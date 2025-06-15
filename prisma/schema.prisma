@@ -7,36 +7,350 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// User Management
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
+  id     String     @id @default(cuid())
+  email  String     @unique
+  name   String?
+  avatar String? // Profile picture URL
+  bio    String? // User bio
+  role   UserRole   @default(STUDENT)
+  status UserStatus @default(ACTIVE)
+
+  // Code Academy Berlin specific
+  cohort         String? // e.g., "2024-Web-Dev-Bootcamp"
+  graduationDate DateTime?
+  linkedinUrl    String?
+  githubUrl      String?
+  portfolioUrl   String?
+  currentJob     String?
+  currentCompany String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations
+  // Learning Relations
+  enrollments  CourseEnrollment[]
+  progress     LessonProgress[]
+  assignments  AssignmentSubmission[]
+  achievements UserAchievement[]
+
+  // Community Relations
+  posts             CommunityPost[]
+  comments          Comment[]
+  likes             Like[]
+  mentorships       Mentorship[]    @relation("Mentor")
+  menteeMentorships Mentorship[]    @relation("Mentee")
+
+  // Document Relations (keeping existing functionality)
   documents     Document[]
   favorites     Favorite[]
-  comments      Comment[]
   suggestions   Suggestion[]
   collaborators DocumentCollaborator[]
 
   @@map("users")
 }
 
-model Document {
-  id          String   @id @default(cuid())
+// Learning Management System Models
+model Course {
+  id          String           @id @default(cuid())
   title       String
-  content     Json // Plate.js document content as JSON
-  parentId    String? // For hierarchical document structure
-  isPublished Boolean  @default(false)
-  isArchived  Boolean  @default(false)
-  coverImage  String? // URL to cover image
-  icon        String? // Emoji or icon for the document
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  description String
+  thumbnail   String?
+  difficulty  CourseDifficulty @default(BEGINNER)
+  category    CourseCategory
+  duration    Int? // Duration in hours
+  isPublished Boolean          @default(false)
+  order       Int              @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
+  lessons       Lesson[]
+  enrollments   CourseEnrollment[]
+  prerequisites CoursePrerequisite[] @relation("Course")
+  dependents    CoursePrerequisite[] @relation("Prerequisite")
+
+  @@map("courses")
+}
+
+model Lesson {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  content     Json? // Rich content (videos, text, code examples)
+  type        LessonType @default(TEXT)
+  duration    Int? // Duration in minutes
+  order       Int        @default(0)
+  isPublished Boolean    @default(false)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  progress    LessonProgress[]
+  assignments Assignment[]
+  resources   LessonResource[]
+
+  @@map("lessons")
+}
+
+model Assignment {
+  id           String         @id @default(cuid())
+  title        String
+  description  String
+  instructions Json // Rich instructions content
+  type         AssignmentType @default(PROJECT)
+  dueDate      DateTime?
+  maxScore     Int            @default(100)
+  isPublished  Boolean        @default(false)
+
+  lessonId String?
+  lesson   Lesson? @relation(fields: [lessonId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  submissions AssignmentSubmission[]
+  resources   AssignmentResource[]
+
+  @@map("assignments")
+}
+
+// Progress Tracking
+model CourseEnrollment {
+  id          String    @id @default(cuid())
+  enrolledAt  DateTime  @default(now())
+  completedAt DateTime?
+  progress    Float     @default(0) // Percentage 0-100
+
+  userId   String
+  courseId String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("course_enrollments")
+}
+
+model LessonProgress {
+  id          String               @id @default(cuid())
+  status      LessonProgressStatus @default(NOT_STARTED)
+  startedAt   DateTime?
+  completedAt DateTime?
+  timeSpent   Int                  @default(0) // Time in minutes
+
+  userId   String
+  lessonId String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@map("lesson_progress")
+}
+
+model AssignmentSubmission {
+  id          String           @id @default(cuid())
+  content     Json // Submission content
+  status      SubmissionStatus @default(DRAFT)
+  score       Int?
+  feedback    String?
+  submittedAt DateTime?
+  gradedAt    DateTime?
+
+  userId       String
+  assignmentId String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, assignmentId])
+  @@map("assignment_submissions")
+}
+
+// Community Features
+model CommunityPost {
+  id          String   @id @default(cuid())
+  title       String
+  content     Json // Rich content
+  type        PostType @default(DISCUSSION)
+  isPublished Boolean  @default(true)
+  isPinned    Boolean  @default(false)
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  comments Comment[]
+  likes    Like[]
+  tags     PostTag[]
+
+  @@map("community_posts")
+}
+
+model Comment {
+  id      String @id @default(cuid())
+  content Json // Rich content
+
+  // Relations
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  // Polymorphic relations
+  postId String?
+  post   CommunityPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  documentId String?
+  document   Document? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  parentId String?
+  parent   Comment?  @relation("CommentThread", fields: [parentId], references: [id])
+  replies  Comment[] @relation("CommentThread")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("comments")
+}
+
+model Like {
+  id String @id @default(cuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  postId String?
+  post   CommunityPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@map("likes")
+}
+
+// Mentorship System
+model Mentorship {
+  id      String           @id @default(cuid())
+  status  MentorshipStatus @default(PENDING)
+  message String?
+
+  mentorId String
+  menteeId String
+  mentor   User   @relation("Mentor", fields: [mentorId], references: [id], onDelete: Cascade)
+  mentee   User   @relation("Mentee", fields: [menteeId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime  @default(now())
+  acceptedAt DateTime?
+  endedAt    DateTime?
+
+  @@unique([mentorId, menteeId])
+  @@map("mentorships")
+}
+
+// Gamification & Achievements
+model Achievement {
+  id          String          @id @default(cuid())
+  title       String
+  description String
+  icon        String
+  type        AchievementType
+  condition   Json // Conditions to unlock
+  points      Int             @default(0)
+
+  createdAt DateTime @default(now())
+
+  // Relations
+  userAchievements UserAchievement[]
+
+  @@map("achievements")
+}
+
+model UserAchievement {
+  id         String   @id @default(cuid())
+  unlockedAt DateTime @default(now())
+
+  userId        String
+  achievementId String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@map("user_achievements")
+}
+
+// Resources
+model LessonResource {
+  id    String       @id @default(cuid())
+  title String
+  url   String
+  type  ResourceType @default(LINK)
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@map("lesson_resources")
+}
+
+model AssignmentResource {
+  id    String       @id @default(cuid())
+  title String
+  url   String
+  type  ResourceType @default(LINK)
+
+  assignmentId String
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  @@map("assignment_resources")
+}
+
+// Supporting Models
+model CoursePrerequisite {
+  id String @id @default(cuid())
+
+  courseId       String
+  prerequisiteId String
+  course         Course @relation("Course", fields: [courseId], references: [id], onDelete: Cascade)
+  prerequisite   Course @relation("Prerequisite", fields: [prerequisiteId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, prerequisiteId])
+  @@map("course_prerequisites")
+}
+
+model PostTag {
+  id    String @id @default(cuid())
+  name  String @unique
+  color String @default("#3B82F6")
+
+  posts CommunityPost[]
+
+  @@map("post_tags")
+}
+
+// Keep existing Document functionality for course content and community
+model Document {
+  id          String       @id @default(cuid())
+  title       String
+  content     Json
+  parentId    String?
+  isPublished Boolean      @default(false)
+  isArchived  Boolean      @default(false)
+  coverImage  String?
+  icon        String?
+  type        DocumentType @default(GENERAL)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   authorId      String
   author        User                   @relation(fields: [authorId], references: [id], onDelete: Cascade)
   parent        Document?              @relation("DocumentHierarchy", fields: [parentId], references: [id])
@@ -50,10 +364,10 @@ model Document {
   @@map("documents")
 }
 
+// Keep existing models with minimal changes
 model Favorite {
   id String @id @default(cuid())
 
-  // Relations
   userId     String
   documentId String
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -65,43 +379,18 @@ model Favorite {
   @@map("favorites")
 }
 
-model Comment {
-  id        String   @id @default(cuid())
-  content   String
-  resolved  Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Position in document (for inline comments)
-  blockId String? // Reference to specific block in document
-  path    Json? // Path to the comment position in the document
-
-  // Relations
-  userId     String
-  documentId String
-  parentId   String? // For threaded comments
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  document   Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  parent     Comment?  @relation("CommentThread", fields: [parentId], references: [id])
-  replies    Comment[] @relation("CommentThread")
-
-  @@map("comments")
-}
-
 model Suggestion {
   id          String           @id @default(cuid())
   type        SuggestionType
-  content     Json // Original and suggested content
+  content     Json
   status      SuggestionStatus @default(PENDING)
   description String?
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
-  // Position in document
-  blockId String? // Reference to specific block
-  path    Json? // Path to the suggestion position
+  blockId String?
+  path    Json?
 
-  // Relations
   userId     String
   documentId String
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -115,7 +404,6 @@ model DocumentCollaborator {
   permission DocumentPermission @default(READ)
   createdAt  DateTime           @default(now())
 
-  // Relations
   userId     String
   documentId String
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -127,12 +415,11 @@ model DocumentCollaborator {
 
 model DocumentVersion {
   id        String   @id @default(cuid())
-  content   Json // Document content at this version
+  content   Json
   title     String
   version   Int
   createdAt DateTime @default(now())
 
-  // Relations
   documentId String
   document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
@@ -141,6 +428,102 @@ model DocumentVersion {
 }
 
 // Enums
+enum UserRole {
+  STUDENT
+  ALUMNI
+  INSTRUCTOR
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  GRADUATED
+}
+
+enum CourseDifficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum CourseCategory {
+  WEB_DEVELOPMENT
+  DATA_SCIENCE
+  UX_UI_DESIGN
+  DIGITAL_MARKETING
+  CAREER_DEVELOPMENT
+  SOFT_SKILLS
+}
+
+enum LessonType {
+  TEXT
+  VIDEO
+  INTERACTIVE
+  QUIZ
+  EXERCISE
+}
+
+enum AssignmentType {
+  PROJECT
+  QUIZ
+  EXERCISE
+  PRESENTATION
+  PEER_REVIEW
+}
+
+enum LessonProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum SubmissionStatus {
+  DRAFT
+  SUBMITTED
+  GRADED
+  RETURNED
+}
+
+enum PostType {
+  DISCUSSION
+  QUESTION
+  SHOWCASE
+  JOB_POSTING
+  EVENT
+  ANNOUNCEMENT
+}
+
+enum MentorshipStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  DECLINED
+}
+
+enum AchievementType {
+  COURSE_COMPLETION
+  STREAK
+  PARTICIPATION
+  SKILL_MASTERY
+  COMMUNITY_CONTRIBUTION
+}
+
+enum ResourceType {
+  LINK
+  FILE
+  VIDEO
+  DOCUMENT
+}
+
+enum DocumentType {
+  GENERAL
+  COURSE_MATERIAL
+  ASSIGNMENT
+  RESOURCE
+}
+
+// Existing enums
 enum SuggestionType {
   INSERT
   DELETE

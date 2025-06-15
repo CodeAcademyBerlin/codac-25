@@ -17,15 +17,57 @@ interface SimpleAutoSaveEditorProps {
     children?: React.ReactNode;
 }
 
+// Helper function to ensure content is in correct Plate.js format
+function normalizeContent(content: any): Value {
+    // If content is already a valid Plate.js Value (array of elements)
+    if (Array.isArray(content)) {
+        return content;
+    }
+
+    // If content is null/undefined, return default
+    if (!content) {
+        return [{ type: 'p', children: [{ text: '' }] }];
+    }
+
+    // If content is in a different format (like the rich_text format), convert it
+    if (content?.type === 'rich_text' && content?.blocks) {
+        return content.blocks.map((block: any) => {
+            switch (block.type) {
+                case 'heading':
+                    return {
+                        type: `h${block.level || 1}`,
+                        children: [{ text: block.content || '' }]
+                    };
+                case 'paragraph':
+                    return {
+                        type: 'p',
+                        children: [{ text: block.content || '' }]
+                    };
+                default:
+                    return {
+                        type: 'p',
+                        children: [{ text: block.content || '' }]
+                    };
+            }
+        });
+    }
+
+    // Fallback for any other format
+    console.warn('Unknown content format, using fallback:', content);
+    return [{ type: 'p', children: [{ text: JSON.stringify(content) }] }];
+}
+
 export function SimpleAutoSaveEditor({
     documentId,
     initialValue,
     children,
 }: SimpleAutoSaveEditorProps) {
-    // Editor value state
-    const [editorValue, setEditorValue] = React.useState<Value>(
-        initialValue ?? [{ type: 'p', children: [{ text: '' }] }]
-    );
+    // Editor value state - normalize the initial content
+    const [editorValue, setEditorValue] = React.useState<Value>(() => {
+        const normalized = normalizeContent(initialValue);
+        console.log('Normalizing initial content:', { initialValue, normalized });
+        return normalized;
+    });
 
     // Save timeout ref
     const saveTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
@@ -88,7 +130,7 @@ export function SimpleAutoSaveEditor({
         // Set new timeout for database save
         saveTimeoutRef.current = setTimeout(() => {
             saveToDatabase(value);
-        }, 2000);
+        }, 10000);
     }, [saveToDatabase]);
 
     // Manual save
@@ -111,7 +153,7 @@ export function SimpleAutoSaveEditor({
     return (
         <div className="w-full h-full flex flex-col">
             {/* Status bar */}
-            <div className="flex items-center justify-between p-2 border-b bg-gray-50 dark:bg-gray-900">
+            <div className="flex items-center justify-between p-2 border-b">
                 <span className="text-sm text-gray-600">Auto-save enabled</span>
                 <Button
                     variant="outline"

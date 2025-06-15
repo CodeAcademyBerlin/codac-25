@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { type Icon } from '@tabler/icons-react';
+import { type LucideIcon } from 'lucide-react';
 
 import {
   SidebarGroup,
@@ -18,7 +18,8 @@ export function NavSecondary({
   items: {
     title: string;
     url: string;
-    icon: Icon;
+    icon: LucideIcon;
+    badge?: string;
   }[];
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   return (
@@ -31,6 +32,11 @@ export function NavSecondary({
                 <a href={item.url}>
                   <item.icon />
                   <span>{item.title}</span>
+                  {item.badge && (
+                    <span className="ml-auto rounded-full bg-blue-600 px-2 py-0.5 text-xs font-medium text-white">
+                      {item.badge}
+                    </span>
+                  )}
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
