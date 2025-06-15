@@ -1,8 +1,20 @@
 ---
 description: Organize code in a consistent and logical manner.
 globs: */**
+alwaysApply: false
 ---
 - Structure files logically, grouping related components, helpers, types and static content.
 - Prefer named exports for components over default exports.
 - Favor small, single-purpose components over large, monolithic ones.
 - Separate concerns between presentational and container components.
+
+The folders are based on a standard Next.js application.
+/actions	Server-side mutations (Create, Update, Delete)
+/app	App Router components
+/components	Dashboard UI components
+/data	Fetches data from the database or external APIs (Read)
+/hooks	Custom React hooks
+/lib	Shared utility functions
+/public	Static assets like images
+/schemas	Validation schemas for actions and data
+/types	General types and DTOs

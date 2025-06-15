@@ -1,19 +1,37 @@
 'use client';
 
 import * as React from 'react';
+import { type Value } from 'platejs';
 
 import { Plate, usePlateEditor } from 'platejs/react';
 import { Editor, EditorContainer } from '@/components/ui/editor';
 import { EditorKit } from './editor-kit';
 
-export function PlateEditor() {
+export function PlateEditor({
+  initialValue,
+  children,
+}: {
+  /**
+   * Initial document value to load into the editor. When omitted, a default
+   * demo value will be used.
+   */
+  initialValue?: Value;
+  /**
+   * Optional children that will have access to the Plate editor context.
+   * This is useful for customization such as adding a toolbar that relies on
+   * hooks like `useEditorRef` or `useEditorSelector`.
+   */
+  children?: React.ReactNode;
+}) {
+  console.log(initialValue);
   const editor = usePlateEditor({
     plugins: EditorKit,
-    value,
+    value: initialValue ?? defaultValue,
   });
 
   return (
     <Plate editor={editor}>
+      {children}
       <EditorContainer>
         <Editor variant="demo" />
       </EditorContainer>
@@ -21,7 +39,7 @@ export function PlateEditor() {
   );
 }
 
-const value = [
+const defaultValue = [
   {
     children: [{ text: 'Welcome to the Plate Playground!' }],
     type: 'h1',

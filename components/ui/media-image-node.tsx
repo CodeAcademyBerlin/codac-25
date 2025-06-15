@@ -31,8 +31,8 @@ export const ImageElement = withHOC(
     });
 
     return (
-      <MediaToolbar plugin={ImagePlugin}>
-        <PlateElement {...props} className="py-2.5">
+      <PlateElement {...props} className="py-2.5">
+        <MediaToolbar plugin={ImagePlugin}>
           <figure className="group relative m-0" contentEditable={false}>
             <Resizable
               align={align}
@@ -73,10 +73,10 @@ export const ImageElement = withHOC(
               />
             </Caption>
           </figure>
+        </MediaToolbar>
 
-          {props.children}
-        </PlateElement>
-      </MediaToolbar>
+        {props.children}
+      </PlateElement>
     );
   }
 );

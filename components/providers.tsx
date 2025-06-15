@@ -1,8 +1,6 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { PlateEditor } from './editor/plate-editor';
 import { ThemeProvider } from 'next-themes';
 
 interface ProvidersProps {

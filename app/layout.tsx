@@ -4,6 +4,7 @@ import "./globals.css";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Providers } from "@/components/providers";
 import { SidebarInset } from "@/components/ui/sidebar";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 
 const geistSans = Geist({
@@ -31,9 +32,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Providers  >
-          {children}
-        </Providers>
+        <NuqsAdapter>
+          <Providers>
+            {children}
+          </Providers>
+        </NuqsAdapter>
       </body>
     </html>
   );

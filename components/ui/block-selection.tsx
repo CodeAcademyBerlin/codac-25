@@ -23,7 +23,7 @@ export const blockSelectionVariants = cva(
 );
 
 export function BlockSelection(props: PlateElementProps) {
-  const isBlockSelected = useBlockSelected();
+  const isBlockSelected = useBlockSelected(props.element?.id as string | undefined);
   const isDragging = usePluginOption(DndPlugin, 'isDragging');
 
   if (!isBlockSelected || props.plugin.key === 'tr') return null;
