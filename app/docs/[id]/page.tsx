@@ -1,4 +1,4 @@
-import { PlateEditor } from "@/components/editor/plate-editor";
+import { SimpleAutoSaveEditor } from "@/components/editor/simple-auto-save-editor";
 import { getDoc } from "@/data/docs";
 import { notFound } from "next/navigation";
 import { type Value } from 'platejs';
@@ -13,6 +13,8 @@ interface DocPageProps {
 export default async function DocPage({ params }: DocPageProps) {
   const { id } = params;
 
+  console.log('DocPage - Document ID:', { id, type: typeof id, length: id?.length });
+
   const doc = await getDoc(id)
 
   if (!doc) {
@@ -22,9 +24,17 @@ export default async function DocPage({ params }: DocPageProps) {
   // const { markdown, plainText, value } = await getServerEditor()
   // console.log(markdown, plainText, value)
 
-  return (
+  console.log('DocPage - Rendering with:', {
+    documentId: id,
+    hasDoc: !!doc,
+    docId: doc?.id
+  });
 
-    <PlateEditor initialValue={doc.content as Value} />
+  return (
+    <SimpleAutoSaveEditor
+      documentId={id}
+      initialValue={doc.content as Value}
+    />
   );
 }
 
