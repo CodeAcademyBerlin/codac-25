@@ -23,6 +23,7 @@ import {
 import { NavMain } from './nav-main';
 import { NavSecondary } from './nav-secondary';
 import { NavUser } from './nav-user';
+import { ThemePicker } from './theme-picker';
 import {
   Sidebar,
   SidebarContent,
@@ -47,12 +48,12 @@ const data = {
       url: '/docs',
       icon: FileText,
       isActive: true,
-      // items: [
-      //   {
-      //     title: 'Documents',
-      //     url: '/docs',
-      //   },
-      // ],
+      items: [
+        {
+          title: 'Documents',
+          url: '/docs',
+        },
+      ],
     },
     {
       title: 'Dashboard',
@@ -215,10 +216,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Brain className="!size-5" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold text-lg">CODAC</span>
-                  <span className="truncate text-xs text-muted-foreground">
+                  <span className="truncate font-semibold text-lg">codac community</span>
+                  {/* <span className="truncate text-xs text-muted-foreground">
                     Code Academy Berlin
-                  </span>
+                  </span> */}
                 </div>
               </a>
             </SidebarMenuButton>
@@ -230,6 +231,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
+        <div className="flex items-center justify-between px-2 pb-2">
+          <span className="text-xs text-muted-foreground">Customize</span>
+          <ThemePicker variant="popover" align="end" />
+        </div>
         <NavSecondary items={data.footer} />
         <NavUser user={data.user} />
       </SidebarFooter>

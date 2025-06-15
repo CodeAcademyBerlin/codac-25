@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CODAC - Code Academy Berlin Learning Platform",
+  title: "codac - Code Academy Berlin community",
   description: "Comprehensive learning management system and community platform for Code Academy Berlin students and alumni. Learn, collaborate, and grow together.",
   keywords: ["Code Academy Berlin", "LMS", "Learning Platform", "Web Development", "Data Science", "UX/UI Design", "Bootcamp", "Programming Education"],
   authors: [{ name: "Code Academy Berlin" }],

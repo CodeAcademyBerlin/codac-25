@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ThemePicker } from "@/components/theme-picker"
 import { Book, Calendar, Trophy, Users, MessageSquare, Clock, BookOpen, Target, TrendingUp } from "lucide-react"
 
 export default function Page() {
@@ -44,6 +45,9 @@ export default function Page() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
+          <div className="ml-auto">
+            <ThemePicker variant="dropdown" align="end" />
+          </div>
         </header>
 
         <div className="flex flex-1 flex-col gap-6 p-6">
