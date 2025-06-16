@@ -39,11 +39,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { BasicMarksKit } from '@/components/basic-marks-kit';
+import { BasicMarksKit } from '@/components/editor/plugins/basic-marks-kit';
 import {
   type TDiscussion,
-  discussionPlugin,
-} from '@/components/discussion-kit';
+  discussionPlugin
+} from '@/components/editor/plugins/discussion-kit';
 
 import { Editor, EditorContainer } from './editor';
 
@@ -84,7 +84,7 @@ export function Comment(props: {
   const resolveDiscussion = async (id: string) => {
     const updatedDiscussions = editor
       .getOption(discussionPlugin, 'discussions')
-      .map((discussion) => {
+      .map((discussion: TDiscussion) => {
         if (discussion.id === id) {
           return { ...discussion, isResolved: true };
         }
@@ -96,7 +96,7 @@ export function Comment(props: {
   const removeDiscussion = async (id: string) => {
     const updatedDiscussions = editor
       .getOption(discussionPlugin, 'discussions')
-      .filter((discussion) => discussion.id !== id);
+      .filter((discussion: TDiscussion) => discussion.id !== id);
     editor.setOption(discussionPlugin, 'discussions', updatedDiscussions);
   };
 
@@ -108,9 +108,9 @@ export function Comment(props: {
   }) => {
     const updatedDiscussions = editor
       .getOption(discussionPlugin, 'discussions')
-      .map((discussion) => {
+      .map((discussion: TDiscussion) => {
         if (discussion.id === input.discussionId) {
-          const updatedComments = discussion.comments.map((comment) => {
+          const updatedComments = discussion.comments.map((comment: TComment) => {
             if (comment.id === input.id) {
               return {
                 ...comment,
@@ -316,13 +316,13 @@ function CommentMoreDropdown(props: {
     // Find and update the discussion
     const updatedDiscussions = editor
       .getOption(discussionPlugin, 'discussions')
-      .map((discussion) => {
+      .map((discussion: TDiscussion) => {
         if (discussion.id !== comment.discussionId) {
           return discussion;
         }
 
         const commentIndex = discussion.comments.findIndex(
-          (c) => c.id === comment.id
+          (c: TComment) => c.id === comment.id
         );
         if (commentIndex === -1) {
           return discussion;
@@ -390,7 +390,7 @@ function CommentMoreDropdown(props: {
 
 const useCommentEditor = (
   options: Omit<CreatePlateEditorOptions, 'plugins'> = {},
-  deps: any[] = []
+  deps: unknown[] = []
 ) => {
   const commentEditor = usePlateEditor(
     {
@@ -446,7 +446,7 @@ export function CommentCreateForm({
 
     if (discussionId) {
       // Get existing discussion
-      const discussion = discussions.find((d) => d.id === discussionId);
+      const discussion = discussions.find((d: TDiscussion) => d.id === discussionId);
       if (!discussion) {
         // Mock creating suggestion
         const newDiscussion: TDiscussion = {
@@ -491,7 +491,7 @@ export function CommentCreateForm({
 
       // Filter out old discussion and add updated one
       const updatedDiscussions = discussions
-        .filter((d) => d.id !== discussionId)
+        .filter((d: TDiscussion) => d.id !== discussionId)
         .concat(updatedDiscussion);
 
       editor.setOption(discussionPlugin, 'discussions', updatedDiscussions);

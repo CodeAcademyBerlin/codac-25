@@ -1,4 +1,4 @@
-# CODAC - Code Academy Berlin Learning Platform
+# CODAC - Code Academy Berlin community
 
 ![CODAC Logo](https://via.placeholder.com/800x200/4F46E5/FFFFFF?text=CODAC+-+Code+Academy+Berlin)
 
@@ -240,6 +240,266 @@ CODAC provides comprehensive analytics for different user types:
 - **Student Analytics**: Progress tracking, time spent, achievement unlocks
 - **Instructor Analytics**: Student engagement, completion rates, assignment performance
 - **Admin Analytics**: Platform usage, community activity, course effectiveness
+
+## 👨‍💻 Collaboration Guide for Beginner Developers
+
+Welcome, Code Academy Berlin students! This section will help you collaborate effectively on the CODAC project, even if you're new to working with codebases.
+
+### 🔄 Git Workflow for Beginners
+
+Fork or clone the repositiry on GitHub
+
+#### 1. Setting Up Your Development Environment
+
+Before making any changes, ensure you have the project running locally:
+
+```bash
+# Make sure you're in the project directory
+cd codac
+
+# Always pull the latest changes before starting work
+git pull origin main
+
+# Create your own branch for the feature you're working on
+git checkout -b feature/your-feature-name
+```
+
+#### 2. Branch Naming Conventions
+
+Use descriptive branch names that indicate what you're working on:
+
+- `feature/add-user-profile` - For new features
+- `fix/login-button-issue` - For bug fixes
+- `docs/update-readme` - For documentation updates
+- `style/improve-button-design` - For UI/styling changes
+
+#### 3. Making Changes Safely
+
+Before making changes, create a new branch and test your setup:
+
+```bash
+# Start the development server to make sure everything works
+pnpm dev
+
+# Make your changes in small, focused commits
+# Test your changes before committing
+```
+
+#### 4. Commit Message Guidelines
+
+Write clear, descriptive commit messages:
+
+```bash
+# Good commit messages:
+git commit -m "Add user registration form validation"
+git commit -m "Fix navigation menu on mobile devices"
+git commit -m "Update README with installation instructions"
+
+# Bad commit messages:
+git commit -m "fixes"
+git commit -m "update"
+git commit -m "wip"
+```
+
+### 📋 Development Best Practices
+
+#### Before You Start Coding
+
+1. **Check existing issues** - Look at GitHub issues to see if someone is already working on what you want to do
+2. **Create an issue** - If your idea isn't covered, create a new issue to discuss it
+3. **Ask questions** - Don't hesitate to ask in Discord or GitHub discussions
+
+#### While Coding
+
+1. **Follow the project structure** - Put files in the correct folders (see Project Structure above)
+2. **Use TypeScript** - The project uses TypeScript, so make sure your code is type-safe
+3. **Follow naming conventions** - Use camelCase for variables, PascalCase for components
+4. **Test your changes** - Always test your changes before pushing
+
+#### Code Style Guidelines
+
+```typescript
+// ✅ Good: Clear component names and structure
+export function UserProfileCard({ user }: { user: User }) {
+  const [isEditing, setIsEditing] = useState(false);
+
+  return (
+    <div className="bg-card p-6 rounded-lg">
+      <h2 className="text-xl font-semibold">{user.name}</h2>
+    </div>
+  );
+}
+
+// ❌ Avoid: Unclear names and poor structure
+export default function Card(props: any) {
+  return <div style={{ background: "white" }}>{props.data}</div>;
+}
+```
+
+### 🔍 Common Development Tasks
+
+#### Adding a New Component
+
+1. Create the component in the appropriate folder under `components/`
+2. Use TypeScript interfaces for props
+3. Follow the existing design system (Tailwind classes)
+4. Export the component using named exports
+
+```typescript
+// components/ui/user-avatar.tsx
+interface UserAvatarProps {
+  user: {
+    name: string;
+    avatar?: string;
+  };
+  size?: "sm" | "md" | "lg";
+}
+
+export function UserAvatar({ user, size = "md" }: UserAvatarProps) {
+  // Component implementation
+}
+```
+
+#### Adding a New Page
+
+1. Create the page in the `app/` directory following Next.js App Router conventions
+2. Use Server Components when possible
+3. Add proper TypeScript types for params and search params
+
+```typescript
+// app/courses/[id]/page.tsx
+interface CoursePageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function CoursePage({ params }: CoursePageProps) {
+  // Page implementation
+}
+```
+
+#### Database Changes
+
+1. Update the Prisma schema in `prisma/schema.prisma`
+2. Create a migration: `pnpm db:push`
+3. Update TypeScript types if needed
+4. Test with sample data
+
+### 🚨 Debugging Common Issues
+
+#### TypeScript Errors
+
+```bash
+# Check for TypeScript errors
+pnpm build
+
+# Fix common issues:
+# - Missing imports
+# - Incorrect prop types
+# - Unused variables
+```
+
+#### Database Issues
+
+```bash
+# Reset the database if needed
+pnpm db:reset
+
+# Re-seed with sample data
+pnpm db:seed
+```
+
+#### Package Issues
+
+```bash
+# Clear node_modules and reinstall
+rm -rf node_modules
+pnpm install
+```
+
+### 📝 Pull Request Process
+
+#### Before Creating a PR
+
+1. **Test thoroughly** - Make sure your changes work correctly
+2. **Check for conflicts** - Merge main into your branch if needed
+3. **Review your changes** - Use `git diff` to see what you've changed
+
+#### Creating a Good PR
+
+1. **Use a descriptive title** - "Add user profile editing functionality"
+2. **Write a clear description** - Explain what you changed and why
+3. **Add screenshots** - For UI changes, include before/after screenshots
+4. **Link related issues** - Use "Closes #123" to link to issues
+
+#### PR Template
+
+```markdown
+## What does this PR do?
+
+Brief description of the changes
+
+## Type of change
+
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Documentation update
+- [ ] Style/UI improvement
+
+## Testing
+
+- [ ] I have tested this change locally
+- [ ] I have checked that existing functionality still works
+
+## Screenshots (if applicable)
+
+Before: [screenshot]
+After: [screenshot]
+```
+
+### 🆘 Getting Help
+
+#### When You're Stuck
+
+1. **Read error messages carefully** - They often tell you exactly what's wrong
+2. **Check the documentation** - Look at Next.js, React, or Prisma docs
+3. **Search existing issues** - Someone might have had the same problem
+4. **Ask for help** - Don't be afraid to ask questions!
+
+#### Where to Ask for Help
+
+- **GitHub Discussions** - For general questions about the project
+- **Discord** - For real-time help and community support
+- **GitHub Issues** - For bugs or feature requests
+- **Code Review** - Ask for feedback on your PRs
+
+#### Questions to Include When Asking for Help
+
+1. What are you trying to do?
+2. What did you expect to happen?
+3. What actually happened?
+4. What error messages did you see?
+5. What have you already tried?
+
+### 🎯 Good First Issues
+
+If you're looking for ways to contribute, look for issues labeled:
+
+- `good first issue` - Perfect for beginners
+- `documentation` - Help improve docs
+- `bug` - Fix existing problems
+- `enhancement` - Small improvements
+
+### 📚 Learning Resources
+
+- **Next.js Documentation** - https://nextjs.org/docs
+- **React Documentation** - https://react.dev
+- **TypeScript Handbook** - https://www.typescriptlang.org/docs
+- **Tailwind CSS** - https://tailwindcss.com/docs
+- **Prisma Documentation** - https://www.prisma.io/docs
+
+Remember: Every expert was once a beginner. Don't be afraid to make mistakes – that's how we learn! The Code Academy Berlin community is here to support you.
 
 ## 🤝 Contributing
 

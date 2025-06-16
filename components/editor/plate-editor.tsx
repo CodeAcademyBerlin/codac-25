@@ -3,9 +3,10 @@
 import * as React from 'react';
 import { type Value } from 'platejs';
 
-import { Plate, usePlateEditor } from 'platejs/react';
+import { createPlateEditor, Plate, usePlateEditor } from 'platejs/react';
 import { Editor, EditorContainer } from '@/components/ui/editor';
 import { EditorKit } from './editor-kit';
+
 
 export function PlateEditor({
   initialValue,
@@ -23,19 +24,24 @@ export function PlateEditor({
    */
   children?: React.ReactNode;
 }) {
-  console.log(initialValue);
-  const editor = usePlateEditor({
+
+  //   const editor = usePlateEditor({
+  //     plugins: EditorKit,
+  //     value: initialValue ?? defaultValue,
+  // });
+  const editor = createPlateEditor({
     plugins: EditorKit,
     value: initialValue ?? defaultValue,
   });
-
   return (
+
     <Plate editor={editor}>
       {children}
       <EditorContainer>
         <Editor variant="demo" />
       </EditorContainer>
     </Plate>
+
   );
 }
 
@@ -147,19 +153,19 @@ const defaultValue = [
     ],
     type: 'p',
   },
-  // {
-  //   children: [
-  //     {
-  //       text: 'Block-level suggestions are also supported for broader feedback.',
-  //     },
-  //   ],
-  //   suggestion: {
-  //     suggestionId: 'suggestionBlock1',
-  //     type: 'block',
-  //     userId: 'charlie',
-  //   },
-  //   type: 'p',
-  // },
+  {
+    children: [
+      {
+        text: 'Block-level suggestions are also supported for broader feedback.',
+      },
+    ],
+    suggestion: {
+      suggestionId: 'suggestionBlock1',
+      type: 'block',
+      userId: 'charlie',
+    },
+    type: 'p',
+  },
   // AI Section
   {
     children: [{ text: 'AI-Powered Editing' }],

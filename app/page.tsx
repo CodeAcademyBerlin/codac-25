@@ -6,7 +6,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { Button } from "@/components/ui/button"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
@@ -14,11 +14,11 @@ import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ThemePicker } from "@/components/theme-picker"
-import { Book, Calendar, Trophy, Users, MessageSquare, Clock, BookOpen, Target, TrendingUp } from "lucide-react"
+import { Book, Calendar, Trophy, Users, MessageSquare, Clock, Target, TrendingUp } from "lucide-react"
 
 export default function Page() {
   return (
-    <>
+    <div >
       <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
         <SidebarTrigger className="-ml-1" />
         <Separator
@@ -48,7 +48,7 @@ export default function Page() {
         <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tight">Welcome back, Alex!</h1>
           <p className="text-muted-foreground">
-            Here's what's happening in your learning journey today.
+            Here&apos;s what&apos;s happening in your learning journey today.
           </p>
         </div>
 
@@ -262,7 +262,7 @@ export default function Page() {
                     Emma Wilson started a discussion
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    "Best practices for API error handling" - 6 hours ago
+                    &ldquo;Best practices for API error handling&rdquo; - 6 hours ago
                   </p>
                 </div>
                 <Badge variant="outline">
@@ -274,6 +274,6 @@ export default function Page() {
           </CardContent>
         </Card>
       </div>
-    </>
+    </div>
   )
 }

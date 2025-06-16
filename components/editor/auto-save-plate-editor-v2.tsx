@@ -136,7 +136,6 @@ export function AutoSavePlateEditor({
         setSaveStatus(prev => ({ ...prev, status: 'saving' }));
 
         try {
-            console.log('Saving to database:', { documentId, content }); // Debug log
             const result = await updateDoc({
                 id: documentId,
                 content,
@@ -173,7 +172,6 @@ export function AutoSavePlateEditor({
 
     // Handle editor changes
     const handleEditorChange = React.useCallback(({ value }: { value: Value }) => {
-        console.log('Editor changed:', value); // Debug log
         setEditorValue(value);
 
         // Clear existing timeout
@@ -184,7 +182,6 @@ export function AutoSavePlateEditor({
 
         // Set new timeout for database save
         saveTimeoutRef.current = setTimeout(() => {
-            console.log('Auto-saving to database...'); // Debug log
             saveToDatabase(value);
         }, 2000);
     }, [saveToDatabase]);
@@ -195,7 +192,6 @@ export function AutoSavePlateEditor({
             clearTimeout(saveTimeoutRef.current);
             saveTimeoutRef.current = null;
         }
-        console.log('Manual save triggered:', editorValue); // Debug log
         await saveToDatabase(editorValue);
         toast.success('Document saved');
     }, [editorValue, saveToDatabase]);

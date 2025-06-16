@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
+import { InputJsonValue } from '@prisma/client/runtime/library';
 
 const DEMO_USER_ID = 'demo-user';
 
@@ -30,13 +31,13 @@ export async function GET(
         },
         comments: {
           include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
+            // user: {
+            //   select: {
+            //     id: true,
+            //     name: true,
+            //     email: true,
+            //   },
+            // },
           },
           orderBy: {
             createdAt: 'desc',
@@ -136,7 +137,7 @@ export async function PUT(
             await tx.documentVersion.create({
               data: {
                 documentId: id,
-                content: currentDocument.content as any,
+                content: currentDocument.content as InputJsonValue,
                 title: currentDocument.title,
                 version: nextVersion,
               },
@@ -150,16 +151,20 @@ export async function PUT(
     }
 
     // Prepare update data
-    const updateData: any = {
+    const updateData: {
+      title?: string;
+      content?: InputJsonValue;
+      updatedAt?: Date;
+    } = {
       updatedAt: new Date(),
     };
 
     if (title !== undefined) {
-      updateData.title = title;
+      updateData.title = title as string;
     }
 
     if (content !== undefined) {
-      updateData.content = content;
+      updateData.content = content as InputJsonValue;
     }
 
     // Update the document

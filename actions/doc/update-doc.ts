@@ -1,38 +1,127 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
+import { Prisma } from '@prisma/client';
 
 import { prisma } from '@/lib/db';
-import { UpdateDocSchema } from '@/schemas/doc';
+import {
+    updateDocSchema,
+    type UpdateDocInput,
+    type ServerActionResult
+} from '@/lib/validation/doc';
 
-type UpdateDocInput = z.infer<typeof UpdateDocSchema>;
+// Define return type using Prisma's generated types
+type UpdateDocResult = ServerActionResult<Prisma.DocumentGetPayload<{
+    include: {
+        author: {
+            select: {
+                id: true;
+                name: true;
+                email: true;
+            };
+        };
+    };
+}>>;
 
-export async function updateDoc(data: UpdateDocInput) {
+export async function updateDoc(data: UpdateDocInput): Promise<UpdateDocResult> {
     try {
-        const { id, ...validatedData } = UpdateDocSchema.parse(data);
+        // Validate input data
+        const { id, ...validatedData } = updateDocSchema.parse(data);
 
-        // ⚠️  TODO: Add authorization check to ensure user can update this document
-        const doc = await (prisma as any).document.update({
+        // Check if document exists and user has permission
+        const existingDoc = await prisma.document.findUnique({
             where: { id },
-            data: {
-                ...validatedData,
+            select: {
+                id: true,
+                authorId: true,
+                isArchived: true
             },
         });
 
-        // Revalidate paths to reflect the update
-        revalidatePath('/');
-        if (doc.parentId) {
-            revalidatePath(`/docs/${doc.parentId}`);
+        if (!existingDoc) {
+            return {
+                success: false,
+                error: 'Document not found'
+            };
         }
-        revalidatePath(`/docs/${doc.id}`);
 
-        return { success: true, data: doc };
+        if (existingDoc.isArchived) {
+            return {
+                success: false,
+                error: 'Cannot update archived document'
+            };
+        }
+
+        // TODO: Add proper authorization check
+        // if (existingDoc.authorId !== currentUserId) {
+        //   return { success: false, error: 'Unauthorized' };
+        // }
+
+        // Update document with proper types
+        const document = await prisma.document.update({
+            where: { id },
+            data: {
+                ...validatedData,
+                updatedAt: new Date(),
+            },
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                    },
+                },
+            },
+        });
+
+        // Revalidate relevant paths
+        revalidatePath('/docs');
+        revalidatePath(`/docs/${id}`);
+        if (document.parentId) {
+            revalidatePath(`/docs/${document.parentId}`);
+        }
+
+        return {
+            success: true,
+            data: document
+        };
+
     } catch (error) {
         console.error('Error updating document:', error);
-        if (error instanceof z.ZodError) {
-            return { success: false, error: error.errors };
+
+        // Handle Zod validation errors
+        if (error instanceof Error && error.name === 'ZodError') {
+            return {
+                success: false,
+                error: (error as any).errors
+            };
         }
-        return { success: false, error: 'Failed to update document' };
+
+        // Handle Prisma errors
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            switch (error.code) {
+                case 'P2002':
+                    return {
+                        success: false,
+                        error: 'A document with this title already exists'
+                    };
+                case 'P2025':
+                    return {
+                        success: false,
+                        error: 'Document not found'
+                    };
+                default:
+                    return {
+                        success: false,
+                        error: 'Database error occurred'
+                    };
+            }
+        }
+
+        return {
+            success: false,
+            error: 'Failed to update document'
+        };
     }
 }

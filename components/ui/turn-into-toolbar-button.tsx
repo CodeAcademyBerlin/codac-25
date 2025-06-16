@@ -3,7 +3,6 @@
 import * as React from 'react';
 
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
-import type { TElement } from 'platejs';
 
 import { DropdownMenuItemIndicator } from '@radix-ui/react-dropdown-menu';
 import {
@@ -137,7 +136,7 @@ export function TurnIntoToolbarButton(props: DropdownMenuProps) {
       >
         <ToolbarMenuGroup
           value={value}
-          onValueChange={(type) => {
+          onValueChange={() => {
           }}
           label="Turn into"
         >

@@ -27,7 +27,9 @@ const config: Record<
 export const BlockListStatic: RenderStaticNodeWrapper = (props) => {
   if (!props.element.listStyleType) return;
 
-  return (props) => <List {...props} />;
+  const BlockListWrapper = (props: SlateRenderElementProps) => <List {...props} />;
+  BlockListWrapper.displayName = 'BlockListWrapper';
+  return BlockListWrapper;
 };
 
 function List(props: SlateRenderElementProps) {
@@ -74,7 +76,7 @@ function TodoLiStatic(props: SlateRenderElementProps) {
       className={cn(
         'list-none',
         (props.element.checked as boolean) &&
-          'text-muted-foreground line-through'
+        'text-muted-foreground line-through'
       )}
     >
       {props.children}

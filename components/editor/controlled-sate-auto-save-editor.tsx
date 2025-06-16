@@ -18,7 +18,7 @@ interface SimpleAutoSaveEditorProps {
 }
 
 // Helper function to ensure content is in correct Plate.js format
-function normalizeContent(content: any): Value {
+function normalizeContent(content: Value): Value {
     // If content is already a valid Plate.js Value (array of elements)
     if (Array.isArray(content)) {
         return content;
@@ -30,8 +30,31 @@ function normalizeContent(content: any): Value {
     }
 
     // If content is in a different format (like the rich_text format), convert it
-    if (content?.type === 'rich_text' && content?.blocks) {
-        return content.blocks.map((block: any) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((content as any)?.type === 'rich_text' && (content as any)?.blocks) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (content as any).blocks.map((block: any) => {
+            if (block.type === 'heading') {
+                return {
+                    type: `h${block.level || 1}`,
+                    children: [{ text: block.content || '' }]
+                };
+            }
+            if (block.type === 'paragraph') {
+                return {
+                    type: 'p',
+                    children: [{ text: block.content || '' }]
+                };
+            }
+            if (block.type === 'list') {
+                return {
+                    type: 'ul',
+                    children: block.items.map((item: { content: string }) => ({
+                        type: 'li',
+                        children: [{ text: item.content || '' }]
+                    }))
+                };
+            }
             switch (block.type) {
                 case 'heading':
                     return {
@@ -64,8 +87,7 @@ export function SimpleAutoSaveEditor({
 }: SimpleAutoSaveEditorProps) {
     // Editor value state - normalize the initial content
     const [editorValue, setEditorValue] = React.useState<Value>(() => {
-        const normalized = normalizeContent(initialValue);
-        console.log('Normalizing initial content:', { initialValue, normalized });
+        const normalized = normalizeContent(initialValue || []);
         return normalized;
     });
 
@@ -81,13 +103,6 @@ export function SimpleAutoSaveEditor({
     // Save to database function
     const saveToDatabase = React.useCallback(async (content: Value) => {
         try {
-            console.log('Saving to database...', {
-                documentId,
-                documentIdType: typeof documentId,
-                documentIdLength: documentId?.length,
-                contentType: typeof content,
-                content
-            });
 
             if (!documentId) {
                 console.error('No document ID provided');
@@ -101,7 +116,6 @@ export function SimpleAutoSaveEditor({
             });
 
             if (result.success) {
-                console.log('Save successful');
                 toast.success('Document saved');
             } else {
                 console.error('Save failed - Full error:', result.error);
@@ -119,7 +133,6 @@ export function SimpleAutoSaveEditor({
 
     // Handle editor changes
     const handleEditorChange = React.useCallback(({ value }: { value: Value }) => {
-        console.log('Editor changed, new value:', value);
         setEditorValue(value);
 
         // Clear existing timeout
@@ -150,33 +163,54 @@ export function SimpleAutoSaveEditor({
         };
     }, []);
 
-    return (
-        <div className="w-full h-full flex flex-col">
-            {/* Status bar */}
-            <div className="flex items-center justify-between p-2 border-b">
-                <span className="text-sm text-gray-600">Auto-save enabled</span>
+    return (<>
+
+        {/* <div className="flex flex-col h-full overflow-hidden">
+            Status bar with improved accessibility */}
+        {/* <div className="flex-shrink-0 flex items-center flex-wrap justify-between px-3 py-2 border-b bg-muted/30" role="toolbar" aria-label="Document controls">
+                <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground" aria-live="polite">
+                        Auto-save enabled
+                    </span>
+                    <span className="sr-only">
+                        Document changes are automatically saved every 10 seconds
+                    </span>
+                </div>
                 <Button
                     variant="outline"
                     size="sm"
                     onClick={handleManualSave}
+                    aria-label="Save document now"
+                    className="h-8"
                 >
-                    <Save className="h-4 w-4 mr-1" />
+                    <Save className="h-4 w-4 mr-1" aria-hidden="true" />
                     Save
                 </Button>
-            </div>
+            </div> */}
 
-            {/* Editor */}
-            <div className="flex-1">
-                <Plate
-                    editor={editor}
-                    onChange={handleEditorChange}
-                >
-                    {children}
-                    <EditorContainer>
-                        <Editor variant="demo" />
-                    </EditorContainer>
-                </Plate>
-            </div>
-        </div>
+        {/* Editor with proper overflow handling */}
+
+        <Plate
+            editor={editor}
+            onChange={handleEditorChange}
+        >
+            {children}
+            <EditorContainer variant="responsive" >
+                <Editor
+                    variant="responsive"
+                    aria-label="Document content"
+                    role="textbox"
+                    aria-multiline="true"
+                    aria-describedby="editor-help"
+                />
+                <div id="editor-help" className="sr-only">
+                    Rich text editor. Use toolbar buttons or keyboard shortcuts to format text.
+                    Changes are automatically saved.
+                </div>
+            </EditorContainer>
+        </Plate>
+        {/* </div> */}
+    </>
+
     );
 } 

@@ -6,17 +6,13 @@ import {
   BarChart3,
   Users,
   MessageSquare,
-  User,
   Calendar,
   Trophy,
   HelpCircle,
   Settings,
   Search,
   Briefcase,
-  Heart,
-  Star,
   GraduationCap,
-  Brain,
   FileText,
   Pyramid,
 } from 'lucide-react';
@@ -47,7 +43,7 @@ const data = {
 
     {
       title: 'Dashboard',
-      url: '/dashboard',
+      url: '/',
       icon: BarChart3,
       isActive: false,
       items: [
@@ -199,19 +195,19 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      <SidebarHeader >
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="/dashboard">
-                <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-gradient-to-br from-gray-600 to-purple-600 text-white">
+              <a href="/">
+                <div className="sm:flex-nowrap flex h-8 w-8 items-center justify-center rounded-sm bg-gradient-to-br from-gray-600 to-purple-600 text-white">
                   <Pyramid className="!size-5" />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold  text-2xl hidden md:block">codac </span>
+                <div className=" flex-1 text-left text-sm hidden sm:grid leading-tight">
+                  <span className="truncate font-semibold  text-2xl ">codac </span>
                   {/* <span className="truncate text-xs text-muted-foreground">
                     community
                   </span> */}
@@ -226,10 +222,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <div className="flex items-center justify-between px-2 pb-2">
+        {/* <div className="flex items-center justify-between px-2 pb-2">
           <span className="text-xs text-muted-foreground">Customize</span>
           <ThemePicker variant="popover" align="end" />
-        </div>
+        </div> */}
         <NavSecondary items={data.footer} />
         <NavUser user={data.user} />
       </SidebarFooter>

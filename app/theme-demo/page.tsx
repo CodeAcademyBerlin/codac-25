@@ -26,19 +26,15 @@ import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
-    Book,
     Calendar,
     Trophy,
     Users,
     MessageSquare,
-    Clock,
     BookOpen,
-    Target,
     TrendingUp,
     Palette,
     Info,
     CheckCircle,
-    AlertTriangle,
     XCircle
 } from "lucide-react"
 

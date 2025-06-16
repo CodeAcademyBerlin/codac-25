@@ -1,5 +1,5 @@
 import { createPlateEditor } from 'platejs/react';
-import { MarkdownPlugin, remarkMention, remarkMdx } from '@platejs/markdown';
+import { MarkdownPlugin } from '@platejs/markdown';
 // import remarkGfm from 'remark-gfm';
 // import remarkMath from 'remark-math';
 

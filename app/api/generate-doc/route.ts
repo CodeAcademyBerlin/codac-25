@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createSlateEditor } from 'platejs';
 import { AutoformatPlugin } from '@platejs/autoformat';
 import { BaseTextAlignPlugin } from '@platejs/basic-styles';
@@ -30,7 +30,7 @@ const initialValue = [
  * GET /api/generate-doc
  * Returns a markdown string and the raw Slate value of a server-generated document.
  */
-export async function GET(_req: NextRequest) {
+export async function GET() {
     // Create the editor instance inside the request scope to avoid cross-request state sharing.
     const editor = createSlateEditor({
         plugins: [

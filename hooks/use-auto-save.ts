@@ -40,8 +40,8 @@ export function useAutoSave({
     const debouncedContent = useDebounce(content, debounceMs);
 
     // Refs for managing intervals and preventing stale closures
-    const saveTimeoutRef = useRef<NodeJS.Timeout>();
-    const autoSaveIntervalRef = useRef<NodeJS.Timeout>();
+    const saveTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
+    const autoSaveIntervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
     const lastSavedContentRef = useRef<Value | null>(null);
 
     // Save to local storage when content changes (debounced)

@@ -27,7 +27,7 @@
 
 import * as React from 'react';
 import { useTheme } from 'next-themes';
-import { Monitor, Moon, Sun, Palette, Check } from 'lucide-react';
+import { Monitor, Moon, Sun, Check } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -45,6 +45,7 @@ import {
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { colorSchemes, getStoredColorScheme, applyColorScheme, type ColorScheme } from '@/lib/theme-utils';
+import { useMounted } from '@/hooks/use-mounted';
 
 const themes = [
     {
@@ -72,10 +73,9 @@ interface ThemePickerProps {
 export function ThemePicker({ variant = 'dropdown', align = 'end' }: ThemePickerProps) {
     const { theme, setTheme } = useTheme();
     const [colorScheme, setColorScheme] = React.useState<ColorScheme>('default');
-    const [mounted, setMounted] = React.useState(false);
+    const mounted = useMounted();
 
     React.useEffect(() => {
-        setMounted(true);
         const savedScheme = getStoredColorScheme();
         setColorScheme(savedScheme);
         applyColorScheme(savedScheme);
@@ -90,16 +90,8 @@ export function ThemePicker({ variant = 'dropdown', align = 'end' }: ThemePicker
         applyColorScheme(scheme);
     };
 
-    if (!mounted) {
-        return (
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Sun className="h-4 w-4" />
-                <span className="sr-only">Toggle theme</span>
-            </Button>
-        );
-    }
-
-    const ThemeIcon = theme === 'dark' ? Moon : theme === 'light' ? Sun : Monitor;
+    // Always render the same structure to avoid hydration mismatch
+    const ThemeIcon = !mounted ? Sun : (theme === 'dark' ? Moon : theme === 'light' ? Sun : Monitor);
 
     if (variant === 'popover') {
         return (

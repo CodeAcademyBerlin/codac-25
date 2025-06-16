@@ -1,50 +1,60 @@
-import { SimpleAutoSaveEditor } from "@/components/editor/simple-auto-save-editor";
+
 import { getDoc } from "@/data/docs";
-import { notFound } from "next/navigation";
-import { type Value } from 'platejs';
+import { Value } from "platejs";
+import { createPlateEditor, ParagraphPlugin } from "platejs/react";
+import { CodeLeaf } from "@/components/ui/code-node";
+import { ParagraphElement } from "@/components/ui/paragraph-node";
+import { CodePlugin } from "@platejs/basic-nodes/react";
+import { PlateEditor } from "@/components/editor/plate-editor";
+import { PlateRefEditor } from "@/components/editor/plate-provider";
 
 
-interface DocPageProps {
-  params: { id: string };
-}
 
 
 
-export default async function DocPage({ params }: DocPageProps) {
-  const { id } = params;
-
-  console.log('DocPage - Document ID:', { id, type: typeof id, length: id?.length });
-
+export default async function DocPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const doc = await getDoc(id)
 
-  if (!doc) {
-    notFound();
-  }
-
-  // const { markdown, plainText, value } = await getServerEditor()
-  // console.log(markdown, plainText, value)
-
-  console.log('DocPage - Rendering with:', {
-    documentId: id,
-    hasDoc: !!doc,
-    docId: doc?.id
-  });
-
   return (
-    <div className="h-full flex flex-col">
-      <div className="border-b p-4">
-        <h1 className="text-xl font-semibold">{doc.title}</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Last updated {new Date(doc.updatedAt).toLocaleDateString()}
-        </p>
-      </div>
-      <div className="">
-        <SimpleAutoSaveEditor
-          documentId={id}
-          initialValue={doc.content as Value}
-        />
-      </div>
-    </div>
+    <>
+      <PlateRefEditor docId={id} initialValue={doc?.content as Value} />
+    </>
   );
+
+
+  // const editor = usePlateEditor({
+  //   plugins: EditorKit
+  // });
+
+  // return (
+
+  //   <Plate editor={editor}>
+  //     {/* {children} */}
+  //     <EditorContainer>
+  //       <Editor variant="none" />
+  //     </EditorContainer>
+  //   </Plate>
+
+  // )
+  {/*  return (
+    <>
+      <div className="flex-shrink-0 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="px-4 py-3 sm:px-6">
+          <h1 className="text-xl font-semibold leading-tight tracking-tight">
+            {doc.title}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Last updated {new Date(doc.updatedAt).toLocaleDateString()}
+          </p>
+        </div>
+      </div> 
+      <SimpleAutoSaveEditor
+        documentId={id}
+        initialValue={doc.content as Value}
+      /> 
+      <PlateEditor />
+    </>
+  );*/}
 }
 

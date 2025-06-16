@@ -1,6 +1,6 @@
 "use client"
 
-import { MoreHorizontal, type LucideIcon } from "lucide-react"
+import { type LucideIcon } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -40,7 +40,8 @@ export function NavMain({
             <SidebarMenuItem>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-                  {item.title} <MoreHorizontal className="ml-auto" />
+                  {item.icon && <item.icon />}
+                  {item.title}
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               {item.items?.length ? (
@@ -49,8 +50,9 @@ export function NavMain({
                   align={isMobile ? "end" : "start"}
                   className="min-w-56 rounded-lg"
                 >
-                  {item.items.map((item) => (
+                  {item.items.map((item: { title: string; url: string }) => (
                     <DropdownMenuItem asChild key={item.title}>
+
                       <a href={item.url}>{item.title}</a>
                     </DropdownMenuItem>
                   ))}

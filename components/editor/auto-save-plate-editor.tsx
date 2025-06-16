@@ -167,7 +167,7 @@ export function AutoSavePlateEditor({
     }, [checkForLocalDraft]);
 
     // Handle editor value changes
-    const handleEditorChange = React.useCallback((value: Value) => {
+    const handleEditorChange = React.useCallback(({ value }: { value: Value }) => {
         setEditorValue(value);
         updateContent(value);
     }, [updateContent]);

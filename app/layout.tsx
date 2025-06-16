@@ -4,7 +4,6 @@ import "./globals.css";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Providers } from "@/components/providers";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "@/components/ui/sonner"
 
 const geistSans = Geist({
@@ -48,19 +47,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased w-screen h-screen overflow-hidden`}
+        suppressHydrationWarning
+        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
-        <NuqsAdapter>
-          <Providers>
-            <SidebarProvider defaultOpen={true}>
-              <AppSidebar />
-              <SidebarInset className="flex flex-col">
-                {children}
-              </SidebarInset>
-            </SidebarProvider>
-          </Providers>
-          <Toaster />
-        </NuqsAdapter>
+        <Providers>
+          <AppSidebar />
+          <main className="w-full h-full">
+            {children}
+          </main>
+        </Providers>
+        <Toaster />
       </body>
     </html>
   );

@@ -4,6 +4,7 @@ import { BlockSelectionPlugin } from '@platejs/selection/react';
 import { getPluginTypes, KEYS } from 'platejs';
 
 import { BlockSelection } from '@/components/ui/block-selection';
+import { PlateElementProps } from 'platejs/react';
 
 export const BlockSelectionKit = [
   BlockSelectionPlugin.configure(({ editor }) => ({
@@ -23,7 +24,7 @@ export const BlockSelectionKit = [
         if (!props.attributes.className?.includes('slate-selectable'))
           return null;
 
-        return <BlockSelection {...(props as any)} />;
+        return <BlockSelection {...(props as PlateElementProps)} />;
       },
     },
   })),

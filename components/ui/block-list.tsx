@@ -34,7 +34,9 @@ const config: Record<
 export const BlockList: RenderNodeWrapper = (props) => {
   if (!props.element.listStyleType) return;
 
-  return (props) => <List {...props} />;
+  const BlockListWrapper = (props: PlateElementProps) => <List {...props} />;
+  BlockListWrapper.displayName = 'BlockListWrapper';
+  return BlockListWrapper;
 };
 
 function List(props: PlateElementProps) {
@@ -78,7 +80,7 @@ function TodoLi(props: PlateElementProps) {
       className={cn(
         'list-none',
         (props.element.checked as boolean) &&
-          'text-muted-foreground line-through'
+        'text-muted-foreground line-through'
       )}
     >
       {props.children}
