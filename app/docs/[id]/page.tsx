@@ -31,10 +31,20 @@ export default async function DocPage({ params }: DocPageProps) {
   });
 
   return (
-    <SimpleAutoSaveEditor
-      documentId={id}
-      initialValue={doc.content as Value}
-    />
+    <div className="h-full flex flex-col">
+      <div className="border-b p-4">
+        <h1 className="text-xl font-semibold">{doc.title}</h1>
+        <p className="text-sm text-muted-foreground mt-1">
+          Last updated {new Date(doc.updatedAt).toLocaleDateString()}
+        </p>
+      </div>
+      <div className="">
+        <SimpleAutoSaveEditor
+          documentId={id}
+          initialValue={doc.content as Value}
+        />
+      </div>
+    </div>
   );
 }
 

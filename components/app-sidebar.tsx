@@ -18,6 +18,7 @@ import {
   GraduationCap,
   Brain,
   FileText,
+  Pyramid,
 } from 'lucide-react';
 
 import { NavMain } from './nav-main';
@@ -43,18 +44,7 @@ const data = {
     cohort: '2024-Web-Dev-Bootcamp',
   },
   navMain: [
-    {
-      title: 'Documents',
-      url: '/docs',
-      icon: FileText,
-      isActive: true,
-      items: [
-        {
-          title: 'Documents',
-          url: '/docs',
-        },
-      ],
-    },
+
     {
       title: 'Dashboard',
       url: '/dashboard',
@@ -166,6 +156,11 @@ const data = {
   ],
   navSecondary: [
     {
+      title: 'Documents',
+      url: '/docs',
+      icon: FileText,
+    },
+    {
       title: 'Messages',
       url: '/messages',
       icon: MessageSquare,
@@ -212,13 +207,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <a href="/dashboard">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 text-white">
-                  <Brain className="!size-5" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-sm bg-gradient-to-br from-gray-600 to-purple-600 text-white">
+                  <Pyramid className="!size-5" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold text-lg">codac community</span>
+                  <span className="truncate font-semibold  text-2xl hidden md:block">codac </span>
                   {/* <span className="truncate text-xs text-muted-foreground">
-                    Code Academy Berlin
+                    community
                   </span> */}
                 </div>
               </a>

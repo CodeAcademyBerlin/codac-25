@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Providers } from "@/components/providers";
-import { SidebarInset } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "@/components/ui/sonner"
 
@@ -48,11 +48,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased w-screen h-screen overflow-hidden`}
       >
         <NuqsAdapter>
           <Providers>
-            {children}
+            <SidebarProvider defaultOpen={true}>
+              <AppSidebar />
+              <SidebarInset className="flex flex-col">
+                {children}
+              </SidebarInset>
+            </SidebarProvider>
           </Providers>
           <Toaster />
         </NuqsAdapter>

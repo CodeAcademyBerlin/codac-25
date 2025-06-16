@@ -142,6 +142,8 @@ After seeding, you can log in with these sample accounts:
 
 ```
 codac/
+__
+|
 ├── app/                    # Next.js App Router pages
 │   ├── dashboard/         # Dashboard and overview pages
 │   ├── learning/          # Course and lesson pages

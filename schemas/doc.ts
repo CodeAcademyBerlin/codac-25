@@ -2,12 +2,13 @@ import { z } from 'zod';
 
 export const DocSchema = z.object({
     title: z.string().min(1, { message: 'Title is required' }),
-    content: z.any().optional(),
     parentId: z.string().optional(),
-    isPublished: z.boolean().optional(),
+    content: z.any().optional(),
+    isDeleted: z.boolean().optional(),
+    isPublic: z.boolean().optional(),
     isArchived: z.boolean().optional(),
-    coverImage: z.string().url().optional(),
-    icon: z.string().optional(),
+    createdAt: z.date().optional(),
+    updatedAt: z.date().optional(),
 });
 
 export const UpdateDocSchema = DocSchema.partial().extend({
@@ -17,4 +18,6 @@ export const UpdateDocSchema = DocSchema.partial().extend({
 export const CreateDocSchema = DocSchema.pick({
     title: true,
     parentId: true,
+    content: true,
+
 }); 

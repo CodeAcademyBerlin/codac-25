@@ -17,6 +17,13 @@ export async function createDoc(data: CreateDocInput) {
             data: {
                 title: validatedData.title,
                 parentId: validatedData.parentId,
+                content: 'Hello World',
+                authorId: '1',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                isDeleted: false,
+                isPublic: false,
+                isArchived: false,
             },
         });
         // Ensure any server components that rely on the list of documents are revalidated
