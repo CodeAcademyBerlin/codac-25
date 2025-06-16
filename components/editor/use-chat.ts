@@ -1,10 +1,10 @@
 'use client';
 
-import * as React from 'react';
 
 import { useChat as useBaseChat } from '@ai-sdk/react';
 import { faker } from '@faker-js/faker';
 import { usePluginOption } from 'platejs/react';
+import * as React from 'react';
 
 import { aiChatPlugin } from '@/components/editor/plugins/ai-kit';
 

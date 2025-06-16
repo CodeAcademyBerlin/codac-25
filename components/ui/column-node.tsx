@@ -1,9 +1,6 @@
 'use client';
 
-import * as React from 'react';
 
-import type { TColumnElement } from 'platejs';
-import type { PlateElementProps } from 'platejs/react';
 
 import { useDraggable, useDropLine } from '@platejs/dnd';
 import { setColumns } from '@platejs/layout';
@@ -13,7 +10,9 @@ import { BlockSelectionPlugin } from '@platejs/selection/react';
 import { useComposedRef } from '@udecode/cn';
 import { type LucideProps, Trash2Icon } from 'lucide-react';
 import { GripHorizontal } from 'lucide-react';
+import type { TColumnElement } from 'platejs';
 import { PathApi } from 'platejs';
+import type { PlateElementProps } from 'platejs/react';
 import {
   PlateElement,
   useEditorRef,
@@ -23,6 +22,7 @@ import {
   useRemoveNodeButton,
   withHOC,
 } from 'platejs/react';
+import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
 import {

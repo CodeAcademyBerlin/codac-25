@@ -1,8 +1,9 @@
-import { getDocs } from '@/data/docs';
-import { DocSidebarContent } from './doc-sidebar-content';
+import { ThemePicker } from "@/components/theme-picker";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { ThemePicker } from "@/components/theme-picker";
+import { getDocs } from '@/data/docs';
+
+import { DocSidebarContent } from './doc-sidebar-content';
 import { DocsBreadcrumb } from './docs-breadcrumb';
 
 export default async function DocLayout({

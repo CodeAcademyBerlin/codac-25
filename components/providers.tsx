@@ -1,11 +1,11 @@
 'use client';
 
 import { ReactNode } from 'react';
-import { ThemeProvider } from 'next-themes';
+
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { ThemeProvider } from 'next-themes';
+
 import { SidebarProvider } from './ui/sidebar';
-import { AppSidebar } from './app-sidebar';
-import { SidebarInset } from './ui/sidebar';
 
 interface ProvidersProps {
   children: ReactNode;

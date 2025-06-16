@@ -1,9 +1,7 @@
 'use client';
 
-import * as React from 'react';
 
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
-
 import { DropdownMenuItemIndicator } from '@radix-ui/react-dropdown-menu';
 import {
   CheckIcon,
@@ -21,6 +19,7 @@ import {
 } from 'lucide-react';
 import { KEYS } from 'platejs';
 import { useEditorRef, useSelectionFragmentProp } from 'platejs/react';
+import * as React from 'react';
 
 import {
   DropdownMenu,

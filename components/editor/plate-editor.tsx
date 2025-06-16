@@ -1,10 +1,11 @@
 'use client';
 
-import * as React from 'react';
 import { type Value } from 'platejs';
-
 import { createPlateEditor, Plate, usePlateEditor } from 'platejs/react';
+import * as React from 'react';
+
 import { Editor, EditorContainer } from '@/components/ui/editor';
+
 import { EditorKit } from './editor-kit';
 
 

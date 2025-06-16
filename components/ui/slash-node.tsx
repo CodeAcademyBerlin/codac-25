@@ -1,8 +1,6 @@
 'use client';
 
-import * as React from 'react';
 
-import type { PlateEditor, PlateElementProps } from 'platejs/react';
 
 import { AIChatPlugin } from '@platejs/ai/react';
 import {
@@ -25,7 +23,9 @@ import {
   TableOfContentsIcon,
 } from 'lucide-react';
 import { type TComboboxInputElement, KEYS } from 'platejs';
+import type { PlateEditor, PlateElementProps } from 'platejs/react';
 import { PlateElement } from 'platejs/react';
+import * as React from 'react';
 
 import {
   insertBlock,

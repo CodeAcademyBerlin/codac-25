@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
 import { InputJsonValue } from '@prisma/client/runtime/library';
+import { NextRequest, NextResponse } from 'next/server';
+
+import { prisma } from '@/lib/db';
 
 const DEMO_USER_ID = 'demo-user';
 

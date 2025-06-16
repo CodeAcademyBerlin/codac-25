@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { prisma } from '@/lib/db';
 
 const DEMO_USER_ID = 'demo-user';

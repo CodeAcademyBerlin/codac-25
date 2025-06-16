@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+import { Button } from '@/components/ui/button'
+
 export default function NotFound() {
     return (
         <div className="w-full h-full flex flex-col items-center justify-center">
@@ -11,13 +13,11 @@ export default function NotFound() {
                     <span className="text-muted-foreground">at</span>
                     <code className="bg-muted px-2 py-1 rounded">404.notFound()</code>
                 </div>
-                <Link
-                    href="/"
-                    className="mt-4 inline-flex items-center gap-2 text-primary hover:underline"
-                >
-                    <span>Return to Homepage</span>
-                    <span className="text-muted-foreground">// TODO: Fix this bug</span>
-                </Link>
+                <Button asChild className="mt-4">
+                    <Link href="/">
+                        Return to Homepage
+                    </Link>
+                </Button>
             </div>
         </div>
     )

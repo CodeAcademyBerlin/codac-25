@@ -1,12 +1,12 @@
 "use client"
 import { Value } from "platejs";
 import { PlateController, useEditorRef, useEditorSelector, useEditorState } from "platejs/react";
+
+import { logger } from "@/lib/logger";
+
 import { PlateEditor } from "./plate-editor";
 
-
-export default function PlateProvider({ children }: { children: React.ReactNode }) {
-
-
+export function PlateProvider({ children }: { children: React.ReactNode }) {
     return (
         <PlateController>
             {children}
@@ -14,7 +14,7 @@ export default function PlateProvider({ children }: { children: React.ReactNode 
     )
 }
 
-export const PlateRefEditor = ({ docId, initialValue }: { docId: string, initialValue: Value }) => {
+export const PlateRefEditor = ({ docId: _docId, initialValue }: { docId: string, initialValue: Value }) => {
     return (
         <PlateController>
             <PlateEditor initialValue={initialValue} >
@@ -24,14 +24,21 @@ export const PlateRefEditor = ({ docId, initialValue }: { docId: string, initial
     )
 }
 
-const PlateStateUpdater = (props: any) => {
-    console.log(props)
-    const editor = useEditorRef();
+const PlateStateUpdater = () => {
+    const _editor = useEditorRef();
     const hasSelection = useEditorSelector((editor) => !!editor?.selection, []);
     const editorState = useEditorState();
-    console.log(editorState)
-    // console.log(editor)
-    // console.log(hasSelection)
+
+    // Log editor state changes in development
+    logger.debug('Editor state updated', {
+        action: 'state_update',
+        resource: 'plate_editor',
+        metadata: {
+            hasSelection,
+            editorStateKeys: Object.keys(editorState || {})
+        }
+    });
+
     return (
         <div>
             <h1>Plate State Updater</h1>

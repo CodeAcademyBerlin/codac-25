@@ -1,4 +1,5 @@
 import { getDocs } from '@/data/docs';
+
 import { DocsGrid } from './docs-grid';
 
 export default async function DocsPage({

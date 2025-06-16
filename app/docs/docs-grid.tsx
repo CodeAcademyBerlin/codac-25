@@ -1,8 +1,9 @@
-import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { FileText, BookOpen, ClipboardList, FolderOpen } from "lucide-react";
 import { formatDistanceToNow } from 'date-fns';
+import { FileText, BookOpen, ClipboardList, FolderOpen } from "lucide-react";
+import Link from 'next/link';
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const DOCUMENT_TYPE_CONFIG = {
     GENERAL: {

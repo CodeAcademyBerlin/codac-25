@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 
 import {
   AIChatPlugin,
@@ -30,7 +29,9 @@ import {
 import { type NodeEntry, type SlateEditor, isHotkey, NodeApi } from 'platejs';
 import { useEditorPlugin, useHotkeys, usePluginOption } from 'platejs/react';
 import { type PlateEditor, useEditorRef } from 'platejs/react';
+import * as React from 'react';
 
+import { useChat } from '@/components/editor/use-chat';
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -44,7 +45,6 @@ import {
   PopoverContent,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { useChat } from '@/components/editor/use-chat';
 
 import { AIChatEditor } from './ai-chat-editor';
 

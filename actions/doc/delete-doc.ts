@@ -9,6 +9,8 @@ import {
     type DeleteDocInput,
     type ServerActionResult
 } from '@/lib/validation/doc';
+import { checkDocumentPermission } from '@/lib/permissions';
+import { logger } from '@/lib/logger';
 
 // Define return type for delete operation
 type DeleteDocResult = ServerActionResult<{ id: string; title: string }>;
@@ -57,10 +59,20 @@ export async function deleteDoc(data: DeleteDocInput): Promise<DeleteDocResult> 
             };
         }
 
-        // TODO: Add proper authorization check
-        // if (existingDoc.authorId !== currentUserId) {
-        //   return { success: false, error: 'Unauthorized' };
-        // }
+        // Check if user has permission to delete this document
+        // Note: User ID should be obtained from authentication context
+        // For now, we'll use the document's authorId for demonstration
+        const currentUserId = existingDoc.authorId; // This should be replaced with actual auth context
+        const isAuthorized = await checkDocumentPermission(currentUserId, id, 'delete');
+        if (!isAuthorized) {
+            logger.logPermissionDenied('delete', 'document', currentUserId, {
+                resourceId: id
+            });
+            return {
+                success: false,
+                error: 'You do not have permission to delete this document'
+            };
+        }
 
         // Soft delete by archiving (recommended approach)
         await prisma.document.update({
@@ -91,7 +103,11 @@ export async function deleteDoc(data: DeleteDocInput): Promise<DeleteDocResult> 
         };
 
     } catch (error) {
-        console.error('Error deleting document:', error);
+        logger.error('Error deleting document', error instanceof Error ? error : new Error(String(error)), {
+            action: 'delete',
+            resource: 'document',
+            resourceId: data.id
+        });
 
         // Handle Zod validation errors
         if (error instanceof Error && error.name === 'ZodError') {

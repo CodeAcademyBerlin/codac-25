@@ -1,13 +1,13 @@
-import * as React from 'react';
 
+
+import { isOrderedList } from '@platejs/list';
+import { CheckIcon } from 'lucide-react';
 import type {
   RenderStaticNodeWrapper,
   SlateRenderElementProps,
   TListElement,
 } from 'platejs';
-
-import { isOrderedList } from '@platejs/list';
-import { CheckIcon } from 'lucide-react';
+import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 

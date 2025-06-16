@@ -1,15 +1,17 @@
 'use client';
 
-import * as React from 'react';
+import { Save } from 'lucide-react';
 import { type Value } from 'platejs';
 import { Plate, usePlateEditor } from 'platejs/react';
+import * as React from 'react';
 import { toast } from 'sonner';
 
-import { Editor, EditorContainer } from '@/components/ui/editor';
-import { EditorKit } from './editor-kit';
 import { updateDoc } from '@/actions/doc/update-doc';
 import { Button } from '@/components/ui/button';
-import { Save } from 'lucide-react';
+import { Editor, EditorContainer } from '@/components/ui/editor';
+
+import { EditorKit } from './editor-kit';
+
 
 interface SimpleAutoSaveEditorProps {
     documentId: string;

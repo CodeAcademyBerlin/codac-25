@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import {
   Book,
   BarChart3,
@@ -16,11 +15,8 @@ import {
   FileText,
   Pyramid,
 } from 'lucide-react';
+import * as React from 'react';
 
-import { NavMain } from './nav-main';
-import { NavSecondary } from './nav-secondary';
-import { NavUser } from './nav-user';
-import { ThemePicker } from './theme-picker';
 import {
   Sidebar,
   SidebarContent,
@@ -30,6 +26,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+
+import { NavMain } from './nav-main';
+import { NavSecondary } from './nav-secondary';
+import { NavUser } from './nav-user';
+import { ThemePicker } from './theme-picker';
 
 const data = {
   user: {

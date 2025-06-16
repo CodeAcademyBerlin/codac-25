@@ -1,9 +1,7 @@
 'use client';
 
-import * as React from 'react';
 
 import type { TResolvedSuggestion } from '@platejs/suggestion';
-
 import {
   acceptSuggestion,
   getSuggestionKey,
@@ -26,22 +24,22 @@ import {
   type TInlineSuggestionData,
 } from 'platejs';
 import { useEditorPlugin, usePluginOption } from 'platejs/react';
+import * as React from 'react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import {
   type TDiscussion,
   discussionPlugin,
 } from '@/components/editor/plugins/discussion-kit';
 import { suggestionPlugin } from '@/components/editor/plugins/suggestion-kit';
-
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   type TComment,
   Comment,
   CommentCreateForm,
   formatCommentDate,
 } from '@/components/ui/comment';
+import { cn } from '@/lib/utils';
 
 export interface ResolvedSuggestion extends TResolvedSuggestion {
   comments: TComment[];

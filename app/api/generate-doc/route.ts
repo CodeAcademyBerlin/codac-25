@@ -1,7 +1,4 @@
-import { NextResponse } from 'next/server';
-import { createSlateEditor } from 'platejs';
 import { AutoformatPlugin } from '@platejs/autoformat';
-import { BaseTextAlignPlugin } from '@platejs/basic-styles';
 import {
     BaseBoldPlugin,
     BaseCodePlugin,
@@ -11,7 +8,10 @@ import {
     BaseH2Plugin,
     BaseH3Plugin,
 } from '@platejs/basic-nodes';
+import { BaseTextAlignPlugin } from '@platejs/basic-styles';
 import { MarkdownPlugin, remarkMdx } from '@platejs/markdown';
+import { NextResponse } from 'next/server';
+import { createSlateEditor } from 'platejs';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 

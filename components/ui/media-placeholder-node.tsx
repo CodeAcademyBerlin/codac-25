@@ -1,23 +1,22 @@
 'use client';
 
-import * as React from 'react';
-
-import type { TPlaceholderElement } from 'platejs';
-import type { PlateElementProps } from 'platejs/react';
-
 import {
   PlaceholderPlugin,
   PlaceholderProvider,
   updateUploadHistory,
 } from '@platejs/media/react';
 import { AudioLines, FileUp, Film, ImageIcon, Loader2Icon } from 'lucide-react';
+import Image from 'next/image';
+import type { TPlaceholderElement } from 'platejs';
 import { KEYS } from 'platejs';
+import type { PlateElementProps } from 'platejs/react';
 import { PlateElement, useEditorPlugin, withHOC } from 'platejs/react';
+import * as React from 'react';
 import { useFilePicker } from 'use-file-picker';
 
-import { cn } from '@/lib/utils';
 import { useUploadFile } from '@/hooks/use-upload-file';
-import Image from 'next/image';
+import { cn } from '@/lib/utils';
+
 
 const CONTENT: Record<
   string,

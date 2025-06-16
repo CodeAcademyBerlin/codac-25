@@ -1,17 +1,18 @@
 'use client';
 
-import * as React from 'react';
+import { AlertCircle, CheckCircle2, Cloud, Save, CloudOff } from 'lucide-react';
 import { type Value } from 'platejs';
 import { Plate, usePlateEditor } from 'platejs/react';
+import * as React from 'react';
 import { toast } from 'sonner';
 
-import { Editor, EditorContainer } from '@/components/ui/editor';
-import { EditorKit } from './editor-kit';
-import { useAutoSave, type AutoSaveStatus } from '@/hooks/use-auto-save';
 import { updateDoc } from '@/actions/doc/update-doc';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, CheckCircle2, Cloud, Save, CloudOff } from 'lucide-react';
+import { Editor, EditorContainer } from '@/components/ui/editor';
+import { useAutoSave, type AutoSaveStatus } from '@/hooks/use-auto-save';
 import { cn } from '@/lib/utils';
+
+import { EditorKit } from './editor-kit';
 
 interface AutoSavePlateEditorProps {
     documentId: string;

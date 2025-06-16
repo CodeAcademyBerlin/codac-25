@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 
 import { useDraggable, useDropLine } from '@platejs/dnd';
 import { BlockSelectionPlugin } from '@platejs/selection/react';
@@ -16,6 +15,7 @@ import {
   usePluginOption,
 } from 'platejs/react';
 import { useSelected } from 'platejs/react';
+import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
 import {

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { prisma } from '@/lib/db';
 
 // For now, we'll use a hardcoded user ID. In a real app, you'd get this from authentication

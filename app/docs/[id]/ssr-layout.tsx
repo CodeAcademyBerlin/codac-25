@@ -1,9 +1,10 @@
-import { getDoc } from "@/data/docs"
-import { PlateEditor } from "@/components/editor/plate-editor"
 import { Value } from "platejs"
-import { EditorKit } from "@/components/editor/editor-kit"
-import { EditorContainer, Editor } from "@/components/ui/editor"
 import { usePlateEditor, Plate } from "platejs/react"
+
+import { EditorKit } from "@/components/editor/editor-kit"
+import { PlateEditor } from "@/components/editor/plate-editor"
+import { EditorContainer, Editor } from "@/components/ui/editor"
+import { getDoc } from "@/data/docs"
 
 export default async function DocEditorLayout({
     children, params

@@ -1,8 +1,6 @@
 'use client';
 
-import * as React from 'react';
 
-import type { WithRequiredKey } from 'platejs';
 
 import {
   FloatingMedia as FloatingMediaPrimitive,
@@ -12,6 +10,7 @@ import {
 } from '@platejs/media/react';
 import { cva } from 'class-variance-authority';
 import { Link, Trash2Icon } from 'lucide-react';
+import type { WithRequiredKey } from 'platejs';
 import {
   useEditorRef,
   useEditorSelector,
@@ -20,6 +19,7 @@ import {
   useRemoveNodeButton,
   useSelected,
 } from 'platejs/react';
+import * as React from 'react';
 
 import { Button, buttonVariants } from '@/components/ui/button';
 import {

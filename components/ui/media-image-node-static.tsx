@@ -1,16 +1,17 @@
-import * as React from 'react';
-
+import Image from 'next/image';
 import type {
   SlateElementProps,
   TCaptionProps,
   TImageElement,
   TResizableProps,
 } from 'platejs';
-
 import { NodeApi, SlateElement } from 'platejs';
+import * as React from 'react';
+
+
 
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
+
 
 export function ImageElementStatic(
   props: SlateElementProps<TImageElement & TCaptionProps & TResizableProps>

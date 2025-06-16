@@ -1,14 +1,15 @@
 'use client';
 
-import * as React from 'react';
-
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 
 import { MarkdownPlugin } from '@platejs/markdown';
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 import { ArrowDownToLineIcon } from 'lucide-react';
 import { createSlateEditor, serializeHtml } from 'platejs';
 import { useEditorRef } from 'platejs/react';
+import * as React from 'react';
 
+
+import { EditorKit } from '@/components/editor/editor-kit';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +20,6 @@ import {
 
 import { EditorStatic } from './editor-static';
 import { ToolbarButton } from './toolbar';
-import { EditorKit } from '@/components/editor/editor-kit';
 
 const siteUrl = 'https://platejs.org';
 

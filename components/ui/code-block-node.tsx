@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 
 import { formatCodeBlock, isLangSupported } from '@platejs/code-block';
 import { BracesIcon, Check, CheckIcon, CopyIcon } from 'lucide-react';
@@ -12,6 +11,7 @@ import {
   PlateLeaf,
 } from 'platejs/react';
 import { useEditorRef, useElement, useReadOnly } from 'platejs/react';
+import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
 import {

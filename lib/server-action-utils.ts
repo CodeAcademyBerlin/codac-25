@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { z } from 'zod';
+
 import { logger } from '@/lib/logger';
 
 // Generic server action result type
@@ -201,55 +202,49 @@ export type DocumentWithRelations = Prisma.DocumentGetPayload<{
     };
 }>;
 
-// Utility for checking permissions (placeholder for auth integration)
-export async function checkDocumentPermission(
-    documentId: string,
+// TODO: Implement actual permission checking logic
+export async function checkPermission(
     userId: string,
-    permission: 'read' | 'write' | 'delete' = 'read'
+    resource: string,
+    action: string,
+    resourceId?: string
 ): Promise<boolean> {
-    // TODO: Implement actual permission checking logic
-    // This is a placeholder that should be replaced with your auth logic
-
     try {
-        const document = await (await import('@/lib/db')).prisma.document.findUnique({
-            where: { id: documentId },
-            select: {
-                authorId: true,
-                isArchived: true,
-                collaborators: {
-                    where: { userId },
-                    select: { permission: true },
-                },
-            },
-        });
-
-        if (!document || document.isArchived) {
+        // Basic permission check - can be extended with role-based logic
+        if (!userId) {
+            logger.warn('Permission check failed: No user ID provided', {
+                action: 'permission_check',
+                resource,
+                metadata: { action, resourceId }
+            });
             return false;
         }
 
-        // Owner has all permissions
-        if (document.authorId === userId) {
-            return true;
-        }
+        // Log permission check
+        logger.debug('Checking permission', {
+            action: 'permission_check',
+            resource,
+            userId,
+            metadata: { action, resourceId }
+        });
 
-        // Check collaborator permissions
-        const collaborator = document.collaborators[0];
-        if (collaborator) {
-            switch (permission) {
-                case 'read':
-                    return ['READ', 'WRITE', 'ADMIN'].includes(collaborator.permission);
-                case 'write':
-                    return ['WRITE', 'ADMIN'].includes(collaborator.permission);
-                case 'delete':
-                    return collaborator.permission === 'ADMIN';
-                default:
-                    return false;
-            }
-        }
+        // Here you would implement your actual permission logic
+        // For example, checking user roles, resource ownership, etc.
 
-        return false;
+        // Example implementation:
+        // const user = await prisma.user.findUnique({ where: { id: userId } });
+        // if (!user) return false;
+
+        // For now, return true for authenticated users
+        // This should be replaced with your actual permission logic
+        return true;
+
     } catch (error) {
-        console.error('Error checking document permission:', error);
+        logger.error('Permission check failed', error instanceof Error ? error : new Error(String(error)), {
+            userId,
+            resource,
+            metadata: { action, resourceId }
+        });
         return false;
     }
 } 

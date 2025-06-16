@@ -127,7 +127,7 @@ export function MediaPreviewDialog() {
                 <Plus className="size-4" />
               </button>
             </div>
-            {/* TODO: downLoad the image */}
+            {/* Download functionality - implement when needed */}
             <button className={cn(buttonVariants())} type="button">
               <Download className="size-4" />
             </button>

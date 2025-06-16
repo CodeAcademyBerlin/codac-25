@@ -1,12 +1,13 @@
 
-import { getDoc } from "@/data/docs";
+import { CodePlugin } from "@platejs/basic-nodes/react";
 import { Value } from "platejs";
 import { createPlateEditor, ParagraphPlugin } from "platejs/react";
-import { CodeLeaf } from "@/components/ui/code-node";
-import { ParagraphElement } from "@/components/ui/paragraph-node";
-import { CodePlugin } from "@platejs/basic-nodes/react";
+
 import { PlateEditor } from "@/components/editor/plate-editor";
 import { PlateRefEditor } from "@/components/editor/plate-provider";
+import { CodeLeaf } from "@/components/ui/code-node";
+import { ParagraphElement } from "@/components/ui/paragraph-node";
+import { getDoc } from "@/data/docs";
 
 
 

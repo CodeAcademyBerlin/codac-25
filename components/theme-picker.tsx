@@ -25,9 +25,9 @@
 
 'use client';
 
-import * as React from 'react';
-import { useTheme } from 'next-themes';
 import { Monitor, Moon, Sun, Check } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -43,9 +43,9 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
-import { colorSchemes, getStoredColorScheme, applyColorScheme, type ColorScheme } from '@/lib/theme-utils';
 import { useMounted } from '@/hooks/use-mounted';
+import { colorSchemes, getStoredColorScheme, applyColorScheme, type ColorScheme } from '@/lib/theme-utils';
+import { cn } from '@/lib/utils';
 
 const themes = [
     {

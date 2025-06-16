@@ -1,14 +1,14 @@
 'use client';
 
-import * as React from 'react';
 
-import type { TElement } from 'platejs';
 
 import { toUnitLess } from '@platejs/basic-styles';
 import { FontSizePlugin } from '@platejs/basic-styles/react';
 import { Minus, Plus } from 'lucide-react';
+import type { TElement } from 'platejs';
 import { KEYS } from 'platejs';
 import { useEditorPlugin, useEditorSelector } from 'platejs/react';
+import * as React from 'react';
 
 import {
   Popover,

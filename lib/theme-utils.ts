@@ -1,3 +1,5 @@
+import { logger } from './logger';
+
 export const colorSchemes = [
     {
         name: 'default',
@@ -65,7 +67,11 @@ export function setStoredColorScheme(scheme: ColorScheme): void {
     try {
         localStorage.setItem(STORAGE_KEY, scheme);
     } catch (error) {
-        console.warn('Failed to store color scheme:', error);
+        logger.warn('Failed to store color scheme', {
+            action: 'set_color_scheme',
+            resource: 'theme',
+            metadata: { scheme, error: error instanceof Error ? error.message : String(error) }
+        });
     }
 }
 
