@@ -1,6 +1,6 @@
 import { getDocs } from '@/data/docs';
 
-import { DocsGrid } from './docs-grid';
+import { DocsGrid } from './components/docs-grid';
 
 export default async function DocsPage({
     searchParams,

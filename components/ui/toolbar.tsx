@@ -270,11 +270,11 @@ export function ToolbarGroup({
     <div
       className={cn(
         'group/toolbar-group',
-        'relative hidden has-[button]:flex',
+        'relative hidden has-[button]:flex items-center',
         className
       )}
     >
-      <div className="flex items-center">{children}</div>
+      <div className="flex items-center flex-shrink-0">{children}</div>
 
       <div className="mx-1.5 py-0.5 group-last/toolbar-group:hidden!">
         <Separator orientation="vertical" />

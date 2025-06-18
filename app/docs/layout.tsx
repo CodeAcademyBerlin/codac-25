@@ -1,7 +1,8 @@
+import { ThemePicker } from '@/components/theme-picker';
 import { getDocs } from '@/data/docs';
 
-import { DocsNavbar } from './components/navbar';
-import { DocSidebarContent } from './doc-sidebar-content';
+import { DocSidebarContent } from './components/doc-sidebar-content';
+import { DocsNavbar } from './components/docs-navbar';
 
 export default async function DocLayout({
   children,
@@ -14,7 +15,10 @@ export default async function DocLayout({
   return (
     <>
     <div className="flex items-center gap-4" >
-          <DocsNavbar docs={docs} />
+        <DocsNavbar docs={docs} />
+        <div className="ml-auto pr-4">
+        <ThemePicker variant="dropdown" align="end" />
+        </div>
       </div>
       <div className="flex h-full w-full divide-x">
       <DocSidebarContent docs={docs} />
