@@ -1,26 +1,16 @@
-
-import { CodePlugin } from "@platejs/basic-nodes/react";
 import { Value } from "platejs";
-import { createPlateEditor, ParagraphPlugin } from "platejs/react";
 
-import { PlateEditor } from "@/components/editor/plate-editor";
-import { PlateRefEditor } from "@/components/editor/plate-provider";
-import { CodeLeaf } from "@/components/ui/code-node";
-import { ParagraphElement } from "@/components/ui/paragraph-node";
+import { PlateAutoSaveEditor } from "@/components/editor/plate-provider";
 import { getDoc } from "@/data/docs";
-
-
-
-
 
 export default async function DocPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const doc = await getDoc(id)
 
   return (
-    <>
-      <PlateRefEditor docId={id} initialValue={doc?.content as Value} />
-    </>
+    <div className="h-full w-full">
+      <PlateAutoSaveEditor docId={id} initialValue={doc?.content as Value} />
+    </div>
   );
 
 

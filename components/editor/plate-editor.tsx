@@ -1,7 +1,7 @@
 'use client';
 
 import { type Value } from 'platejs';
-import { createPlateEditor, Plate, usePlateEditor } from 'platejs/react';
+import { createPlateEditor, Plate } from 'platejs/react';
 import * as React from 'react';
 
 import { Editor, EditorContainer } from '@/components/ui/editor';
@@ -35,14 +35,14 @@ export function PlateEditor({
     value: initialValue ?? defaultValue,
   });
   return (
-
-    <Plate editor={editor}>
-      {children}
-      <EditorContainer>
-        <Editor variant="demo" />
-      </EditorContainer>
-    </Plate>
-
+    <div className="w-full max-w-full overflow-hidden">
+      <Plate editor={editor}>
+        {children}
+        <EditorContainer className="max-w-full">
+          <Editor variant="default" className="max-w-full" />
+        </EditorContainer>
+      </Plate>
+    </div>
   );
 }
 

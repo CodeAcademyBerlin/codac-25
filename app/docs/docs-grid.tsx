@@ -53,7 +53,7 @@ export function DocsGrid({ docs, selectedType }: DocsGridProps) {
 
     if (docs.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+            <div className="relative flex flex-col items-center justify-center min-h-[400px] text-center">
                 <FileText className="h-12 w-12 text-muted-foreground mb-4" />
                 <h2 className="text-xl font-semibold mb-2">No documents found</h2>
                 <p className="text-muted-foreground mb-4">

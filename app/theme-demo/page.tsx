@@ -11,7 +11,6 @@ import {
     XCircle
 } from "lucide-react"
 
-import { AppSidebar } from "@/components/app-sidebar"
 import { ThemePicker } from "@/components/theme-picker"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -31,8 +30,6 @@ import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
 import {
-    SidebarInset,
-    SidebarProvider,
     SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { Switch } from "@/components/ui/switch"
@@ -41,9 +38,8 @@ import { Textarea } from "@/components/ui/textarea"
 
 export default function ThemeDemoPage() {
     return (
-        <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>
+        <>
+    
                 <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
                     <SidebarTrigger className="-ml-1" />
                     <Separator
@@ -53,7 +49,7 @@ export default function ThemeDemoPage() {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem className="hidden md:block">
-                                <BreadcrumbLink href="/dashboard">
+                                <BreadcrumbLink href="/">
                                     Dashboard
                                 </BreadcrumbLink>
                             </BreadcrumbItem>
@@ -368,7 +364,7 @@ export default function ThemeDemoPage() {
                         </CardContent>
                     </Card>
                 </div>
-            </SidebarInset>
-        </SidebarProvider>
+       
+        </>
     )
 } 

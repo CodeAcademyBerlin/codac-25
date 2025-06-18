@@ -5,7 +5,6 @@ import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import {
     Breadcrumb,
     BreadcrumbItem,
-    BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
@@ -18,7 +17,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
-interface DocsBreadcrumbProps {
+export interface DocsBreadcrumbProps {
     docs: Array<{
         id: string;
         title: string;

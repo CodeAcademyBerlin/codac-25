@@ -72,7 +72,7 @@ CODAC empowers Code Academy Berlin students and alumni to learn, collaborate, an
 - pnpm (recommended) or npm
 - Git
 
-### Installation
+### Quick Start (Recommended for Students)
 
 1. **Clone the repository**
 
@@ -81,19 +81,58 @@ CODAC empowers Code Academy Berlin students and alumni to learn, collaborate, an
    cd codac
    ```
 
-2. **Install dependencies**
+2. **Run the automated setup**
+
+   **Windows users:**
+
+   ```bash
+   setup.bat
+   ```
+
+   **Mac/Linux users:**
+
+   ```bash
+   ./setup.sh
+   ```
+
+   **Alternative (all platforms):**
+
+   ```bash
+   node setup.js
+   ```
+
+   This will automatically:
+
+   - Check prerequisites (Node.js 18+)
+   - Install dependencies
+   - Create environment files
+   - Set up the database
+   - Seed sample data
+   - Handle common errors
+   - Create missing directories (like `docs/`)
+
+3. **Start development**
+
+   ```bash
+   pnpm dev
+   ```
+
+4. **Open the application**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+### Manual Installation (Advanced)
+
+If you prefer manual setup or encounter issues:
+
+1. **Install dependencies**
 
    ```bash
    pnpm install
    ```
 
-3. **Set up environment variables**
+2. **Set up environment variables**
 
-   ```bash
-   cp .env.example .env.local
-   ```
-
-   Update the following variables in `.env.local`:
+   Create a `.env` file with:
 
    ```env
    DATABASE_URL="file:./dev.db"
@@ -101,21 +140,30 @@ CODAC empowers Code Academy Berlin students and alumni to learn, collaborate, an
    NEXTAUTH_URL="http://localhost:3000"
    ```
 
-4. **Initialize the database**
+3. **Initialize the database**
 
    ```bash
+   pnpm db:generate
    pnpm db:push
    pnpm db:seed
    ```
 
-5. **Start the development server**
+4. **Start the development server**
 
    ```bash
    pnpm dev
    ```
 
-6. **Open the application**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+### Troubleshooting
+
+If you encounter issues:
+
+- **Database errors**: Try `pnpm db:reset` to reset the database
+- **Permission errors**: Ensure you have write permissions in the project directory
+- **Port conflicts**: The app runs on port 3000, make sure it's available
+- **Node.js version**: Ensure you're using Node.js 18 or higher
+
+For more help, check the [Issues](https://github.com/codeacademyberlin/codac/issues) or ask your instructor.
 
 ### Sample User Accounts
 

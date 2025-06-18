@@ -1,10 +1,21 @@
-import { PrismaClient, UserRole, UserStatus, CourseDifficulty, CourseCategory, LessonType, AssignmentType, PostType, LessonProgressStatus, SubmissionStatus, DocumentType } from '@prisma/client';
-import { faker } from '@faker-js/faker';
+import fs from 'fs';
+
+import { PrismaClient, UserRole, UserStatus, CourseDifficulty, CourseCategory, LessonType, AssignmentType, PostType, LessonProgressStatus, DocumentType } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Starting CODAC seed...');
+
+  // Ensure required directories exist
+  const requiredDirs = ['docs', 'public', 'uploads'];
+
+  requiredDirs.forEach(dir => {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+      console.log(`📁 Created missing directory: ${dir}`);
+    }
+  });
 
   // Clean existing data
   await prisma.userAchievement.deleteMany();
@@ -366,13 +377,19 @@ async function main() {
     prisma.communityPost.create({
       data: {
         title: 'My First Portfolio Project!',
-        content: {
-          type: 'rich_text',
-          blocks: [
-            { type: 'paragraph', content: 'Just finished my first portfolio website! Would love to get some feedback from the community.' },
-            { type: 'link', url: 'https://sarah-portfolio.netlify.app', text: 'Check it out here' }
-          ],
-        },
+        content: [
+          {
+            type: 'p',
+            children: [{ text: 'Just finished my first portfolio website! Would love to get some feedback from the community.' }],
+          },
+          {
+            type: 'p',
+            children: [
+              { text: 'Check it out here: ' },
+              { text: 'https://sarah-portfolio.netlify.app', link: true },
+            ],
+          },
+        ],
         type: PostType.SHOWCASE,
         authorId: users[1].id, // Sarah
         isPinned: false,
@@ -381,13 +398,17 @@ async function main() {
     prisma.communityPost.create({
       data: {
         title: 'Help with React State Management',
-        content: {
-          type: 'rich_text',
-          blocks: [
-            { type: 'paragraph', content: 'I\'m struggling with understanding when to use useState vs useReducer. Can someone explain the difference?' },
-            { type: 'code', language: 'javascript', content: 'const [count, setCount] = useState(0);' }
-          ],
-        },
+        content: [
+          {
+            type: 'p',
+            children: [{ text: 'I\'m struggling with understanding when to use useState vs useReducer. Can someone explain the difference?' }],
+          },
+          {
+            type: 'code_block',
+            lang: 'javascript',
+            children: [{ text: 'const [count, setCount] = useState(0);' }],
+          },
+        ],
         type: PostType.QUESTION,
         authorId: users[2].id, // Tom
         isPinned: false,
@@ -396,14 +417,20 @@ async function main() {
     prisma.communityPost.create({
       data: {
         title: 'Frontend Developer Position at Tech Startup',
-        content: {
-          type: 'rich_text',
-          blocks: [
-            { type: 'paragraph', content: 'We\'re looking for a Junior Frontend Developer to join our team. Great opportunity for recent graduates!' },
-            { type: 'paragraph', content: 'Requirements: React, TypeScript, Git, willingness to learn' },
-            { type: 'paragraph', content: 'Send your portfolio to jobs@techstartup.berlin' }
-          ],
-        },
+        content: [
+          {
+            type: 'p',
+            children: [{ text: 'We\'re looking for a Junior Frontend Developer to join our team. Great opportunity for recent graduates!' }],
+          },
+          {
+            type: 'p',
+            children: [{ text: 'Requirements: React, TypeScript, Git, willingness to learn' }],
+          },
+          {
+            type: 'p',
+            children: [{ text: 'Send your portfolio to jobs@techstartup.berlin' }],
+          },
+        ],
         type: PostType.JOB_POSTING,
         authorId: users[3].id, // Lisa (Alumni)
         isPinned: true,
@@ -415,20 +442,24 @@ async function main() {
   await Promise.all([
     prisma.comment.create({
       data: {
-        content: {
-          type: 'rich_text',
-          blocks: [{ type: 'paragraph', content: 'Great work Sarah! The design looks really clean and professional.' }],
-        },
+        content: [
+          {
+            type: 'p',
+            children: [{ text: 'Great work Sarah! The design looks really clean and professional.' }],
+          },
+        ],
         authorId: users[3].id, // Lisa
         postId: posts[0].id,
       },
     }),
     prisma.comment.create({
       data: {
-        content: {
-          type: 'rich_text',
-          blocks: [{ type: 'paragraph', content: 'useState is for simple state, useReducer is better for complex state logic. I can explain more if needed!' }],
-        },
+        content: [
+          {
+            type: 'p',
+            children: [{ text: 'useState is for simple state, useReducer is better for complex state logic. I can explain more if needed!' }],
+          },
+        ],
         authorId: users[5].id, // Dr. Anna (Instructor)
         postId: posts[1].id,
       },
@@ -531,14 +562,34 @@ async function main() {
     prisma.document.create({
       data: {
         title: 'JavaScript Cheat Sheet',
-        content: {
-          type: 'rich_text',
-          blocks: [
-            { type: 'heading', level: 1, content: 'JavaScript Quick Reference' },
-            { type: 'paragraph', content: 'Essential JavaScript syntax and concepts...' },
-            { type: 'code', language: 'javascript', content: 'const greeting = "Hello, World!";' }
-          ],
-        },
+        content: [
+          {
+            type: 'h1',
+            children: [{ text: 'JavaScript Quick Reference' }],
+          },
+          {
+            type: 'p',
+            children: [{ text: 'Essential JavaScript syntax and concepts for modern web development.' }],
+          },
+          {
+            type: 'h2',
+            children: [{ text: 'Variables' }],
+          },
+          {
+            type: 'code_block',
+            lang: 'javascript',
+            children: [{ text: 'const greeting = "Hello, World!";\nlet count = 0;\nvar name = "JavaScript";' }],
+          },
+          {
+            type: 'h2',
+            children: [{ text: 'Functions' }],
+          },
+          {
+            type: 'code_block',
+            lang: 'javascript',
+            children: [{ text: 'function greet(name) {\n  return `Hello, ${name}!`;\n}\n\nconst add = (a, b) => a + b;' }],
+          },
+        ],
         type: DocumentType.COURSE_MATERIAL,
         isPublished: true,
         authorId: users[5].id, // Dr. Anna
@@ -548,13 +599,41 @@ async function main() {
     prisma.document.create({
       data: {
         title: 'Career Preparation Guide',
-        content: {
-          type: 'rich_text',
-          blocks: [
-            { type: 'heading', level: 1, content: 'Getting Ready for Your First Tech Job' },
-            { type: 'paragraph', content: 'A comprehensive guide to preparing for your career transition...' }
-          ],
-        },
+        content: [
+          {
+            type: 'h1',
+            children: [{ text: 'Getting Ready for Your First Tech Job' }],
+          },
+          {
+            type: 'p',
+            children: [{ text: 'A comprehensive guide to preparing for your career transition into the tech industry.' }],
+          },
+          {
+            type: 'h2',
+            children: [{ text: 'Building Your Portfolio' }],
+          },
+          {
+            type: 'p',
+            children: [{ text: 'Your portfolio is your most important asset when job hunting. Make sure it showcases your best work and demonstrates your skills effectively.' }],
+          },
+          {
+            type: 'ul',
+            children: [
+              { type: 'li', children: [{ text: 'Include 3-5 of your best projects' }] },
+              { type: 'li', children: [{ text: 'Write clear project descriptions' }] },
+              { type: 'li', children: [{ text: 'Host your projects on GitHub' }] },
+              { type: 'li', children: [{ text: 'Deploy your applications live' }] },
+            ],
+          },
+          {
+            type: 'h2',
+            children: [{ text: 'Interview Preparation' }],
+          },
+          {
+            type: 'p',
+            children: [{ text: 'Practice coding challenges and prepare for technical interviews. Review fundamental concepts and be ready to explain your projects in detail.' }],
+          },
+        ],
         type: DocumentType.RESOURCE,
         isPublished: true,
         authorId: users[3].id, // Lisa
@@ -582,8 +661,17 @@ async function main() {
 }
 
 main()
+  .then(() => {
+    console.log('✅ Seed completed successfully!');
+    process.exit(0);
+  })
   .catch((e) => {
     console.error('❌ Seed failed:', e);
+    console.error('\n🔧 Troubleshooting:');
+    console.error('1. Make sure your database is running');
+    console.error('2. Check your DATABASE_URL in .env');
+    console.error('3. Try running: pnpm db:push first');
+    console.error('4. If the issue persists, try: pnpm db:reset');
     process.exit(1);
   })
   .finally(async () => {
