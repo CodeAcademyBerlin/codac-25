@@ -68,20 +68,24 @@ const data = {
       icon: Book,
       items: [
         {
-          title: 'Current Courses',
-          url: '/learning/courses',
+          title: 'Learning Overview',
+          url: '/learning',
         },
         {
-          title: 'Assignments',
-          url: '/learning/assignments',
+          title: 'Web Development',
+          url: '/learning/web',
         },
         {
-          title: 'Resources',
-          url: '/learning/resources',
+          title: 'Data Science',
+          url: '/learning/data',
         },
         {
-          title: 'Notes',
-          url: '/learning/notes',
+          title: 'Career Services',
+          url: '/learning/career',
+        },
+        {
+          title: 'All Materials',
+          url: '/docs?type=COURSE_MATERIAL',
         },
       ],
     },

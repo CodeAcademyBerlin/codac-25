@@ -14,8 +14,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState, useCallback, useRef } from 'react';
-import { useDrag, useDrop, DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useDrag, useDrop } from 'react-dnd';
 
 import { createDoc } from '@/actions/doc/create-doc';
 import { deleteDoc } from '@/actions/doc/delete-doc';
@@ -519,22 +518,20 @@ export function EditableToc({ nodes, onNodesChange }: EditableTocProps) {
 
   return (
     <TooltipProvider>
-      <DndProvider backend={HTML5Backend}>
-        <div className="space-y-1">
-          {nodesWithExpanded.map((node) => (
-            <TreeNodeComponent
-              key={node.id}
-              node={node}
-              level={0}
-              onToggle={toggleNode}
-              onRename={handleRename}
-              onDelete={handleDelete}
-              onMove={handleMove}
-              onAddChild={handleAddChild}
-            />
-          ))}
-        </div>
-      </DndProvider>
+      <div className="space-y-1">
+        {nodesWithExpanded.map((node) => (
+          <TreeNodeComponent
+            key={node.id}
+            node={node}
+            level={0}
+            onToggle={toggleNode}
+            onRename={handleRename}
+            onDelete={handleDelete}
+            onMove={handleMove}
+            onAddChild={handleAddChild}
+          />
+        ))}
+      </div>
     </TooltipProvider>
   );
 } 
