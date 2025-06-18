@@ -1,9 +1,8 @@
 'use client';
 
-import { ReactNode } from 'react';
-
-import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { ThemeProvider } from 'next-themes';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { ReactNode } from 'react';
 
 import { SidebarProvider } from './ui/sidebar';
 
@@ -21,9 +20,7 @@ export function Providers({ children }: ProvidersProps) {
     >
       <NuqsAdapter>
         <SidebarProvider defaultOpen={true}>
-
           {children}
-
         </SidebarProvider>
       </NuqsAdapter>
     </ThemeProvider>

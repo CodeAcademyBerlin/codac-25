@@ -21,20 +21,18 @@ The auto-save strategy consists of three main layers:
 - Provides error handling for localStorage operations
 - SSR-safe implementation
 
-#### 2. `useAutoSave` Hook
+#### 2. `useDebounce` Hook
 
-- Manages the auto-save lifecycle
 - Debounces content changes to prevent excessive saves
-- Handles both local and database persistence
-- Provides status tracking and error handling
-- Implements draft recovery functionality
+- Used internally by PlateAutoSaveEditor for content persistence
+- Provides configurable delay for auto-save operations
 
-#### 3. `AutoSavePlateEditor` Component
+#### 3. `PlateAutoSaveEditor` Component
 
 - Wraps the PlateEditor with auto-save functionality
-- Provides visual feedback for save status
-- Implements draft recovery UI
-- Handles manual save operations
+- Provides visual feedback for save status via status bar
+- Handles automatic content persistence
+- Integrates with PlateController for state management
 
 #### 4. `useOnlineStatus` Hook
 
@@ -44,13 +42,13 @@ The auto-save strategy consists of three main layers:
 ## Data Flow
 
 ```
-User Types → Editor Change → useAutoSave Hook
+User Types → Editor Change → PlateStateUpdater
                                     ↓
-                            1. Save to localStorage (1s debounce)
+                            1. Debounce content (5s debounce)
                                     ↓
-                            2. Sync to Database (2s debounce)
+                            2. Save to Database (via updateDoc action)
                                     ↓
-                            3. Auto-sync every 30s (if changes exist)
+                            3. Status feedback via SaveStatusIndicator
 ```
 
 ## Features
@@ -108,35 +106,32 @@ User Types → Editor Change → useAutoSave Hook
 ### Basic Implementation
 
 ```tsx
-import { AutoSavePlateEditor } from "@/components/editor/auto-save-plate-editor";
+import { PlateAutoSaveEditor } from "@/components/editor/plate-provider";
 
 function DocumentPage({ documentId, initialContent }) {
   return (
-    <AutoSavePlateEditor
-      documentId={documentId}
-      initialValue={initialContent}
-    />
+    <PlateAutoSaveEditor docId={documentId} initialValue={initialContent} />
   );
 }
 ```
 
-### With Custom Save Logic
+### With Custom PlateController Usage
 
 ```tsx
-import { useAutoSave } from "@/hooks/use-auto-save";
+import {
+  PlateController,
+  useEditorRef,
+  useEditorSelector,
+} from "platejs/react";
+import { useDebounce } from "@/hooks/use-debounce";
 
 function CustomEditor({ documentId }) {
-  const { updateContent, status, save } = useAutoSave({
-    documentId,
-    onSave: async (content) => {
-      // Custom save logic
-      const result = await myCustomSaveFunction(content);
-      return { success: result.ok, error: result.error };
-    },
-    debounceMs: 2000, // Custom debounce timing
-  });
+  const editor = useEditorRef();
+  const editorContent = useEditorSelector((editor) => editor?.children, []);
+  const debouncedContent = useDebounce(editorContent, 5000);
 
-  // Use updateContent in your editor's onChange handler
+  // Custom save logic with debounced content
+  // Handle save operations as needed
 }
 ```
 

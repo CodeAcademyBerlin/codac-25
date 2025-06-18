@@ -451,7 +451,7 @@ export function EditableToc({ nodes, onNodesChange }: EditableTocProps) {
       if (result.success) {
         // The move was successful, but we don't need to update local state here
         // as the parent component should refetch the data
-        console.log('Document moved successfully');
+                    // Document moved successfully
       } else {
         console.error('Failed to move document:', result.error);
       }

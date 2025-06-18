@@ -1,6 +1,8 @@
 'use client';
 
+import Link from 'next/link';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 import {
     Breadcrumb,
@@ -16,6 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+
 
 export interface DocsBreadcrumbProps {
     docs: Array<{
@@ -33,7 +36,7 @@ const DOCUMENT_TYPES = [
     { value: 'RESOURCE', label: 'Resource' },
 ] as const;
 
-export function DocsBreadcrumb({ docs }: DocsBreadcrumbProps) {
+function DocsBreadcrumbContent({ docs }: DocsBreadcrumbProps) {
     const params = useParams();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -59,9 +62,11 @@ export function DocsBreadcrumb({ docs }: DocsBreadcrumbProps) {
         <Breadcrumb>
             <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                    <span className="text-foreground hover:text-foreground/80 font-medium">
-                        Docs
-                    </span>
+                    <Link href="/docs">
+                        <span className="text-foreground hover:text-foreground/80 font-medium">
+                            Docs
+                        </span>
+                    </Link>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
@@ -94,5 +99,29 @@ export function DocsBreadcrumb({ docs }: DocsBreadcrumbProps) {
                 )}
             </BreadcrumbList>
         </Breadcrumb>
+    );
+}
+
+export function DocsBreadcrumb({ docs }: DocsBreadcrumbProps) {
+    return (
+        <Suspense fallback={
+            <Breadcrumb>
+                <BreadcrumbList>
+                    <BreadcrumbItem className="hidden md:block">
+                        <span className="text-foreground hover:text-foreground/80 font-medium">
+                            Docs
+                        </span>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator className="hidden md:block" />
+                    <BreadcrumbItem>
+                        <span className="text-foreground hover:text-foreground/80 font-medium">
+                            All Documents
+                        </span>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
+        }>
+            <DocsBreadcrumbContent docs={docs} />
+        </Suspense>
     );
 } 

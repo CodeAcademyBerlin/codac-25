@@ -30,7 +30,7 @@ export function handlePrismaError(error: Prisma.PrismaClientKnownRequestError): 
 // Common validation error handling
 export function handleValidationError(error: unknown): string | z.ZodError['errors'] {
     if (error instanceof Error && error.name === 'ZodError') {
-        return (error as any).errors;
+        return (error as z.ZodError).errors;
     }
     return 'Validation failed';
 }
@@ -49,7 +49,7 @@ export function createServerAction<TInput, TOutput>(
             // Log the start of the action
             if (actionName && resourceName) {
                 logger.logServerAction(actionName, resourceName, {
-                    metadata: { inputKeys: Object.keys(input as any) }
+                    metadata: { inputKeys: Object.keys(input as Record<string, unknown>) }
                 });
             }
 
@@ -75,7 +75,7 @@ export function createServerAction<TInput, TOutput>(
                 logger.logServerActionError(actionName, resourceName, error, {
                     metadata: {
                         duration: Date.now() - startTime,
-                        inputKeys: Object.keys(input as any)
+                        inputKeys: Object.keys(input as Record<string, unknown>)
                     }
                 });
             } else {
@@ -83,7 +83,7 @@ export function createServerAction<TInput, TOutput>(
             }
 
             if (error instanceof Error && error.name === 'ZodError') {
-                logger.logValidationError(resourceName || 'unknown', (error as any).errors);
+                logger.logValidationError(resourceName || 'unknown', (error as z.ZodError).errors);
                 return { success: false, error: handleValidationError(error) };
             }
 

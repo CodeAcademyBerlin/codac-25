@@ -15,6 +15,7 @@ import {
   FileText,
   Pyramid,
 } from 'lucide-react';
+import Link from 'next/link';
 import * as React from 'react';
 
 import {
@@ -30,7 +31,6 @@ import {
 import { NavMain } from './nav-main';
 import { NavSecondary } from './nav-secondary';
 import { NavUser } from './nav-user';
-import { ThemePicker } from './theme-picker';
 
 const data = {
   user: {
@@ -203,7 +203,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="/">
+              <Link href="/">
                 <div className="sm:flex-nowrap flex h-8 w-8 items-center justify-center rounded-sm bg-gradient-to-br from-gray-600 to-purple-600 text-white">
                   <Pyramid className="!size-5" />
                 </div>
@@ -213,7 +213,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     community
                   </span> */}
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

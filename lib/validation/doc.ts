@@ -20,8 +20,8 @@ export const docSchema = z.object({
 export const createDocSchema = z.object({
     title: z.string().min(1, 'Title is required').max(255, 'Title too long'),
     content: z.any().optional(),
-    parentId: z.string().cuid().optional().or(z.literal('').transform(() => undefined)),
-    isFolder: z.boolean().default(false),
+    parentId: z.union([z.string().optional(), z.literal('').transform(() => undefined)]),
+    isFolder: z.boolean().optional().transform(val => val ?? false),
     type: z.enum(['GENERAL', 'COURSE_MATERIAL', 'ASSIGNMENT', 'RESOURCE']),
 });
 

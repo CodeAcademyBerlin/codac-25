@@ -5,7 +5,7 @@ interface LogContext {
     action?: string;
     resource?: string;
     resourceId?: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
 }
 
 interface LogEntry {
@@ -40,11 +40,13 @@ class Logger {
                 ? `\n  Context: ${JSON.stringify(logEntry.context, null, 2)}`
                 : '';
 
+            // eslint-disable-next-line no-console
             console.log(
                 `[${logEntry.timestamp}] ${logEntry.level}: ${logEntry.message}${contextStr}`
             );
         } else if (this.isProduction) {
             // Structured JSON for production (for log aggregation)
+            // eslint-disable-next-line no-console
             console.log(JSON.stringify(logEntry));
         }
     }
@@ -103,7 +105,7 @@ class Logger {
         });
     }
 
-    logValidationError(resource: string, errors: any, context?: LogContext) {
+    logValidationError(resource: string, errors: unknown, context?: LogContext) {
         this.warn(`Validation failed for ${resource}`, {
             resource,
             metadata: { validationErrors: errors },

@@ -10,8 +10,8 @@ import {
 } from '@/lib/server-action-utils';
 
 // Using the utility function for cleaner server actions
-export const createDocOptimized = createServerAction(
-    createDocSchema,
+export const createDocOptimized = createServerAction<CreateDocInput, DocumentWithAuthor>(
+    createDocSchema as any, // Type assertion to bypass the type mismatch
     async (data: CreateDocInput): Promise<DocumentWithAuthor> => {
         // TODO: Replace with actual user ID from auth context
         const TEMP_USER_ID = 'demo-user';

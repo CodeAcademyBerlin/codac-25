@@ -73,7 +73,7 @@ export function DocsGrid({ docs, selectedType }: DocsGridProps) {
     }
 
     return (
-        <div className="p-6">
+        <div className="p-6 w-full">
             <div className="mb-8">
                 <h1 className="text-3xl font-bold tracking-tight">
                     {typeLabel} Documents

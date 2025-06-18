@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 
 type SettingsBarItemProperties = {
   readonly title: string;
-  readonly children: ReactElement<any>;
+  readonly children: ReactElement;
   readonly action?: ReactNode;
 };
 
