@@ -506,15 +506,16 @@ export function EditableToc({ nodes, onNodesChange }: EditableTocProps) {
     }
   }, [nodes, onNodesChange]);
 
-  // Add expanded state to nodes
-  const nodesWithExpanded = nodes.map(node => ({
-    ...node,
-    isExpanded: expandedNodes.has(node.id),
-    children: node.children?.map(child => ({
-      ...child,
-      isExpanded: expandedNodes.has(child.id)
-    }))
-  }));
+  // Add expanded state to nodes recursively
+  const addExpandedState = (nodes: TreeNode[]): TreeNode[] => {
+    return nodes.map(node => ({
+      ...node,
+      isExpanded: expandedNodes.has(node.id),
+      children: node.children ? addExpandedState(node.children) : undefined
+    }));
+  };
+
+  const nodesWithExpanded = addExpandedState(nodes);
 
   return (
     <TooltipProvider>
