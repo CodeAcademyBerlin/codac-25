@@ -1,0 +1,50 @@
+[
+  {
+    "name": "104th Training Corps",
+    "aka": "Trainees",
+    "slug": "trainees",
+    "startDate": "2024-01-01T00:00:00Z",
+    "endDate": "2024-12-31T23:59:59Z",
+    "description": "Elite soldiers training to fight Titans",
+    "isActive": true
+  },
+  {
+    "name": "103rd Training Corps",
+    "aka": "The Veterans",
+    "slug": "veterans",
+    "startDate": "2023-01-01T00:00:00Z",
+    "endDate": "2023-12-31T23:59:59Z",
+    "description": "Experienced soldiers and mentors",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "name": "Scout Regiment",
+    "aka": "The Scouts",
+    "slug": "scouts",
+    "startDate": "2024-01-01T00:00:00Z",
+    "endDate": "2024-12-31T23:59:59Z",
+    "description": "The Scout Regiment is the military's main expeditionary force, responsible for exploring the world outside the walls and fighting against the Titans.",
+    "image": "https://static.wikia.nocookie.net/shingekinokyojin/images/a/a7/Survey_Corps_Logo.png/revision/latest?cb=20140307090257"
+  },
+  {
+    "id": 3,
+    "name": "Garrison Regiment",
+    "aka": "The Garrison",
+    "slug": "garrison",
+    "startDate": "2024-01-01T00:00:00Z",
+    "endDate": "2024-12-31T23:59:59Z",
+    "description": "The Garrison Regiment is responsible for defending the walls and maintaining order within the walls.",
+    "image": "https://static.wikia.nocookie.net/shingekinokyojin/images/4/4c/Garrison_Regiment_Logo.png/revision/latest/scale-to-width-down/350?cb=20140307090257"
+  },
+  {
+    "id": 4,
+    "name": "Military Police Regiment",
+    "aka": "MPs",
+    "slug": "mps",
+    "startDate": "2024-01-01T00:00:00Z",
+    "endDate": "2024-12-31T23:59:59Z",
+    "description": "The Military Police Regiment is responsible for maintaining order within the walls and protecting the royal family.",
+    "image": "https://static.wikia.nocookie.net/shingekinokyojin/images/4/4c/Brigade_Logo.png/revision/latest/scale-to-width-down/350?cb=20140307090257"
+  }
+]

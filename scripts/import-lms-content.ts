@@ -40,13 +40,41 @@ interface FileNode {
     children?: FileNode[];
 }
 
+// Course category mapping based on directory names
+const getCourseCategory = (dirName: string): string => {
+    const categoryMap: { [key: string]: string } = {
+        'web': 'WEB_DEVELOPMENT',
+        'data': 'DATA_SCIENCE',
+        'career': 'CAREER_DEVELOPMENT',
+        'ux': 'UX_UI_DESIGN',
+        'marketing': 'DIGITAL_MARKETING',
+    };
+
+    return categoryMap[dirName.toLowerCase()] || 'WEB_DEVELOPMENT';
+};
+
+// Extract order from filename or frontmatter
+const extractOrder = (name: string, frontmatter?: FrontMatter): number => {
+    if (frontmatter?.order !== undefined) {
+        return frontmatter.order;
+    }
+
+    // Extract order from names like "Module-1", "Project-2", "Sprint-3", "Step-1"
+    const match = name.match(/(?:Module|Project|Sprint|Step|Task|Chapter)-?(\d+)/i);
+    if (match) {
+        return parseInt(match[1], 10);
+    }
+
+    return 999; // Default high order for items without explicit ordering
+};
+
 async function readDirectory(dirPath: string): Promise<FileNode[]> {
     const entries = await fs.readdir(dirPath, { withFileTypes: true });
     const nodes: FileNode[] = [];
 
     for (const entry of entries) {
         if (entry.name.startsWith('.') || entry.name === 'assets') {
-            continue; // Skip hidden files and assets folder for now
+            continue; // Skip hidden files and assets folder (handled separately)
         }
 
         const fullPath = path.join(dirPath, entry.name);
@@ -70,7 +98,7 @@ async function readDirectory(dirPath: string): Promise<FileNode[]> {
                     name: entry.name,
                     path: fullPath,
                     isDirectory: false,
-                    order: frontmatter.order,
+                    order: extractOrder(entry.name, frontmatter),
                 });
             } catch (error) {
                 console.warn(`Failed to read frontmatter from ${fullPath}:`, error);
@@ -78,6 +106,7 @@ async function readDirectory(dirPath: string): Promise<FileNode[]> {
                     name: entry.name,
                     path: fullPath,
                     isDirectory: false,
+                    order: extractOrder(entry.name),
                 });
             }
         }
@@ -115,76 +144,195 @@ function markdownToPlateJS(markdown: string): any[] {
     }
 }
 
-async function createDocumentFromMarkdown(
-    filePath: string,
-    parentId: string | null = null
-): Promise<string> {
-    const content = await fs.readFile(filePath, 'utf-8');
-    const { data, content: markdownContent } = matter(content);
-    const frontmatter = data as FrontMatter;
-
-    // Convert markdown to PlateJS format
-    const plateContent = markdownToPlateJS(markdownContent);
-
-    // Create the document
-    const doc = await prisma.document.create({
-        data: {
-            title: frontmatter.title || path.basename(filePath, '.md'),
-            content: plateContent,
-            type: 'COURSE_MATERIAL',
-            parentId,
-            isFolder: false,
-            isPublished: true,
-            isArchived: false,
-            authorId: 'lms-import',
-        },
-    });
-
-    console.log(`✅ Created document: ${doc.title} (${doc.id})`);
-    return doc.id;
-}
-
-async function createFolder(
+async function createCourse(
     name: string,
-    parentId: string | null = null
+    description: string = ''
 ): Promise<string> {
-    const folder = await prisma.document.create({
-        data: {
-            title: name,
-            content: [], // Empty content for folders
-            type: 'COURSE_MATERIAL',
-            parentId,
-            isFolder: true,
-            isPublished: true,
-            isArchived: false,
-            authorId: 'lms-import',
-        },
-    });
+    try {
+        const course = await (prisma as any).course.create({
+            data: {
+                title: name.charAt(0).toUpperCase() + name.slice(1).replace(/[-_]/g, ' '),
+                description: description || `${name} course content`,
+                category: getCourseCategory(name),
+                difficulty: 'BEGINNER',
+                isPublished: true,
+                order: extractOrder(name),
+            },
+        });
 
-    console.log(`📁 Created folder: ${folder.title} (${folder.id})`);
-    return folder.id;
+        console.log(`📚 Created course: ${course.title} (${course.id})`);
+        return course.id;
+    } catch (error) {
+        console.error(`❌ Failed to create course ${name}:`, error);
+        throw error;
+    }
 }
 
-async function processNode(node: FileNode, parentId: string | null = null): Promise<void> {
-    if (node.isDirectory) {
-        // Create folder
-        const folderId = await createFolder(node.name, parentId);
+async function createProject(
+    name: string,
+    courseId: string,
+    description: string = ''
+): Promise<string> {
+    try {
+        const project = await (prisma as any).project.create({
+            data: {
+                title: name.replace(/[-_]/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+                description: description || `${name} project content`,
+                courseId,
+                isPublished: true,
+                order: extractOrder(name),
+            },
+        });
 
-        // Process children
-        if (node.children) {
-            for (const child of node.children) {
-                await processNode(child, folderId);
+        console.log(`📋 Created project: ${project.title} (${project.id})`);
+        return project.id;
+    } catch (error) {
+        console.error(`❌ Failed to create project ${name}:`, error);
+        throw error;
+    }
+}
+
+async function createLesson(
+    filePath: string,
+    projectId: string
+): Promise<string> {
+    try {
+        const content = await fs.readFile(filePath, 'utf-8');
+        const { data, content: markdownContent } = matter(content);
+        const frontmatter = data as FrontMatter;
+
+        // Convert markdown to PlateJS format
+        const plateContent = markdownToPlateJS(markdownContent);
+
+        // Determine lesson type based on content
+        let lessonType = 'TEXT';
+        if (markdownContent.includes('video') || markdownContent.includes('youtube')) {
+            lessonType = 'VIDEO';
+        } else if (markdownContent.includes('quiz') || markdownContent.includes('question')) {
+            lessonType = 'QUIZ';
+        } else if (markdownContent.includes('exercise') || markdownContent.includes('practice')) {
+            lessonType = 'EXERCISE';
+        }
+
+        const fileName = path.basename(filePath, '.md');
+        const lesson = await (prisma as any).lesson.create({
+            data: {
+                title: frontmatter.title || fileName.replace(/[-_]/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+                description: frontmatter.metaDescription || `${fileName} lesson content`,
+                content: plateContent,
+                type: lessonType,
+                projectId,
+                isPublished: true,
+                order: extractOrder(fileName, frontmatter),
+            },
+        });
+
+        console.log(`📝 Created lesson: ${lesson.title} (${lesson.id})`);
+        return lesson.id;
+    } catch (error) {
+        console.error(`❌ Failed to create lesson from ${filePath}:`, error);
+        throw error;
+    }
+}
+
+// TODO: Implement asset upload to uploadthing
+async function handleAssets(assetsPath: string): Promise<void> {
+    console.log(`📁 Found assets directory: ${assetsPath}`);
+    console.log('⚠️  Asset upload to uploadthing not yet implemented');
+    // Future implementation:
+    // 1. Read all files in assets directory
+    // 2. Upload each file to uploadthing using the configured file router
+    // 3. Store the uploaded URLs for reference in lessons/projects
+    // 4. Update markdown content to reference uploaded asset URLs
+}
+
+async function processCourse(courseNode: FileNode): Promise<void> {
+    console.log(`\n🎓 Processing course: ${courseNode.name}`);
+
+    // Read course description from main course markdown file if it exists
+    let courseDescription = '';
+    const courseMarkdownPath = path.join(path.dirname(courseNode.path), `${courseNode.name}.md`);
+    try {
+        const courseContent = await fs.readFile(courseMarkdownPath, 'utf-8');
+        const { data, content } = matter(courseContent);
+        courseDescription = (data as FrontMatter).metaDescription || content.substring(0, 200) + '...';
+    } catch {
+        // Course markdown doesn't exist, use default description
+    }
+
+    const courseId = await createCourse(courseNode.name, courseDescription);
+
+    // Handle assets directory if it exists
+    const assetsPath = path.join(courseNode.path, 'assets');
+    try {
+        await fs.access(assetsPath);
+        await handleAssets(assetsPath);
+    } catch {
+        // No assets directory
+    }
+
+    // Process projects (direct subdirectories)
+    if (courseNode.children) {
+        for (const child of courseNode.children) {
+            if (child.isDirectory) {
+                await processProject(child, courseId);
+            } else if (child.name.endsWith('.md')) {
+                // Handle standalone lessons at course level (create a default project)
+                const existingProject = await (prisma as any).project.findFirst({
+                    where: {
+                        courseId,
+                        title: 'General Lessons'
+                    }
+                });
+                let defaultProjectId = existingProject?.id;
+
+                if (!defaultProjectId) {
+                    defaultProjectId = await createProject('General Lessons', courseId, 'Standalone lessons for this course');
+                }
+
+                await createLesson(child.path, defaultProjectId);
             }
         }
-    } else if (node.name.endsWith('.md')) {
-        // Create document from markdown file
-        await createDocumentFromMarkdown(node.path, parentId);
+    }
+}
+
+async function processProject(projectNode: FileNode, courseId: string): Promise<void> {
+    console.log(`  📋 Processing project: ${projectNode.name}`);
+
+    // Read project description from main project markdown file if it exists
+    let projectDescription = '';
+    const projectMarkdownPath = path.join(path.dirname(projectNode.path), `${projectNode.name}.md`);
+    try {
+        const projectContent = await fs.readFile(projectMarkdownPath, 'utf-8');
+        const { data, content } = matter(projectContent);
+        projectDescription = (data as FrontMatter).metaDescription || content.substring(0, 200) + '...';
+    } catch {
+        // Project markdown doesn't exist, use default description
+    }
+
+    const projectId = await createProject(projectNode.name, courseId, projectDescription);
+
+    // Process lessons (markdown files in project directory)
+    if (projectNode.children) {
+        for (const child of projectNode.children) {
+            if (!child.isDirectory && child.name.endsWith('.md')) {
+                await createLesson(child.path, projectId);
+            }
+        }
     }
 }
 
 async function main() {
     try {
         console.log('🚀 Starting LMS content import...');
+
+        // Check if the required models exist in the database
+        try {
+            await (prisma as any).course.findMany({ take: 1 });
+        } catch (error) {
+            console.error('❌ Course model not found. Please run "npx prisma generate" and "npx prisma db push" first.');
+            process.exit(1);
+        }
 
         // Check if we have a demo user, create one if not
         let demoUser = await prisma.user.findUnique({
@@ -203,20 +351,20 @@ async function main() {
             console.log('✅ Created LMS import user');
         }
 
-        // Create root LMS folder
-        const lmsRootId = await createFolder('LMS Content');
-
         // Read the content directory
         const contentPath = path.join(process.cwd(), 'content');
         const nodes = await readDirectory(contentPath);
 
-        // Process each top-level item
+        // Process each top-level directory as a course
         for (const node of nodes) {
-            await processNode(node, lmsRootId);
+            if (node.isDirectory && !['assets', '.git'].includes(node.name)) {
+                await processCourse(node);
+            }
         }
 
-        console.log('✅ LMS content import completed successfully!');
-        console.log('📖 You can now access the imported content in the /docs section');
+        console.log('\n✅ LMS content import completed successfully!');
+        console.log('📖 Courses, projects, and lessons have been imported to the database');
+        console.log('⚠️  Note: Asset upload to uploadthing is not yet implemented');
 
     } catch (error) {
         console.error('❌ Import failed:', error);

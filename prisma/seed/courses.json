@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Titan Combat Tactics",
+    "description": "Learn advanced techniques for fighting Titans",
+    "slug": "titan-combat",
+    "isPublished": true
+  },
+  {
+    "name": "ODM Gear Mastery",
+    "description": "Master the Vertical Maneuvering Equipment",
+    "slug": "odm-gear",
+    "isPublished": true
+  },
+  {
+    "name": "Military Strategy",
+    "description": "Strategic planning and battlefield tactics",
+    "slug": "military-strategy",
+    "isPublished": true
+  }
+]

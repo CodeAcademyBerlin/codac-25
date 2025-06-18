@@ -67,12 +67,33 @@ model Course {
   updatedAt DateTime @updatedAt
 
   // Relations
-  lessons       Lesson[]
+  projects      Project[]
   enrollments   CourseEnrollment[]
   prerequisites CoursePrerequisite[] @relation("Course")
   dependents    CoursePrerequisite[] @relation("Prerequisite")
 
   @@map("courses")
+}
+
+model Project {
+  id          String  @id @default(cuid())
+  title       String
+  description String?
+  thumbnail   String?
+  duration    Int? // Duration in hours
+  isPublished Boolean @default(false)
+  order       Int     @default(0)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  lessons Lesson[]
+
+  @@map("projects")
 }
 
 model Lesson {
@@ -85,8 +106,8 @@ model Lesson {
   order       Int        @default(0)
   isPublished Boolean    @default(false)
 
-  courseId String
-  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -432,7 +453,7 @@ model DocumentVersion {
 enum UserRole {
   STUDENT
   ALUMNI
-  INSTRUCTOR
+  MENTOR
   ADMIN
 }
 

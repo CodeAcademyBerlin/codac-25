@@ -1,105 +1,134 @@
-# Import LMS Content to Docs System
+# LMS Content Import Script
 
-This guide will help you import the LMS content from the `/content` folder into your app's `/docs` system so it can be edited with the PlateJS editor.
+This script imports content from the `content/` directory into the database following the new schema mapping:
 
-## Overview
-
-The import script will:
-
-1. Read all markdown files from the `/content` folder
-2. Parse frontmatter metadata from each file
-3. Convert markdown content to PlateJS format
-4. Create a hierarchical folder structure in the docs system
-5. Maintain the original course organization
+- **Root directories** (web, data, career) → **Courses**
+- **Direct subdirectories** (Module-1, Module-2, etc.) → **Projects**
+- **Markdown files** → **Lessons**
+- **Static assets** → uploadthing bucket (planned)
 
 ## Prerequisites
 
-Make sure you have the required dependencies:
+1. **Regenerate Prisma Client** (required for new models):
 
-```bash
-pnpm add gray-matter
-```
+   ```bash
+   npx prisma generate
+   ```
+
+2. **Apply Database Schema**:
+
+   ```bash
+   npx prisma db push
+   ```
+
+3. **Test the import structure** (optional but recommended):
+   ```bash
+   npx tsx scripts/test-lms-import.ts
+   ```
 
 ## Running the Import
 
-1. **Create the import user** (if not exists):
-   The script will automatically create an `lms-import` user for authoring the imported content.
-
-2. **Run the import script**:
-
-   ```bash
-   tsx scripts/import-lms-content.ts
-   ```
-
-3. **Access the imported content**:
-   Navigate to `/docs` in your app to see the imported LMS content organized under "LMS Content" folder.
+```bash
+npx tsx scripts/import-lms-content.ts
+```
 
 ## What Gets Imported
 
-### Structure
+Based on the current `content/` directory structure:
 
-- **Root folder**: `LMS Content` (created automatically)
-- **Course folders**: `career`, `data`, `web`, etc.
-- **Module folders**: `Module-1`, `Module-2`, etc.
-- **Project folders**: `Project-1`, `Project-2`, etc.
-- **Lesson files**: All `.md` files converted to editable documents
+- **3 Courses**: career, data, web
+- **9 Projects**: Step-1, Step-2, Step-3, Module-1, Module-2, Module-3, etc.
+- **34 Lessons**: All markdown files
 
-### Content Processing
+## Content Structure Mapping
 
-- **Frontmatter**: Title, order, access, and other metadata are parsed
-- **Markdown**: Converted to PlateJS-compatible format
-- **Assets**: Referenced but not imported (manual copy needed)
-- **Links**: Internal links may need adjustment after import
+### Current Structure:
 
-## Post-Import Steps
+```
+content/
+├── career/           → Course: Career Development
+│   ├── Step-1/      → Project: Step 1
+│   │   ├── Chapter-1.md → Lesson: Chapter 1
+│   │   └── ...
+│   └── career.md    → Standalone lesson in "General Lessons" project
+├── data/            → Course: Data Science
+│   ├── Module-1/    → Project: Module 1
+│   │   ├── Project-1.md → Lesson: Project 1
+│   │   └── ...
+│   └── data.md      → Standalone lesson in "General Lessons" project
+└── web/             → Course: Web Development
+    ├── Module-1/    → Project: Module 1
+    │   ├── Project-1.md → Lesson: Project 1
+    │   └── ...
+    └── web.md       → Standalone lesson in "General Lessons" project
+```
 
-1. **Review imported content**: Check that all content imported correctly
-2. **Fix internal links**: Update any broken internal references
-3. **Import assets**: Manually copy assets folder to public directory if needed
-4. **Test editor functionality**: Ensure PlateJS editor works with imported content
-5. **Set permissions**: Configure document permissions as needed
+## Features
+
+- **Automatic ordering**: Extracts order from filenames (Module-1, Project-2, Sprint-3, etc.)
+- **Frontmatter support**: Uses `order` field from markdown frontmatter if available
+- **Course categorization**: Maps directory names to course categories
+- **Lesson type detection**: Automatically detects lesson types based on content
+- **Error handling**: Robust error handling with detailed logging
+- **Markdown conversion**: Converts markdown to PlateJS format for rich editing
+
+## Course Categories
+
+- `web` → WEB_DEVELOPMENT
+- `data` → DATA_SCIENCE
+- `career` → CAREER_DEVELOPMENT
+- `ux` → UX_UI_DESIGN
+- `marketing` → DIGITAL_MARKETING
+
+## Lesson Types
+
+Automatically detected based on content:
+
+- **VIDEO**: Contains "video" or "youtube"
+- **QUIZ**: Contains "quiz" or "question"
+- **EXERCISE**: Contains "exercise" or "practice"
+- **TEXT**: Default type
+
+## Static Assets (Planned)
+
+The script will eventually handle static assets by:
+
+1. Reading all files in `assets/` directories
+2. Uploading files to uploadthing using the configured file router
+3. Storing uploaded URLs for reference in lessons/projects
+4. Updating markdown content to reference uploaded asset URLs
+
+## Database Schema
+
+The import creates records in these tables:
+
+- `courses` - Top-level course information
+- `projects` - Projects within courses
+- `lessons` - Individual lessons within projects
+- `users` - Creates an `lms-import` admin user if needed
 
 ## Troubleshooting
 
-### Common Issues
+### "Course model not found" Error
 
-- **Import errors**: Check that all markdown files have valid frontmatter
-- **Missing content**: Verify PlateJS markdown plugin is properly configured
-- **Permission errors**: Ensure database is accessible and writable
+Run the prerequisite commands to regenerate the Prisma client:
 
-### Manual Fixes
-
-If some content doesn't import correctly, you can:
-
-1. Edit documents directly in the `/docs` interface
-2. Re-run the import for specific files
-3. Use the markdown import feature in the editor toolbar
-
-## File Organization After Import
-
-```
-LMS Content/
-├── career/
-│   ├── career.md → "Welcome to the Career Services"
-│   ├── Step-1/
-│   │   ├── Step-1.md → "Step 1"
-│   │   └── [chapters...]
-│   └── [other steps...]
-├── data/
-│   ├── data.md → "Data Science Course"
-│   ├── Machine-Learning-Fundamentals.md
-│   ├── Module-1/
-│   │   ├── Module-1.md
-│   │   └── [projects...]
-│   └── [other modules...]
-├── web/
-│   ├── web.md → "Web Development Course"
-│   ├── Module-1/
-│   │   ├── Module-1.md
-│   │   └── [projects...]
-│   └── [other modules...]
-├── welcome.md → "Hello World!"
-└── guidelines.md → "Guidelines"
+```bash
+npx prisma generate
+npx prisma db push
 ```
 
-The imported content will be fully editable using the PlateJS editor while maintaining the original LMS structure and content.
+### Permission Errors on Windows
+
+If you get EPERM errors during `prisma generate`, try:
+
+1. Close your IDE/editor
+2. Run the command from a fresh terminal
+3. Or restart your development server
+
+### Order Issues
+
+If items appear in wrong order:
+
+- Add `order: <number>` to the frontmatter of markdown files
+- Or rename files to include numbers (e.g., `01-intro.md`, `02-basics.md`)

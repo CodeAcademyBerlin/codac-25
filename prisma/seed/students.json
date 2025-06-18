@@ -1,0 +1,212 @@
+[
+  {
+    "id": 1,
+    "userId": 1,
+    "name": "Eren Yeager",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/a/a1/Eren_Jaeger_%28Anime%29_character_image.png/revision/latest/top-crop/width/200/height/150?cb=20220123225500",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 2,
+    "userId": 2,
+    "name": "Mikasa Ackerman",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/4/4f/Mikasa_Ackermann_%28Anime%29_character_image.png/revision/latest/top-crop/width/200/height/150?cb=20231105175401",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 3,
+    "userId": 3,
+    "name": "Armin Arlert",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/9/93/Armin_Arlelt_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20210322005647",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+
+  {
+    "id": 5,
+    "userId": 5,
+    "name": "Connie Springer",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/1/13/Connie_Springer_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20210322005647",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 6,
+    "userId": 6,
+    "name": "Sasha Blouse",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/1/13/Sasha_Blouse_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20210322005647",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 7,
+    "userId": 7,
+    "name": "Marco Bodt",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/1/13/Marco_Bodt_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20210322005647",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 8,
+    "userId": 8,
+    "name": "Krista Lenz",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/1/13/Krista_Lenz_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20210322005647",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 9,
+    "userId": 9,
+    "name": "Ymir",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/1/13/Ymir_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20210322005647",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 10,
+    "userId": 10,
+    "name": "Reiner Braun",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/1/13/Reiner_Braun_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20210322005647",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 11,
+    "userId": 11,
+    "name": "Bertolt Hoover",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/1/13/Bertolt_Hoover_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20210322005647",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 12,
+    "userId": 12,
+    "name": "Annie Leonhart",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/1/13/Annie_Leonhart_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20210322005647",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 13,
+    "userId": 13,
+    "name": "Thomas Wagner",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/9/90/Tomas_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20180217182612",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 14,
+    "userId": 14,
+    "name": "Mina Carolina",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/4/42/Mina_Carolina_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20181014195843",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 15,
+    "userId": 15,
+    "name": "Nac Tias",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/0/09/Nac_Tias_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20181014195047",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 16,
+    "userId": 16,
+    "name": "Mylius Zeramuski",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/8/83/Mylius_Zeramuski_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20190520014953",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 17,
+    "userId": 17,
+    "name": "Hannah Diamant",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/0/0c/Hannah_Diamant_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20190519180214",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 18,
+    "userId": 18,
+    "name": "Daz",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/0/09/Daz_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20181014195047",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 19,
+    "userId": 19,
+    "name": "Samuel Linke-Jackson",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/9/99/Samuel_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20190519180153",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  },
+  {
+    "id": 20,
+    "userId": 20,
+    "name": "Marlowe Freudenberg",
+    "avatar": "https://static.wikia.nocookie.net/shingekinokyojin/images/6/63/Marlo_Freudenberg_%28Anime%29_character_image.png/revision/latest/scale-to-width-down/350?cb=20170514194208",
+    "cohortId": 1,
+    "courseId": 1,
+    "progress": {
+      "completedLessons": []
+    }
+  }
+]

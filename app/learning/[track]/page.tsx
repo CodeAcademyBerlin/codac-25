@@ -6,6 +6,7 @@ import { BookOpen, Clock, ChevronRight, FileText, Folder } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { getDocsHierarchy } from '@/data/docs-hierarchy';
+import { getTrackProgress } from '@/data/tracks';
 
 interface TreeNode {
   id: string;
@@ -16,36 +17,7 @@ interface TreeNode {
   isExpanded?: boolean;
 }
 
-// Mock progress data - this would come from the database
-const mockProgress = {
-  'web': {
-    title: 'Web Development',
-    description: 'Learn to build modern web applications with HTML, CSS, JavaScript, and React',
-    progress: 75,
-    currentLesson: 'React Components',
-    totalLessons: 24,
-    completedLessons: 18,
-    estimatedTime: '12 weeks'
-  },
-  'data': {
-    title: 'Data Science',
-    description: 'Master data analysis, visualization, and machine learning with Python',
-    progress: 45,
-    currentLesson: 'Data Visualization with Tableau',
-    totalLessons: 32,
-    completedLessons: 14,
-    estimatedTime: '16 weeks'
-  },
-  'career': {
-    title: 'Career Services',
-    description: 'Prepare for your job search with CV writing, interview skills, and networking',
-    progress: 20,
-    currentLesson: 'Goal Setting',
-    totalLessons: 12,
-    completedLessons: 2,
-    estimatedTime: '6 weeks'
-  }
-};
+
 
 function findTrackContent(nodes: TreeNode[], trackName: string): TreeNode | null {
   for (const node of nodes) {
@@ -92,7 +64,11 @@ export default async function TrackPage({ params }: { params: Promise<{ track: s
     notFound();
   }
 
-  const trackInfo = mockProgress[track as keyof typeof mockProgress];
+  const trackInfo = await getTrackProgress(track);
+  if (!trackInfo) {
+    notFound();
+  }
+
   const hierarchy = await getDocsHierarchy('COURSE_MATERIAL');
   
   // Find the specific track content in the hierarchy
