@@ -41,7 +41,7 @@ export const VideoElement = withHOC(
 
     const isEditorMounted = useEditorMounted();
 
-    const isTweet = true;
+    const isTweet = embed?.provider === 'twitter';
 
     const { isDragging, handleRef } = useDraggable({
       element: props.element,

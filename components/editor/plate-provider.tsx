@@ -2,11 +2,12 @@
 import { AlertCircle, CheckCircle2, Cloud, CloudOff, Save } from "lucide-react";
 import { Value } from "platejs";
 import { PlateController, useEditorRef, useEditorSelector } from "platejs/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useCallback, useEffect, useRef, useState } from "react";
 
 import { updateDoc } from "@/actions/doc/update-doc";
 import { Button } from "@/components/ui/button";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useHasActiveUploads } from "@/hooks/use-upload-file";
 import { logger } from "@/lib/logger";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +19,31 @@ interface SaveStatus {
     error?: string;
     hasUnsavedChanges: boolean;
 }
+
+// Context for save functionality
+interface SaveContextValue {
+    triggerSave: () => Promise<void>;
+    saveStatus: SaveStatus;
+}
+
+const SaveContext = createContext<SaveContextValue | null>(null);
+
+export const useSave = () => {
+    const context = useContext(SaveContext);
+    if (!context) {
+        // Provide a fallback when context is not available
+        return {
+            triggerSave: async () => {
+                console.warn('Save context not available - save operation skipped');
+            },
+            saveStatus: {
+                status: 'idle' as const,
+                hasUnsavedChanges: false,
+            }
+        };
+    }
+    return context;
+};
 
 function SaveStatusIndicator({ status, onManualSave }: { 
     status: SaveStatus; 
@@ -125,6 +151,7 @@ const PlateStateUpdater = ({ docId, showStatusBar = false, initialValue }: {
 }) => {
     const editor = useEditorRef();
     const hasSelection = useEditorSelector((editor) => !!editor?.selection, []);
+    const hasActiveUploads = useHasActiveUploads();
     
     // Track only the editor content (children), not the entire state
     const editorContent = useEditorSelector((editor) => editor?.children, []);
@@ -146,6 +173,17 @@ const PlateStateUpdater = ({ docId, showStatusBar = false, initialValue }: {
     // Save to database function
     const saveToDatabase = useCallback(async (content: Value, isManual = false) => {
         if (isSavingRef.current || !content || !editor?.children) {
+            return;
+        }
+
+        // Prevent autosave when uploads are in progress (but allow manual saves)
+        if (!isManual && hasActiveUploads) {
+            logger.debug('Skipping autosave due to active uploads', {
+                action: 'autosave_skipped',
+                resource: 'document',
+                resourceId: docId,
+                metadata: { hasActiveUploads }
+            });
             return;
         }
 
@@ -210,7 +248,7 @@ const PlateStateUpdater = ({ docId, showStatusBar = false, initialValue }: {
         } finally {
             isSavingRef.current = false;
         }
-    }, [docId, editor, hasSelection]);
+    }, [docId, editor, hasSelection, hasActiveUploads]);
 
     // Manual save function
     const handleManualSave = useCallback(async () => {
@@ -260,10 +298,20 @@ const PlateStateUpdater = ({ docId, showStatusBar = false, initialValue }: {
         }
     });
 
-    return showStatusBar ? (
-        <SaveStatusIndicator 
-            status={saveStatus} 
-            onManualSave={handleManualSave}
-        />
-    ) : null;
+    // Provide save context to child components
+    const saveContextValue: SaveContextValue = {
+        triggerSave: handleManualSave,
+        saveStatus,
+    };
+
+    return (
+        <SaveContext.Provider value={saveContextValue}>
+            {showStatusBar ? (
+                <SaveStatusIndicator 
+                    status={saveStatus} 
+                    onManualSave={handleManualSave}
+                />
+            ) : null}
+        </SaveContext.Provider>
+    );
 }

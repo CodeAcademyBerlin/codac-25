@@ -1,14 +1,13 @@
+import { generateReactHelpers } from '@uploadthing/react';
 import * as React from 'react';
-
-import type { OurFileRouter } from '@/lib/uploadthing';
+import { toast } from 'sonner';
 import type {
   ClientUploadedFileData,
   UploadFilesOptions,
 } from 'uploadthing/types';
-
-import { generateReactHelpers } from '@uploadthing/react';
-import { toast } from 'sonner';
 import { z } from 'zod';
+
+import type { OurFileRouter } from '@/lib/uploadthing';
 
 export type UploadedFile<T = unknown> = ClientUploadedFileData<T>;
 
@@ -127,4 +126,40 @@ export function showErrorToast(err: unknown) {
   const errorMessage = getErrorMessage(err);
 
   return toast.error(errorMessage);
+}
+
+// Custom hook to check if any uploads are in progress globally
+export function useHasActiveUploads() {
+  const [hasActiveUploads, setHasActiveUploads] = React.useState(false);
+
+  // This will be set by PlaceholderElements when they start/stop uploading
+  React.useEffect(() => {
+    const checkUploads = () => {
+      // Check if there are any elements with isUploading state
+      const uploadingElements = document.querySelectorAll('[data-uploading="true"]');
+      setHasActiveUploads(uploadingElements.length > 0);
+    };
+
+    // Check immediately
+    checkUploads();
+
+    // Set up a MutationObserver to watch for changes
+    const observer = new MutationObserver(checkUploads);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['data-uploading']
+    });
+
+    // Also check periodically as a fallback
+    const interval = setInterval(checkUploads, 1000);
+
+    return () => {
+      observer.disconnect();
+      clearInterval(interval);
+    };
+  }, []);
+
+  return hasActiveUploads;
 }

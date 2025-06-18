@@ -65,6 +65,9 @@ export const PlaceholderElement = withHOC(
     const isImage = element.mediaType === KEYS.img;
 
     const imageRef = React.useRef<HTMLImageElement>(null);
+    
+    // Store dimensions separately to ensure they persist
+    const imageDimensionsRef = React.useRef<{ width: number; height: number } | null>(null);
 
     const { openFilePicker } = useFilePicker({
       accept: currentContent.accept,
@@ -83,37 +86,84 @@ export const PlaceholderElement = withHOC(
 
     const replaceCurrentPlaceholder = React.useCallback(
       (file: File) => {
-        void uploadFile(file);
-        api.placeholder.addUploadingFile(element.id as string, file);
+        if (!api || !api.placeholder) {
+          console.error('API or placeholder API not available');
+          return;
+        }
+        
+        try {
+          void uploadFile(file);
+          api.placeholder.addUploadingFile(element.id as string, file);
+        } catch (error) {
+          console.error('Error in replaceCurrentPlaceholder:', error);
+        }
       },
-      [api.placeholder, element.id, uploadFile]
+      [api, api?.placeholder, element.id, uploadFile]
     );
 
     React.useEffect(() => {
-      if (!uploadedFile) return;
+      if (!uploadedFile || !editor || !editor.api || !editor.tf) return;
 
-      const path = editor.api.findPath(element);
+      try {
+        const path = editor.api.findPath(element);
+        
+        if (!path) {
+          console.warn('Could not find path for element', element);
+          return;
+        }
 
-      editor.tf.withoutSaving(() => {
-        editor.tf.removeNodes({ at: path });
+        editor.tf.withoutSaving(() => {
+          editor.tf.removeNodes({ at: path });
 
-        const node = {
-          children: [{ text: '' }],
-          initialHeight: imageRef.current?.height,
-          initialWidth: imageRef.current?.width,
-          isUpload: true,
-          name: element.mediaType === KEYS.file ? uploadedFile.name : '',
-          placeholderId: element.id as string,
-          type: element.mediaType!,
-          url: uploadedFile.url,
-        };
+          // Get dimensions from stored ref, imageRef, or use defaults
+          let width: number | undefined;
+          let height: number | undefined;
+          
+          // First try to get dimensions from our stored ref
+          if (imageDimensionsRef.current) {
+            width = imageDimensionsRef.current.width;
+            height = imageDimensionsRef.current.height;
+          }
+          // Fallback to imageRef if dimensions ref is not available
+          else if (imageRef?.current) {
+            width = (imageRef.current as any).__originalWidth || imageRef.current.width || imageRef.current.naturalWidth;
+            height = (imageRef.current as any).__originalHeight || imageRef.current.height || imageRef.current.naturalHeight;
+          }
+          
+          // Set default dimensions for media if none found
+          if (element.mediaType === KEYS.img && (!width || !height)) {
+            width = width || 800;  // Default width
+            height = height || 600; // Default height
+          } else if (element.mediaType === KEYS.video && (!width || !height)) {
+            width = width || 800;  // Default width for video
+            height = height || 450; // Default height for video (16:9 aspect ratio)
+          }
 
-        editor.tf.insertNodes(node, { at: path });
+          const node = {
+            children: [{ text: '' }],
+            initialHeight: height,
+            initialWidth: width,
+            isUpload: true,
+            name: element.mediaType === KEYS.file ? uploadedFile.name : '',
+            placeholderId: element.id as string,
+            type: element.mediaType!,
+            url: uploadedFile.url,
+            // Add width and height directly to the node for immediate use
+            ...(width && { width }),
+            ...(height && { height }),
+          };
 
-        updateUploadHistory(editor, node);
-      });
+          editor.tf.insertNodes(node, { at: path });
 
-      api.placeholder.removeUploadingFile(element.id as string);
+          updateUploadHistory(editor, node);
+        });
+
+        api.placeholder.removeUploadingFile(element.id as string);
+      } catch (error) {
+        console.error('Error replacing placeholder with uploaded file:', error);
+        // Remove the uploading file from state even if there's an error
+        api.placeholder.removeUploadingFile(element.id as string);
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [uploadedFile, element.id]);
 
@@ -122,48 +172,68 @@ export const PlaceholderElement = withHOC(
 
     /** Paste and drop */
     React.useEffect(() => {
-      if (isReplaced.current) return;
+      if (isReplaced.current || !editor || !api) return;
 
       isReplaced.current = true;
-      const currentFiles = api.placeholder.getUploadingFile(
-        element.id as string
-      );
+      
+      try {
+        const currentFiles = api.placeholder.getUploadingFile(
+          element.id as string
+        );
 
-      if (!currentFiles) return;
+        if (!currentFiles) return;
 
-      replaceCurrentPlaceholder(currentFiles);
+        replaceCurrentPlaceholder(currentFiles);
+      } catch (error) {
+        console.error('Error handling paste/drop files:', error);
+      }
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isReplaced]);
 
     return (
-      <PlateElement className="my-1" {...props}>
-        {(!loading || !isImage) && (
+      <PlateElement 
+        className="my-1" 
+        {...props}
+        data-uploading={loading ? 'true' : 'false'}
+      >
+        {!loading && (
           <div
             className={cn(
               'flex cursor-pointer items-center rounded-sm bg-muted p-3 pr-9 select-none hover:bg-primary/10'
             )}
-            onClick={() => !loading && openFilePicker()}
+            onClick={() => openFilePicker()}
             contentEditable={false}
           >
             <div className="relative mr-3 flex text-muted-foreground/80 [&_svg]:size-6">
               {currentContent.icon}
             </div>
             <div className="text-sm whitespace-nowrap text-muted-foreground">
-              <div>
-                {loading ? uploadingFile?.name : currentContent.content}
-              </div>
+              <div>{currentContent.content}</div>
+            </div>
+          </div>
+        )}
 
-              {loading && !isImage && (
-                <div className="mt-1 flex items-center gap-1.5">
-                  <div>{formatBytes(uploadingFile?.size ?? 0)}</div>
-                  <div>–</div>
-                  <div className="flex items-center">
+        {loading && !isImage && (
+          <div
+            className={cn(
+              'flex cursor-pointer items-center rounded-sm bg-muted p-3 pr-9 select-none hover:bg-primary/10'
+            )}
+            contentEditable={false}
+          >
+            <div className="relative mr-3 flex text-muted-foreground/80 [&_svg]:size-6">
+              {currentContent.icon}
+            </div>
+            <div className="text-sm whitespace-nowrap text-muted-foreground">
+              <div>{uploadingFile?.name}</div>
+              <div className="mt-1 flex items-center gap-1.5">
+                <div>{formatBytes(uploadingFile?.size ?? 0)}</div>
+                <div>–</div>
+                                  <div className="flex items-center">
                     <Loader2Icon className="mr-1 size-3.5 animate-spin text-muted-foreground" />
-                    {progress ?? 0}%
+                    {Math.round(progress ?? 0)}%
                   </div>
-                </div>
-              )}
+              </div>
             </div>
           </div>
         )}
@@ -173,6 +243,9 @@ export const PlaceholderElement = withHOC(
             file={uploadingFile}
             imageRef={imageRef}
             progress={progress}
+            onDimensionsLoaded={(dimensions) => {
+              imageDimensionsRef.current = dimensions;
+            }}
           />
         )}
 
@@ -187,25 +260,93 @@ export function ImageProgress({
   file,
   imageRef,
   progress = 0,
+  onDimensionsLoaded,
 }: {
   file: File;
   className?: string;
   imageRef?: React.RefObject<HTMLImageElement | null>;
   progress?: number;
+  onDimensionsLoaded?: (dimensions: { width: number; height: number }) => void;
 }) {
   const [objectUrl, setObjectUrl] = React.useState<string | null>(null);
+  const [dimensions, setDimensions] = React.useState<{ width: number; height: number } | null>(null);
+  const [loadError, setLoadError] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const url = URL.createObjectURL(file);
     setObjectUrl(url);
 
+    // Get image dimensions
+    const img = new window.Image();
+    img.onload = () => {
+      const imgDimensions = { width: img.width, height: img.height };
+      setDimensions(imgDimensions);
+      setLoadError(false);
+      
+      // Notify parent component about the dimensions
+      onDimensionsLoaded?.(imgDimensions);
+      
+      // Update the ref with the actual image element and dimensions
+      if (imageRef && imageRef.current) {
+        imageRef.current.width = img.width;
+        imageRef.current.height = img.height;
+        // Store dimensions as custom properties for later access
+        (imageRef.current as any).__originalWidth = img.width;
+        (imageRef.current as any).__originalHeight = img.height;
+      }
+    };
+    img.onerror = () => {
+      setLoadError(true);
+    };
+    img.src = url;
+
     return () => {
       URL.revokeObjectURL(url);
     };
-  }, [file]);
+  }, [file, imageRef]);
 
-  if (!objectUrl) {
-    return null;
+  if (loadError) {
+    return (
+      <div className={cn('relative bg-muted rounded-sm p-4', className)} contentEditable={false}>
+        <div className="flex items-center justify-center h-32 text-muted-foreground">
+          <div className="text-center">
+            <p className="text-sm">Failed to load image preview</p>
+            <p className="text-xs mt-1">{file.name}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!objectUrl || !dimensions) {
+    return (
+      <div className={cn('relative bg-muted rounded-sm', className)} contentEditable={false}>
+        <div className="flex items-center justify-center h-32">
+          <div className="text-center">
+            <Loader2Icon className="size-6 animate-spin text-muted-foreground mx-auto" />
+            <p className="text-xs text-muted-foreground mt-2">Loading preview...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Calculate responsive dimensions while maintaining aspect ratio
+  const maxWidth = 600;
+  const maxHeight = 400;
+  const aspectRatio = dimensions.width / dimensions.height;
+  
+  let displayWidth = dimensions.width;
+  let displayHeight = dimensions.height;
+  
+  if (displayWidth > maxWidth) {
+    displayWidth = maxWidth;
+    displayHeight = maxWidth / aspectRatio;
+  }
+  
+  if (displayHeight > maxHeight) {
+    displayHeight = maxHeight;
+    displayWidth = maxHeight * aspectRatio;
   }
 
   return (
@@ -215,13 +356,24 @@ export function ImageProgress({
         className="h-auto w-full rounded-sm object-cover"
         alt={file.name}
         src={objectUrl}
+        width={Math.round(displayWidth)}
+        height={Math.round(displayHeight)}
+        style={{ maxHeight: '400px', objectFit: 'contain' }}
+        priority={true}
       />
       {progress < 100 && (
-        <div className="absolute right-1 bottom-1 flex items-center space-x-2 rounded-full bg-black/50 px-1 py-0.5">
-          <Loader2Icon className="size-3.5 animate-spin text-muted-foreground" />
+        <div className="absolute right-1 bottom-1 flex items-center space-x-2 rounded-full bg-black/70 backdrop-blur-sm px-2 py-1">
+          <Loader2Icon className="size-3 animate-spin text-white" />
           <span className="text-xs font-medium text-white">
             {Math.round(progress)}%
           </span>
+        </div>
+      )}
+      {progress === 100 && (
+        <div className="absolute right-1 bottom-1 rounded-full bg-green-500/80 backdrop-blur-sm p-1">
+          <svg className="size-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+          </svg>
         </div>
       )}
     </div>

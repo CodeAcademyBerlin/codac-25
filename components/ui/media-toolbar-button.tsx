@@ -1,7 +1,7 @@
 'use client';
 
 
-import { PlaceholderPlugin } from '@platejs/media/react';
+// import { PlaceholderPlugin } from '@platejs/media/react';
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 import {
   AudioLinesIcon,
@@ -14,8 +14,9 @@ import { isUrl, KEYS } from 'platejs';
 import { useEditorRef } from 'platejs/react';
 import * as React from 'react';
 import { toast } from 'sonner';
-import { useFilePicker } from 'use-file-picker';
+// import { useFilePicker } from 'use-file-picker';
 
+import { useSave } from '@/components/editor/plate-provider';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -53,26 +54,26 @@ const MEDIA_CONFIG: Record<
   [KEYS.audio]: {
     accept: ['audio/*'],
     icon: <AudioLinesIcon className="size-4" />,
-    title: 'Insert Audio',
-    tooltip: 'Audio',
+    title: 'Audio',
+    tooltip: 'Add audio block',
   },
   [KEYS.file]: {
     accept: ['*'],
     icon: <FileUpIcon className="size-4" />,
-    title: 'Insert File',
-    tooltip: 'File',
+    title: 'File',
+    tooltip: 'Add file block',
   },
   [KEYS.img]: {
     accept: ['image/*'],
     icon: <ImageIcon className="size-4" />,
-    title: 'Insert Image',
-    tooltip: 'Image',
+    title: 'Image',
+    tooltip: 'Add image block',
   },
   [KEYS.video]: {
     accept: ['video/*'],
     icon: <FilmIcon className="size-4" />,
-    title: 'Insert Video',
-    tooltip: 'Video',
+    title: 'Video',
+    tooltip: 'Add video block',
   },
 };
 
@@ -83,22 +84,47 @@ export function MediaToolbarButton({
   const currentConfig = MEDIA_CONFIG[nodeType];
 
   const editor = useEditorRef();
+  const { triggerSave } = useSave();
   const [open, setOpen] = React.useState(false);
   const [dialogOpen, setDialogOpen] = React.useState(false);
 
-  const { openFilePicker } = useFilePicker({
-    accept: currentConfig.accept,
-    multiple: true,
-    onFilesSelected: ({ plainFiles: updatedFiles }) => {
-      editor.getTransforms(PlaceholderPlugin).insert.media(updatedFiles);
-    },
-  });
+  // Insert placeholder block function
+  const insertPlaceholderBlock = React.useCallback(async () => {
+    editor.tf.insertNodes({
+      children: [{ text: '' }],
+      id: Date.now().toString(), // Generate unique ID for the placeholder
+      mediaType: nodeType,
+      type: 'placeholder',
+    });
+    
+    // Save the document with the new placeholder block before any upload starts
+    // Only attempt save if save context is available
+    if (triggerSave) {
+      try {
+        await triggerSave();
+        console.log('Placeholder block saved to database before upload');
+      } catch (error) {
+        console.error('Failed to save placeholder block:', error);
+        toast.error('Failed to save block. Please try again.');
+      }
+    } else {
+      console.warn('Save functionality not available - placeholder block inserted but not saved immediately');
+    }
+  }, [editor, nodeType, triggerSave]);
+
+  // const { openFilePicker } = useFilePicker({
+  //   accept: currentConfig.accept,
+  //   multiple: true,
+  //   onFilesSelected: ({ plainFiles: updatedFiles }) => {
+  //     editor.getTransforms(PlaceholderPlugin).insert.media(updatedFiles);
+  //   },
+  // });
 
   return (
     <>
       <ToolbarSplitButton
         onClick={() => {
-          openFilePicker();
+          void insertPlaceholderBlock();
         }}
         onKeyDown={(e) => {
           if (e.key === 'ArrowDown') {
@@ -128,10 +154,14 @@ export function MediaToolbarButton({
             alignOffset={-32}
           >
             <DropdownMenuGroup>
-              <DropdownMenuItem onSelect={() => openFilePicker()}>
+              <DropdownMenuItem onSelect={() => void insertPlaceholderBlock()}>
                 {currentConfig.icon}
-                Upload from computer
+                Add {currentConfig.title.toLowerCase()} block
               </DropdownMenuItem>
+              {/* <DropdownMenuItem onSelect={() => openFilePicker()}>
+                {currentConfig.icon}
+                Upload from computer directly
+              </DropdownMenuItem> */}
               <DropdownMenuItem onSelect={() => setDialogOpen(true)}>
                 <LinkIcon />
                 Insert via URL
