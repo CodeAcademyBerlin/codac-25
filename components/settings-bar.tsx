@@ -15,9 +15,10 @@ type SettingsBarItemProperties = {
 
 type SettingsBarProperties = {
   readonly children: ReactNode;
+  readonly collapsedContent?: ReactNode;
 };
 
-const Root = ({ children }: SettingsBarProperties) => {
+const Root = ({ children, collapsedContent }: SettingsBarProperties) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
@@ -41,7 +42,13 @@ const Root = ({ children }: SettingsBarProperties) => {
           )}
         </Button>
       </div>
+      
       {!isCollapsed && children}
+      {isCollapsed && collapsedContent && (
+        <div className="flex flex-col items-center space-y-2">
+          {collapsedContent}
+        </div>
+      )}
     </div>
   );
 };

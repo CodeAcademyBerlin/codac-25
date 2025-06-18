@@ -342,6 +342,7 @@ model Document {
   title       String
   content     Json
   parentId    String?
+  isFolder    Boolean      @default(false)
   isPublished Boolean      @default(false)
   isArchived  Boolean      @default(false)
   coverImage  String?
@@ -353,7 +354,7 @@ model Document {
 
   authorId      String
   author        User                   @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  parent        Document?              @relation("DocumentHierarchy", fields: [parentId], references: [id])
+  parent        Document?              @relation("DocumentHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
   children      Document[]             @relation("DocumentHierarchy")
   favorites     Favorite[]
   comments      Comment[]

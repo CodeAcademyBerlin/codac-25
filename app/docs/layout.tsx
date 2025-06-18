@@ -1,5 +1,6 @@
 import { ThemePicker } from '@/components/theme-picker';
 import { getDocs } from '@/data/docs';
+import { getDocsHierarchy } from '@/data/docs-hierarchy';
 
 import { DocSidebarContent } from './components/doc-sidebar-content';
 import { DocsNavbar } from './components/docs-navbar';
@@ -9,7 +10,9 @@ export default async function DocLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Get all docs for sidebar
+  // Get hierarchical docs for sidebar
+  const nodes = await getDocsHierarchy();
+  // Get flat docs for navbar (compatibility)
   const docs = await getDocs();
   
   return (
@@ -20,8 +23,8 @@ export default async function DocLayout({
         <ThemePicker variant="dropdown" align="end" />
         </div>
       </div>
-      <div className="flex h-full w-full divide-x">
-      <DocSidebarContent docs={docs} />
+      <div className="flex h-full w-full">
+      <DocSidebarContent nodes={nodes} />
         {children}
       </div>
      

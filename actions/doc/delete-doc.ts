@@ -51,12 +51,21 @@ export async function deleteDoc(data: DeleteDocInput): Promise<DeleteDocResult> 
             };
         }
 
-        // Check if document has children
+        // For folders, we'll cascade delete children. For documents, prevent deletion if has children.
         if (existingDoc._count.children > 0) {
-            return {
-                success: false,
-                error: 'Cannot delete document with sub-documents. Please delete or move sub-documents first.'
-            };
+            // Get the document to check if it's a folder
+            const docWithType = await prisma.document.findUnique({
+                where: { id },
+                select: { isFolder: true }
+            });
+
+            if (!docWithType?.isFolder) {
+                return {
+                    success: false,
+                    error: 'Cannot delete document with sub-documents. Please delete or move sub-documents first.'
+                };
+            }
+            // If it's a folder, we'll cascade delete below
         }
 
         // Check if user has permission to delete this document
@@ -74,19 +83,31 @@ export async function deleteDoc(data: DeleteDocInput): Promise<DeleteDocResult> 
             };
         }
 
-        // Soft delete by archiving (recommended approach)
-        await prisma.document.update({
-            where: { id },
-            data: {
-                isArchived: true,
-                updatedAt: new Date(),
-            },
-        });
+        // Function to recursively archive all children
+        const archiveRecursively = async (documentId: string): Promise<void> => {
+            // Get all children
+            const children = await prisma.document.findMany({
+                where: { parentId: documentId },
+                select: { id: true }
+            });
 
-        // Alternative: Hard delete (uncomment if needed)
-        // await prisma.document.delete({
-        //   where: { id },
-        // });
+            // Archive all children recursively
+            for (const child of children) {
+                await archiveRecursively(child.id);
+            }
+
+            // Archive the current document
+            await prisma.document.update({
+                where: { id: documentId },
+                data: {
+                    isArchived: true,
+                    updatedAt: new Date(),
+                },
+            });
+        };
+
+        // Archive the document and all its children
+        await archiveRecursively(id);
 
         // Revalidate relevant paths
         revalidatePath('/docs');

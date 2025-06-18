@@ -55,8 +55,9 @@ export async function createDoc(data: CreateDocInput): Promise<CreateDocResult> 
         const document = await prisma.document.create({
             data: {
                 title: validatedData.title,
-                content: validatedData.content || [{ type: 'p', children: [{ text: '' }] }],
+                content: validatedData.content || (validatedData.isFolder ? [] : [{ type: 'p', children: [{ text: '' }] }]),
                 parentId: validatedData.parentId,
+                isFolder: validatedData.isFolder || false,
                 type: validatedData.type || 'GENERAL',
                 authorId: TEMP_USER_ID,
                 isPublished: false,

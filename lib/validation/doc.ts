@@ -8,6 +8,7 @@ export const docSchema = z.object({
     title: z.string().min(1, 'Title is required').max(255, 'Title too long'),
     content: z.any().optional(),
     parentId: z.string().cuid().optional(),
+    isFolder: z.boolean().default(false),
     isPublished: z.boolean().default(false),
     isArchived: z.boolean().default(false),
     coverImage: z.string().url().optional(),
@@ -20,6 +21,7 @@ export const createDocSchema = z.object({
     title: z.string().min(1, 'Title is required').max(255, 'Title too long'),
     content: z.any().optional(),
     parentId: z.string().cuid().optional().or(z.literal('').transform(() => undefined)),
+    isFolder: z.boolean().default(false),
     type: z.enum(['GENERAL', 'COURSE_MATERIAL', 'ASSIGNMENT', 'RESOURCE']),
 });
 
