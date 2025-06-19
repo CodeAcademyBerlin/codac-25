@@ -66,20 +66,18 @@ async function main() {
 
   console.log('✅ Created cohorts');
 
-  // Create users based on JSON seed data and add additional mentor/alumni users
-  const alumniCohort = cohorts.find(c => c.slug === 'alumni');
 
   // Create users from students JSON data
   const studentUsers = await Promise.all(
     studentsData.map((student: any) => {
-      const cohort = cohorts.find(c => c.id === student.cohortId);
+      const cohort = cohorts.find(c => c.slug === student.cohort);
       return prisma.user.create({
         data: {
           email: `${student.name.toLowerCase().replace(' ', '.')}@codac.academy`,
           name: student.name,
           role: UserRole.STUDENT,
           status: UserStatus.ACTIVE,
-          cohortId: cohort?.id,
+          cohortId: cohorts.find(c => c.slug === student.cohort)?.id,
           avatar: student.avatar,
           bio: `Coding academy student specializing in ${cohort?.name || 'software development'}.`,
           githubUrl: `https://github.com/${student.name.toLowerCase().replace(' ', '')}`,
@@ -89,6 +87,8 @@ async function main() {
     })
   );
 
+
+  const mentorsCohort = cohorts.find(c => c.slug === 'mentors');
   const mentorUsers = await Promise.all(
     mentorsData.map((mentor: any) =>
       prisma.user.create({
@@ -97,7 +97,7 @@ async function main() {
           name: mentor.name,
           role: UserRole.MENTOR,
           status: UserStatus.ACTIVE,
-          cohortId: alumniCohort?.id,
+          cohortId: mentorsCohort?.id,
           avatar: mentor.avatar,
           bio: mentor.bio,
           githubUrl: `https://github.com/${mentor.name.toLowerCase().replace(' ', '')}`,
@@ -110,6 +110,17 @@ async function main() {
   const users = [...studentUsers, ...mentorUsers];
 
   console.log('✅ Created users');
+
+  // Assign users to cohorts
+  await Promise.all(
+    users.map((user) => {
+      return prisma.user.update({
+        where: { id: user.id },
+        data: { cohortId: user.cohortId },
+      });
+    })
+  );
+  console.log('✅ Assigned users to cohorts');
 
   // Create courses based on JSON seed data
   const courses = await Promise.all(

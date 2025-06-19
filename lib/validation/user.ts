@@ -41,7 +41,7 @@ export const userSchema = z.object({
 export const createUserSchema = z.object({
     email: z.string().email('Invalid email address').max(255, 'Email too long'),
     name: z.string().min(1, 'Name is required').max(100, 'Name too long').optional(),
-    role: z.enum(['STUDENT', 'ALUMNI', 'INSTRUCTOR', 'ADMIN']),
+    role: z.enum(['STUDENT', 'ALUMNI', 'MENTOR', 'ADMIN']),
     status: z.enum(['ACTIVE', 'INACTIVE', 'GRADUATED']),
 });
 
@@ -62,7 +62,7 @@ export const getUserSchema = z.object({
 
 // Get users with filters schema
 export const getUsersSchema = z.object({
-    role: z.enum(['STUDENT', 'ALUMNI', 'INSTRUCTOR', 'ADMIN']).optional(),
+    role: z.enum(['STUDENT', 'ALUMNI', 'MENTOR', 'ADMIN']).optional(),
     status: z.enum(['ACTIVE', 'INACTIVE', 'GRADUATED']).optional(),
     cohort: z.string().optional(),
     limit: z.number().min(1).max(100).default(20),
@@ -73,7 +73,7 @@ export const getUsersSchema = z.object({
 // Change user role schema (admin only)
 export const changeUserRoleSchema = z.object({
     id: z.string().cuid('Invalid user ID'),
-    role: z.enum(['STUDENT', 'ALUMNI', 'INSTRUCTOR', 'ADMIN']),
+    role: z.enum(['STUDENT', 'ALUMNI', 'MENTOR', 'ADMIN']),
 });
 
 // Change user status schema

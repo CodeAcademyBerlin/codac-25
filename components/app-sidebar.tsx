@@ -96,21 +96,33 @@ const data = {
       icon: Users,
       items: [
         {
-          title: 'Discussions',
-          url: '/community/discussions',
+          title: 'Cohorts',
+          url: '/community/cohorts',
         },
         {
-          title: 'Showcase',
-          url: '/community/showcase',
+          title: 'Students',
+          url: '/community/students',
         },
         {
-          title: 'Events',
-          url: '/community/events',
+          title: 'Mentors',
+          url: '/community/mentors',
         },
         {
-          title: 'Study Groups',
-          url: '/community/groups',
+          title: 'Alumni',
+          url: '/community/alumni',
         },
+        // {
+        //   title: 'Showcase',
+        //   url: '/community/showcase',
+        // },
+        // {
+        //   title: 'Events',
+        //   url: '/community/events',
+        // },
+        // {
+        //   title: 'Study Groups',
+        //   url: '/community/groups',
+        // },
       ],
     },
     {
