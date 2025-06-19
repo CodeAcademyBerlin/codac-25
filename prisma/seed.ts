@@ -41,6 +41,8 @@ async function main() {
   await prisma.suggestion.deleteMany();
   await prisma.favorite.deleteMany();
   await prisma.document.deleteMany();
+  await prisma.jobApplication.deleteMany();
+  await prisma.job.deleteMany();
   await prisma.user.deleteMany();
   await prisma.cohort.deleteMany();
 
@@ -627,6 +629,132 @@ async function main() {
 
   console.log('✅ Created achievements');
 
+  // Create job board postings for military career opportunities
+  const jobs = await Promise.all([
+    prisma.job.create({
+      data: {
+        title: 'Scout Regiment - Special Operations Squad',
+        description: 'Join humanity\'s most elite unit. We seek exceptional soldiers with proven combat records and unwavering dedication to humanity\'s survival. Advanced ODM gear training and Titan combat experience required.',
+        company: 'Scout Regiment',
+        location: 'Wall Rose - Scout Headquarters',
+        type: 'FULL_TIME',
+        level: 'SENIOR',
+        salary: '2,500 Gold per month + Combat Bonus',
+        remote: false,
+        skills: ['Advanced ODM Gear Operation', 'Titan Combat', 'Leadership', 'Strategic Planning', 'Emergency Medical Training'],
+        benefits: ['Elite Unit Recognition', 'Advanced Equipment Access', 'Combat Training', 'Leadership Development'],
+        applyEmail: 'recruitment@scouts.paradis.military',
+        isActive: true,
+        featured: true,
+        postedById: users[8].id, // Erwin Smith
+      },
+    }),
+    prisma.job.create({
+      data: {
+        title: 'Military Police - Central Interior Squad',
+        description: 'Protect the royal family and maintain order within the walls. Requires top 10 graduation rank and exceptional discipline. Comfortable assignment with prestige and security.',
+        company: 'Military Police Brigade',
+        location: 'Wall Sina - Royal Capital',
+        type: 'FULL_TIME',
+        level: 'MID',
+        salary: '3,000 Gold per month',
+        remote: false,
+        skills: ['Combat Training', 'Investigation', 'Royal Protocol', 'Crowd Control', 'Firearms Training'],
+        benefits: ['High Salary', 'Royal Protection Detail', 'Safe Assignment', 'Social Status'],
+        applyEmail: 'mp-recruitment@sina.royal.gov',
+        isActive: true,
+        featured: true,
+        postedById: adminUsers[0].id, // Admin
+      },
+    }),
+    prisma.job.create({
+      data: {
+        title: 'Garrison Regiment - Artillery Specialist',
+        description: 'Operate and maintain wall-mounted cannons for Titan defense. Technical expertise required for maintaining humanity\'s primary defensive systems.',
+        company: 'Garrison Regiment',
+        location: 'Wall Maria - Trost District',
+        type: 'FULL_TIME',
+        level: 'JUNIOR',
+        salary: '1,800 Gold per month',
+        remote: false,
+        skills: ['Artillery Operation', 'Mechanical Maintenance', 'Wall Defense', 'Team Coordination'],
+        benefits: ['Stable Position', 'Technical Training', 'Equipment Maintenance', 'Defense Training'],
+        applyEmail: 'garrison-tech@trost.military',
+        isActive: true,
+        featured: false,
+        postedById: adminUsers[1].id, // Kenny Ackerman
+      },
+    }),
+    prisma.job.create({
+      data: {
+        title: 'Research Division - Titan Studies Intern',
+        description: 'Assist in groundbreaking Titan research under Commander Hange Zoe. Opportunity to contribute to humanity\'s understanding of our greatest threat.',
+        company: 'Scout Regiment - Research Division',
+        location: 'Wall Rose - Research Facility',
+        type: 'INTERNSHIP',
+        level: 'ENTRY',
+        salary: '800 Gold per month + Research Credits',
+        remote: false,
+        skills: ['Scientific Method', 'Data Analysis', 'Laboratory Safety', 'Research Documentation'],
+        benefits: ['Research Experience', 'Mentorship Program', 'Full-time Potential', 'Scientific Training'],
+        applyEmail: 'research@scouts.paradis.military',
+        isActive: true,
+        featured: false,
+        postedById: users[5].id, // Hange (if they exist in mentors)
+      },
+    }),
+    prisma.job.create({
+      data: {
+        title: 'ODM Gear Maintenance Technician',
+        description: 'Critical support role maintaining and repairing ODM gear for active soldiers. Your work directly impacts soldier survival rates.',
+        company: 'Military Equipment Division',
+        location: 'Wall Rose - Equipment Depot',
+        type: 'CONTRACT',
+        level: 'MID',
+        salary: '2,200 Gold per month',
+        remote: false,
+        skills: ['Mechanical Engineering', 'ODM Gear Systems', 'Quality Control', 'Emergency Repairs'],
+        benefits: ['Critical Role Recognition', 'Equipment Access', 'Technical Development', 'Military Benefits'],
+        applyEmail: 'maintenance@military.equipment',
+        isActive: true,
+        featured: false,
+        postedById: mentorUsers[0].id, // First mentor user
+      },
+    }),
+  ]);
+
+  console.log('✅ Created job postings');
+
+  // Create some job applications
+  await Promise.all([
+    prisma.jobApplication.create({
+      data: {
+        jobId: jobs[0].id, // Scout Regiment Special Ops
+        userId: users[0].id, // Eren
+        coverLetter: 'I am dedicated to humanity\'s survival and will give everything to protect our people. My experience with Titans makes me uniquely qualified for this position.',
+        status: 'PENDING',
+      },
+    }),
+    prisma.jobApplication.create({
+      data: {
+        jobId: jobs[1].id, // Military Police
+        userId: users[3].id, // Jean (typically wants MP in the series)
+        coverLetter: 'I graduated in the top 10 and seek a position that utilizes my leadership skills while ensuring stability.',
+        status: 'REVIEWED',
+      },
+    }),
+    prisma.jobApplication.create({
+      data: {
+        jobId: jobs[3].id, // Research Division Intern
+        userId: users[2].id, // Armin
+        coverLetter: 'My analytical skills and curiosity about Titan behavior would be valuable assets to the research division.',
+        status: 'ACCEPTED',
+      },
+    }),
+  ]);
+
+  console.log('✅ Created job applications');
+
   // Create some documents for military training materials
   await Promise.all([
     prisma.document.create({
@@ -729,8 +857,10 @@ async function main() {
   🏆 ${achievements.length} military achievements
   🤝 2 mentorship connections
   📄 2 training manuals
+  💼 ${jobs.length} military career opportunities
+  📋 3 job applications
 
-⚔️ The 104th Training Corps is ready for Titan combat training!
+⚔️ The 104th Training Corps is ready for Titan combat training and career advancement!
   `);
 }
 

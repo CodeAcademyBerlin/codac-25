@@ -3,5 +3,19 @@ description: Interaction with the database.
 globs: **/*.{js,jsx,ts,tsx}
 alwaysApply: false
 ---
-- Interact with the database using Prisma ORM client;
-- Leverage Prisma's generated types.
+- Interact with the database exclusively using Prisma ORM client
+- Leverage Prisma's generated types for type safety
+- Use the centralized Prisma client from `lib/db/prisma.ts`
+- Implement data operations in separate layers:
+  - `/actions` for mutations (Create, Update, Delete)
+  - `/data` for queries (Read operations)
+- Use the `commonSelects` patterns for consistent data selection
+- Apply proper error handling for database operations
+- Implement transaction support for complex operations
+- Use Prisma's `select` for performance optimization
+- Follow the established patterns for server actions with validation
+- Implement proper caching strategies for read operations
+- Use database-level constraints and validation
+- Handle relationship management carefully (foreign keys, cascades)
+- Implement soft deletes where appropriate using `isArchived` fields
+- Use proper indexing for performance-critical queries

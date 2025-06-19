@@ -3,8 +3,37 @@ description: Enforces a consistent naming convention across the project.
 globs: */**
 ---
 - Use PascalCase for class names and type definitions.
-- Utilize camelCase for variables, functions and methods.
-- Employ kebab-case for file and directory names.
-- Reserve UPPERCASE for environment variables and constants.
-- Avoid magic numbers by defining constants with meaningful names.
-- Start each function name with a verb to indicate its purpose.
+- Use PascalCase for React components and type definitions
+- Utilize camelCase for variables, functions and methods
+- Employ kebab-case for file and directory names
+- Reserve UPPERCASE for environment variables and constants
+- Avoid magic numbers by defining constants with meaningful names
+- Start function names with verbs to indicate their purpose
+
+## Specific Conventions
+
+### Components
+- `UserProfile` (PascalCase for component names)
+- `user-profile.tsx` (kebab-case for file names)
+- `useUserProfile` (camelCase for hooks, starting with 'use')
+
+### Server Actions
+- `createUser`, `updateUser`, `deleteUser` (camelCase, verb-first)
+- `create-user.ts` (kebab-case for file names)
+
+### Types and Interfaces
+- `UserProfile`, `ServerActionResult` (PascalCase)
+- `CreateUserInput`, `UpdateUserInput` (descriptive, specific)
+
+### Variables and Functions
+- `isLoading`, `hasError`, `shouldRender` (boolean variables with auxiliary verbs)
+- `userData`, `userList`, `documentId` (camelCase, descriptive)
+- `handleSubmit`, `processImage`, `validateInput` (camelCase, verb-first)
+
+### Constants
+- `MAX_FILE_SIZE`, `DEFAULT_AVATAR_URL` (UPPERCASE with underscores)
+- `MEDIA_CONFIG`, `PROMPT_TEMPLATES` (UPPERCASE for configuration objects)
+
+### Database/Prisma
+- Follow Prisma naming conventions (snake_case for database, camelCase for client)
+- Use descriptive field names: `createdAt`, `updatedAt`, `isPublished`

@@ -3,18 +3,38 @@ description: Organize code in a consistent and logical manner.
 globs: */**
 alwaysApply: false
 ---
-- Structure files logically, grouping related components, helpers, types and static content.
-- Prefer named exports for components over default exports.
-- Favor small, single-purpose components over large, monolithic ones.
-- Separate concerns between presentational and container components.
+- Structure files logically, grouping related components, helpers, types and static content
+- Prefer named exports for components over default exports
+- Favor small, single-purpose components over large, monolithic ones
+- Separate concerns between presentational and container components
+- Use consistent file naming: kebab-case for files, PascalCase for components
 
-The folders are based on a standard Next.js application.
-/actions	Server-side mutations (Create, Update, Delete)
-/app	App Router components
-/components	Dashboard UI components
-/data	Fetches data from the database or external APIs (Read)
-/hooks	Custom React hooks
-/lib	Shared utility functions
-/public	Static assets like images
-/schemas	Validation schemas for actions and data
-/types	General types and DTOs
+## Project Structure
+
+The folders follow a standard Next.js application with specific conventions:
+
+/actions - Server-side mutations (Create, Update, Delete operations)
+/app - Next.js App Router pages and API routes
+/components - Reusable UI components organized by feature
+  /ui - Base UI components (buttons, inputs, dialogs)
+  /editor - Plate.js editor components and plugins
+  /dashboard - Dashboard-specific components
+  /community - Community feature components
+/data - Database queries and data fetching (Read operations)
+/hooks - Custom React hooks for shared logic
+/lib - Shared utility functions and configurations
+  /db - Database connection and Prisma client
+  /validation - Zod schemas for data validation
+  /imaging - Image processing utilities
+/public - Static assets (images, icons)
+/schemas - Additional validation schemas
+/types - TypeScript type definitions and DTOs
+/prisma - Database schema and migrations
+
+## Component Organization
+
+- Group related components in feature-specific directories
+- Keep component files focused on a single responsibility
+- Use index files for clean imports when appropriate
+- Separate complex components into smaller, composed parts
+- Co-locate related files (component, styles, tests) when beneficial

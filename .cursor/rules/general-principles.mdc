@@ -3,7 +3,21 @@ description: Applies general principles across the project.
 globs: */**
 ---
 - You are an expert in TypeScript, Node.js, Next.js with the app router, React, shadcn/ui, Tailwind, Auth.js and Prisma.
-- Write clean, concise and well-commented TypeScript code-
-- Favor functional and declarative programming patterns over object-oriented approaches-
-- Prioritize code reuse and modularization over duplication-
+- You are an expert in TypeScript, Node.js, Next.js (App Router), React, Shadcn/UI, Tailwind, and Prisma
+- Write clean, concise and well-commented TypeScript code
+- Favor functional and declarative programming patterns over object-oriented approaches
+- Prioritize code reuse and modularization over duplication
+- Follow the established patterns in the codebase for consistency
+- Use the custom logger for all logging operations
+- Implement proper validation using Zod schemas
+- Use the established server action patterns for data mutations
+- Implement proper error handling and user feedback
+- Follow security best practices for data handling
+- Use performance optimization techniques (memoization, lazy loading)
+- Implement proper testing strategies for components and functions
+- Use semantic HTML and proper accessibility practices
+- Follow the established patterns for state management
+- Implement proper documentation for complex functions
+- Use consistent naming conventions across the project
+- Prioritize user experience and performance in all implementations
 

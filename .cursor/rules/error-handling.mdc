@@ -3,5 +3,20 @@ description: Enfore friendly and logical error handling.
 globs: **/*.{js,jsx,ts,tsx}
 ---
 - Implement robust error handling and logging mechanisms.
-- Provide clear and user-friendly error messages to the end-users.
-- Consider using custom error types for consistent error handling.
+- Implement robust error handling using the established `ServerActionResult<T>` pattern
+- Use the centralized error handling utilities in `lib/server-action-utils.ts`
+- Provide clear and user-friendly error messages using toast notifications (Sonner)
+- Handle Prisma errors consistently using `handlePrismaError()` function
+- Use structured error logging with the custom logger from `lib/logger.ts`
+- Implement proper validation error handling with Zod schemas
+- Follow the established error handling pattern in server actions:
+  - Wrap operations in try-catch blocks
+  - Log errors with contextual information
+  - Return consistent error response format
+  - Handle specific error types (Prisma, Zod, custom)
+- Use error boundaries for React component error handling
+- Handle upload errors gracefully with appropriate fallbacks
+- Implement retry logic for transient failures (network, database)
+- Provide loading states during async operations
+- Log errors with appropriate severity levels (error, warn, info)
+- Include error context like userId, resourceId, and operation metadata

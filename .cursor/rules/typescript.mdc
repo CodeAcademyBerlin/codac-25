@@ -3,7 +3,19 @@ description: Applies general TypeScript coding standards and best practices acro
 globs: **/*.{ts,tsx}
 ---
 - Use TypeScript for all code; prefer types over interfaces.
+- Use TypeScript for all code; prefer `type` over `interface`.
 - Write concise, technical TypeScript code with accurate examples.
 - Use functional and declarative programming patterns; avoid classes.
 - Prefer iteration and modularization over code duplication.
 - Use descriptive variable names with auxiliary verbs (e.g., `isLoading`, `hasError`).
+- Leverage Prisma's generated types for database operations.
+- Use proper generic types for reusable components and functions.
+- Implement strict type checking with proper null/undefined handling.
+- Use discriminated unions for complex state management.
+- Implement proper typing for server actions and API responses.
+- Use const assertions for immutable data structures.
+- Implement proper typing for React component props and state.
+- Use utility types (Pick, Omit, Partial) for type transformations.
+- Implement proper error typing with custom error types.
+- Use type guards for runtime type checking.
+- Leverage TypeScript's template literal types for string validation.

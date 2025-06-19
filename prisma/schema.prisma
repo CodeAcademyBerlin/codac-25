@@ -96,6 +96,10 @@ model User {
   suggestions   Suggestion[]
   collaborators DocumentCollaborator[]
 
+  // Job Relations
+  postedJobs      Job[]            @relation("PostedJobs")
+  jobApplications JobApplication[] @relation("JobApplications")
+
   @@map("users")
 }
 
@@ -634,4 +638,77 @@ enum DocumentPermission {
   READ
   WRITE
   ADMIN
+}
+
+// Job Board Models
+model Job {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  company     String
+  location    String?
+  type        JobType   @default(FULL_TIME)
+  level       JobLevel  @default(ENTRY)
+  salary      String?
+  remote      Boolean   @default(false)
+  skills      Json? // Array of required skills
+  benefits    Json? // Array of benefits
+  applyUrl    String?
+  applyEmail  String?
+  isActive    Boolean   @default(true)
+  featured    Boolean   @default(false)
+  expiresAt   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  postedById   String?
+  postedBy     User?            @relation("PostedJobs", fields: [postedById], references: [id], onDelete: SetNull)
+  applications JobApplication[]
+
+  @@map("jobs")
+}
+
+model JobApplication {
+  id          String               @id @default(cuid())
+  coverLetter String?
+  resume      String? // URL or file path
+  status      JobApplicationStatus @default(PENDING)
+  appliedAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  // Relations
+  jobId  String
+  userId String
+  job    Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  user   User   @relation("JobApplications", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, userId])
+  @@map("job_applications")
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+  FREELANCE
+}
+
+enum JobLevel {
+  ENTRY
+  JUNIOR
+  MID
+  SENIOR
+  LEAD
+  EXECUTIVE
+}
+
+enum JobApplicationStatus {
+  PENDING
+  REVIEWED
+  INTERVIEW
+  REJECTED
+  ACCEPTED
 }

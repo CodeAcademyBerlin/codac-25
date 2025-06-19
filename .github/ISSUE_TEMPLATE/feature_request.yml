@@ -21,7 +21,7 @@ body:
         Example: "As a student, I find it difficult to track my progress across multiple courses because..."
         or "Currently there's no way to..."
     validations:
-      required: true
+      required: false
 
   - type: textarea
     id: solution
@@ -32,16 +32,7 @@ body:
         Describe your ideal solution. What should it look like? How should it work?
         Include specific details about the user interface, functionality, etc.
     validations:
-      required: true
-
-  - type: textarea
-    id: alternatives
-    attributes:
-      label: 🔄 Alternative Solutions
-      description: Have you considered any alternative approaches or workarounds?
-      placeholder: |
-        Describe any alternative solutions or features you've considered.
-        Are there any existing workarounds you're currently using?
+      required: false
 
   - type: dropdown
     id: user-type
@@ -82,18 +73,7 @@ body:
         2. When a mentor needs to review student work...
         3. When an instructor wants to create assignments...
     validations:
-      required: true
-
-  - type: textarea
-    id: mockup
-    attributes:
-      label: 🎨 Mockups/Examples
-      description: |
-        Do you have any mockups, screenshots from other apps, or examples?
-        You can drag and drop images here or paste links
-      placeholder: |
-        Add any visual examples, mockups, or screenshots that help illustrate your idea.
-        If you've seen similar features in other apps, feel free to share those as examples!
+      required: false
 
   - type: textarea
     id: technical-considerations
@@ -139,8 +119,6 @@ body:
       label: 📋 Checklist
       description: Please confirm the following
       options:
-        - label: I have searched for existing feature requests before creating this one
-          required: true
         - label: This feature aligns with CODAC's mission as a learning platform
           required: true
         - label: I understand this is a volunteer-maintained project and features are implemented based on community needs and available resources
