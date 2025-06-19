@@ -19,7 +19,6 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({
-    title: _title = "Overview",
     breadcrumbItems = [
         { label: "Dashboard", href: "/dashboard" },
         { label: "Overview" }

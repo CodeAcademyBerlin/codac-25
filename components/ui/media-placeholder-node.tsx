@@ -65,7 +65,7 @@ export const PlaceholderElement = withHOC(
     const isImage = element.mediaType === KEYS.img;
 
     const imageRef = React.useRef<HTMLImageElement>(null);
-    
+
     // Store dimensions separately to ensure they persist
     const imageDimensionsRef = React.useRef<{ width: number; height: number } | null>(null);
 
@@ -90,7 +90,7 @@ export const PlaceholderElement = withHOC(
           console.error('API or placeholder API not available');
           return;
         }
-        
+
         try {
           void uploadFile(file);
           api.placeholder.addUploadingFile(element.id as string, file);
@@ -98,7 +98,7 @@ export const PlaceholderElement = withHOC(
           console.error('Error in replaceCurrentPlaceholder:', error);
         }
       },
-      [api, api?.placeholder, element.id, uploadFile]
+      [api, element.id, uploadFile]
     );
 
     React.useEffect(() => {
@@ -106,7 +106,7 @@ export const PlaceholderElement = withHOC(
 
       try {
         const path = editor.api.findPath(element);
-        
+
         if (!path) {
           console.warn('Could not find path for element', element);
           return;
@@ -118,7 +118,7 @@ export const PlaceholderElement = withHOC(
           // Get dimensions from stored ref, imageRef, or use defaults
           let width: number | undefined;
           let height: number | undefined;
-          
+
           // First try to get dimensions from our stored ref
           if (imageDimensionsRef.current) {
             width = imageDimensionsRef.current.width;
@@ -126,10 +126,10 @@ export const PlaceholderElement = withHOC(
           }
           // Fallback to imageRef if dimensions ref is not available
           else if (imageRef?.current) {
-            width = (imageRef.current as any).__originalWidth || imageRef.current.width || imageRef.current.naturalWidth;
-            height = (imageRef.current as any).__originalHeight || imageRef.current.height || imageRef.current.naturalHeight;
+            width = (imageRef.current as HTMLImageElement & { __originalWidth?: number }).__originalWidth || imageRef.current.width || imageRef.current.naturalWidth;
+            height = (imageRef.current as HTMLImageElement & { __originalHeight?: number }).__originalHeight || imageRef.current.height || imageRef.current.naturalHeight;
           }
-          
+
           // Set default dimensions for media if none found
           if (element.mediaType === KEYS.img && (!width || !height)) {
             width = width || 800;  // Default width
@@ -164,7 +164,6 @@ export const PlaceholderElement = withHOC(
         // Remove the uploading file from state even if there's an error
         api.placeholder.removeUploadingFile(element.id as string);
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [uploadedFile, element.id]);
 
     // React dev mode will call React.useEffect twice
@@ -175,7 +174,7 @@ export const PlaceholderElement = withHOC(
       if (isReplaced.current || !editor || !api) return;
 
       isReplaced.current = true;
-      
+
       try {
         const currentFiles = api.placeholder.getUploadingFile(
           element.id as string
@@ -187,13 +186,11 @@ export const PlaceholderElement = withHOC(
       } catch (error) {
         console.error('Error handling paste/drop files:', error);
       }
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isReplaced]);
 
     return (
-      <PlateElement 
-        className="my-1" 
+      <PlateElement
+        className="my-1"
         {...props}
         data-uploading={loading ? 'true' : 'false'}
       >
@@ -229,10 +226,10 @@ export const PlaceholderElement = withHOC(
               <div className="mt-1 flex items-center gap-1.5">
                 <div>{formatBytes(uploadingFile?.size ?? 0)}</div>
                 <div>–</div>
-                                  <div className="flex items-center">
-                    <Loader2Icon className="mr-1 size-3.5 animate-spin text-muted-foreground" />
-                    {Math.round(progress ?? 0)}%
-                  </div>
+                <div className="flex items-center">
+                  <Loader2Icon className="mr-1 size-3.5 animate-spin text-muted-foreground" />
+                  {Math.round(progress ?? 0)}%
+                </div>
               </div>
             </div>
           </div>
@@ -282,17 +279,17 @@ export function ImageProgress({
       const imgDimensions = { width: img.width, height: img.height };
       setDimensions(imgDimensions);
       setLoadError(false);
-      
+
       // Notify parent component about the dimensions
       onDimensionsLoaded?.(imgDimensions);
-      
+
       // Update the ref with the actual image element and dimensions
       if (imageRef && imageRef.current) {
         imageRef.current.width = img.width;
         imageRef.current.height = img.height;
         // Store dimensions as custom properties for later access
-        (imageRef.current as any).__originalWidth = img.width;
-        (imageRef.current as any).__originalHeight = img.height;
+        (imageRef.current as HTMLImageElement & { __originalWidth?: number; __originalHeight?: number }).__originalWidth = img.width;
+        (imageRef.current as HTMLImageElement & { __originalWidth?: number; __originalHeight?: number }).__originalHeight = img.height;
       }
     };
     img.onerror = () => {
@@ -335,15 +332,15 @@ export function ImageProgress({
   const maxWidth = 600;
   const maxHeight = 400;
   const aspectRatio = dimensions.width / dimensions.height;
-  
+
   let displayWidth = dimensions.width;
   let displayHeight = dimensions.height;
-  
+
   if (displayWidth > maxWidth) {
     displayWidth = maxWidth;
     displayHeight = maxWidth / aspectRatio;
   }
-  
+
   if (displayHeight > maxHeight) {
     displayHeight = maxHeight;
     displayWidth = maxHeight * aspectRatio;
@@ -397,7 +394,7 @@ function formatBytes(
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
 
   return `${(bytes / Math.pow(1024, i)).toFixed(decimals)} ${sizeType === 'accurate'
-      ? (accurateSizes[i] ?? 'Bytest')
-      : (sizes[i] ?? 'Bytes')
+    ? (accurateSizes[i] ?? 'Bytest')
+    : (sizes[i] ?? 'Bytes')
     }`;
 }

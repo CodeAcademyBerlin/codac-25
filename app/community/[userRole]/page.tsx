@@ -67,7 +67,12 @@ export default async function CommunityRolePage({ params }: { params: Promise<Pa
 
     const config = roleConfig[userRole as keyof typeof roleConfig];
 
-    const queryParams: any = {
+    const queryParams: {
+        limit: number;
+        offset: number;
+        role?: 'STUDENT' | 'MENTOR' | 'ALUMNI' | 'ADMIN';
+        status?: 'GRADUATED' | 'ACTIVE' | 'INACTIVE';
+    } = {
         limit: 50,
         offset: 0,
     };

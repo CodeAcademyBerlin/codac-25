@@ -96,13 +96,13 @@ export function MediaToolbarButton({
       mediaType: nodeType,
       type: 'placeholder',
     });
-    
+
     // Save the document with the new placeholder block before any upload starts
     // Only attempt save if save context is available
     if (triggerSave) {
       try {
         await triggerSave();
-        console.log('Placeholder block saved to database before upload');
+        // Placeholder block saved to database before upload
       } catch (error) {
         console.error('Failed to save placeholder block:', error);
         toast.error('Failed to save block. Please try again.');
