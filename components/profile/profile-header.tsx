@@ -62,7 +62,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
                         {/* Avatar */}
                         <Avatar className="h-24 w-24 md:h-32 md:w-32">
                             <AvatarImage
-                                src={user.avatar || user.image || undefined}
+                                src={user.avatar || undefined}
                                 alt={user.name || 'User'}
                             />
                             <AvatarFallback className="bg-primary/10 text-primary font-semibold text-2xl md:text-3xl">

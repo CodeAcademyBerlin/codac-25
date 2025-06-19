@@ -57,7 +57,7 @@ async function main() {
           name: cohortData.name,
           startDate: new Date(cohortData.startDate),
           description: cohortData.description,
-          avatar: cohortData.image || cohortData.avatar,
+          image: cohortData.image,
           slug: cohortData.slug,
         },
       })
@@ -78,7 +78,7 @@ async function main() {
           role: UserRole.STUDENT,
           status: UserStatus.ACTIVE,
           cohortId: cohorts.find(c => c.slug === student.cohort)?.id,
-          avatar: student.avatar,
+          image: student.avatar,
           bio: `Coding academy student specializing in ${cohort?.name || 'software development'}.`,
           githubUrl: `https://github.com/${student.name.toLowerCase().replace(' ', '')}`,
           linkedinUrl: `https://linkedin.com/in/${student.name.toLowerCase().replace(' ', '-')}`,
@@ -98,7 +98,7 @@ async function main() {
           role: UserRole.MENTOR,
           status: UserStatus.ACTIVE,
           cohortId: mentorsCohort?.id,
-          avatar: mentor.avatar,
+          image: mentor.avatar,
           bio: mentor.bio,
           githubUrl: `https://github.com/${mentor.name.toLowerCase().replace(' ', '')}`,
           linkedinUrl: `https://linkedin.com/in/${mentor.name.toLowerCase().replace(' ', '-')}`,
@@ -107,7 +107,71 @@ async function main() {
     )
   );
 
-  const users = [...studentUsers, ...mentorUsers];
+  // Create admin users
+  const adminUsers = await Promise.all([
+    prisma.user.create({
+      data: {
+        email: 'admin@codac.academy',
+        name: 'Admin User',
+        role: UserRole.ADMIN,
+        status: UserStatus.ACTIVE,
+        image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2RjMjYyNiIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjMwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QUQ8L3RleHQ+PC9zdmc+',
+        bio: 'System administrator responsible for platform management and user oversight.',
+        githubUrl: 'https://github.com/codac-admin',
+        linkedinUrl: 'https://linkedin.com/company/codac-academy',
+      },
+    }),
+    prisma.user.create({
+      data: {
+        email: 'kenny.ackerman@codac.academy',
+        name: 'Kenny Ackerman',
+        role: UserRole.ADMIN,
+        status: UserStatus.ACTIVE,
+        image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzM3NDE1MSIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjMwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+S0E8L3RleHQ+PC9zdmc+',
+        bio: 'The Underground King turned academy administrator. Expert in anti-personnel combat and database management.',
+        githubUrl: 'https://github.com/kenny-underground',
+        linkedinUrl: 'https://linkedin.com/in/kenny-ackerman',
+      },
+    }),
+  ]);
+
+  // Create alumni users
+  const alumniUsers = await Promise.all([
+    prisma.user.create({
+      data: {
+        email: 'marco.bott@alumni.codac.academy',
+        name: 'Marco Bott',
+        role: UserRole.ALUMNI,
+        status: UserStatus.GRADUATED,
+        graduationDate: new Date('2023-12-15'),
+        image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzE2YTM0YSIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjMwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TUI8L3RleHQ+PC9zdmc+',
+        bio: 'Full-stack developer at a leading tech company. CODAC graduate specializing in React and Node.js.',
+        githubUrl: 'https://github.com/marco-dev',
+        linkedinUrl: 'https://linkedin.com/in/marco-bott',
+        currentJob: 'Senior Full-Stack Developer',
+        currentCompany: 'TechCorp Inc.',
+        portfolioUrl: 'https://marco-portfolio.dev',
+      },
+    }),
+    prisma.user.create({
+      data: {
+        email: 'annie.leonhart@alumni.codac.academy',
+        name: 'Annie Leonhart',
+        role: UserRole.ALUMNI,
+        status: UserStatus.GRADUATED,
+        graduationDate: new Date('2023-08-30'),
+        image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzFmMjkzNyIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjMwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QUw8L3RleHQ+PC9zdmc+',
+        bio: 'Data scientist and machine learning engineer. CODAC graduate now working in AI research.',
+        githubUrl: 'https://github.com/annie-ml',
+        linkedinUrl: 'https://linkedin.com/in/annie-leonhart',
+        currentJob: 'Machine Learning Engineer',
+        currentCompany: 'AI Research Labs',
+        portfolioUrl: 'https://annie-ml.com',
+      },
+    }),
+  ]);
+
+  const users = [...studentUsers, ...mentorUsers, ...adminUsers, ...alumniUsers];
 
   console.log('✅ Created users');
 

@@ -1,8 +1,14 @@
-import { Suspense } from "react"
-import { SignInForm } from "@/components/auth/signin-form"
+import { SignInForm } from "@/components/auth/signin-form-server"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-export default function SignInPage() {
+interface SignInPageProps {
+    searchParams?: {
+        callbackUrl?: string
+        error?: string
+    }
+}
+
+export default async function SignInPage({ searchParams }: SignInPageProps) {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
             <Card className="w-full max-w-md">
@@ -15,9 +21,7 @@ export default function SignInPage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Suspense fallback={<div>Loading...</div>}>
-                        <SignInForm />
-                    </Suspense>
+                    <SignInForm searchParams={searchParams} />
                 </CardContent>
             </Card>
         </div>

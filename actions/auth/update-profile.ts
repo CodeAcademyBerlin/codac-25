@@ -103,6 +103,7 @@ export async function updateProfile(data: UpdateProfileInput): Promise<UpdatePro
         });
 
         // Revalidate relevant paths
+        revalidatePath('/');
         revalidatePath('/profile');
         revalidatePath('/community');
         revalidatePath(`/community/students/${user.id}`);
