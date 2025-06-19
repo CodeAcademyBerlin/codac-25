@@ -1,0 +1,27 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+## Performance Optimization Guidelines
+
+- Use React Server Components by default, client components only when necessary
+- Implement proper loading states and skeleton screens
+- Use Next.js Image component for all image assets
+- Implement proper caching strategies for data fetching
+- Use dynamic imports for code splitting large components
+- Implement proper memoization with React.memo, useMemo, useCallback
+- Use the established debouncing patterns from `hooks/use-debounce.ts`
+- Optimize database queries with proper Prisma selections
+- Implement proper pagination for large data sets
+- Use streaming for better perceived performance
+- Minimize bundle size with proper tree shaking
+- Implement proper lazy loading for non-critical content
+- Use established patterns for optimistic updates
+- Handle large lists with virtualization when necessary
+- Implement proper preloading for critical resources
+- Use efficient state management patterns
+- Minimize re-renders with proper dependency arrays
+- Implement proper error boundaries to prevent cascading failures
+- Use Web Vitals monitoring and optimization techniques
+- Follow established patterns for auto-save functionality

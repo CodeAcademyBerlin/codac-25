@@ -1,0 +1,149 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+## AI-Assisted Coding Guidelines
+
+### Cursor Rules & MCP Best Practices
+
+- Use `@rules` to reference these workspace rules in your prompts
+- Leverage the `.cursor/rules/` directory for consistent AI guidance
+- Reference specific rule files: `@rules/typescript`, `@rules/error-handling`, etc.
+- Use MCP tools for codebase exploration and understanding
+- Keep rules concise but comprehensive for better AI comprehension
+
+### Free Tier Optimization
+
+- **Be Specific**: Provide clear, detailed prompts to avoid back-and-forth
+- **Use Context Wisely**: Reference existing files and patterns in your requests
+- **Batch Requests**: Combine related changes into single comprehensive requests
+- **Focus on Quality**: Prefer fewer, well-crafted prompts over many short ones
+- **Use Existing Patterns**: Reference established code patterns to reduce explanation needs
+
+### Effective AI Prompting
+
+```
+# Good Prompt Structure:
+1. Context: "I'm working on [specific feature/component]"
+2. Goal: "I need to [specific action]"
+3. Constraints: "Following our [specific rule/pattern]"
+4. Reference: "Similar to [existing file/pattern]"
+```
+
+### Model Selection for Free Tier
+
+- **Claude 3.5 Sonnet**: Best for complex refactoring and architecture decisions
+- **GPT-4**: Good for general coding tasks and explanations
+- **GPT-3.5**: Suitable for simple tasks and quick fixes
+- **Local Models**: Consider for frequent, simple tasks to preserve quota
+
+### Efficient AI Workflows
+
+#### For New Features:
+1. Start with architecture planning using AI
+2. Generate component structure following established patterns
+3. Implement core logic with AI assistance
+4. Use AI for error handling and edge cases
+5. AI-assisted testing and documentation
+
+#### For Bug Fixes:
+1. Use AI to analyze error patterns
+2. Reference similar fixes in codebase
+3. Apply established error handling patterns
+4. Validate fix with AI review
+
+#### For Refactoring:
+1. Use AI to identify improvement opportunities
+2. Follow established code organization rules
+3. Maintain consistency with existing patterns
+4. Use AI for impact analysis
+
+### Smart Context Usage
+
+- **File References**: Use `@filename` to include relevant files
+- **Rule References**: Use `@rules/rulename` for specific guidelines
+- **Pattern Examples**: Reference similar implementations in codebase
+- **Error Context**: Include full error messages and stack traces
+
+### Prompt Templates
+
+#### New Component Creation:
+```
+Create a new [component type] following @rules/ui-and-styling 
+and @rules/typescript patterns. Reference [similar component] 
+for consistency. Include proper error handling per @rules/error-handling.
+```
+
+#### Server Action Implementation:
+```
+Implement a server action following @rules/data-management 
+and @rules/error-handling patterns. Use the established 
+ServerActionResult pattern from lib/server-action-utils.ts.
+```
+
+#### Bug Investigation:
+```
+Analyze this error following @rules/error-handling. 
+Check similar patterns in [relevant files]. 
+Suggest fix maintaining consistency with our codebase.
+```
+
+### Code Review with AI
+
+- Use AI to review code against established rules
+- Check for consistency with existing patterns
+- Validate error handling implementation
+- Review performance implications
+- Ensure accessibility compliance
+
+### AI-Assisted Documentation
+
+- Generate JSDoc comments for complex functions
+- Create README updates for new features
+- Document API changes and breaking changes
+- Generate code examples following established patterns
+
+### Limitations & Alternatives
+
+#### When AI Struggles:
+- Very large file modifications (break into smaller chunks)
+- Complex state management (reference existing patterns)
+- Performance optimization (use specific metrics and requirements)
+- Security-sensitive code (validate thoroughly)
+
+#### Free Tier Strategies:
+- Plan requests during off-peak hours
+- Use AI for planning, implement manually when quota is low
+- Focus AI usage on complex problems, not simple syntax
+- Cache AI-generated solutions for similar future problems
+
+### Collaboration Patterns
+
+#### Team Usage:
+- Share effective prompts and patterns
+- Document AI-generated solutions for team reference
+- Review AI suggestions before implementation
+- Maintain consistency across team members' AI usage
+
+#### Code Quality:
+- Always review AI-generated code thoroughly
+- Test AI solutions against established patterns
+- Validate security and performance implications
+- Ensure adherence to project rules and conventions
+
+### Integration with Development Workflow
+
+1. **Planning Phase**: Use AI for architecture and approach
+2. **Implementation**: AI-assisted coding with rule validation
+3. **Review Phase**: AI code review against established patterns
+4. **Documentation**: AI-generated docs following project standards
+5. **Testing**: AI-assisted test creation and validation
+
+### Monitoring AI Effectiveness
+
+- Track which types of requests work best
+- Document successful prompt patterns
+- Note common AI limitations for your use case
+- Share learnings with team for collective improvement
+

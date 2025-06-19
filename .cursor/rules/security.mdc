@@ -1,0 +1,27 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+## Security Guidelines
+
+- Validate all user inputs using Zod schemas consistently
+- Use proper authentication and authorization patterns
+- Implement proper CSRF protection for all forms
+- Use the established permission checking patterns
+- Sanitize user-generated content before storage and display
+- Implement proper rate limiting for API endpoints
+- Use secure file upload validation and processing
+- Follow established patterns for sensitive data handling
+- Implement proper session management and token handling
+- Use environment variables for all sensitive configuration
+- Implement proper logging without exposing sensitive data
+- Use proper data encryption for sensitive information
+- Follow secure coding practices for database operations
+- Implement proper input validation and output encoding
+- Use Content Security Policy (CSP) headers appropriately
+- Implement proper error handling without information leakage
+- Use secure communication protocols (HTTPS) consistently
+- Follow established patterns for user data privacy
+- Implement proper backup and recovery procedures
+- Use security headers and proper CORS configuration

@@ -1,0 +1,27 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+## Accessibility Guidelines
+
+- Use semantic HTML elements for proper document structure
+- Implement proper ARIA labels and roles for complex interactions
+- Ensure keyboard navigation works for all interactive elements
+- Use proper focus management and visible focus indicators
+- Implement proper heading hierarchy (h1, h2, h3, etc.)
+- Provide alternative text for all images and media content
+- Use sufficient color contrast ratios for text and backgrounds
+- Ensure all form inputs have proper labels and error messages
+- Implement proper screen reader support for dynamic content
+- Use landmark roles for better navigation structure
+- Provide skip links for keyboard users
+- Ensure all interactive elements are properly focusable
+- Use proper live regions for dynamic content updates
+- Implement proper error announcement for form validation
+- Use descriptive link text and button labels
+- Ensure proper table markup with headers and captions
+- Implement proper modal and dialog accessibility
+- Use consistent navigation patterns throughout the application
+- Test with screen readers and keyboard-only navigation
+- Follow WCAG 2.1 AA guidelines for compliance

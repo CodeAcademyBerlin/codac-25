@@ -1,6 +1,6 @@
-# CODAC - Code Academy Berlin community
+# codac - Code Academy Berlin community
 
-![CODAC Logo](https://via.placeholder.com/800x200/4F46E5/FFFFFF?text=CODAC+-+Code+Academy+Berlin)
+<!-- ![CODAC Logo](/public/extension_icon.png) -->
 
 A comprehensive learning management system and community platform designed specifically for students and alumni of Code Academy Berlin. CODAC facilitates learning, collaboration, and community building among current students and graduates.
 

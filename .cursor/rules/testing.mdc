@@ -1,0 +1,28 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+## Testing Guidelines
+
+- Write tests for all critical business logic and server actions
+- Use Jest and React Testing Library for component testing
+- Implement integration tests for complex user workflows
+- Test error handling and edge cases thoroughly
+- Use proper mocking for external dependencies and APIs
+- Test accessibility features and keyboard navigation
+- Implement visual regression testing for UI components
+- Use proper test data and factories for consistent testing
+- Test responsive design and mobile functionality
+- Implement end-to-end tests for critical user journeys
+- Test database operations and data integrity
+- Use proper setup and teardown for test environments
+- Test performance characteristics of critical operations
+- Implement proper test coverage reporting
+- Use descriptive test names and clear assertions
+- Test both happy path and error scenarios
+- Implement proper async testing patterns
+- Test user interactions and form submissions
+- Use proper component testing isolation
+- Maintain test data separate from production data
+

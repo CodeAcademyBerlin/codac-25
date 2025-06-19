@@ -1,0 +1,71 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+## AI Quick Reference Guide
+
+### Essential Cursor Commands
+
+- `@rules` - Reference all workspace rules
+- `@rules/[rulename]` - Reference specific rule file
+- `@filename` - Include specific file in context
+- `@folder` - Include folder contents in context
+- `Ctrl/Cmd + K` - Quick AI chat
+- `Ctrl/Cmd + L` - AI chat with current file context
+
+### Common AI Prompts for This Project
+
+#### Component Creation:
+```
+@rules Create a new dashboard component for [feature] following our established patterns. Reference components/dashboard/stats-cards.tsx for consistency.
+```
+
+#### Server Action:
+```
+@rules/data-management @rules/error-handling Create a server action to [action] with proper validation and error handling. Use the pattern from actions/user/create-user.ts.
+```
+
+#### Bug Fix:
+```
+@rules/error-handling Fix this error: [error message]. Check similar patterns in the codebase and apply our established error handling approach.
+```
+
+#### Refactoring:
+```
+@rules/code-organization Refactor this component to follow our organization patterns. Split into smaller components if needed and ensure proper separation of concerns.
+```
+
+### File Reference Shortcuts
+
+```bash
+# Core patterns to reference:
+@lib/server-action-utils.ts    # Server action patterns
+@components/ui/               # UI component patterns  
+@actions/user/create-user.ts  # Server action example
+@components/editor/           # Editor component patterns
+@lib/validation/              # Validation schema patterns
+```
+
+### Free Tier Tips
+
+1. **Combine requests**: "Create component, add error handling, and write tests"
+2. **Reference patterns**: Always mention similar existing files
+3. **Be specific**: Include exact requirements and constraints
+4. **Use rules**: Always reference @rules for consistency
+
+### Quick Validation Checklist
+
+- [ ] Follows @rules/typescript patterns?
+- [ ] Uses established error handling?
+- [ ] Matches @rules/naming-conventions?
+- [ ] Includes proper validation?
+- [ ] Consistent with existing patterns?
+
+### Emergency Patterns (When AI Quota Low)
+
+1. **Copy existing pattern** - Find similar component/function
+2. **Manual implementation** - Use rules as checklist
+3. **Incremental changes** - Small, focused modifications
+4. **Team collaboration** - Ask team members for AI assistance
+
