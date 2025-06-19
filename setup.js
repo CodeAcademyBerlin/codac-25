@@ -139,7 +139,7 @@ function setupDatabase(packageManager) {
     );
     
     executeCommand(
-      `${packageManager} db:push`,
+      `${packageManager} db:push --force-reset`,
       'Failed to push database schema',
       'Database schema pushed successfully'
     );
@@ -168,8 +168,8 @@ function setupDatabase(packageManager) {
 }
 
 function main() {
-  log('🚀 CODAC Setup Script', 'bold');
-  log('===================\n', 'bold');
+  log('⚔️  CODAC Attack on Titan Setup Script', 'bold');
+  log('=====================================\n', 'bold');
   
   try {
     const packageManager = checkPrerequisites();
@@ -190,12 +190,14 @@ function main() {
     log('\nNext steps:', 'bold');
     log(`1. Start the development server: ${packageManager} dev`);
     log('2. Open http://localhost:3000 in your browser');
-    log('3. Sign in with one of the sample accounts (check README.md)');
+    log('3. Join the 104th Training Corps with one of the sample accounts above!');
     
     log('\nSample accounts:', 'cyan');
-    log('• Student: alex.mueller@student.codeacademyberlin.com');
-    log('• Alumni: lisa.weber@alumni.codeacademyberlin.com');
-    log('• Instructor: dr.anna.hoffmann@instructor.codeacademyberlin.com');
+    log('• Student: eren.yeager@104th.paradis.military');
+    log('• Student: mikasa.ackerman@104th.paradis.military');
+    log('• Student: armin.arlert@104th.paradis.military');
+    log('• Mentor: levi.ackerman@mentor.paradis.military');
+    log('• Mentor: erwin.smith@mentor.paradis.military');
     
     log('\nFor help, check:', 'yellow');
     log('• README.md for detailed documentation');

@@ -34,6 +34,7 @@ import { NavUser } from './nav-user';
 
 const data = {
   user: {
+    id: 'user_alex_mueller_2024', // This would come from your auth system
     name: 'Alex Müller',
     email: 'alex.mueller@student.codeacademyberlin.com',
     avatar: '/avatars/student-1.jpg',

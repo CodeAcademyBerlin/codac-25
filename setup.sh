@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo ""
-echo "🚀 CODAC Setup for Mac/Linux"
-echo "============================="
+echo "⚔️  CODAC Attack on Titan Setup for Mac/Linux"
+echo "=============================================="
 echo ""
 
 # Check if Node.js is installed

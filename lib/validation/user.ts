@@ -3,11 +3,28 @@ import { z } from 'zod';
 // Import the shared type
 export type { ServerActionResult } from '@/lib/server-action-utils';
 
+// Avatar validation schema - supports both URLs and base64 data URIs
+const avatarSchema = z.string().refine(
+    (value) => {
+        // Check if it's a valid URL
+        try {
+            new URL(value);
+            return true;
+        } catch {
+            // Check if it's a valid base64 data URI
+            return value.startsWith('data:image/') && value.includes('base64,');
+        }
+    },
+    {
+        message: 'Avatar must be a valid URL or base64 image data URI'
+    }
+).optional();
+
 // Base user validation schema
 export const userSchema = z.object({
     email: z.string().email('Invalid email address').max(255, 'Email too long'),
     name: z.string().min(1, 'Name is required').max(100, 'Name too long').optional(),
-    avatar: z.string().url('Invalid avatar URL').optional(),
+    avatar: avatarSchema,
     bio: z.string().max(500, 'Bio too long').optional(),
     role: z.enum(['STUDENT', 'ALUMNI', 'INSTRUCTOR', 'ADMIN']).default('STUDENT'),
     status: z.enum(['ACTIVE', 'INACTIVE', 'GRADUATED']).default('ACTIVE'),

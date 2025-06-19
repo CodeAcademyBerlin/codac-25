@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { PrismaClient, UserRole, UserStatus, CourseDifficulty, CourseCategory, LessonType, AssignmentType, PostType, LessonProgressStatus, DocumentType } from '@prisma/client';
+import { PrismaClient, UserRole, UserStatus, CourseCategory, LessonType, AssignmentType, PostType, LessonProgressStatus, DocumentType } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -42,213 +42,100 @@ async function main() {
   await prisma.favorite.deleteMany();
   await prisma.document.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.cohort.deleteMany();
 
-  // Load seed data (for future enhancements)
-  // const { students, courses: courseData, cohorts } = loadSeedData();
+  // Load seed data from JSON files
+  const cohortsData = JSON.parse(fs.readFileSync('prisma/seed/cohorts.json', 'utf-8'));
+  const studentsData = JSON.parse(fs.readFileSync('prisma/seed/students.json', 'utf-8'));
+  const coursesData = JSON.parse(fs.readFileSync('prisma/seed/courses.json', 'utf-8'));
+  const mentorsData = JSON.parse(fs.readFileSync('prisma/seed/mentors.json', 'utf-8'));
+  // Create cohorts first
+  const cohorts = await Promise.all(
+    cohortsData.map((cohortData: any) =>
+      prisma.cohort.create({
+        data: {
+          name: cohortData.name,
+          startDate: new Date(cohortData.startDate),
+          description: cohortData.description,
+          avatar: cohortData.image || cohortData.avatar,
+          slug: cohortData.slug,
+        },
+      })
+    )
+  );
 
-  // Create sample users based on Attack on Titan characters
-  const users = await Promise.all([
-    // Students from 104th Training Corps
-    prisma.user.create({
-      data: {
-        email: 'eren.yeager@104th.paradis.military',
-        name: 'Eren Yeager',
-        role: UserRole.STUDENT,
-        status: UserStatus.ACTIVE,
-        cohort: '104th Training Corps',
-        bio: 'Determined to exterminate all Titans and explore the world beyond the walls.',
-        githubUrl: 'https://github.com/erenattacktitan',
-        linkedinUrl: 'https://linkedin.com/in/eren-yeager-scout',
-      },
-    }),
-    prisma.user.create({
-      data: {
-        email: 'mikasa.ackerman@104th.paradis.military',
-        name: 'Mikasa Ackerman',
-        role: UserRole.STUDENT,
-        status: UserStatus.ACTIVE,
-        cohort: '104th Training Corps',
-        bio: 'Elite soldier with exceptional combat skills. Specializes in Titan elimination.',
-        githubUrl: 'https://github.com/mikasaackerman',
-        linkedinUrl: 'https://linkedin.com/in/mikasa-ackerman',
-      },
-    }),
-    prisma.user.create({
-      data: {
-        email: 'armin.arlert@104th.paradis.military',
-        name: 'Armin Arlert',
-        role: UserRole.STUDENT,
-        status: UserStatus.ACTIVE,
-        cohort: '104th Training Corps',
-        bio: 'Strategic genius with exceptional analytical skills. Dreams of seeing the ocean.',
-        githubUrl: 'https://github.com/arminarlert',
-        linkedinUrl: 'https://linkedin.com/in/armin-arlert',
-      },
-    }),
-    prisma.user.create({
-      data: {
-        email: 'jean.kirstein@104th.paradis.military',
-        name: 'Jean Kirstein',
-        role: UserRole.STUDENT,
-        status: UserStatus.ACTIVE,
-        cohort: '104th Training Corps',
-        bio: 'Natural leader with strong tactical awareness and ODM gear proficiency.',
-        githubUrl: 'https://github.com/jeankirstein',
-        linkedinUrl: 'https://linkedin.com/in/jean-kirstein',
-      },
-    }),
-    prisma.user.create({
-      data: {
-        email: 'sasha.blouse@104th.paradis.military',
-        name: 'Sasha Blouse',
-        role: UserRole.STUDENT,
-        status: UserStatus.ACTIVE,
-        cohort: '104th Training Corps',
-        bio: 'Expert archer and hunter with incredible instincts and appetite.',
-        githubUrl: 'https://github.com/sashablouse',
-        linkedinUrl: 'https://linkedin.com/in/sasha-blouse',
-      },
-    }),
+  console.log('✅ Created cohorts');
 
-    // Alumni from previous corps
-    prisma.user.create({
-      data: {
-        email: 'hange.zoe@scouts.paradis.military',
-        name: 'Hange Zoë',
-        role: UserRole.ALUMNI,
-        status: UserStatus.GRADUATED,
-        cohort: '103rd Training Corps',
-        graduationDate: new Date('2023-12-15'),
-        currentJob: 'Squad Leader',
-        currentCompany: 'Scout Regiment',
-        bio: 'Titan researcher and former 14th Commander of the Scout Regiment. Passionate about understanding Titans.',
-        githubUrl: 'https://github.com/hangezoe',
-        linkedinUrl: 'https://linkedin.com/in/hange-zoe',
-        portfolioUrl: 'https://titan-research.paradis.gov',
-      },
-    }),
-    prisma.user.create({
-      data: {
-        email: 'marco.bodt@alumni.paradis.military',
-        name: 'Marco Bodt',
-        role: UserRole.ALUMNI,
-        status: UserStatus.GRADUATED,
-        cohort: '104th Training Corps',
-        graduationDate: new Date('2023-11-20'),
-        currentJob: 'Military Police Officer',
-        currentCompany: 'Military Police Regiment',
-        bio: 'Graduated with honors from the 104th Training Corps. Natural leader and tactical expert.',
-        githubUrl: 'https://github.com/marcobodt',
-        linkedinUrl: 'https://linkedin.com/in/marco-bodt',
-      },
-    }),
+  // Create users based on JSON seed data and add additional mentor/alumni users
+  const alumniCohort = cohorts.find(c => c.slug === 'alumni');
 
-    // Mentors (former Instructors)
-    prisma.user.create({
-      data: {
-        email: 'levi.ackerman@mentor.paradis.military',
-        name: 'Captain Levi Ackerman',
-        role: UserRole.MENTOR,
-        status: UserStatus.ACTIVE,
-        bio: 'Humanity\'s Strongest Soldier. Special Operations Squad Leader with unmatched combat skills.',
-        githubUrl: 'https://github.com/captainlevi',
-        linkedinUrl: 'https://linkedin.com/in/levi-ackerman',
-      },
-    }),
-    prisma.user.create({
-      data: {
-        email: 'erwin.smith@mentor.paradis.military',
-        name: 'Commander Erwin Smith',
-        role: UserRole.MENTOR,
-        status: UserStatus.ACTIVE,
-        bio: '13th Commander of the Scout Regiment. Master strategist and inspirational leader.',
-        githubUrl: 'https://github.com/commandererwin',
-        linkedinUrl: 'https://linkedin.com/in/erwin-smith',
-      },
-    }),
-  ]);
+  // Create users from students JSON data
+  const studentUsers = await Promise.all(
+    studentsData.map((student: any) => {
+      const cohort = cohorts.find(c => c.id === student.cohortId);
+      return prisma.user.create({
+        data: {
+          email: `${student.name.toLowerCase().replace(' ', '.')}@codac.academy`,
+          name: student.name,
+          role: UserRole.STUDENT,
+          status: UserStatus.ACTIVE,
+          cohortId: cohort?.id,
+          avatar: student.avatar,
+          bio: `Coding academy student specializing in ${cohort?.name || 'software development'}.`,
+          githubUrl: `https://github.com/${student.name.toLowerCase().replace(' ', '')}`,
+          linkedinUrl: `https://linkedin.com/in/${student.name.toLowerCase().replace(' ', '-')}`,
+        },
+      });
+    })
+  );
+
+  const mentorUsers = await Promise.all(
+    mentorsData.map((mentor: any) =>
+      prisma.user.create({
+        data: {
+          email: `${mentor.name.toLowerCase().replace(' ', '.')}@codac.academy`,
+          name: mentor.name,
+          role: UserRole.MENTOR,
+          status: UserStatus.ACTIVE,
+          cohortId: alumniCohort?.id,
+          avatar: mentor.avatar,
+          bio: mentor.bio,
+          githubUrl: `https://github.com/${mentor.name.toLowerCase().replace(' ', '')}`,
+          linkedinUrl: `https://linkedin.com/in/${mentor.name.toLowerCase().replace(' ', '-')}`,
+        },
+      })
+    )
+  );
+
+  const users = [...studentUsers, ...mentorUsers];
 
   console.log('✅ Created users');
 
-  // Create courses based on Attack on Titan military training
-  const courses = await Promise.all([
-    prisma.course.create({
-      data: {
-        title: 'Titan Combat Tactics',
-        description: 'Master the fundamentals of Titan combat, including weak point identification, formation strategies, and survival techniques.',
-        difficulty: CourseDifficulty.BEGINNER,
-        category: CourseCategory.WEB_DEVELOPMENT,
-        duration: 40,
-        isPublished: true,
-        order: 1,
-      },
-    }),
-    prisma.course.create({
-      data: {
-        title: 'ODM Gear Mastery',
-        description: 'Advanced techniques for Vertical Maneuvering Equipment operation, maintenance, and combat applications.',
-        difficulty: CourseDifficulty.INTERMEDIATE,
-        category: CourseCategory.WEB_DEVELOPMENT,
-        duration: 50,
-        isPublished: true,
-        order: 2,
-      },
-    }),
-    prisma.course.create({
-      data: {
-        title: 'Military Strategy & Formation',
-        description: 'Learn advanced military formations, battlefield tactics, and expedition planning for beyond-the-walls missions.',
-        difficulty: CourseDifficulty.INTERMEDIATE,
-        category: CourseCategory.WEB_DEVELOPMENT,
-        duration: 45,
-        isPublished: true,
-        order: 3,
-      },
-    }),
-    prisma.course.create({
-      data: {
-        title: 'Titan Research & Analysis',
-        description: 'Scientific approach to understanding Titan behavior, anatomy, and characteristics through observation and experimentation.',
-        difficulty: CourseDifficulty.BEGINNER,
-        category: CourseCategory.DATA_SCIENCE,
-        duration: 60,
-        isPublished: true,
-        order: 1,
-      },
-    }),
-    prisma.course.create({
-      data: {
-        title: 'Advanced Combat Techniques',
-        description: 'Elite-level combat training including dual-wielding, aerial maneuvers, and Titan shifter countermeasures.',
-        difficulty: CourseDifficulty.ADVANCED,
-        category: CourseCategory.DATA_SCIENCE,
-        duration: 70,
-        isPublished: true,
-        order: 2,
-      },
-    }),
-    prisma.course.create({
-      data: {
-        title: 'Military Career Development',
-        description: 'Essential skills for advancing through military ranks: leadership, decision-making, and survival psychology.',
-        difficulty: CourseDifficulty.BEGINNER,
-        category: CourseCategory.CAREER_DEVELOPMENT,
-        duration: 20,
-        isPublished: true,
-        order: 1,
-      },
-    }),
-  ]);
+  // Create courses based on JSON seed data
+  const courses = await Promise.all(
+    coursesData.map((courseData: any) =>
+      prisma.course.create({
+        data: {
+          title: courseData.name,
+          description: courseData.description,
+          category: courseData.category as CourseCategory,
+          duration: courseData.duration,
+          isPublished: courseData.isPublished,
+          order: courseData.order,
+        },
+      })
+    )
+  );
 
   console.log('✅ Created courses');
 
-  // Create projects for Titan Combat Tactics course
-  const titanCombatProjects = await Promise.all([
+  // Create projects for Full Stack Web Development course
+  const fullStackProjects = await Promise.all([
     prisma.project.create({
       data: {
-        title: 'Basic Titan Anatomy',
-        description: 'Understanding Titan physiology and weak points',
-        duration: 15,
+        title: 'Frontend Fundamentals',
+        description: 'Building responsive web interfaces with HTML, CSS, and JavaScript',
+        duration: 80,
         order: 1,
         isPublished: true,
         courseId: courses[0].id,
@@ -256,9 +143,9 @@ async function main() {
     }),
     prisma.project.create({
       data: {
-        title: 'Formation Combat Training',
-        description: 'Long-Range Scouting Formation practice and execution',
-        duration: 20,
+        title: 'React Development',
+        description: 'Building modern single-page applications with React and state management',
+        duration: 120,
         order: 2,
         isPublished: true,
         courseId: courses[0].id,
@@ -266,63 +153,107 @@ async function main() {
     }),
     prisma.project.create({
       data: {
-        title: 'Emergency Protocols',
-        description: 'Survival tactics when separated from formation',
-        duration: 10,
+        title: 'Backend Development',
+        description: 'Server-side development with Node.js, Express, and database integration',
+        duration: 100,
         order: 3,
+        isPublished: true,
+        courseId: courses[0].id,
+      },
+    }),
+    prisma.project.create({
+      data: {
+        title: 'Full Stack Project',
+        description: 'Complete web application from design to deployment',
+        duration: 160,
+        order: 4,
         isPublished: true,
         courseId: courses[0].id,
       },
     }),
   ]);
 
-  // Create lessons for Basic Titan Anatomy project
-  const anatomyLessons = await Promise.all([
+  // Create projects for Data Science course
+  const dataScienceProjects = await Promise.all([
+    prisma.project.create({
+      data: {
+        title: 'Python for Data Science',
+        description: 'Python fundamentals and data manipulation with pandas',
+        duration: 60,
+        order: 1,
+        isPublished: true,
+        courseId: courses[1].id,
+      },
+    }),
+    prisma.project.create({
+      data: {
+        title: 'Data Visualization',
+        description: 'Creating compelling visualizations with matplotlib and seaborn',
+        duration: 40,
+        order: 2,
+        isPublished: true,
+        courseId: courses[1].id,
+      },
+    }),
+    prisma.project.create({
+      data: {
+        title: 'Machine Learning Basics',
+        description: 'Introduction to supervised and unsupervised learning algorithms',
+        duration: 80,
+        order: 3,
+        isPublished: true,
+        courseId: courses[1].id,
+      },
+    }),
+  ]);
+
+  // Create lessons for Frontend Fundamentals project
+  const frontendLessons = await Promise.all([
     prisma.lesson.create({
       data: {
-        title: 'Introduction to Titan Types',
-        description: 'Classification of different Titan types and their characteristics',
+        title: 'HTML Semantics and Structure',
+        description: 'Building accessible and semantic HTML documents',
         type: LessonType.VIDEO,
         duration: 45,
         order: 1,
         isPublished: true,
-        projectId: titanCombatProjects[0].id,
+        projectId: fullStackProjects[0].id,
         content: {
           type: 'video',
-          videoUrl: 'https://example.com/titan-types',
-          transcript: 'Welcome to Titan Combat Training. Today we\'ll learn about different Titan classifications...',
+          videoUrl: 'https://example.com/html-semantics',
+          transcript: 'Welcome to Frontend Development. Today we\'ll learn about semantic HTML and document structure...',
         },
       },
     }),
     prisma.lesson.create({
       data: {
-        title: 'Nape Targeting Techniques',
-        description: 'Precision strikes on the Titan weak point for maximum effectiveness',
+        title: 'CSS Flexbox and Grid',
+        description: 'Modern CSS layout techniques for responsive design',
         type: LessonType.INTERACTIVE,
         duration: 60,
         order: 2,
         isPublished: true,
-        projectId: titanCombatProjects[0].id,
+        projectId: fullStackProjects[0].id,
         content: {
           type: 'interactive',
           exercises: [
-            { question: 'What is the most effective angle for nape strikes?', answer: '45 degrees from behind and above' }
+            { question: 'What is the difference between Flexbox and CSS Grid?', answer: 'Flexbox is one-dimensional, Grid is two-dimensional' }
           ],
         },
       },
     }),
     prisma.lesson.create({
       data: {
-        title: 'Abnormal Titan Behavior',
-        description: 'Identifying and responding to irregular Titan movement patterns',
+        title: 'JavaScript DOM Manipulation',
+        description: 'Interacting with web pages using JavaScript',
         type: LessonType.TEXT,
         duration: 50,
         order: 3,
         isPublished: true,
-        projectId: titanCombatProjects[0].id,
+        projectId: fullStackProjects[0].id,
         content: {
           type: 'text',
-          markdown: '# Abnormal Titans\n\nAbnormal Titans exhibit unpredictable behavior patterns that deviate from standard Titan movement...',
+          markdown: '# DOM Manipulation\n\nThe Document Object Model (DOM) is the programming interface for web documents...',
         },
       },
     }),
@@ -332,37 +263,37 @@ async function main() {
   const assignments = await Promise.all([
     prisma.assignment.create({
       data: {
-        title: 'Build ODM Gear Simulator',
-        description: 'Create a simulation application for ODM gear training and practice.',
+        title: 'Build Personal Portfolio Website',
+        description: 'Create a responsive portfolio website showcasing your projects and skills.',
         type: AssignmentType.PROJECT,
         dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
         maxScore: 100,
         isPublished: true,
-        lessonId: anatomyLessons[2].id,
+        lessonId: frontendLessons[2].id,
         instructions: {
           requirements: [
-            'Basic 3D movement simulation',
-            'Gas consumption mechanics',
-            'Target practice mode',
-            'Score tracking system'
+            'Responsive design using CSS Grid/Flexbox',
+            'Interactive JavaScript features',
+            'Semantic HTML structure',
+            'Accessible design principles'
           ],
-          deliverables: ['GitHub repository link', 'Live demo URL', 'Training report with results'],
+          deliverables: ['GitHub repository link', 'Live deployed URL', 'Design documentation'],
         },
       },
     }),
     prisma.assignment.create({
       data: {
-        title: 'Titan Classification Quiz',
-        description: 'Test your knowledge of different Titan types and characteristics.',
+        title: 'Frontend Fundamentals Quiz',
+        description: 'Test your knowledge of HTML, CSS, and JavaScript fundamentals.',
         type: AssignmentType.QUIZ,
         dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
         maxScore: 50,
         isPublished: true,
-        lessonId: anatomyLessons[1].id,
+        lessonId: frontendLessons[1].id,
         instructions: {
           questions: [
-            { question: 'What distinguishes an Abnormal Titan from a regular Titan?', type: 'short_answer' },
-            { question: 'Describe the Long-Range Scouting Formation strategy.', type: 'essay' }
+            { question: 'What is the difference between semantic and non-semantic HTML elements?', type: 'short_answer' },
+            { question: 'Explain how CSS Grid differs from Flexbox and when to use each.', type: 'essay' }
           ],
         },
       },
@@ -407,8 +338,8 @@ async function main() {
   await Promise.all([
     prisma.lessonProgress.create({
       data: {
-        userId: users[0].id, // Eren
-        lessonId: anatomyLessons[0].id,
+        userId: users[0].id, // Alex
+        lessonId: frontendLessons[0].id,
         status: LessonProgressStatus.COMPLETED,
         completedAt: new Date(),
         timeSpent: 45,
@@ -416,8 +347,8 @@ async function main() {
     }),
     prisma.lessonProgress.create({
       data: {
-        userId: users[0].id, // Eren
-        lessonId: anatomyLessons[1].id,
+        userId: users[0].id, // Alex
+        lessonId: frontendLessons[1].id,
         status: LessonProgressStatus.COMPLETED,
         completedAt: new Date(),
         timeSpent: 60,
@@ -425,8 +356,8 @@ async function main() {
     }),
     prisma.lessonProgress.create({
       data: {
-        userId: users[0].id, // Eren
-        lessonId: anatomyLessons[2].id,
+        userId: users[0].id, // Alex
+        lessonId: frontendLessons[2].id,
         status: LessonProgressStatus.IN_PROGRESS,
         startedAt: new Date(),
         timeSpent: 25,
@@ -716,8 +647,8 @@ async function main() {
 📊 Created:
   👥 ${users.length} users (cadets, veterans, mentors)
   📚 ${courses.length} military training courses
-  🎯 ${titanCombatProjects.length} training projects
-  📖 ${anatomyLessons.length} combat lessons
+  🎯 ${fullStackProjects.length + dataScienceProjects.length} training projects
+  📖 ${frontendLessons.length} combat lessons
   📝 ${assignments.length} training assignments
   💬 ${posts.length} military community posts
   🏆 ${achievements.length} military achievements

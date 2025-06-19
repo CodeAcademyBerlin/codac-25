@@ -1,20 +1,42 @@
 [
   {
+    "id": 1,
     "name": "Titan Combat Tactics",
-    "description": "Learn advanced techniques for fighting Titans",
+    "description": "Master the fundamentals of Titan combat, including weak point identification, formation strategies, and survival techniques.",
     "slug": "titan-combat",
-    "isPublished": true
+    "category": "WEB_DEVELOPMENT",
+    "duration": 40,
+    "isPublished": true,
+    "order": 1
   },
   {
+    "id": 2,
     "name": "ODM Gear Mastery",
-    "description": "Master the Vertical Maneuvering Equipment",
+    "description": "Advanced techniques for Vertical Maneuvering Equipment operation, maintenance, and combat applications.",
     "slug": "odm-gear",
-    "isPublished": true
+    "category": "WEB_DEVELOPMENT",
+    "duration": 50,
+    "isPublished": true,
+    "order": 2
   },
   {
-    "name": "Military Strategy",
-    "description": "Strategic planning and battlefield tactics",
+    "id": 3,
+    "name": "Military Strategy & Formation",
+    "description": "Learn advanced military formations, battlefield tactics, and expedition planning for beyond-the-walls missions.",
     "slug": "military-strategy",
-    "isPublished": true
+    "category": "WEB_DEVELOPMENT",
+    "duration": 45,
+    "isPublished": true,
+    "order": 3
+  },
+  {
+    "id": 4,
+    "name": "Titan Research & Analysis",
+    "description": "Scientific approach to understanding Titan behavior, anatomy, and characteristics through observation and experimentation.",
+    "slug": "titan-research",
+    "category": "DATA_SCIENCE",
+    "duration": 60,
+    "isPublished": true,
+    "order": 4
   }
 ]

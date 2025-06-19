@@ -18,7 +18,8 @@ model User {
   status UserStatus @default(ACTIVE)
 
   // Code Academy Berlin specific
-  cohort         String? // e.g., "2024-Web-Dev-Bootcamp"
+  cohortId       String?
+  cohort         Cohort?   @relation(fields: [cohortId], references: [id])
   graduationDate DateTime?
   linkedinUrl    String?
   githubUrl      String?
@@ -51,17 +52,43 @@ model User {
   @@map("users")
 }
 
+model UserImage {
+  id          String  @id @default(cuid())
+  userId      String
+  data        Bytes?
+  contentType String?
+  hash        String?
+
+  @@index([userId], map: "IX_UserImage_userId")
+}
+
+model Cohort {
+  id          String   @id @default(cuid())
+  name        String
+  startDate   DateTime
+  description String?
+  avatar      String?
+  slug        String   @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  students User[]
+
+  @@map("cohorts")
+}
+
 // Learning Management System Models
 model Course {
-  id          String           @id @default(cuid())
+  id          String         @id @default(cuid())
   title       String
   description String
   thumbnail   String?
-  difficulty  CourseDifficulty @default(BEGINNER)
   category    CourseCategory
   duration    Int? // Duration in hours
-  isPublished Boolean          @default(false)
-  order       Int              @default(0)
+  isPublished Boolean        @default(false)
+  order       Int            @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -461,12 +488,6 @@ enum UserStatus {
   ACTIVE
   INACTIVE
   GRADUATED
-}
-
-enum CourseDifficulty {
-  BEGINNER
-  INTERMEDIATE
-  ADVANCED
 }
 
 enum CourseCategory {

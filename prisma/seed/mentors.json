@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Captain Levi Ackerman",
+    "email": "levi.ackerman@mentor.paradis.military",
+    "avatar": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSI0MCIgZmlsbD0iIzM3NDE1NiIvPjx0ZXh0IHg9IjQwIiB5PSI0NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjIwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TEE8L3RleHQ+PC9zdmc+",
+    "bio": "Humanity's Strongest Soldier. Special Operations Squad Leader with unmatched combat skills and ODM gear mastery.",
+    "role": "MENTOR",
+    "specialty": "Combat Training"
+  },
+  {
+    "id": 2,
+    "name": "Commander Erwin Smith",
+    "email": "erwin.smith@mentor.paradis.military",
+    "avatar": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSI0MCIgZmlsbD0iIzEzNzVjNyIvPjx0ZXh0IHg9IjQwIiB5PSI0NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjIwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RVM8L3RleHQ+PC9zdmc+",
+    "bio": "13th Commander of the Scout Regiment. Master strategist and inspirational leader who dedicates his heart to humanity.",
+    "role": "MENTOR",
+    "specialty": "Strategy & Leadership"
+  },
+  {
+    "id": 3,
+    "name": "Hange Zoë",
+    "email": "hange.zoe@mentor.paradis.military",
+    "avatar": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSI0MCIgZmlsbD0iIzkzNzMxNyIvPjx0ZXh0IHg9IjQwIiB5PSI0NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjIwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+SFo8L3RleHQ+PC9zdmc+",
+    "bio": "Titan researcher and former 14th Commander of the Scout Regiment. Passionate about understanding Titans and advancing humanity's knowledge.",
+    "role": "MENTOR",
+    "specialty": "Titan Research"
+  },
+  {
+    "id": 4,
+    "name": "Keith Shadis",
+    "email": "keith.shadis@instructor.paradis.military",
+    "avatar": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSI0MCIgZmlsbD0iIzc5NTU0OCIvPjx0ZXh0IHg9IjQwIiB5PSI0NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjIwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+S1M8L3RleHQ+PC9zdmc+",
+    "bio": "Instructor of the 104th Training Corps. Tough but fair trainer who shapes cadets into capable soldiers.",
+    "role": "INSTRUCTOR",
+    "specialty": "Basic Training"
+  }
+]

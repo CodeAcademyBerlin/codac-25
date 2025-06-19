@@ -1,7 +1,7 @@
 @echo off
 echo.
-echo 🚀 CODAC Setup for Windows
-echo ==========================
+echo ⚔️  CODAC Attack on Titan Setup for Windows
+echo ==========================================
 echo.
 
 REM Check if Node.js is installed
