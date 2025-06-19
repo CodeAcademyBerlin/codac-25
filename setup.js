@@ -2,7 +2,6 @@
 
 const { execSync } = require('child_process');
 const fs = require('fs');
-const path = require('path');
 
 const colors = {
   reset: '\x1b[0m',
@@ -45,6 +44,42 @@ function executeCommand(command, errorMessage, successMessage) {
   }
 }
 
+function installPnpm() {
+  log('\n📦 Installing pnpm...', 'bold');
+  
+  try {
+    // Check if pnpm is already installed
+    execSync('pnpm --version', { stdio: 'ignore' });
+    const pnpmVersion = execSync('pnpm --version', { encoding: 'utf8' }).trim();
+    success(`pnpm ${pnpmVersion} is already installed`);
+    return true;
+  } catch {
+    info('pnpm not found, installing...');
+    
+    try {
+      // Try installing pnpm using npm
+      executeCommand(
+        'npm install -g pnpm',
+        'Failed to install pnpm globally',
+        'pnpm installed successfully'
+      );
+      
+      // Verify installation
+      const pnpmVersion = execSync('pnpm --version', { encoding: 'utf8' }).trim();
+      success(`pnpm ${pnpmVersion} installed successfully`);
+      return true;
+    } catch {
+      error('Failed to install pnpm automatically');
+      log('\n🔧 Manual pnpm installation options:', 'yellow');
+      log('1. Using npm: npm install -g pnpm');
+      log('2. Using curl: curl -fsSL https://get.pnpm.io/install.sh | sh -');
+      log('3. Using PowerShell (Windows): iwr https://get.pnpm.io/install.ps1 -useb | iex');
+      log('4. Visit https://pnpm.io/installation for more options');
+      throw new Error('pnpm installation required');
+    }
+  }
+}
+
 function checkPrerequisites() {
   log('\n🔍 Checking prerequisites...', 'bold');
   
@@ -61,23 +96,11 @@ function checkPrerequisites() {
     throw err;
   }
 
-  // Check for package manager
-  let packageManager = 'npm';
-  try {
-    execSync('pnpm --version', { stdio: 'ignore' });
-    packageManager = 'pnpm';
-    success('pnpm detected');
-  } catch {
-    try {
-      execSync('npm --version', { stdio: 'ignore' });
-      warning('Using npm (pnpm is recommended for better performance)');
-    } catch {
-      error('No package manager found. Please install npm or pnpm.');
-      throw new Error('Package manager not found');
-    }
-  }
-
-  return packageManager;
+  // Install and check pnpm (now mandatory)
+  installPnpm();
+  
+  // Since we enforce pnpm, always return pnpm
+  return 'pnpm';
 }
 
 function createEnvFile() {
@@ -98,6 +121,7 @@ DATABASE_URL="file:./dev.db"
 # Authentication (generate your own secret)
 NEXTAUTH_SECRET="your-secret-key-change-this-in-production"
 NEXTAUTH_URL="http://localhost:3000"
+UPLOADTHING_TOKEN="your-uploadthing-token"
 
 # Optional: Add your own API keys here
 `;
@@ -151,7 +175,7 @@ function setupDatabase(packageManager) {
         'Failed to seed database',
         'Database seeded successfully'
       );
-    } catch (seedError) {
+    } catch {
       warning('Database seeding failed, but this is not critical for development');
       info('You can manually run the seed later with: pnpm db:seed');
     }

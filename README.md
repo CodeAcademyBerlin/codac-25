@@ -212,8 +212,13 @@ CODAC empowers Code Academy Berlin students and alumni to learn, collaborate, an
 ### Prerequisites
 
 - **Node.js 18+** - JavaScript runtime
-- **pnpm** (recommended) or npm - Package manager
+- **pnpm** - Package manager (will be auto-installed by setup scripts)
 - **Git** - Version control
+- **Administrator privileges** - Required on macOS for global pnpm installation
+
+> **Note:** This project uses pnpm as the mandatory package manager for better dependency management and faster installation. The setup scripts will automatically install pnpm if it's not already available on your system.
+
+> **macOS Users:** The setup process may require administrator privileges to install pnpm globally. You'll be prompted for your password if needed.
 
 ### Quick Start (Recommended)
 
@@ -238,6 +243,8 @@ CODAC empowers Code Academy Berlin students and alumni to learn, collaborate, an
    ./setup.sh
    ```
 
+   > **macOS Users**: You may be prompted for your administrator password during pnpm installation. This is normal and required for global package installation.
+
    **Cross-platform:**
 
    ```bash
@@ -247,7 +254,8 @@ CODAC empowers Code Academy Berlin students and alumni to learn, collaborate, an
    This will automatically:
 
    - Check Node.js version (18+ required)
-   - Install dependencies with pnpm/npm
+   - Install pnpm if not already available
+   - Install dependencies with pnpm
    - Generate Prisma client
    - Set up the SQLite database
    - Seed with sample data
@@ -288,7 +296,7 @@ If you prefer manual control over the setup process:
 1. **Install dependencies**
 
    ```bash
-   pnpm install  # or npm install
+   pnpm install
    ```
 
 2. **Set up the database**
