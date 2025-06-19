@@ -5,7 +5,7 @@ import { BookOpen, Clock, Trophy, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { getDocs } from '@/data/docs';
+import { getDocs } from '@/data/docs/docs';
 
 // Mock data for course progress - this would come from the database in a real implementation
 const courseProgress = {
@@ -17,13 +17,13 @@ const courseProgress = {
 export default async function LearningPage() {
   // Get all course material documents
   const docs = await getDocs('COURSE_MATERIAL');
-  
+
   // Group docs by course track
   const coursesByTrack = docs.reduce((acc, doc) => {
     const track = doc.title.toLowerCase().includes('web') ? 'web' :
-                  doc.title.toLowerCase().includes('data') ? 'data' :
-                  doc.title.toLowerCase().includes('career') ? 'career' : 'other';
-    
+      doc.title.toLowerCase().includes('data') ? 'data' :
+        doc.title.toLowerCase().includes('career') ? 'career' : 'other';
+
     if (!acc[track]) acc[track] = [];
     acc[track].push(doc);
     return acc;
@@ -43,11 +43,11 @@ export default async function LearningPage() {
       <div className="grid gap-4 md:grid-cols-3">
         {Object.entries(coursesByTrack).map(([track, documents]) => {
           if (track === 'other') return null;
-          
+
           const trackInfo = courseProgress[track as keyof typeof courseProgress];
           const trackTitle = {
             'web': 'Web Development',
-            'data': 'Data Science', 
+            'data': 'Data Science',
             'career': 'Career Services'
           }[track] || track;
 
@@ -86,7 +86,7 @@ export default async function LearningPage() {
                 )}
 
                 {/* Action Button */}
-                <Link 
+                <Link
                   href={`/learning/${track}`}
                   className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3 w-full"
                 >

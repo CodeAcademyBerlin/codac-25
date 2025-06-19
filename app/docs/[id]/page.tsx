@@ -1,7 +1,7 @@
 import { Value } from "platejs";
 
 import { PlateAutoSaveEditor } from "@/components/editor/plate-provider";
-import { getDoc } from "@/data/docs";
+import { getDoc } from "@/data/docs/docs";
 
 export default async function DocPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

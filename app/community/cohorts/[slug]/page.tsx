@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { Users, Calendar, MapPin, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
-import { getCohorts } from '@/actions/cohort/get-cohorts';
+import { getCohorts } from '@/data/cohort/get-cohorts';
 import { StudentCard } from '@/components/community/student-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

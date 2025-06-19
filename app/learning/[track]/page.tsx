@@ -5,7 +5,7 @@ import { BookOpen, Clock, ChevronRight, FileText, Folder } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { getDocsHierarchy } from '@/data/docs-hierarchy';
+import { getDocsHierarchy } from '@/data/docs/docs-hierarchy';
 import { getTrackProgress } from '@/data/tracks';
 
 interface TreeNode {
@@ -21,8 +21,8 @@ interface TreeNode {
 
 function findTrackContent(nodes: TreeNode[], trackName: string): TreeNode | null {
   for (const node of nodes) {
-    if (node.title.toLowerCase().includes(trackName.toLowerCase()) || 
-        (trackName === 'career' && node.title.toLowerCase().includes('career'))) {
+    if (node.title.toLowerCase().includes(trackName.toLowerCase()) ||
+      (trackName === 'career' && node.title.toLowerCase().includes('career'))) {
       return node;
     }
     if (node.children) {
@@ -58,7 +58,7 @@ function renderContentTree(nodes: TreeNode[], level = 0): React.ReactNode {
 
 export default async function TrackPage({ params }: { params: Promise<{ track: string }> }) {
   const { track } = await params;
-  
+
   // Validate track
   if (!['web', 'data', 'career'].includes(track)) {
     notFound();
@@ -70,7 +70,7 @@ export default async function TrackPage({ params }: { params: Promise<{ track: s
   }
 
   const hierarchy = await getDocsHierarchy('COURSE_MATERIAL');
-  
+
   // Find the specific track content in the hierarchy
   const trackContent = findTrackContent(hierarchy, track);
 
@@ -108,7 +108,7 @@ export default async function TrackPage({ params }: { params: Promise<{ track: s
               <div className="text-sm text-muted-foreground">Duration</div>
             </div>
           </div>
-          
+
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span>Overall Progress</span>
@@ -143,7 +143,7 @@ export default async function TrackPage({ params }: { params: Promise<{ track: s
                 <div className="text-center py-8 text-muted-foreground">
                   <BookOpen className="h-12 w-12 mx-auto mb-4" />
                   <p>No content available for this track yet.</p>
-                  <Link 
+                  <Link
                     href="/docs?type=COURSE_MATERIAL"
                     className="text-primary hover:underline"
                   >

@@ -1,4 +1,4 @@
-import { getDocs } from '@/data/docs';
+import { getDocs } from '@/data/docs/docs';
 
 import { DocsGrid } from './components/docs-grid';
 

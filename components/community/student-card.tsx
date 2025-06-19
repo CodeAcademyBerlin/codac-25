@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 
-import type { CohortWithStudents } from '@/actions/cohort/get-cohorts';
+import type { CohortWithStudents } from '@/data/cohort/get-cohorts';
 
 type StudentCardProps = {
     student: CohortWithStudents['students'][0];
@@ -58,11 +58,20 @@ export function StudentCard({ student, cohortName }: StudentCardProps) {
         }).format(date);
     };
 
+    // Determine the correct role path for navigation
+    const getRolePath = () => {
+        if (student.status === 'GRADUATED') return 'alumni';
+        if (student.role === 'MENTOR') return 'mentors';
+        return 'students';
+    };
+
+    const userProfileUrl = `/community/${getRolePath()}/${student.id}`;
+
     return (
-        <Card className="group cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] border-border/50 hover:border-border">
+        <Card className="transition-all duration-200 hover:shadow-lg border-border/50 hover:border-border">
             <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
+                    <Link href={userProfileUrl} className="flex items-center gap-3 flex-1 group">
                         <Avatar className="h-12 w-12">
                             <AvatarImage src={student.avatar || undefined} alt={student.name || 'Student'} />
                             <AvatarFallback className="bg-primary/10 text-primary font-semibold">
@@ -82,7 +91,7 @@ export function StudentCard({ student, cohortName }: StudentCardProps) {
                                 </Badge>
                             </div>
                         </div>
-                    </div>
+                    </Link>
                 </div>
             </CardHeader>
 
@@ -144,7 +153,7 @@ export function StudentCard({ student, cohortName }: StudentCardProps) {
                     <div className="flex items-center gap-2 text-sm">
                         <Trophy className="h-4 w-4 text-muted-foreground" />
                         <span className="text-muted-foreground">
-                            {student._count.achievements} achievement{student._count.achievements !== 1 ? 's' : ''}
+                            {student._count.achievements || 0} achievement{(student._count.achievements || 0) !== 1 ? 's' : ''}
                         </span>
                     </div>
                 </div>

@@ -16,7 +16,7 @@ import {
 
 // Define return type
 type GetUsersResult = ServerActionResult<{
-    users: UserWithCounts[];
+    users: any[];
     total: number;
     hasMore: boolean;
 }>;
@@ -55,7 +55,9 @@ export async function getUsers(data: GetUsersInput): Promise<GetUsersResult> {
         }
 
         if (validatedData.cohort) {
-            where.cohort = validatedData.cohort;
+            where.cohort = {
+                slug: validatedData.cohort
+            };
         }
 
         if (validatedData.search) {
@@ -85,6 +87,8 @@ export async function getUsers(data: GetUsersInput): Promise<GetUsersResult> {
                         enrollments: true,
                         posts: true,
                         comments: true,
+                        achievements: true,
+                        favorites: true,
                     },
                 },
             },
@@ -121,7 +125,7 @@ export async function getUsers(data: GetUsersInput): Promise<GetUsersResult> {
         return {
             success: true,
             data: {
-                users: users as UserWithCounts[],
+                users,
                 total,
                 hasMore,
             }

@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { Users, GraduationCap, Calendar, TrendingUp } from 'lucide-react';
 
-import { getCohorts } from '@/actions/cohort/get-cohorts';
+import { getCohorts } from '@/data/cohort/get-cohorts';
 import { CohortCard } from '@/components/community/cohort-card';
 import { StudentCard } from '@/components/community/student-card';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
