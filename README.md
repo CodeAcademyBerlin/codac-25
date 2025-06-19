@@ -380,7 +380,7 @@ pnpm db:studio    # Open Prisma Studio
 pnpm db:reset     # Reset database and reseed
 
 # Utilities
-pnpm import:lms   # Import LMS content from external sources
+pnpm import:lms   # Import LMS content from external sources (require acces to content source)
 pnpm export:docs  # Export documents to Markdown format
 
 # Setup Commands
@@ -414,6 +414,7 @@ DATABASE_URL="file:./prisma/dev.db"
 NEXTAUTH_SECRET="your-secret-key"
 NEXTAUTH_URL="http://localhost:3000"
 
+# Platejs editor
 # AI Features (Optional)
 OPENAI_API_KEY="your-openai-api-key"
 
@@ -421,12 +422,7 @@ OPENAI_API_KEY="your-openai-api-key"
 UPLOADTHING_SECRET="your-uploadthing-secret"
 UPLOADTHING_APP_ID="your-uploadthing-app-id"
 
-# Email (Optional)
-EMAIL_SERVER_HOST="smtp.example.com"
-EMAIL_SERVER_PORT=587
-EMAIL_SERVER_USER="username"
-EMAIL_SERVER_PASSWORD="password"
-EMAIL_FROM="noreply@example.com"
+
 ```
 
 ### Database Configuration
@@ -478,18 +474,7 @@ We welcome contributions from the Code Academy Berlin community! Please see our 
 
 ## 🚀 Deployment
 
-### Vercel (Recommended)
-
-1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Configure environment variables in Vercel dashboard
-4. Deploy automatically on every push to main branch
-
-### Other Platforms
-
-- **Netlify**: Full-stack deployment with serverless functions
-- **Railway**: Database and hosting in one platform with PostgreSQL
-- **Docker**: Containerized deployment for custom infrastructure
+### TBD (probably Vercel)
 
 ### Production Considerations
 
@@ -534,9 +519,9 @@ We welcome contributions from the Code Academy Berlin community! Please see our 
 
 ### Support Channels
 
-- **Students**: Ask classmates in your cohort or contact instructors
+- **Students**: Ask classmates in your cohort or contact mentors
 - **Contributors**: Use GitHub issues and discussions
-- **Instructors**: Contact the development team directly
+- **Mentors**: Contact the development team directly
 
 ## 📄 License
 
