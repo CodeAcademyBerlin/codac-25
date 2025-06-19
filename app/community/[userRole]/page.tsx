@@ -1,13 +1,13 @@
-import { Suspense } from 'react';
 import { Users, GraduationCap, Search, Filter, TrendingUp, Award, Star, Trophy, Briefcase, Calendar, MessageSquare } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
-import { getUsers } from '@/data/user/get-users';
+
 import { StudentCard } from '@/components/community/student-card';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { getUsers } from '@/data/user/get-users';
 import { UserWithCounts } from '@/lib/server-action-utils';
 
 type Params = {
@@ -58,8 +58,8 @@ export async function generateStaticParams() {
     ];
 }
 
-export default async function CommunityRolePage({ params }: { params: Params }) {
-    const { userRole } = params;
+export default async function CommunityRolePage({ params }: { params: Promise<Params> }) {
+    const { userRole } = await params;
 
     if (!roleConfig[userRole as keyof typeof roleConfig]) {
         notFound();
@@ -100,7 +100,7 @@ export default async function CommunityRolePage({ params }: { params: Params }) 
     // Filter users based on role-specific logic
     let activeUsers: UserWithCounts[] = [];
     let inactiveUsers: UserWithCounts[] = [];
-    let allUsers: UserWithCounts[] = [];
+
     let employedCount: number = 0;
     let recentCount: number = 0;
 

@@ -1,9 +1,7 @@
-import { notFound } from 'next/navigation';
 import {
     ArrowLeft,
     Users,
     Calendar,
-    MapPin,
     Briefcase,
     GraduationCap,
     Github,
@@ -18,13 +16,13 @@ import {
     Star
 } from 'lucide-react';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-import { getUser, type UserProfile } from '@/data/user/get-user';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getUser } from '@/data/user/get-user';
 
 type Params = {
     userRole: string;
@@ -89,8 +87,8 @@ function formatJoinDate(date: Date) {
     }).format(date);
 }
 
-export default async function UserDetailsPage({ params }: { params: Params }) {
-    const { userRole, userId } = params;
+export default async function UserDetailsPage({ params }: { params: Promise<Params> }) {
+    const { userRole, userId } = await params;
 
     if (!roleConfig[userRole as keyof typeof roleConfig]) {
         notFound();

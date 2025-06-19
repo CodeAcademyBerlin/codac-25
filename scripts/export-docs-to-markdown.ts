@@ -277,4 +277,5 @@ if (require.main === module) {
     main();
 }
 
-export { exportDocsToMarkdown, ExportOptions }; 
+export { exportDocsToMarkdown };
+export type { ExportOptions }; 

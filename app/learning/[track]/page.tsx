@@ -1,7 +1,7 @@
+import { BookOpen, Clock, ChevronRight, FileText, Folder } from "lucide-react";
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { BookOpen, Clock, ChevronRight, FileText, Folder } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";

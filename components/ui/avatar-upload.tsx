@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
 import { Camera, Upload, X, Loader2 } from 'lucide-react';
+import React, { useState, useRef } from 'react';
 import { toast } from 'sonner';
 
+import { updateUserAvatar } from '@/actions/user/update-user-avatar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { updateUserAvatar } from '@/actions/user/update-user-avatar';
 import { cn } from '@/lib/utils';
 
 interface AvatarUploadProps {
@@ -76,7 +76,8 @@ export function AvatarUpload({
                 setIsDialogOpen(false);
                 setPreviewImage(null);
             } else {
-                toast.error(result.error || 'Failed to update avatar');
+                const errorMessage = typeof result.error === 'string' ? result.error : 'Failed to update avatar';
+                toast.error(errorMessage);
             }
         } catch (error) {
             console.error('Avatar upload error:', error);

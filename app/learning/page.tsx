@@ -1,6 +1,6 @@
+import { BookOpen, Clock, Trophy, Users } from "lucide-react";
 import Link from 'next/link';
 
-import { BookOpen, Clock, Trophy, Users } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

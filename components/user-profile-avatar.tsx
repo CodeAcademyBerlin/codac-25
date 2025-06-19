@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+
 import { AvatarUpload } from '@/components/ui/avatar-upload';
 
 interface UserProfileAvatarProps {

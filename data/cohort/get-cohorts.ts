@@ -109,9 +109,9 @@ export async function getCohorts(): Promise<GetCohortsResult> {
         const totalStudents = cohorts.reduce((total, cohort) => total + cohort._count.students, 0);
 
         logger.info('Cohorts retrieved successfully', {
-            action: 'get',
-            resource: 'cohorts',
             metadata: {
+                action: 'get',
+                resource: 'cohorts',
                 duration: Date.now() - startTime,
                 cohortsCount: cohorts.length,
                 totalStudents,
@@ -127,11 +127,10 @@ export async function getCohorts(): Promise<GetCohortsResult> {
         };
 
     } catch (error) {
-        logger.error('Failed to get cohorts', {
-            action: 'get',
-            resource: 'cohorts',
-            error: error instanceof Error ? error.message : 'Unknown error',
+        logger.error('Failed to get cohorts', error instanceof Error ? error : new Error(String(error)), {
             metadata: {
+                action: 'get',
+                resource: 'cohorts',
                 duration: Date.now() - startTime,
             }
         });

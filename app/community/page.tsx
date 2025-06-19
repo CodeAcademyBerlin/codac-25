@@ -1,12 +1,10 @@
-import { Suspense } from 'react';
 import { Users, GraduationCap, Calendar, TrendingUp } from 'lucide-react';
 
-import { getCohorts } from '@/data/cohort/get-cohorts';
 import { CohortCard } from '@/components/community/cohort-card';
 import { StudentCard } from '@/components/community/student-card';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getCohorts } from '@/data/cohort/get-cohorts';
 
 export default async function CommunityPage() {
     const result = await getCohorts();
@@ -17,7 +15,7 @@ export default async function CommunityPage() {
                 <div className="text-center">
                     <h1 className="text-3xl font-bold mb-4">Community</h1>
                     <p className="text-muted-foreground">
-                        {result.error || 'Failed to load community data'}
+                        {'error' in result ? (typeof result.error === 'string' ? result.error : 'Invalid data format') : 'Failed to load community data'}
                     </p>
                 </div>
             </div>
@@ -174,58 +172,3 @@ export default async function CommunityPage() {
     );
 }
 
-// Loading component for Suspense
-function CommunityPageSkeleton() {
-    return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="mb-8">
-                <Skeleton className="h-10 w-64 mb-2" />
-                <Skeleton className="h-6 w-96" />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                {[...Array(4)].map((_, i) => (
-                    <Card key={i}>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <Skeleton className="h-4 w-24" />
-                            <Skeleton className="h-4 w-4" />
-                        </CardHeader>
-                        <CardContent>
-                            <Skeleton className="h-8 w-16 mb-1" />
-                            <Skeleton className="h-3 w-32" />
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-
-            <div className="mb-6">
-                <Skeleton className="h-8 w-32 mb-2" />
-                <Skeleton className="h-4 w-64" />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
-                    <Card key={i}>
-                        <CardHeader className="pb-3">
-                            <div className="flex items-center gap-3">
-                                <Skeleton className="h-12 w-12 rounded-full" />
-                                <div>
-                                    <Skeleton className="h-5 w-32 mb-2" />
-                                    <Skeleton className="h-4 w-24" />
-                                </div>
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <Skeleton className="h-4 w-full mb-2" />
-                            <Skeleton className="h-4 w-3/4 mb-4" />
-                            <div className="flex gap-2">
-                                <Skeleton className="h-4 w-20" />
-                                <Skeleton className="h-4 w-20" />
-                            </div>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-        </div>
-    );
-} 

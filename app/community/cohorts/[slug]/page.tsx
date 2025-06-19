@@ -1,21 +1,22 @@
-import { notFound } from 'next/navigation';
-import { Users, Calendar, MapPin, ArrowLeft } from 'lucide-react';
+import { Users, Calendar, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-import { getCohorts } from '@/data/cohort/get-cohorts';
 import { StudentCard } from '@/components/community/student-card';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getCohorts } from '@/data/cohort/get-cohorts';
 
 type CohortPageProps = {
-    params: {
+    params: Promise<{
         slug: string;
-    };
+    }>;
 };
 
 export default async function CohortPage({ params }: CohortPageProps) {
+    const { slug } = await params;
     const result = await getCohorts();
 
     if (!result.success || !result.data) {
@@ -23,7 +24,7 @@ export default async function CohortPage({ params }: CohortPageProps) {
     }
 
     const { cohorts } = result.data;
-    const cohort = cohorts.find(c => c.slug === params.slug);
+    const cohort = cohorts.find(c => c.slug === slug);
 
     if (!cohort) {
         notFound();
@@ -187,6 +188,7 @@ export default async function CohortPage({ params }: CohortPageProps) {
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: CohortPageProps) {
+    const { slug } = await params;
     const result = await getCohorts();
 
     if (!result.success || !result.data) {
@@ -197,7 +199,7 @@ export async function generateMetadata({ params }: CohortPageProps) {
     }
 
     const { cohorts } = result.data;
-    const cohort = cohorts.find(c => c.slug === params.slug);
+    const cohort = cohorts.find(c => c.slug === slug);
 
     if (!cohort) {
         return {

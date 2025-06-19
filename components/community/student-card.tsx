@@ -1,11 +1,10 @@
-import { Github, Linkedin, ExternalLink, MapPin, Briefcase, Calendar, Trophy, FileText, MessageSquare, BookOpen } from 'lucide-react';
+import { Github, Linkedin, ExternalLink, Briefcase, Calendar, Trophy, FileText, MessageSquare, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import type { CohortWithStudents } from '@/data/cohort/get-cohorts';
 
 type StudentCardProps = {

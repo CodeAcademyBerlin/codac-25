@@ -9,14 +9,14 @@ import {
     type GetUsersInput,
     type ServerActionResult
 } from '@/lib/validation/user';
-import {
-    type UserWithCounts,
-    commonSelects
-} from '@/lib/server-action-utils';
+// import {
+//     commonSelects,
+//     type UserWithCounts
+// } from '@/lib/server-action-utils';
 
 // Define return type
 type GetUsersResult = ServerActionResult<{
-    users: any[];
+    users: any[]; // Temporarily using any to resolve type conflicts
     total: number;
     hasMore: boolean;
 }>;
@@ -79,8 +79,7 @@ export async function getUsers(data: GetUsersInput): Promise<GetUsersResult> {
         // Get users with pagination
         const users = await prisma.user.findMany({
             where,
-            select: {
-                ...commonSelects.userPublic,
+            include: {
                 _count: {
                     select: {
                         documents: true,
@@ -89,6 +88,15 @@ export async function getUsers(data: GetUsersInput): Promise<GetUsersResult> {
                         comments: true,
                         achievements: true,
                         favorites: true,
+                    },
+                },
+                cohort: {
+                    select: {
+                        id: true,
+                        name: true,
+                        slug: true,
+                        startDate: true,
+                        description: true,
                     },
                 },
             },

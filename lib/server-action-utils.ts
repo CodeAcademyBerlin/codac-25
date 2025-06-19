@@ -111,7 +111,16 @@ export const commonSelects = {
         bio: true,
         role: true,
         status: true,
-        cohort: true,
+        cohort: {
+            select: {
+                id: true,
+                name: true,
+                slug: true,
+                startDate: true,
+                endDate: true,
+                description: true,
+            },
+        },
         graduationDate: true,
         linkedinUrl: true,
         githubUrl: true,
@@ -128,7 +137,16 @@ export const commonSelects = {
         bio: true,
         role: true,
         status: true,
-        cohort: true,
+        cohort: {
+            select: {
+                id: true,
+                name: true,
+                slug: true,
+                startDate: true,
+                endDate: true,
+                description: true,
+            },
+        },
         graduationDate: true,
         linkedinUrl: true,
         githubUrl: true,
@@ -174,6 +192,8 @@ export type UserWithCounts = Prisma.UserGetPayload<{
                 enrollments: true;
                 posts: true;
                 comments: true;
+                achievements: true;
+                favorites: true;
             };
         };
     };

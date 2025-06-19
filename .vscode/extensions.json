@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "prisma.prisma",
+        "bradlc.vscode-tailwindcss",
+        "yoavbls.pretty-ts-errors",
+        "dbaeumer.vscode-eslint"
+    ]
+}

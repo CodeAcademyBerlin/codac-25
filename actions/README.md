@@ -2,6 +2,8 @@
 
 This guide explains how to properly create and use server actions with TypeScript, Prisma, validation, and logging in this codebase.
 
+Following security gudelines article [security nextjs server components actions](https://nextjs.org/blog/security-nextjs-server-components-actions)
+
 ## 🏗️ Architecture Overview
 
 Our server actions follow a consistent pattern with:

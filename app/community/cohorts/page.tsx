@@ -1,13 +1,11 @@
-import { Suspense } from 'react';
 import { Users, Calendar, Search, Filter } from 'lucide-react';
 
-import { getCohorts } from '@/data/cohort/get-cohorts';
 import { CohortCard } from '@/components/community/cohort-card';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getCohorts } from '@/data/cohort/get-cohorts';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 
 export default async function CohortsPage() {
     const result = await getCohorts();
@@ -18,7 +16,7 @@ export default async function CohortsPage() {
                 <div className="text-center">
                     <h1 className="text-3xl font-bold mb-4">Cohorts</h1>
                     <p className="text-muted-foreground">
-                        {result.error || 'Failed to load cohorts'}
+                        {'error' in result ? (typeof result.error === 'string' ? result.error : 'Invalid data format') : 'Failed to load cohorts'}
                     </p>
                 </div>
             </div>
