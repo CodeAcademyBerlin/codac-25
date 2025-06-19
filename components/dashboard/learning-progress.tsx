@@ -30,8 +30,8 @@ export function LearningProgress() {
                 {progressData.map((item, index) => (
                     <div key={index} className="space-y-2">
                         <div className="flex items-center justify-between">
-                            <Link 
-                                href={`/learning/${item.track}`} 
+                            <Link
+                                href={`/learning/${item.track}`}
                                 className="text-sm font-medium hover:text-primary transition-colors"
                             >
                                 {item.name}
@@ -41,9 +41,9 @@ export function LearningProgress() {
                         <Progress value={item.progress} className="h-2" />
                     </div>
                 ))}
-                
+
                 <div className="pt-4 mt-4 border-t">
-                    <Link 
+                    <Link
                         href="/learning"
                         className="text-sm text-primary hover:underline"
                     >

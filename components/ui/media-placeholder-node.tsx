@@ -1,256 +1,268 @@
 'use client';
 
+import React from 'react';
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
+import {
+  PlateElement,
+  PlateElementProps,
+  TElement,
+  useEditorRef,
+  useElement,
+} from '@udecode/plate-common/react';
+
+import { KEYS } from '@udecode/plate-media/react';
+import {
+  AudioIcon,
+  FileIcon,
+  FileUpIcon,
+  Loader2Icon,
+} from 'lucide-react';
+
 import {
   PlaceholderPlugin,
-  PlaceholderProvider,
-  updateUploadHistory,
-} from '@platejs/media/react';
-import { AudioLines, FileUp, Film, ImageIcon, Loader2Icon } from 'lucide-react';
-import Image from 'next/image';
-import type { TPlaceholderElement } from 'platejs';
-import { KEYS } from 'platejs';
-import type { PlateElementProps } from 'platejs/react';
-import { PlateElement, useEditorPlugin, withHOC } from 'platejs/react';
-import * as React from 'react';
-import { useFilePicker } from 'use-file-picker';
+  TPlaceholderElement,
+  useFilePicker,
+  usePlaceholderStore,
+} from '@udecode/plate-media/react';
 
-import { useUploadFile } from '@/hooks/use-upload-file';
-import { cn } from '@/lib/utils';
+import { updateUploadHistory } from '@/components/editor/transforms';
 
+type TImageElement = TElement & {
+  url: string;
+  width?: number;
+  height?: number;
+  name?: string;
+};
 
-const CONTENT: Record<
-  string,
-  {
-    accept: string[];
-    content: React.ReactNode;
-    icon: React.ReactNode;
-  }
-> = {
-  [KEYS.audio]: {
-    accept: ['audio/*'],
-    content: 'Add an audio file',
-    icon: <AudioLines />,
-  },
-  [KEYS.file]: {
-    accept: ['*'],
-    content: 'Add a file',
-    icon: <FileUp />,
-  },
+interface PlaceholderElementProps extends PlateElementProps {
+  className?: string;
+}
+
+const MEDIA_CONFIG: Record<string, {
+  icon: React.ReactNode;
+  content: string;
+}> = {
   [KEYS.img]: {
-    accept: ['image/*'],
-    content: 'Add an image',
-    icon: <ImageIcon />,
+    icon: <FileUpIcon />,
+    content: 'Click to upload an image or drag and drop',
   },
   [KEYS.video]: {
-    accept: ['video/*'],
-    content: 'Add a video',
-    icon: <Film />,
+    icon: <FileUpIcon />,
+    content: 'Click to upload a video or drag and drop',
+  },
+  [KEYS.file]: {
+    icon: <FileIcon />,
+    content: 'Click to upload a file or drag and drop',
   },
 };
 
-export const PlaceholderElement = withHOC(
-  PlaceholderProvider,
-  function PlaceholderElement(props: PlateElementProps<TPlaceholderElement>) {
-    const { editor, element } = props;
+export const MediaPlaceholderElement = React.forwardRef<
+  HTMLDivElement,
+  PlaceholderElementProps
+>(function PlaceholderElement(props: PlateElementProps<TPlaceholderElement>) {
+  const { children, className, ...elementProps } = props;
+  const element = useElement<TPlaceholderElement>();
+  const editor = useEditorRef();
+  const api = editor.api.placeholder;
 
-    const { api } = useEditorPlugin(PlaceholderPlugin);
+  const uploadedFile = usePlaceholderStore().get.uploadedFile(element.id as string);
+  const uploadingFile = usePlaceholderStore().get.uploadingFile(element.id as string);
+  const isImage = element.mediaType === KEYS.img;
+  const loading = Boolean(uploadingFile);
+  const progress = usePlaceholderStore().get.progress(element.id as string);
 
-    const { isUploading, progress, uploadedFile, uploadFile, uploadingFile } =
-      useUploadFile();
+  const imageRef = React.useRef<HTMLImageElement | null>(null);
 
-    const loading = isUploading && uploadingFile;
+  // Store dimensions separately to ensure they persist
+  const imageDimensionsRef = React.useRef<{ width: number; height: number } | null>(null);
 
-    const currentContent = CONTENT[element.mediaType];
+  const { openFilePicker } = useFilePicker({
+    accept: element.mediaType === KEYS.img
+      ? 'image/*'
+      : element.mediaType === KEYS.video
+        ? 'video/*'
+        : '*',
+    multiple: false,
+    onFilesSelected: ({ plainFiles: [file] }) => {
+      if (file) {
+        api.addUploadingFile(element.id as string, file);
+      }
+    },
+  });
 
-    const isImage = element.mediaType === KEYS.img;
+  const { uploadFile } = useFilePicker({
+    accept: '*',
+    multiple: false,
+    onFilesSelected: () => { },
+  });
 
-    const imageRef = React.useRef<HTMLImageElement>(null);
+  const currentContent = MEDIA_CONFIG[element.mediaType!] || MEDIA_CONFIG[KEYS.file];
 
-    // Store dimensions separately to ensure they persist
-    const imageDimensionsRef = React.useRef<{ width: number; height: number } | null>(null);
-
-    const { openFilePicker } = useFilePicker({
-      accept: currentContent.accept,
-      multiple: true,
-      onFilesSelected: ({ plainFiles: updatedFiles }) => {
-        const firstFile = updatedFiles[0];
-        const restFiles = updatedFiles.slice(1);
-
-        replaceCurrentPlaceholder(firstFile);
-
-        if (restFiles.length > 0) {
-          editor.getTransforms(PlaceholderPlugin).insert.media(restFiles);
-        }
-      },
-    });
-
-    const replaceCurrentPlaceholder = React.useCallback(
-      (file: File) => {
-        if (!api || !api.placeholder) {
-          console.error('API or placeholder API not available');
-          return;
-        }
-
-        try {
-          void uploadFile(file);
-          api.placeholder.addUploadingFile(element.id as string, file);
-        } catch (error) {
-          console.error('Error in replaceCurrentPlaceholder:', error);
-        }
-      },
-      [api, element.id, uploadFile]
-    );
-
-    React.useEffect(() => {
-      if (!uploadedFile || !editor || !editor.api || !editor.tf) return;
+  // Replace placeholder with uploaded file
+  const replaceCurrentPlaceholder = React.useCallback(
+    async (file: File) => {
+      if (!editor || !api || !element.id) return;
 
       try {
-        const path = editor.api.findPath(element);
+        void uploadFile(file);
+        api.addUploadingFile(element.id as string, file);
+      } catch (error) {
+        console.error('Error in replaceCurrentPlaceholder:', error);
+      }
+    },
+    [api, element.id, uploadFile]
+  );
 
-        if (!path) {
-          console.warn('Could not find path for element', element);
-          return;
+  React.useEffect(() => {
+    if (!uploadedFile || !editor || !editor.api || !editor.tf) return;
+
+    try {
+      const path = editor.api.findPath(element);
+
+      if (!path) {
+        console.warn('Could not find path for element', element);
+        return;
+      }
+
+      editor.tf.withoutSaving(() => {
+        editor.tf.removeNodes({ at: path });
+
+        // Get dimensions from stored ref, imageRef, or use defaults
+        let width: number | undefined;
+        let height: number | undefined;
+
+        // First try to get dimensions from our stored ref
+        if (imageDimensionsRef.current) {
+          width = imageDimensionsRef.current.width;
+          height = imageDimensionsRef.current.height;
+        }
+        // Fallback to imageRef if dimensions ref is not available
+        else if (imageRef?.current) {
+          width = (imageRef.current as HTMLImageElement & { __originalWidth?: number }).__originalWidth || imageRef.current.width || imageRef.current.naturalWidth;
+          height = (imageRef.current as HTMLImageElement & { __originalHeight?: number }).__originalHeight || imageRef.current.height || imageRef.current.naturalHeight;
         }
 
-        editor.tf.withoutSaving(() => {
-          editor.tf.removeNodes({ at: path });
+        // Set default dimensions for media if none found
+        if (element.mediaType === KEYS.img && (!width || !height)) {
+          width = width || 800;  // Default width
+          height = height || 600; // Default height
+        } else if (element.mediaType === KEYS.video && (!width || !height)) {
+          width = width || 800;  // Default width for video
+          height = height || 450; // Default height for video (16:9 aspect ratio)
+        }
 
-          // Get dimensions from stored ref, imageRef, or use defaults
-          let width: number | undefined;
-          let height: number | undefined;
+        const node = {
+          children: [{ text: '' }],
+          initialHeight: height,
+          initialWidth: width,
+          isUpload: true,
+          name: element.mediaType === KEYS.file ? uploadedFile.name : '',
+          placeholderId: element.id as string,
+          type: element.mediaType!,
+          url: uploadedFile.url,
+          // Add width and height directly to the node for immediate use
+          ...(width && { width }),
+          ...(height && { height }),
+        };
 
-          // First try to get dimensions from our stored ref
-          if (imageDimensionsRef.current) {
-            width = imageDimensionsRef.current.width;
-            height = imageDimensionsRef.current.height;
-          }
-          // Fallback to imageRef if dimensions ref is not available
-          else if (imageRef?.current) {
-            width = (imageRef.current as HTMLImageElement & { __originalWidth?: number }).__originalWidth || imageRef.current.width || imageRef.current.naturalWidth;
-            height = (imageRef.current as HTMLImageElement & { __originalHeight?: number }).__originalHeight || imageRef.current.height || imageRef.current.naturalHeight;
-          }
+        editor.tf.insertNodes(node, { at: path });
 
-          // Set default dimensions for media if none found
-          if (element.mediaType === KEYS.img && (!width || !height)) {
-            width = width || 800;  // Default width
-            height = height || 600; // Default height
-          } else if (element.mediaType === KEYS.video && (!width || !height)) {
-            width = width || 800;  // Default width for video
-            height = height || 450; // Default height for video (16:9 aspect ratio)
-          }
+        updateUploadHistory(editor, node);
+      });
 
-          const node = {
-            children: [{ text: '' }],
-            initialHeight: height,
-            initialWidth: width,
-            isUpload: true,
-            name: element.mediaType === KEYS.file ? uploadedFile.name : '',
-            placeholderId: element.id as string,
-            type: element.mediaType!,
-            url: uploadedFile.url,
-            // Add width and height directly to the node for immediate use
-            ...(width && { width }),
-            ...(height && { height }),
-          };
+      api.removeUploadingFile(element.id as string);
+    } catch (error) {
+      console.error('Error replacing placeholder with uploaded file:', error);
+      // Remove the uploading file from state even if there's an error
+      api.removeUploadingFile(element.id as string);
+    }
+  }, [uploadedFile, element.id]);
 
-          editor.tf.insertNodes(node, { at: path });
+  // React dev mode will call React.useEffect twice
+  const isReplaced = React.useRef(false);
 
-          updateUploadHistory(editor, node);
-        });
+  /** Paste and drop */
+  React.useEffect(() => {
+    if (isReplaced.current || !editor || !api) return;
 
-        api.placeholder.removeUploadingFile(element.id as string);
-      } catch (error) {
-        console.error('Error replacing placeholder with uploaded file:', error);
-        // Remove the uploading file from state even if there's an error
-        api.placeholder.removeUploadingFile(element.id as string);
-      }
-    }, [uploadedFile, element.id]);
+    isReplaced.current = true;
 
-    // React dev mode will call React.useEffect twice
-    const isReplaced = React.useRef(false);
+    try {
+      const currentFiles = api.getUploadingFile(
+        element.id as string
+      );
 
-    /** Paste and drop */
-    React.useEffect(() => {
-      if (isReplaced.current || !editor || !api) return;
+      if (!currentFiles) return;
 
-      isReplaced.current = true;
+      replaceCurrentPlaceholder(currentFiles);
+    } catch (error) {
+      console.error('Error handling paste/drop files:', error);
+    }
+  }, [isReplaced]);
 
-      try {
-        const currentFiles = api.placeholder.getUploadingFile(
-          element.id as string
-        );
-
-        if (!currentFiles) return;
-
-        replaceCurrentPlaceholder(currentFiles);
-      } catch (error) {
-        console.error('Error handling paste/drop files:', error);
-      }
-    }, [isReplaced]);
-
-    return (
-      <PlateElement
-        className="my-1"
-        {...props}
-        data-uploading={loading ? 'true' : 'false'}
-      >
-        {!loading && (
-          <div
-            className={cn(
-              'flex cursor-pointer items-center rounded-sm bg-muted p-3 pr-9 select-none hover:bg-primary/10'
-            )}
-            onClick={() => openFilePicker()}
-            contentEditable={false}
-          >
-            <div className="relative mr-3 flex text-muted-foreground/80 [&_svg]:size-6">
-              {currentContent.icon}
-            </div>
-            <div className="text-sm whitespace-nowrap text-muted-foreground">
-              <div>{currentContent.content}</div>
-            </div>
+  return (
+    <PlateElement
+      className="my-1"
+      {...props}
+      data-uploading={loading ? 'true' : 'false'}
+    >
+      {!loading && (
+        <div
+          className={cn(
+            'flex cursor-pointer items-center rounded-sm bg-muted p-3 pr-9 select-none hover:bg-primary/10'
+          )}
+          onClick={() => openFilePicker()}
+          contentEditable={false}
+        >
+          <div className="relative mr-3 flex text-muted-foreground/80 [&_svg]:size-6">
+            {currentContent.icon}
           </div>
-        )}
+          <div className="text-sm whitespace-nowrap text-muted-foreground">
+            <div>{currentContent.content}</div>
+          </div>
+        </div>
+      )}
 
-        {loading && !isImage && (
-          <div
-            className={cn(
-              'flex cursor-pointer items-center rounded-sm bg-muted p-3 pr-9 select-none hover:bg-primary/10'
-            )}
-            contentEditable={false}
-          >
-            <div className="relative mr-3 flex text-muted-foreground/80 [&_svg]:size-6">
-              {currentContent.icon}
-            </div>
-            <div className="text-sm whitespace-nowrap text-muted-foreground">
-              <div>{uploadingFile?.name}</div>
-              <div className="mt-1 flex items-center gap-1.5">
-                <div>{formatBytes(uploadingFile?.size ?? 0)}</div>
-                <div>–</div>
-                <div className="flex items-center">
-                  <Loader2Icon className="mr-1 size-3.5 animate-spin text-muted-foreground" />
-                  {Math.round(progress ?? 0)}%
-                </div>
+      {loading && !isImage && (
+        <div
+          className={cn(
+            'flex cursor-pointer items-center rounded-sm bg-muted p-3 pr-9 select-none hover:bg-primary/10'
+          )}
+          contentEditable={false}
+        >
+          <div className="relative mr-3 flex text-muted-foreground/80 [&_svg]:size-6">
+            {currentContent.icon}
+          </div>
+          <div className="text-sm whitespace-nowrap text-muted-foreground">
+            <div>{uploadingFile?.name}</div>
+            <div className="mt-1 flex items-center gap-1.5">
+              <div>{formatBytes(uploadingFile?.size ?? 0)}</div>
+              <div>–</div>
+              <div className="flex items-center">
+                <Loader2Icon className="mr-1 size-3.5 animate-spin text-muted-foreground" />
+                {Math.round(progress ?? 0)}%
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {isImage && loading && (
-          <ImageProgress
-            file={uploadingFile}
-            imageRef={imageRef}
-            progress={progress}
-            onDimensionsLoaded={(dimensions) => {
-              imageDimensionsRef.current = dimensions;
-            }}
-          />
-        )}
+      {isImage && loading && (
+        <ImageProgress
+          file={uploadingFile}
+          imageRef={imageRef}
+          progress={progress}
+          onDimensionsLoaded={(dimensions) => {
+            imageDimensionsRef.current = dimensions;
+          }}
+        />
+      )}
 
-        {props.children}
-      </PlateElement>
-    );
-  }
-);
+      {props.children}
+    </PlateElement>
+  );
+});
 
 export function ImageProgress({
   className,

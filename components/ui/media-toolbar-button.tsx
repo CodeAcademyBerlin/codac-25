@@ -96,7 +96,6 @@ export function MediaToolbarButton({
       mediaType: nodeType,
       type: 'placeholder',
     });
-
     // Save the document with the new placeholder block before any upload starts
     // Only attempt save if save context is available
     if (triggerSave) {

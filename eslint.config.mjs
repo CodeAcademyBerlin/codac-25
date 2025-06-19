@@ -31,18 +31,32 @@ const eslintConfig = [
       'react/require-default-props': 'off',
       'react/jsx-uses-react': 'off',
       'react/react-in-jsx-scope': 'off',
+      'react/no-unescaped-entities': 'warn',
       
       // General code quality
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'error',
       'no-var': 'error',
       
-      // Import organization (temporarily disabled for build)
-      'import/order': 'off',
-      
-      // Temporarily disable other problematic rules
-      '@typescript-eslint/no-unused-vars': 'warn',
-      'react/no-unescaped-entities': 'warn'
+      // Import organization
+      'import/order': [
+        'error',
+        {
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index'
+          ],
+          'newlines-between': 'always',
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true
+          }
+        }
+      ]
     }
   },
   {

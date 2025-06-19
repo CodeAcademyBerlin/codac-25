@@ -1,12 +1,12 @@
 'use client';
 
-import { 
-  ChevronDown, 
-  ChevronRight, 
-  FileText, 
-  Folder, 
-  FolderOpen, 
-  Plus, 
+import {
+  ChevronDown,
+  ChevronRight,
+  FileText,
+  Folder,
+  FolderOpen,
+  Plus,
   MoreHorizontal,
   Edit2,
   Trash2,
@@ -84,14 +84,14 @@ interface TreeNodeProps {
   onAddChild: (parentId: string, type: 'FOLDER' | 'DOCUMENT') => void;
 }
 
-function TreeNodeComponent({ 
-  node, 
-  level, 
-  onToggle, 
-  onRename, 
-  onDelete, 
-  onMove, 
-  onAddChild 
+function TreeNodeComponent({
+  node,
+  level,
+  onToggle,
+  onRename,
+  onDelete,
+  onMove,
+  onAddChild
 }: TreeNodeProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(node.title);
@@ -112,23 +112,23 @@ function TreeNodeComponent({
     accept: ItemTypes.NODE,
     hover: (item: DragItem, monitor) => {
       if (!dropRef.current) return;
-      
+
       const dragId = item.id;
       const dropId = node.id;
-      
+
       if (dragId === dropId) return;
-      
+
       const hoverBoundingRect = dropRef.current.getBoundingClientRect();
       const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
-      
+
       if (!clientOffset) return;
-      
+
       const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-      
+
       // Determine drop position
       let position: 'before' | 'after' | 'inside' = 'inside';
-      
+
       if (node.type === 'FOLDER') {
         if (hoverClientY < hoverMiddleY / 2) {
           position = 'before';
@@ -140,7 +140,7 @@ function TreeNodeComponent({
       } else {
         position = hoverClientY < hoverMiddleY ? 'before' : 'after';
       }
-      
+
       setDropPosition(position);
     },
     drop: (item: DragItem) => {
@@ -241,8 +241,8 @@ function TreeNodeComponent({
             </TooltipTrigger>
             <TooltipContent side="right" align="center">
               <p>
-                {node.type === 'FOLDER' 
-                  ? node.isExpanded 
+                {node.type === 'FOLDER'
+                  ? node.isExpanded
                     ? `Folder: ${node.title} (expanded${node.children?.length ? ` - ${node.children.length} items` : ' - empty'})`
                     : `Folder: ${node.title} (collapsed${node.children?.length ? ` - ${node.children.length} items` : ' - empty'})`
                   : `Document: ${node.title}`
@@ -356,7 +356,7 @@ function TreeNodeComponent({
           <AlertDialogHeader>
             <AlertDialogTitle>Delete {node.type.toLowerCase()}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete &ldquo;{node.title}&rdquo;? 
+              Are you sure you want to delete &ldquo;{node.title}&rdquo;?
               {node.type === 'FOLDER' && ' All contents will be permanently removed.'}
               This action cannot be undone.
             </AlertDialogDescription>
@@ -450,7 +450,7 @@ export function EditableToc({ nodes, onNodesChange }: EditableTocProps) {
       if (result.success) {
         // The move was successful, but we don't need to update local state here
         // as the parent component should refetch the data
-                    // Document moved successfully
+        // Document moved successfully
       } else {
         console.error('Failed to move document:', result.error);
       }
@@ -469,7 +469,7 @@ export function EditableToc({ nodes, onNodesChange }: EditableTocProps) {
         type: 'GENERAL',
         content: type === 'FOLDER' ? [] : [{ type: 'p', children: [{ text: '' }] }]
       });
-      
+
       if (result.success && result.data) {
         // Update local state
         const newNode: TreeNode = {
