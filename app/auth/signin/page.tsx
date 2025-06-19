@@ -1,14 +1,16 @@
-import { SignInForm } from "@/components/auth/signin-form-server"
+import { SignInForm } from "@/components/auth/signin-form"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface SignInPageProps {
-    searchParams?: {
+    searchParams?: Promise<{
         callbackUrl?: string
         error?: string
-    }
+    }>
 }
 
 export default async function SignInPage({ searchParams }: SignInPageProps) {
+    const params = await searchParams
+
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
             <Card className="w-full max-w-md">
@@ -21,7 +23,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <SignInForm searchParams={searchParams} />
+                    <SignInForm callbackUrl={params?.callbackUrl} />
                 </CardContent>
             </Card>
         </div>

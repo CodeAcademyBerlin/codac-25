@@ -1,7 +1,8 @@
-import { Loader2, Mail } from "lucide-react"
+import { Loader2, Mail, CheckCircle } from "lucide-react"
 
 export const Icons = {
     spinner: Loader2,
+    checkCircle: CheckCircle,
     google: (props: React.SVGProps<SVGSVGElement>) => (
         <svg role="img" viewBox="0 0 24 24" {...props}>
             <path
