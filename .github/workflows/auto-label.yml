@@ -1,0 +1,167 @@
+name: Auto Label Issues and PRs
+
+on:
+  issues:
+    types: [opened, edited]
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  label:
+    name: Auto Label
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        if: github.event_name == 'pull_request'
+
+      - name: Auto label based on content and files
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labelsToAdd = [];
+            const labelsToRemove = [];
+
+            // Get the content to analyze
+            let title = "";
+            let body = "";
+            let changedFiles = [];
+
+            if (context.eventName === 'issues') {
+              title = context.payload.issue.title.toLowerCase();
+              body = context.payload.issue.body ? context.payload.issue.body.toLowerCase() : "";
+            } else {
+              title = context.payload.pull_request.title.toLowerCase();
+              body = context.payload.pull_request.body ? context.payload.pull_request.body.toLowerCase() : "";
+              
+              // Get changed files for PR
+              const { data: files } = await github.rest.pulls.listFiles({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.pull_request.number,
+              });
+              changedFiles = files.map(file => file.filename);
+            }
+
+            const content = title + " " + body;
+
+            // Priority labels
+            if (content.includes('urgent') || content.includes('critical') || content.includes('blocking')) {
+              labelsToAdd.push('priority: high');
+            } else if (content.includes('minor') || content.includes('cosmetic') || content.includes('typo')) {
+              labelsToAdd.push('priority: low');
+            } else {
+              labelsToAdd.push('priority: medium');
+            }
+
+            // Type labels based on content
+            if (content.includes('bug') || content.includes('error') || content.includes('broken') || content.includes('issue')) {
+              labelsToAdd.push('type: bug');
+            }
+
+            if (content.includes('feature') || content.includes('enhancement') || content.includes('add') || content.includes('new')) {
+              labelsToAdd.push('type: feature');
+            }
+
+            if (content.includes('documentation') || content.includes('docs') || content.includes('readme')) {
+              labelsToAdd.push('type: documentation');
+            }
+
+            if (content.includes('performance') || content.includes('optimization') || content.includes('speed')) {
+              labelsToAdd.push('type: performance');
+            }
+
+            if (content.includes('security') || content.includes('vulnerability') || content.includes('auth')) {
+              labelsToAdd.push('type: security');
+            }
+
+            if (content.includes('test') || content.includes('testing') || content.includes('spec')) {
+              labelsToAdd.push('type: testing');
+            }
+
+            if (content.includes('refactor') || content.includes('cleanup') || content.includes('code quality')) {
+              labelsToAdd.push('type: refactoring');
+            }
+
+            // Component/Area labels based on file changes (for PRs)
+            if (context.eventName === 'pull_request') {
+              const hasUIChanges = changedFiles.some(file => 
+                file.includes('components/ui/') || 
+                file.includes('.css') || 
+                file.includes('tailwind') ||
+                file.includes('components/')
+              );
+              if (hasUIChanges) labelsToAdd.push('area: ui');
+              
+              const hasAPIChanges = changedFiles.some(file => 
+                file.includes('api/') || 
+                file.includes('actions/') ||
+                file.includes('route.ts')
+              );
+              if (hasAPIChanges) labelsToAdd.push('area: api');
+              
+              const hasDBChanges = changedFiles.some(file => 
+                file.includes('prisma/') || 
+                file.includes('schema.prisma') ||
+                file.includes('migration')
+              );
+              if (hasDBChanges) labelsToAdd.push('area: database');
+              
+              const hasEditorChanges = changedFiles.some(file => 
+                file.includes('editor/') ||
+                file.includes('plate')
+              );
+              if (hasEditorChanges) labelsToAdd.push('area: editor');
+              
+              const hasCommunityChanges = changedFiles.some(file => 
+                file.includes('community/')
+              );
+              if (hasCommunityChanges) labelsToAdd.push('area: community');
+              
+              const hasDocsChanges = changedFiles.some(file => 
+                file.includes('docs/') ||
+                file.includes('.md') ||
+                file.includes('README')
+              );
+              if (hasDocsChanges) labelsToAdd.push('area: documentation');
+            }
+
+            // Experience level labels
+            if (content.includes('good first issue') || content.includes('beginner') || content.includes('easy')) {
+              labelsToAdd.push('good first issue');
+              labelsToAdd.push('difficulty: beginner');
+            } else if (content.includes('advanced') || content.includes('complex') || content.includes('expert')) {
+              labelsToAdd.push('difficulty: advanced');
+            } else if (labelsToAdd.length > 0) {
+              labelsToAdd.push('difficulty: intermediate');
+            }
+
+            // Status labels for issues
+            if (context.eventName === 'issues') {
+              if (content.includes('help wanted') || content.includes('need help')) {
+                labelsToAdd.push('help wanted');
+              }
+              
+              if (content.includes('discussion') || content.includes('question') || content.includes('how to')) {
+                labelsToAdd.push('type: question');
+              }
+            }
+
+            // Remove duplicates
+            const uniqueLabels = [...new Set(labelsToAdd)];
+
+            if (uniqueLabels.length > 0) {
+              const issueNumber = context.eventName === 'issues' 
+                ? context.payload.issue.number 
+                : context.payload.pull_request.number;
+                
+              await github.rest.issues.addLabels({
+                issue_number: issueNumber,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: uniqueLabels
+              });
+              
+              console.log(`Added labels: ${uniqueLabels.join(', ')}`);
+            }

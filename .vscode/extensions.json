@@ -3,6 +3,8 @@
         "prisma.prisma",
         "bradlc.vscode-tailwindcss",
         "yoavbls.pretty-ts-errors",
-        "dbaeumer.vscode-eslint"
+        "dbaeumer.vscode-eslint",
+        "maattdd.gitless",
+        "github.vscode-github-actions"
     ]
 }

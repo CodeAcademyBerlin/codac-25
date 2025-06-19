@@ -1,0 +1,154 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  lint-and-typecheck:
+    name: Lint and Type Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+
+      - name: Run ESLint
+        run: pnpm lint
+
+      - name: Run TypeScript check
+        run: pnpm ts:check
+
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+
+      - name: Build application
+        run: pnpm build
+        env:
+          SKIP_ENV_VALIDATION: true
+
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Run security audit
+        run: pnpm audit --audit-level moderate
+        continue-on-error: true
+
+  dependency-check:
+    name: Check Dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Check for outdated dependencies
+        run: pnpm outdated
+        continue-on-error: true
+
+  pr-size-check:
+    name: PR Size Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Check PR size
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const additions = pr.additions;
+            const deletions = pr.deletions;
+            const changedFiles = pr.changed_files;
+
+            let comment = "## 📊 Pull Request Analysis\n\n";
+            comment += `- **Files changed:** ${changedFiles}\n`;
+            comment += `- **Lines added:** ${additions}\n`;
+            comment += `- **Lines deleted:** ${deletions}\n\n`;
+
+            if (changedFiles > 50) {
+              comment += "⚠️ **Large PR detected**: This PR changes many files. Consider breaking it into smaller PRs for easier review.\n\n";
+            }
+
+            if (additions > 1000) {
+              comment += "⚠️ **Large addition detected**: This PR adds many lines. Please ensure all changes are necessary and well-documented.\n\n";
+            }
+
+            comment += "### 💡 Tips for Contributors\n";
+            comment += "- Keep PRs focused on a single feature or fix\n";
+            comment += "- Write clear commit messages following conventional commits\n";
+            comment += "- Add tests for new functionality\n";
+            comment += "- Update documentation when needed\n";
+
+            // Only post comment if it's a significant PR
+            if (changedFiles > 10 || additions > 200) {
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }

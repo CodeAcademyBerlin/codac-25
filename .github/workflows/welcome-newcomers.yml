@@ -1,0 +1,126 @@
+name: Welcome New Contributors
+
+on:
+  pull_request_target:
+    types: [opened]
+  issues:
+    types: [opened]
+
+jobs:
+  welcome:
+    name: Welcome Contributors
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Welcome new contributor
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const isFirstTimeContributor = async () => {
+              try {
+                // Check if this is the user's first contribution to this repo
+                const { data: prs } = await github.rest.pulls.list({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  creator: context.actor,
+                  state: 'all'
+                });
+                
+                const { data: issues } = await github.rest.issues.listForRepo({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  creator: context.actor,
+                  state: 'all'
+                });
+                
+                return prs.length <= 1 && issues.length <= 1;
+              } catch (error) {
+                console.log('Error checking contribution history:', error);
+                return false;
+              }
+            };
+
+            const isFirstTime = await isFirstTimeContributor();
+
+            if (!isFirstTime) return;
+
+            let welcomeMessage = "";
+
+                         if (context.eventName === 'pull_request_target') {
+               welcomeMessage = "## 🎉 Welcome to CODAC!\n\n" +
+                 "Thank you for your first contribution to the Code Academy Berlin community platform! We're excited to have you join our community of learners and developers.\n\n" +
+                 "### 🚀 What happens next?\n\n" +
+                 "1. **Automated checks** will run to ensure code quality\n" +
+                 "2. **Maintainers will review** your changes (usually within 2-3 days)\n" +
+                 "3. **Feedback and discussions** may happen in this PR\n" +
+                 "4. **Once approved**, your contribution will be merged!\n\n" +
+                 "### 💡 While you wait\n\n" +
+                 "- ⭐ **Star the repository** to show your support\n" +
+                 "- 📖 **Read our [Contributing Guide](CONTRIBUTING.md)** for detailed guidelines\n" +
+                 "- 🐛 **Check out [good first issues](https://github.com/" + context.repo.owner + "/" + context.repo.repo + "/labels/good%20first%20issue)** for more ways to contribute\n" +
+                 "- 💬 **Join our community discussions** in the issues and discussions tab\n\n" +
+                 "### 🎯 Tips for Success\n\n" +
+                 "- Keep your PR focused on a single feature or fix\n" +
+                 "- Write clear, descriptive commit messages\n" +
+                 "- Add tests if your changes include new functionality\n" +
+                 "- Be responsive to review feedback\n\n" +
+                 "### 🆘 Need Help?\n\n" +
+                 "- Check our [FAQ section](README.md#faq)\n" +
+                 "- Review the [Development Setup](README.md#getting-started)\n" +
+                 "- Ask questions in this PR - we're here to help!\n\n" +
+                 "**Happy coding!** 🚀\n\n" +
+                 "*This is an automated message for first-time contributors.*";
+                         } else if (context.eventName === 'issues') {
+               welcomeMessage = "## 👋 Welcome to CODAC!\n\n" +
+                 "Thank you for opening your first issue! We appreciate you taking the time to help improve the Code Academy Berlin community platform.\n\n" +
+                 "### 🔍 What happens next?\n\n" +
+                 "1. **Maintainers will review** your issue (usually within 1-2 days)\n" +
+                 "2. **Labels will be added** to categorize your issue\n" +
+                 "3. **Discussion may follow** to clarify details\n" +
+                 "4. **Contributors may volunteer** to work on the issue\n\n" +
+                 "### 💡 Good to know\n\n" +
+                 "- 🏷️ **Good first issues** are labeled and perfect for beginners\n" +
+                 "- 🐛 **Bug reports** should include steps to reproduce\n" +
+                 "- ✨ **Feature requests** should explain the problem being solved\n" +
+                 "- 📚 **Questions** are welcome - we love helping newcomers!\n\n" +
+                 "### 🎯 Contributing Guidelines\n\n" +
+                 "- Check if a similar issue already exists\n" +
+                 "- Provide as much detail as possible\n" +
+                 "- Be respectful and constructive in discussions\n" +
+                 "- Consider contributing a fix if you're able!\n\n" +
+                 "### 🚀 Ready to contribute code?\n\n" +
+                 "- Fork the repository and create a branch\n" +
+                 "- Check out our [Contributing Guide](CONTRIBUTING.md)\n" +
+                 "- Look for issues labeled `good first issue` or `help wanted`\n\n" +
+                 "**Thanks for being part of our community!** 🌟\n\n" +
+                 "*This is an automated message for first-time contributors.*";
+            }
+
+            // Create the welcome comment
+            if (context.eventName === 'pull_request_target') {
+              await github.rest.issues.createComment({
+                issue_number: context.payload.pull_request.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: welcomeMessage
+              });
+            } else {
+              await github.rest.issues.createComment({
+                issue_number: context.payload.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: welcomeMessage
+              });
+            }
+
+      - name: Add labels to first-time contributor PR/Issue
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request_target'
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['first-time-contributor', 'needs-review']
+            });

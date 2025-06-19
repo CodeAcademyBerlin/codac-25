@@ -1,0 +1,159 @@
+name: Close Stale Issues and PRs
+
+on:
+  schedule:
+    # Run daily at 1:00 AM UTC
+    - cron: "0 1 * * *"
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  stale:
+    name: Handle Stale Issues and PRs
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'codeacademyberlin' # Only run on the main repo
+
+    steps:
+      - name: Handle stale issues and PRs
+        uses: actions/stale@v9
+        with:
+          # General settings
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+          # Issues configuration
+          stale-issue-message: |
+            👋 **This issue has been automatically marked as stale** because it has not had recent activity. 
+
+            ### 🤔 What happens next?
+            - This issue will be **closed in 7 days** if no further activity occurs
+            - Add a comment or make changes to keep it open
+            - Remove the 'stale' label to prevent auto-closure
+
+            ### 💡 For contributors
+            - If you're working on this, please leave a comment
+            - If this is still relevant, please add details or ask questions
+            - Consider creating a PR if you have a solution
+
+            **Thank you for your contributions to CODAC!** 🚀
+
+          close-issue-message: |
+            🔒 **This issue has been automatically closed** due to inactivity.
+
+            ### 🔄 Can this be reopened?
+            - **Yes!** Comment on this issue and it can be reopened
+            - Create a new issue if the problem persists
+            - Reference this issue in related discussions
+
+            ### 🙏 Thank you
+            We appreciate your contribution to making CODAC better, even if this particular issue didn't move forward.
+
+            **Keep contributing!** 🌟
+
+          # Pull requests configuration
+          stale-pr-message: |
+            👋 **This pull request has been automatically marked as stale** because it has not had recent activity.
+
+            ### 🤔 What happens next?
+            - This PR will be **closed in 7 days** if no further activity occurs
+            - Push new commits or add comments to keep it open
+            - Remove the 'stale' label to prevent auto-closure
+
+            ### 💡 For contributors
+            - Rebase on the latest main branch if needed
+            - Respond to any review comments
+            - Ask for help if you're stuck
+
+            **We appreciate your contribution!** 🚀
+
+          close-pr-message: |
+            🔒 **This pull request has been automatically closed** due to inactivity.
+
+            ### 🔄 Can this be reopened?
+            - **Yes!** Add a comment and we can reopen it
+            - You can also create a new PR with these changes
+            - Make sure to sync with the latest main branch
+
+            ### 🙏 Thank you
+            We appreciate the time and effort you put into this contribution. Feel free to try again anytime!
+
+            **Keep coding!** 🌟
+
+          # Timing configuration
+          days-before-stale: 30 # Mark as stale after 30 days
+          days-before-close: 7 # Close after 7 more days (37 total)
+          days-before-pr-stale: 21 # PRs become stale faster (21 days)
+          days-before-pr-close: 7 # Close PRs after 7 more days (28 total)
+
+          # Labels
+          stale-issue-label: "stale"
+          stale-pr-label: "stale"
+          exempt-issue-labels: "pinned,security,on-hold,in-progress"
+          exempt-pr-labels: "pinned,security,on-hold,in-progress,work-in-progress"
+
+          # Additional settings
+          remove-stale-when-updated: true # Remove stale label when updated
+          enable-statistics: true # Show statistics in logs
+          operations-per-run: 100 # Limit operations per run
+
+          # Don't process drafts or certain labels
+          exempt-draft-pr: true
+
+  cleanup-closed-prs:
+    name: Clean up old closed PRs
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'codeacademyberlin'
+
+    steps:
+      - name: Delete head branches of closed PRs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get closed PRs from the last 30 days
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'closed',
+              per_page: 50,
+              sort: 'updated',
+              direction: 'desc'
+            });
+
+            let deletedBranches = 0;
+
+            for (const pr of prs) {
+              // Skip if updated recently or if it's from a fork
+              if (new Date(pr.updated_at) > thirtyDaysAgo) continue;
+              if (pr.head.repo.full_name !== context.repo.full_name) continue;
+              
+              const branchName = pr.head.ref;
+              
+              // Don't delete protected branches
+              const protectedBranches = ['main', 'develop', 'staging', 'production'];
+              if (protectedBranches.includes(branchName)) continue;
+              
+              try {
+                await github.rest.git.deleteRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: `heads/${branchName}`
+                });
+                
+                console.log(`Deleted branch: ${branchName} (from PR #${pr.number})`);
+                deletedBranches++;
+                
+                // Rate limiting - small delay between deletions
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+              } catch (error) {
+                if (error.status === 422) {
+                  // Branch already deleted
+                  console.log(`Branch ${branchName} was already deleted`);
+                } else {
+                  console.log(`Failed to delete branch ${branchName}: ${error.message}`);
+                }
+              }
+            }
+
+            console.log(`Cleanup complete. Deleted ${deletedBranches} branches.`);

@@ -1,0 +1,178 @@
+name: PR Reviewer Assignment and Guidance
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+jobs:
+  assign-reviewers:
+    name: Assign Reviewers and Add Guidance
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+
+    steps:
+      - name: Assign reviewers based on changed files
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+
+            // Get changed files
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+            });
+
+            const changedFiles = files.map(file => file.filename);
+
+            // Define reviewers for different areas
+            const reviewerMap = {
+              'ui': ['maintainer1'], // Replace with actual GitHub usernames
+              'api': ['maintainer2'],
+              'database': ['maintainer3'],
+              'docs': ['maintainer1', 'maintainer2'],
+              'tests': ['maintainer2', 'maintainer3']
+            };
+
+            let suggestedReviewers = new Set();
+
+            // Determine which reviewers to suggest based on changed files
+            changedFiles.forEach(file => {
+              if (file.includes('components/') || file.includes('.css') || file.includes('tailwind')) {
+                reviewerMap.ui?.forEach(reviewer => suggestedReviewers.add(reviewer));
+              }
+              if (file.includes('api/') || file.includes('actions/') || file.includes('route.ts')) {
+                reviewerMap.api?.forEach(reviewer => suggestedReviewers.add(reviewer));
+              }
+              if (file.includes('prisma/') || file.includes('schema.prisma')) {
+                reviewerMap.database?.forEach(reviewer => suggestedReviewers.add(reviewer));
+              }
+              if (file.includes('.md') || file.includes('docs/')) {
+                reviewerMap.docs?.forEach(reviewer => suggestedReviewers.add(reviewer));
+              }
+              if (file.includes('test') || file.includes('spec')) {
+                reviewerMap.tests?.forEach(reviewer => suggestedReviewers.add(reviewer));
+              }
+            });
+
+            // Add helpful comment with PR summary and guidelines
+            let comment = `## 📝 Pull Request Summary\n\n`;
+            comment += `**Files changed:** ${files.length}\n`;
+            comment += `**Lines added:** ${pr.additions}\n`;
+            comment += `**Lines deleted:** ${pr.deletions}\n\n`;
+
+            // Categorize changes
+            const uiChanges = changedFiles.filter(f => f.includes('components/') || f.includes('.css'));
+            const apiChanges = changedFiles.filter(f => f.includes('api/') || f.includes('actions/'));
+            const dbChanges = changedFiles.filter(f => f.includes('prisma/') || f.includes('schema'));
+            const docsChanges = changedFiles.filter(f => f.includes('.md') || f.includes('docs/'));
+
+            if (uiChanges.length > 0) {
+              comment += `### 🎨 UI/Component Changes\n`;
+              comment += `- Please ensure components follow our design system\n`;
+              comment += `- Check responsive design on mobile devices\n`;
+              comment += `- Verify accessibility standards (ARIA labels, keyboard navigation)\n\n`;
+            }
+
+            if (apiChanges.length > 0) {
+              comment += `### 🔌 API/Backend Changes\n`;
+              comment += `- Ensure proper error handling is implemented\n`;
+              comment += `- Verify input validation and sanitization\n`;
+              comment += `- Check that database operations are optimized\n\n`;
+            }
+
+            if (dbChanges.length > 0) {
+              comment += `### 🗄️ Database Changes\n`;
+              comment += `- ⚠️ **Database schema changes detected**\n`;
+              comment += `- Please ensure migrations are properly tested\n`;
+              comment += `- Consider backward compatibility\n`;
+              comment += `- Update seed data if necessary\n\n`;
+            }
+
+            if (docsChanges.length > 0) {
+              comment += `### 📚 Documentation Changes\n`;
+              comment += `- Thank you for improving our documentation!\n`;
+              comment += `- Please check for typos and grammar\n`;
+              comment += `- Ensure examples are up to date\n\n`;
+            }
+
+            comment += `### ✅ Review Checklist\n\n`;
+            comment += `**For the Author:**\n`;
+            comment += `- [ ] Code follows project conventions and style guide\n`;
+            comment += `- [ ] Self-review completed\n`;
+            comment += `- [ ] Tests added/updated for new functionality\n`;
+            comment += `- [ ] Documentation updated if needed\n`;
+            comment += `- [ ] No console.log or debug code left behind\n`;
+            comment += `- [ ] Error handling implemented appropriately\n\n`;
+
+            comment += `**For Reviewers:**\n`;
+            comment += `- [ ] Code is clean and maintainable\n`;
+            comment += `- [ ] Logic is sound and efficient\n`;
+            comment += `- [ ] Security considerations addressed\n`;
+            comment += `- [ ] Performance impact considered\n`;
+            comment += `- [ ] Browser compatibility maintained\n`;
+            comment += `- [ ] Mobile responsiveness verified\n\n`;
+
+            comment += `### 🎯 Testing Instructions\n\n`;
+            comment += `1. **Clone and setup:**\n`;
+            comment += `   \`\`\`bash\n`;
+            comment += `   git checkout ${pr.head.ref}\n`;
+            comment += `   pnpm install\n`;
+            comment += `   pnpm dev\n`;
+            comment += `   \`\`\`\n\n`;
+            comment += `2. **Test the changes:**\n`;
+            comment += `   - Verify the feature works as expected\n`;
+            comment += `   - Test edge cases and error scenarios\n`;
+            comment += `   - Check console for errors\n`;
+            comment += `   - Test on different screen sizes\n\n`;
+
+            comment += `### 🤝 For New Contributors\n\n`;
+            comment += `- Don't worry if you receive feedback - it's part of the learning process!\n`;
+            comment += `- Feel free to ask questions if something is unclear\n`;
+            comment += `- We're here to help you succeed and learn\n`;
+            comment += `- Consider joining our Discord/Slack for real-time help\n\n`;
+
+            comment += `---\n`;
+            comment += `*This comment was automatically generated to help with the review process.*`;
+
+            // Post the comment
+            await github.rest.issues.createComment({
+              issue_number: pr.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+            console.log(`Added review guidance comment to PR #${pr.number}`);
+
+      - name: Auto-assign labels for review priority
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const labels = [];
+
+            // Priority based on size
+            if (pr.changed_files <= 5 && pr.additions <= 100) {
+              labels.push('size: small');
+              labels.push('priority: medium');
+            } else if (pr.changed_files <= 15 && pr.additions <= 500) {
+              labels.push('size: medium');
+              labels.push('priority: medium');
+            } else {
+              labels.push('size: large');
+              labels.push('priority: low'); // Large PRs get lower priority for detailed review
+            }
+
+            // Add review status
+            labels.push('status: needs-review');
+
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                issue_number: pr.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: labels
+              });
+            }

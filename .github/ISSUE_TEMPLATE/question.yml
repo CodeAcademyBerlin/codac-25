@@ -1,0 +1,189 @@
+name: ❓ Question / Help Needed
+description: Ask for help or get clarification
+title: "[Question]: "
+labels: ["type: question", "help wanted"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Welcome! 👋 We're here to help you succeed with CODAC.
+
+        Don't hesitate to ask questions - that's how we all learn! Please provide as much detail as possible so we can give you the best help.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: ❓ Your Question
+      description: What would you like help with?
+      placeholder: |
+        Be as specific as possible. For example:
+        - "How do I set up the development environment on macOS?"
+        - "I'm getting an error when trying to create a new document. How can I debug this?"
+        - "What's the best way to add a new component to the UI?"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: 📂 Question Category
+      description: What type of help do you need?
+      options:
+        - "🚀 Getting Started / Setup"
+        - "💻 Development / Coding"
+        - "🐛 Debugging / Troubleshooting"
+        - "🎨 UI/UX Design"
+        - "🗄️ Database / Data"
+        - "🔧 Configuration"
+        - "📚 Documentation"
+        - "🤝 Contributing Process"
+        - "❓ General Question"
+        - "🏗️ Architecture / Best Practices"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: experience
+    attributes:
+      label: 📊 Your Experience Level
+      description: How would you describe your experience with web development?
+      options:
+        - "🌱 Beginner - New to web development"
+        - "📈 Intermediate - Some experience with React/Next.js"
+        - "🚀 Advanced - Experienced developer, new to this project"
+        - "🎓 Student - Learning as part of Code Academy Berlin"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 🔍 Context & What You've Tried
+      description: |
+        Provide context about what you're working on and what you've already tried
+      placeholder: |
+        Help us understand your situation:
+        - What are you trying to accomplish?
+        - What have you already tried?
+        - Where are you stuck?
+        - Any error messages you're seeing?
+
+        The more context you provide, the better we can help you!
+    validations:
+      required: true
+
+  - type: textarea
+    id: error-details
+    attributes:
+      label: 🚨 Error Messages (if any)
+      description: |
+        If you're seeing any error messages, please paste them here
+        (Check browser console with F12 → Console tab)
+      placeholder: |
+        Paste any error messages here, including:
+        - Browser console errors
+        - Terminal/command line errors
+        - Build errors
+
+        If no errors, you can write "No error messages"
+      render: text
+
+  - type: textarea
+    id: code-snippet
+    attributes:
+      label: 💾 Relevant Code (if applicable)
+      description: |
+        If your question involves code, please share the relevant parts
+      placeholder: |
+        Paste relevant code snippets here. Please include:
+        - The code you're working on
+        - Any related configuration
+        - File names if helpful
+
+        Don't worry about including everything - just the parts related to your question!
+      render: typescript
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 📸 Screenshots/Videos
+      description: |
+        Visual aids can be very helpful! Add screenshots or screen recordings if they help explain your question
+      placeholder: Drag and drop images/videos here, or paste links
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: 💻 Your Environment
+      description: What's your development setup?
+      multiple: true
+      options:
+        - "Windows"
+        - "macOS"
+        - "Linux"
+        - "VS Code"
+        - "WebStorm/IntelliJ"
+        - "Other IDE"
+        - "Chrome"
+        - "Firefox"
+        - "Safari"
+        - "Edge"
+
+  - type: checkboxes
+    id: tried
+    attributes:
+      label: ✅ Have you tried these first?
+      description: Let us know what you've already checked
+      options:
+        - label: "I've read the README and setup instructions"
+        - label: "I've searched existing issues and discussions"
+        - label: "I've checked the Contributing Guide"
+        - label: "I've looked at the error message carefully"
+        - label: "I've tried restarting my development server"
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: 📋 Additional Information
+      description: |
+        Anything else that might be helpful?
+      placeholder: |
+        Any other details that might help us understand your question:
+        - Specific goals or deadlines
+        - Whether this is for a school project
+        - If you're following a specific tutorial
+        - Any constraints or requirements
+
+  - type: markdown
+    attributes:
+      value: |
+        ### 🤝 Community Guidelines
+
+        **Remember:**
+        - No question is too basic - we all started somewhere!
+        - Be patient - community members volunteer their time to help
+        - Be specific - the more details you provide, the better help you'll receive
+        - Say thanks - appreciate those who take time to help you
+
+        **Getting faster help:**
+        - Check if others have asked similar questions
+        - Provide complete information upfront
+        - Be responsive when people ask follow-up questions
+        - Consider joining our Discord/Slack for real-time help
+
+        **Want to help others too?**
+        - Answer questions you know the solution to
+        - Share resources and tutorials you've found helpful
+        - Welcome newcomers and encourage questions
+
+        ### 🎓 Learning Resources
+
+        While waiting for help, you might find these useful:
+        - [Next.js Documentation](https://nextjs.org/docs)
+        - [React Documentation](https://react.dev)
+        - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+        - [Prisma Documentation](https://www.prisma.io/docs)
+
+        **Happy learning!** 🚀
