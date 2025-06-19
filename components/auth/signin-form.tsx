@@ -9,8 +9,6 @@ import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface SignInFormProps {
     callbackUrl?: string
@@ -49,9 +47,7 @@ export function SignInForm({ callbackUrl: initialCallbackUrl }: SignInFormProps)
     // Form state
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [isEmailLoading, setIsEmailLoading] = useState(false)
     const [isCredentialsLoading, setIsCredentialsLoading] = useState(false)
-    const [isGoogleLoading, setIsGoogleLoading] = useState(false)
 
     // Get parameters from URL
     const callbackUrl = initialCallbackUrl || searchParams.get('callbackUrl') || "/"
@@ -103,56 +99,7 @@ export function SignInForm({ callbackUrl: initialCallbackUrl }: SignInFormProps)
         }
     }
 
-    const handleEmailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
 
-        if (!email) {
-            setError("Email is required")
-            return
-        }
-
-        setIsEmailLoading(true)
-        setError(undefined)
-
-        try {
-            const result = await signIn("email", {
-                email,
-                callbackUrl,
-                redirect: false,
-            })
-
-            if (result?.error) {
-                setError(result.error)
-            } else {
-                // Redirect to verification page or handle success
-                router.push("/auth/verify-request")
-            }
-        } catch {
-            setError("An error occurred during sign in.")
-        } finally {
-            setIsEmailLoading(false)
-        }
-    }
-
-    const handleGoogleSignIn = async () => {
-        setIsGoogleLoading(true)
-        setError(undefined)
-
-        try {
-            const result = await signIn("google", {
-                callbackUrl,
-                redirect: false,
-            })
-
-            if (result?.error) {
-                setError(result.error)
-            }
-        } catch {
-            setError("An error occurred during sign in.")
-        } finally {
-            setIsGoogleLoading(false)
-        }
-    }
 
     // Show loading while checking authentication status
     if (status === "loading") {
@@ -178,95 +125,38 @@ export function SignInForm({ callbackUrl: initialCallbackUrl }: SignInFormProps)
                 </Alert>
             )}
 
-            <Tabs defaultValue="credentials" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="credentials">Sign In</TabsTrigger>
-                    <TabsTrigger value="email">Magic Link</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="credentials" className="space-y-4">
-                    <form onSubmit={handleCredentialsSubmit} className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="credentials-email">Email</Label>
-                            <Input
-                                id="credentials-email"
-                                name="email"
-                                type="email"
-                                placeholder="Enter your email address"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                disabled={isCredentialsLoading}
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input
-                                id="password"
-                                name="password"
-                                type="password"
-                                placeholder="Enter your password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                                disabled={isCredentialsLoading}
-                            />
-                        </div>
-                        <Button type="submit" className="w-full" disabled={isCredentialsLoading}>
-                            {isCredentialsLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-                            Sign In
-                        </Button>
-                    </form>
-                </TabsContent>
-
-                <TabsContent value="email" className="space-y-4">
-                    <form onSubmit={handleEmailSubmit} className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="magic-email">Email</Label>
-                            <Input
-                                id="magic-email"
-                                name="email"
-                                type="email"
-                                placeholder="Enter your email address"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                disabled={isEmailLoading}
-                            />
-                        </div>
-                        <Button type="submit" className="w-full" disabled={isEmailLoading}>
-                            {isEmailLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
-                            Send Magic Link
-                        </Button>
-                    </form>
-                </TabsContent>
-            </Tabs>
-
-            <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                    <Separator className="w-full" />
+            <form onSubmit={handleCredentialsSubmit} className="space-y-4">
+                <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="Enter your email address"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        disabled={isCredentialsLoading}
+                    />
                 </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">
-                        Or continue with
-                    </span>
+                <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        disabled={isCredentialsLoading}
+                    />
                 </div>
-            </div>
-
-            <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={handleGoogleSignIn}
-                disabled={isGoogleLoading}
-            >
-                {isGoogleLoading ? (
-                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                    <Icons.google className="mr-2 h-4 w-4" />
-                )}
-                Sign In with Google
-            </Button>
+                <Button type="submit" className="w-full" disabled={isCredentialsLoading}>
+                    {isCredentialsLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
+                    Sign In
+                </Button>
+            </form>
 
             <div className="text-center text-sm">
                 <span className="text-muted-foreground">Don't have an account? </span>
