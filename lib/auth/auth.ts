@@ -1,9 +1,10 @@
-import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import GoogleProvider from "next-auth/providers/google"
-import EmailProvider from "next-auth/providers/email"
-import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
+import NextAuth from "next-auth"
+import CredentialsProvider from "next-auth/providers/credentials"
+import EmailProvider from "next-auth/providers/email"
+import GoogleProvider from "next-auth/providers/google"
+
 import { prisma } from "@/lib/db/prisma"
 
 

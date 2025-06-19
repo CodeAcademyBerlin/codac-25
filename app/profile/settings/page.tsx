@@ -1,11 +1,12 @@
-import { redirect } from 'next/navigation';
-import { auth } from '@/lib/auth/auth';
-import { getUser } from '@/data/user/get-user';
-import { ProfileSettingsForm } from '@/components/profile/profile-settings-form';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
+
+import { ProfileSettingsForm } from '@/components/profile/profile-settings-form';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { getUser } from '@/data/user/get-user';
+import { auth } from '@/lib/auth/auth';
 
 export const metadata = {
     title: 'Profile Settings | Codac',

@@ -1,6 +1,7 @@
-import { auth } from "@/lib/auth/auth"
+import type { UserRole } from "@prisma/client"
 import { redirect } from "next/navigation"
-import type { UserRole, UserStatus } from "@prisma/client"
+
+import { auth } from "@/lib/auth/auth"
 
 export async function getCurrentUser() {
     const session = await auth()

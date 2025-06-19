@@ -1,10 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import Link from "next/link"
 import { signOut } from "next-auth/react"
+import { useState } from "react"
+
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/ui/icons"
-import Link from "next/link"
+
 
 export function SignOutButton() {
     const [isLoading, setIsLoading] = useState(false)
@@ -13,7 +15,7 @@ export function SignOutButton() {
         setIsLoading(true)
         try {
             await signOut({ callbackUrl: "/" })
-        } catch (error) {
+        } catch {
             setIsLoading(false)
         }
     }

@@ -1,17 +1,20 @@
 import { AlertTriangle } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import Link from "next/link"
 
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
+
 interface ErrorPageProps {
-    searchParams: {
+    searchParams: Promise<{
         error?: string
-    }
+    }>
 }
 
-export default function ErrorPage({ searchParams }: ErrorPageProps) {
-    const error = searchParams.error
+export default async function ErrorPage({ searchParams }: ErrorPageProps) {
+    const resolvedSearchParams = await searchParams
+    const error = resolvedSearchParams.error
 
     const getErrorMessage = (error: string | undefined): string => {
         switch (error) {

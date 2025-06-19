@@ -6,6 +6,7 @@ import {
   IconNotification,
   IconUserCircle,
 } from '@tabler/icons-react';
+import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -25,7 +26,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar';
-import Link from 'next/link';
 
 export function NavUser() {
   const { isMobile } = useSidebar();

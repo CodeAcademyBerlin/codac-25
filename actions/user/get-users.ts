@@ -55,7 +55,9 @@ export async function getUsers(data: GetUsersInput): Promise<GetUsersResult> {
         }
 
         if (validatedData.cohort) {
-            where.cohort = validatedData.cohort;
+            where.cohort = {
+                slug: validatedData.cohort
+            };
         }
 
         if (validatedData.search) {

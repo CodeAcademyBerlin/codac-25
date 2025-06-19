@@ -58,6 +58,7 @@ model User {
 
   // Code Academy Berlin specific fields
   bio            String? // User bio
+  avatar         String? // User avatar URL or base64 data
   role           UserRole   @default(STUDENT)
   status         UserStatus @default(ACTIVE)
   cohortId       String?
@@ -114,6 +115,7 @@ model Cohort {
   startDate   DateTime
   description String?
   image       String?
+  avatar      String? // Cohort avatar URL or base64 data
   slug        String   @unique
 
   createdAt DateTime @default(now())

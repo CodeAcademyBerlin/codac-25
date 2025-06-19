@@ -1,8 +1,5 @@
 'use client';
 
-import { UserProfile } from '@/data/user/get-user';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import {
     FileText,
     Heart,
@@ -12,6 +9,11 @@ import {
     Calendar,
     Users
 } from 'lucide-react';
+
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { UserProfile } from '@/data/user/get-user';
+
 
 type ProfileStatsProps = {
     user: UserProfile;

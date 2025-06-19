@@ -1,4 +1,4 @@
-# CODAC - Code Academy Berlin community
+# CODAC - Code Academy Berlin Community Platform
 
 ![CODAC Logo](https://via.placeholder.com/800x200/4F46E5/FFFFFF?text=CODAC+-+Code+Academy+Berlin)
 
@@ -12,61 +12,79 @@ CODAC empowers Code Academy Berlin students and alumni to learn, collaborate, an
 
 ### 📚 Learning Management System
 
-- **Course Management** - Structured learning paths with lessons, assignments, and progress tracking
-- **Interactive Content** - Rich text editor powered by Plate.js for creating engaging educational content
-- **Progress Tracking** - Detailed analytics on learning progress, completion rates, and time spent
-- **Assignment System** - Create, submit, and grade assignments with feedback loops
-- **Resource Library** - Centralized repository of learning materials and references
+- **Rich Content Editor** - Powered by Plate.js for creating engaging educational content with advanced formatting, media embedding, and collaborative editing capabilities
+- **Document Management** - Comprehensive document creation, editing, and sharing system with version control and real-time collaboration
+- **Progress Tracking** - Detailed analytics on learning progress, completion rates, and time spent on various activities
+- **Assignment System** - Create, submit, and grade assignments with integrated feedback mechanisms
+- **Resource Library** - Centralized repository of learning materials, code examples, and references
 
 ### 👥 Community Platform
 
-- **Discussion Forums** - Engage in topic-based discussions with peers and instructors
-- **Project Showcase** - Share and get feedback on portfolio projects
-- **Q&A System** - Ask questions and get help from the community
-- **Event Management** - Stay updated on workshops, study groups, and networking events
+- **Cohort Management** - Organized student groups with dedicated spaces for each cohort
+- **Student Directory** - Browse and connect with current students, alumni, and mentors
+- **User Profiles** - Comprehensive profiles with professional information, social links, and achievements
+- **Role-Based Access** - Different permissions and features for Students, Alumni, Mentors, Instructors, and Admins
+- **Discussion Forums** - Engage in topic-based discussions with peers and instructors (planned)
 
 ### 🤝 Mentorship & Career Support
 
-- **Mentor Matching** - Connect current students with successful alumni
-- **Job Board** - Alumni and partner companies share job opportunities
-- **Career Resources** - Interview preparation, resume building, and career guidance
+- **Mentor Matching** - Connect current students with successful alumni (in development)
+- **Job Board** - Alumni and partner companies share job opportunities (planned)
+- **Career Resources** - Interview preparation, resume building, and career guidance (planned)
 - **Portfolio Management** - Showcase your work and track career progress
 
 ### 🏆 Gamification & Engagement
 
-- **Achievement System** - Earn badges and points for various accomplishments
-- **Study Streaks** - Track and gamify consistent learning habits
-- **Leaderboards** - Friendly competition to motivate learning
-- **Community Points** - Reward helpful community participation
+- **Achievement System** - Earn badges and points for various accomplishments (planned)
+- **Study Streaks** - Track and gamify consistent learning habits (planned)
+- **Leaderboards** - Friendly competition to motivate learning (planned)
+- **Community Points** - Reward helpful community participation (planned)
 
 ## 🛠 Tech Stack
 
 ### Frontend
 
-- **Next.js 15** - React framework with App Router
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first CSS framework
-- **Shadcn/UI** - Modern, accessible UI components
-- **Radix UI** - Primitive UI components
-- **Plate.js** - Rich text editor for content creation
+- **Next.js 15** - React framework with App Router and latest features
+- **TypeScript** - Type-safe development throughout the application
+- **Tailwind CSS** - Utility-first CSS framework for rapid styling
+- **Shadcn/UI** - Modern, accessible UI component library
+- **Radix UI** - Primitive UI components for complex interactions
+- **Plate.js** - Advanced rich text editor for content creation
 
 ### Backend & Database
 
-- **Prisma ORM** - Type-safe database access
-- **SQLite** - Development database (production uses PostgreSQL)
-- **Server Actions** - Next.js server-side mutations
-- **Zod** - Runtime type validation
+- **Prisma ORM** - Type-safe database access with powerful query capabilities
+- **SQLite** - Development database (production ready for PostgreSQL)
+- **Server Actions** - Modern Next.js server-side mutations
+- **Zod** - Runtime type validation and schema parsing
+- **NextAuth.js** - Complete authentication solution with multiple providers
+
+### Authentication & Security
+
+- **NextAuth.js v5** - Comprehensive authentication with Google OAuth, email magic links, and credentials
+- **Prisma Adapter** - Seamless database integration for user sessions
+- **Role-Based Access Control** - Granular permissions system
+- **Secure Avatar Upload** - Image processing and storage with validation
 
 ### Additional Tools
 
 - **Lucide Icons** - Beautiful, consistent iconography
-- **Recharts** - Data visualization for analytics
-- **React Hook Form** - Form management
-- **Nuqs** - URL state management
+- **Recharts** - Data visualization for analytics and dashboards
+- **React Hook Form** - Efficient form management with validation
+- **Nuqs** - URL state management for better UX
+- **Sonner** - Toast notifications for user feedback
 
 ## 🚀 Implementation Status
 
 ### ✅ Completed Features
+
+#### User Management & Authentication
+
+- **Complete Authentication System** - Google OAuth, email magic links, and credential-based login
+- **User Profiles** - Comprehensive profiles with avatar upload, bio, social links
+- **Role-Based System** - Students, Alumni, Mentors, Instructors, Admins with appropriate permissions
+- **Profile Settings** - Full profile editing with form validation and error handling
+- **Avatar Management** - Image upload, resize, and optimization with base64 storage
 
 #### Community Platform
 
@@ -75,97 +93,115 @@ CODAC empowers Code Academy Berlin students and alumni to learn, collaborate, an
   - Overview statistics (total students, active students, graduates, active cohorts)
   - Interactive cohort cards with student previews
   - Featured students showcase based on activity
-  - Responsive design with loading states
+  - Responsive design with comprehensive loading states
 
-- **Cohort Pages** (`/community/cohorts/[slug]`) - Individual cohort exploration
+- **Cohort Management** (`/community/cohorts/[slug]`) - Individual cohort exploration
 
   - Detailed cohort information and statistics
   - Complete student directory for each cohort
   - Student activity metrics and profiles
-  - SEO-optimized with static generation
+  - SEO-optimized with static generation for performance
 
-- **Role-based Community Pages** (`/community/[userRole]`) - Targeted views
-  - Students directory with filtering and search
+- **Role-based Community Pages** (`/community/[userRole]`) - Targeted directory views
+
+  - Students directory with filtering and search capabilities
   - Mentors directory with availability status
   - Alumni showcase with employment statistics
-  - Activity-based user rankings
+  - Activity-based user rankings and engagement metrics
 
-#### User Management
+- **Individual User Pages** (`/community/[userRole]/[userId]`) - Detailed user profiles
+  - Complete user information display
+  - Social links and professional information
+  - Activity history and community contributions
+  - Direct messaging capabilities (interface ready)
 
-- **User Profiles** - Comprehensive user data with social links
-- **Role System** - Students, Alumni, Mentors, Instructors, Admins
-- **Status Management** - Active, Inactive, Graduated user states
-- **Activity Tracking** - Documents, posts, comments, achievements
+#### Document Management System
 
-#### Document Management
+- **Rich Text Editor** - Plate.js powered content creation with advanced features
 
-- **Rich Text Editor** - Plate.js powered content creation
-- **Document Types** - Support for various content types
-- **Collaborative Editing** - Real-time editing capabilities
-- **Version Control** - Document versioning and history
+  - Block-based editing with drag-and-drop
+  - Media embedding (images, videos, files)
+  - Code blocks with syntax highlighting
+  - Mathematical equations and formulas
+  - Collaborative editing capabilities
+  - Export to various formats
+
+- **Document Organization** - Hierarchical document structure
+  - Folder support for content organization
+  - Document types (lessons, assignments, resources)
+  - Sharing and collaboration features
+  - Version control and history tracking
 
 #### Data Architecture
 
-- **Organized Data Layer** - Clean separation of data fetching (`data/`) and mutations (`actions/`)
-- **Type-safe Operations** - Full TypeScript integration with Prisma
-- **Comprehensive Logging** - Structured logging for monitoring
-- **Error Handling** - Graceful error handling with user feedback
+- **Organized Data Layer** - Clean separation of concerns
+
+  - Data fetching functions in `data/` directory
+  - Server actions in `actions/` directory
+  - Comprehensive error handling and logging
+  - Type-safe operations throughout
+
+- **Database Schema** - Well-designed relational structure
+  - User management with cohort relationships
+  - Document system with collaboration support
+  - Achievement and progress tracking foundations
+  - Extensible design for future features
 
 ### 🚧 In Progress
 
-#### Learning Management
+#### Learning Management System
 
-- **Course Creation** - Building course authoring tools
-- **Progress Tracking** - Student progress analytics
-- **Assignment System** - Assignment creation and grading
-- **Learning Paths** - Structured learning tracks
+- **Course Structure** - Building comprehensive course authoring tools
+- **Assignment System** - Creating submission and grading workflows
+- **Progress Tracking** - Advanced analytics and reporting
+- **Learning Paths** - Structured educational journeys
 
-#### Community Features
+#### Enhanced Community Features
 
-- **Discussion Forums** - Threaded discussions and Q&A
-- **Messaging System** - Direct messaging between users
-- **Event Management** - Community events and meetups
-- **Study Groups** - Collaborative learning groups
+- **Discussion Forums** - Threaded discussions with moderation
+- **Direct Messaging** - Private communication between users
+- **Event Management** - Community events and study sessions
+- **Study Groups** - Collaborative learning environments
 
 ### 📋 Planned Features
 
-#### Advanced Community
+#### Advanced Learning Tools
 
-- **Live Chat** - Real-time community communication
-- **Video Calls** - Integrated video conferencing
-- **Project Collaboration** - Team project management
-- **Peer Review System** - Code and project reviews
+- **Interactive Coding Environment** - In-browser code execution
+- **Video Conferencing** - Integrated video calls for mentoring
+- **Screen Sharing** - Collaborative debugging and code reviews
+- **AI-Powered Assistance** - Intelligent tutoring and code suggestions
 
-#### Gamification
+#### Gamification System
 
-- **Achievement System** - Comprehensive badge system
+- **Comprehensive Achievements** - Badges for various accomplishments
 - **Leaderboards** - Community rankings and competitions
-- **Study Streaks** - Learning habit tracking
-- **Community Challenges** - Group learning challenges
+- **Study Streaks** - Habit tracking and motivation
+- **Community Challenges** - Group learning activities
 
-#### Career Support
+#### Career Development
 
-- **Job Board** - Alumni and partner job postings
-- **Portfolio Showcase** - Student work exhibitions
-- **Interview Prep** - Mock interviews and feedback
-- **Career Guidance** - Mentorship and career planning
+- **Job Board** - Industry job postings and career opportunities
+- **Portfolio Builder** - Showcase student projects and achievements
+- **Interview Preparation** - Mock interviews and feedback
+- **Career Guidance** - Mentorship matching and career planning
 
-#### Advanced Features
+#### Technical Enhancements
 
-- **AI Integration** - Smart content recommendations
 - **Mobile App** - Native mobile experience
 - **Offline Support** - Content access without internet
-- **Multi-language** - Support for multiple languages
+- **Advanced Analytics** - Detailed learning and engagement metrics
+- **API Integration** - Third-party service connections
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm (recommended) or npm
-- Git
+- **Node.js 18+** - JavaScript runtime
+- **pnpm** (recommended) or npm - Package manager
+- **Git** - Version control
 
-### Quick Start (Recommended for Students)
+### Quick Start (Recommended)
 
 1. **Clone the repository**
 
@@ -176,19 +212,19 @@ CODAC empowers Code Academy Berlin students and alumni to learn, collaborate, an
 
 2. **Run the automated setup**
 
-   **Windows users:**
+   **Windows:**
 
-   ```bash
+   ```cmd
    setup.bat
    ```
 
-   **Mac/Linux users:**
+   **Mac/Linux:**
 
    ```bash
    ./setup.sh
    ```
 
-   **Alternative (all platforms):**
+   **Cross-platform:**
 
    ```bash
    node setup.js
@@ -196,485 +232,247 @@ CODAC empowers Code Academy Berlin students and alumni to learn, collaborate, an
 
    This will automatically:
 
-   - Check prerequisites (Node.js 18+)
-   - Install dependencies
-   - Create environment files
+   - Check Node.js version (18+ required)
+   - Install dependencies with pnpm/npm
+   - Generate Prisma client
    - Set up the database
-   - Seed sample data
-   - Handle common errors
-   - Create missing directories (like `docs/`)
+   - Seed with sample data
 
-3. **Start development**
+3. **Configure environment variables**
 
    ```bash
-   pnpm dev
+   cp env.template .env
    ```
 
-4. **Open the application**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+   Edit `.env` with your configuration:
 
-### Manual Installation (Advanced)
-
-If you prefer manual setup or encounter issues:
-
-1. **Install dependencies**
-
-   ```bash
-   pnpm install
-   ```
-
-2. **Set up environment variables**
-
-   Create a `.env` file with:
-
-   ```env
-   DATABASE_URL="file:./dev.db"
-   NEXTAUTH_SECRET="your-secret-key"
-   NEXTAUTH_URL="http://localhost:3000"
-   ```
-
-3. **Initialize the database**
-
-   ```bash
-   pnpm db:generate
-   pnpm db:push
-   pnpm db:seed
-   ```
+   - Database URL
+   - NextAuth secret and URLs
+   - OAuth provider credentials (Google, GitHub, etc.)
+   - Upload thing API keys (for file uploads)
 
 4. **Start the development server**
 
    ```bash
-   pnpm dev
+   npm run dev
    ```
 
-### Troubleshooting
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-If you encounter issues:
+### Manual Setup (Advanced)
 
-- **Database errors**: Try `pnpm db:reset` to reset the database
-- **Permission errors**: Ensure you have write permissions in the project directory
-- **Port conflicts**: The app runs on port 3000, make sure it's available
-- **Node.js version**: Ensure you're using Node.js 18 or higher
+If you prefer manual control over the setup process:
 
-For more help, check the [Issues](https://github.com/codeacademyberlin/codac/issues) or ask your instructor.
+1. **Install dependencies**
 
-### Sample User Accounts
+   ```bash
+   pnpm install  # or npm install
+   ```
 
-After seeding, you can log in with these sample accounts:
+2. **Set up the database**
 
-**Student Account:**
+   ```bash
+   npm run db:generate  # Generate Prisma client
+   npm run db:push      # Create database tables
+   npm run db:seed      # Populate with sample data
+   ```
 
-- Email: `alex.mueller@student.codeacademyberlin.com`
-- Role: Student
-- Cohort: 2024-Web-Dev-Bootcamp
+3. **Configure environment**
 
-**Alumni Account:**
+   ```bash
+   cp env.template .env
+   # Edit .env with your settings
+   ```
 
-- Email: `lisa.weber@alumni.codeacademyberlin.com`
-- Role: Alumni
-- Graduated: 2023
-
-**Instructor Account:**
-
-- Email: `dr.anna.hoffmann@instructor.codeacademyberlin.com`
-- Role: Instructor
+4. **Run development server**
+   ```bash
+   npm run dev
+   ```
 
 ## 📁 Project Structure
 
 ```
 codac/
-├── app/                    # Next.js App Router pages
-│   ├── community/         # Community features ✅ IMPLEMENTED
-│   │   ├── [userRole]/   # Role-based user directories
-│   │   └── cohorts/      # Cohort exploration pages
-│   ├── docs/             # Document management ✅ IMPLEMENTED
-│   ├── learning/         # Learning tracks 🚧 IN PROGRESS
-│   └── page.tsx          # Main dashboard
-├── components/           # Reusable UI components
-│   ├── ui/              # Base UI components (Shadcn) ✅
-│   ├── editor/          # Rich text editor components ✅
-│   └── community/       # Community-specific components ✅
-├── actions/             # Server actions for mutations ✅
-├── data/               # Data fetching functions ✅
-├── lib/                # Utility functions and configurations ✅
-├── hooks/              # Custom React hooks ✅
-├── types/              # TypeScript type definitions ✅
-├── prisma/             # Database schema and migrations ✅
-└── public/             # Static assets ✅
+├── app/                    # Next.js app directory
+│   ├── api/               # API routes
+│   ├── auth/              # Authentication pages
+│   ├── community/         # Community platform pages
+│   ├── docs/              # Document management
+│   ├── profile/           # User profile pages
+│   └── ...
+├── components/            # React components
+│   ├── auth/              # Authentication components
+│   ├── community/         # Community features
+│   ├── editor/            # Rich text editor
+│   ├── profile/           # User profile components
+│   └── ui/                # Reusable UI components
+├── actions/               # Server actions
+│   ├── auth/              # Authentication actions
+│   ├── doc/               # Document actions
+│   └── user/              # User management actions
+├── data/                  # Data fetching functions
+│   ├── cohort/            # Cohort data operations
+│   ├── docs/              # Document data operations
+│   └── user/              # User data operations
+├── lib/                   # Utility libraries
+│   ├── auth/              # Authentication utilities
+│   ├── db/                # Database configuration
+│   └── validation/        # Schema validation
+├── prisma/                # Database schema and migrations
+├── public/                # Static assets
+└── types/                 # TypeScript type definitions
 ```
 
-## Server Components Actions
+## 🛠 Development Scripts
 
-[server components actions patters](https://nextjs.org/blog/security-nextjs-server-components-actions)
+```bash
+# Development
+npm run dev          # Start development server with Turbopack
+npm run dev:safe     # Setup and start development server
+
+# Building
+npm run build        # Create production build
+npm run start        # Start production server
+
+# Code Quality
+npm run lint         # Run ESLint
+npm run lint:fix     # Fix linting issues automatically
+npm run ts:check     # Type checking without emitting files
+
+# Database
+npm run db:generate  # Generate Prisma client
+npm run db:push      # Push schema changes to database
+npm run db:seed      # Seed database with sample data
+npm run db:studio    # Open Prisma Studio
+npm run db:reset     # Reset database and reseed
+
+# Utilities
+npm run import:lms   # Import LMS content
+npm run export:docs  # Export documents to markdown
+```
 
 ## 🎨 Design System
 
-CODAC uses a carefully crafted design system that reflects Code Academy Berlin's brand:
+CODAC uses a comprehensive design system built on:
 
-- **Primary Colors**: Blue (#4F46E5) and Purple (#7C3AED) gradient
-- **Typography**: Geist Sans for UI, Geist Mono for code
-- **Components**: Built with Shadcn/UI and Radix primitives
-- **Icons**: Lucide icons for consistency
-- **Responsive**: Mobile-first design approach
+- **Tailwind CSS** - Utility-first styling with custom configuration
+- **Shadcn/UI** - Consistent, accessible component library
+- **Radix UI** - Unstyled primitive components
+- **Custom Theme** - Carefully crafted color palette and typography
+- **Responsive Design** - Mobile-first approach with breakpoint system
 
-## 🔐 User Roles & Permissions
+## 🔧 Configuration
 
-### Students
+### Environment Variables
 
-- Access to enrolled courses and lessons
-- Submit assignments and view feedback
-- Participate in community discussions
-- Connect with mentors
-- Track learning progress
+Key environment variables (see `env.template`):
 
-### Alumni
+```env
+# Database
+DATABASE_URL="file:./prisma/dev.db"
 
-- Access to career resources and job board
-- Mentor current students
-- Share job opportunities
-- Participate in alumni network
-- Continue learning with advanced courses
+# NextAuth
+NEXTAUTH_SECRET="your-secret-key"
+NEXTAUTH_URL="http://localhost:3000"
 
-### Instructors
+# OAuth Providers
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
 
-- Create and manage course content
-- Grade assignments and provide feedback
-- Moderate community discussions
-- View student analytics
-- Manage course enrollments
-
-### Admins
-
-- Full platform management
-- User role management
-- Course approval and publishing
-- Community moderation
-- Analytics and reporting
-
-## 🔧 Database Schema
-
-The database is designed to support comprehensive LMS and community features:
-
-### Core Entities
-
-- **Users** - Students, alumni, instructors with role-based access
-- **Courses** - Structured learning content with prerequisites
-- **Lessons** - Individual learning units with various content types
-- **Assignments** - Projects, quizzes, and exercises with grading
-- **Progress Tracking** - Detailed learning analytics per user
-
-### Community Features
-
-- **Posts** - Discussion threads, showcases, questions, job postings
-- **Comments** - Threaded discussions with rich content
-- **Mentorships** - Connections between mentors and mentees
-- **Achievements** - Gamification elements with conditions and rewards
-
-### Content Management
-
-- **Documents** - Rich text content for resources and materials
-- **Resources** - Links, files, and additional learning materials
-- **Versions** - Content versioning for collaborative editing
-
-## 📊 Analytics & Insights
-
-CODAC provides comprehensive analytics for different user types:
-
-- **Student Analytics**: Progress tracking, time spent, achievement unlocks
-- **Instructor Analytics**: Student engagement, completion rates, assignment performance
-- **Admin Analytics**: Platform usage, community activity, course effectiveness
-
-## 👨‍💻 Collaboration Guide for Beginner Developers
-
-Welcome, Code Academy Berlin students! This section will help you collaborate effectively on the CODAC project, even if you're new to working with codebases.
-
-### 🔄 Git Workflow for Beginners
-
-Fork or clone the repositiry on GitHub
-
-#### 1. Setting Up Your Development Environment
-
-Before making any changes, ensure you have the project running locally:
-
-```bash
-# Make sure you're in the project directory
-cd codac
-
-# Always pull the latest changes before starting work
-git pull origin main
-
-# Create your own branch for the feature you're working on
-git checkout -b feature/your-feature-name
+# Upload Thing (for file uploads)
+UPLOADTHING_SECRET="your-uploadthing-secret"
+UPLOADTHING_APP_ID="your-uploadthing-app-id"
 ```
 
-#### 2. Branch Naming Conventions
-
-Use descriptive branch names that indicate what you're working on:
-
-- `feature/add-user-profile` - For new features
-- `fix/login-button-issue` - For bug fixes
-- `docs/update-readme` - For documentation updates
-- `style/improve-button-design` - For UI/styling changes
-
-#### 3. Making Changes Safely
-
-Before making changes, create a new branch and test your setup:
-
-```bash
-# Start the development server to make sure everything works
-pnpm dev
-
-# Make your changes in small, focused commits
-# Test your changes before committing
-```
-
-#### 4. Commit Message Guidelines
-
-Write clear, descriptive commit messages:
-
-```bash
-# Good commit messages:
-git commit -m "Add user registration form validation"
-git commit -m "Fix navigation menu on mobile devices"
-git commit -m "Update README with installation instructions"
-
-# Bad commit messages:
-git commit -m "fixes"
-git commit -m "update"
-git commit -m "wip"
-```
-
-### 📋 Development Best Practices
-
-#### Before You Start Coding
-
-1. **Check existing issues** - Look at GitHub issues to see if someone is already working on what you want to do
-2. **Create an issue** - If your idea isn't covered, create a new issue to discuss it
-3. **Ask questions** - Don't hesitate to ask in Discord or GitHub discussions
-
-#### While Coding
-
-1. **Follow the project structure** - Put files in the correct folders (see Project Structure above)
-2. **Use TypeScript** - The project uses TypeScript, so make sure your code is type-safe
-3. **Follow naming conventions** - Use camelCase for variables, PascalCase for components
-4. **Test your changes** - Always test your changes before pushing
-
-#### Code Style Guidelines
-
-```typescript
-// ✅ Good: Clear component names and structure
-export function UserProfileCard({ user }: { user: User }) {
-  const [isEditing, setIsEditing] = useState(false);
-
-  return (
-    <div className="bg-card p-6 rounded-lg">
-      <h2 className="text-xl font-semibold">{user.name}</h2>
-    </div>
-  );
-}
-
-// ❌ Avoid: Unclear names and poor structure
-export default function Card(props: any) {
-  return <div style={{ background: "white" }}>{props.data}</div>;
-}
-```
-
-### 🔍 Common Development Tasks
-
-#### Adding a New Component
-
-1. Create the component in the appropriate folder under `components/`
-2. Use TypeScript interfaces for props
-3. Follow the existing design system (Tailwind classes)
-4. Export the component using named exports
-
-```typescript
-// components/ui/user-avatar.tsx
-interface UserAvatarProps {
-  user: {
-    name: string;
-    avatar?: string;
-  };
-  size?: "sm" | "md" | "lg";
-}
-
-export function UserAvatar({ user, size = "md" }: UserAvatarProps) {
-  // Component implementation
-}
-```
-
-#### Adding a New Page
-
-1. Create the page in the `app/` directory following Next.js App Router conventions
-2. Use Server Components when possible
-3. Add proper TypeScript types for params and search params
-
-```typescript
-// app/courses/[id]/page.tsx
-interface CoursePageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function CoursePage({ params }: CoursePageProps) {
-  // Page implementation
-}
-```
-
-#### Database Changes
-
-1. Update the Prisma schema in `prisma/schema.prisma`
-2. Create a migration: `pnpm db:push`
-3. Update TypeScript types if needed
-4. Test with sample data
-
-### 🚨 Debugging Common Issues
-
-#### TypeScript Errors
-
-```bash
-# Check for TypeScript errors
-pnpm build
-
-# Fix common issues:
-# - Missing imports
-# - Incorrect prop types
-# - Unused variables
-```
-
-#### Database Issues
-
-```bash
-# Reset the database if needed
-pnpm db:reset
-
-# Re-seed with sample data
-pnpm db:seed
-```
-
-#### Package Issues
-
-```bash
-# Clear node_modules and reinstall
-rm -rf node_modules
-pnpm install
-```
-
-### 📝 Pull Request Process
-
-#### Before Creating a PR
-
-1. **Test thoroughly** - Make sure your changes work correctly
-2. **Check for conflicts** - Merge main into your branch if needed
-3. **Review your changes** - Use `git diff` to see what you've changed
-
-#### Creating a Good PR
-
-1. **Use a descriptive title** - "Add user profile editing functionality"
-2. **Write a clear description** - Explain what you changed and why
-3. **Add screenshots** - For UI changes, include before/after screenshots
-4. **Link related issues** - Use "Closes #123" to link to issues
-
-#### PR Template
-
-```markdown
-## What does this PR do?
-
-Brief description of the changes
-
-## Type of change
-
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Documentation update
-- [ ] Style/UI improvement
-
-## Testing
-
-- [ ] I have tested this change locally
-- [ ] I have checked that existing functionality still works
-
-## Screenshots (if applicable)
-
-Before: [screenshot]
-After: [screenshot]
-```
-
-### 🆘 Getting Help
-
-#### When You're Stuck
-
-1. **Read error messages carefully** - They often tell you exactly what's wrong
-2. **Check the documentation** - Look at Next.js, React, or Prisma docs
-3. **Search existing issues** - Someone might have had the same problem
-4. **Ask for help** - Don't be afraid to ask questions!
-
-#### Where to Ask for Help
-
-- **GitHub Discussions** - For general questions about the project
-- **Discord** - For real-time help and community support
-- **GitHub Issues** - For bugs or feature requests
-- **Code Review** - Ask for feedback on your PRs
-
-#### Questions to Include When Asking for Help
-
-1. What are you trying to do?
-2. What did you expect to happen?
-3. What actually happened?
-4. What error messages did you see?
-5. What have you already tried?
-
-### 🎯 Good First Issues
-
-If you're looking for ways to contribute, look for issues labeled:
-
-- `good first issue` - Perfect for beginners
-- `documentation` - Help improve docs
-- `bug` - Fix existing problems
-- `enhancement` - Small improvements
-
-### 📚 Learning Resources
-
-- **Next.js Documentation** - https://nextjs.org/docs
-- **React Documentation** - https://react.dev
-- **TypeScript Handbook** - https://www.typescriptlang.org/docs
-- **Tailwind CSS** - https://tailwindcss.com/docs
-- **Prisma Documentation** - https://www.prisma.io/docs
-
-Remember: Every expert was once a beginner. Don't be afraid to make mistakes – that's how we learn! The Code Academy Berlin community is here to support you.
+### Database Configuration
+
+- **Development**: SQLite for easy local development
+- **Production**: PostgreSQL recommended for scalability
+- **Migrations**: Automatic schema management with Prisma
 
 ## 🤝 Contributing
 
-We welcome contributions from the Code Academy Berlin community! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
+We welcome contributions from the Code Academy Berlin community!
 
-- Code style and standards
-- Development workflow
-- Testing requirements
-- Pull request process
+### Getting Started
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes
+4. Run tests and linting: `npm run lint` and `npm run ts:check`
+5. Commit your changes: `git commit -m 'Add amazing feature'`
+6. Push to the branch: `git push origin feature/amazing-feature`
+7. Open a Pull Request
+
+### Development Guidelines
+
+- Follow TypeScript best practices
+- Write meaningful commit messages
+- Test your changes thoroughly
+- Update documentation when needed
+- Follow the existing code style
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+## 📚 Documentation
+
+- [Authentication Setup](dev-docs/AUTHENTICATION_SETUP.md)
+- [Community Features](dev-docs/COMMUNITY_FEATURE.md)
+- [User Profile System](dev-docs/USER_PROFILE_FEATURE.md)
+- [Auto-save Strategy](dev-docs/AUTO_SAVE_STRATEGY.md)
+- [Avatar Upload System](dev-docs/AVATAR_UPLOAD.md)
+- [Student Setup Guide](STUDENT_SETUP.md)
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Configure environment variables
+4. Deploy automatically on every push
+
+### Other Platforms
+
+- **Netlify**: Full-stack deployment support
+- **Railway**: Database and hosting in one platform
+- **Docker**: Containerized deployment options
+
+## 📊 Analytics & Monitoring
+
+- **Built-in Logging**: Comprehensive application logging
+- **Error Tracking**: Structured error handling and reporting
+- **Performance Monitoring**: Built-in Next.js analytics
+- **User Analytics**: Learning progress and engagement metrics
+
+## 🔒 Security
+
+- **Authentication**: Secure multi-provider authentication
+- **Authorization**: Role-based access control
+- **Data Validation**: Input sanitization and validation
+- **File Upload Security**: Safe file handling and processing
+- **Environment Security**: Proper secret management
+
+## 🆘 Support
+
+- **Documentation**: Comprehensive guides and API references
+- **Community**: Code Academy Berlin student community
+- **Issues**: GitHub issue tracker for bugs and feature requests
+- **Discussions**: GitHub discussions for questions and ideas
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
+## 🙏 Acknowledgments
 
-For support and questions:
-
-- **Technical Issues**: Create an issue on GitHub
-- **Feature Requests**: Use our feature request template
-- **Community Support**: Join our Discord server
-- **Emergency Contact**: support@codeacademyberlin.com
-
-## 🎉 Acknowledgments
-
-- **Code Academy Berlin** - For the vision and mission
-- **Students & Alumni** - For feedback and community building
+- **Code Academy Berlin** - For providing the educational foundation
 - **Open Source Community** - For the amazing tools and libraries
-- **Instructors** - For educational expertise and content creation
+- **Contributors** - For making this project possible
+- **Students & Alumni** - For feedback and real-world testing
 
 ---
 
-**Built with ❤️ for the Code Academy Berlin community**
+**CODAC** - Empowering the next generation of developers through community-driven learning.
 
-![Footer](https://via.placeholder.com/800x100/F8FAFC/6B7280?text=Empowering+the+next+generation+of+developers+in+Berlin)
+For more information, visit [Code Academy Berlin](https://codeacademyberlin.com) or reach out to our development team.

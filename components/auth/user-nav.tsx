@@ -1,6 +1,9 @@
 "use client"
 
+import { LogOut, Settings, User } from "lucide-react"
+import Link from "next/link"
 import { useSession, signOut } from "next-auth/react"
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -11,8 +14,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { LogOut, Settings, User } from "lucide-react"
-import Link from "next/link"
 
 export function UserNav() {
     const { data: session, status } = useSession()

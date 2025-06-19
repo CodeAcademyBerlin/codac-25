@@ -1,9 +1,6 @@
 'use client';
 
-import { UserProfile } from '@/data/user/get-user';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { format } from 'date-fns';
 import {
     Github,
     Linkedin,
@@ -12,8 +9,12 @@ import {
     GraduationCap,
     ExternalLink
 } from 'lucide-react';
-import { format } from 'date-fns';
 import Link from 'next/link';
+
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { UserProfile } from '@/data/user/get-user';
 
 type ProfileContentProps = {
     user: UserProfile;

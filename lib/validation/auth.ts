@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { userSchema } from "./user";
 
 // Profile update schema (for user's own profile)

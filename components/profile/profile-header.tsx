@@ -1,14 +1,17 @@
 'use client';
 
-import { useState } from 'react';
-import { UserProfile } from '@/data/user/get-user';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import { Edit3, Calendar, MapPin, Briefcase } from 'lucide-react';
-import { ProfileEditModal } from './profile-edit-modal';
 import { format } from 'date-fns';
+import { Edit3, Calendar, MapPin, Briefcase } from 'lucide-react';
+import { useState } from 'react';
+
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { UserProfile } from '@/data/user/get-user';
+
+import { ProfileEditModal } from './profile-edit-modal';
+
 
 type ProfileHeaderProps = {
     user: UserProfile;

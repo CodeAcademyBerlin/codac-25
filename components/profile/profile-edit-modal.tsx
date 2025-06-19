@@ -1,11 +1,15 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { UserProfile } from '@/data/user/get-user';
-import { updateProfileSchema, type UpdateProfileInput } from '@/lib/validation/auth';
+import { toast } from 'sonner';
+
 import { updateProfile } from '@/actions/auth/update-profile';
+import { AvatarUpload } from '@/components/ui/avatar-upload';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -24,12 +28,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { AvatarUpload } from '@/components/ui/avatar-upload';
-import { CalendarIcon, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { UserProfile } from '@/data/user/get-user';
+import { updateProfileSchema, type UpdateProfileInput } from '@/lib/validation/auth';
+
 
 type ProfileEditModalProps = {
     user: UserProfile;
@@ -40,7 +41,7 @@ type ProfileEditModalProps = {
 export function ProfileEditModal({ user, isOpen, onClose }: ProfileEditModalProps) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
-    const [avatarUrl, setAvatarUrl] = useState(user.avatar || '');
+    const [avatarUrl, setAvatarUrl] = useState<string>((user as any).avatar || '');
 
     const form = useForm<UpdateProfileInput>({
         resolver: zodResolver(updateProfileSchema),

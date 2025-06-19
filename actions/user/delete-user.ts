@@ -12,7 +12,7 @@ import {
 } from '@/lib/validation/user';
 
 // Define return type for delete operation
-type DeleteUserResult = ServerActionResult<{ id: string; email: string; name: string | null }>;
+type DeleteUserResult = ServerActionResult<{ id: string; email: string | null; name: string | null }>;
 
 export async function deleteUser(data: DeleteUserInput): Promise<DeleteUserResult> {
     const startTime = Date.now();

@@ -37,7 +37,7 @@ type Doc = {
     isPublished: boolean;
     author?: {
         name: string | null;
-        email: string;
+        email: string | null;
     };
 };
 

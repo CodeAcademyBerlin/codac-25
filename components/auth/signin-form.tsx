@@ -1,14 +1,15 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { signIn, useSession } from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { signIn, useSession } from "next-auth/react"
+import { useState, useEffect } from "react"
+
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
+import { Icons } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Icons } from "@/components/ui/icons"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface SignInFormProps {
@@ -95,7 +96,7 @@ export function SignInForm({ callbackUrl: initialCallbackUrl }: SignInFormProps)
             } else if (result?.ok) {
                 router.push(callbackUrl)
             }
-        } catch (err) {
+        } catch {
             setError("An error occurred during sign in.")
         } finally {
             setIsCredentialsLoading(false)
@@ -126,7 +127,7 @@ export function SignInForm({ callbackUrl: initialCallbackUrl }: SignInFormProps)
                 // Redirect to verification page or handle success
                 router.push("/auth/verify-request")
             }
-        } catch (err) {
+        } catch {
             setError("An error occurred during sign in.")
         } finally {
             setIsEmailLoading(false)
@@ -146,7 +147,7 @@ export function SignInForm({ callbackUrl: initialCallbackUrl }: SignInFormProps)
             if (result?.error) {
                 setError(result.error)
             }
-        } catch (err) {
+        } catch {
             setError("An error occurred during sign in.")
         } finally {
             setIsGoogleLoading(false)

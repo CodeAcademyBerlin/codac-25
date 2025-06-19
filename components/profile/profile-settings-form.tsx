@@ -1,11 +1,16 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2, Save } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
 import { z } from 'zod';
-import { UserProfile } from '@/data/user/get-user';
+
 import { updateProfile } from '@/actions/auth/update-profile';
+import { AvatarUpload } from '@/components/ui/avatar-upload';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Form,
@@ -18,16 +23,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { AvatarUpload } from '@/components/ui/avatar-upload';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, Loader2, Save } from 'lucide-react';
-import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
-import { format } from 'date-fns';
-import { cn } from '@/lib/utils';
+import { UserProfile } from '@/data/user/get-user';
+
 
 type ProfileSettingsFormProps = {
     user: UserProfile;
@@ -51,7 +48,7 @@ type SettingsFormData = z.infer<typeof settingsSchema>;
 export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
-    const [avatarUrl, setAvatarUrl] = useState(user.avatar || undefined);
+    const [avatarUrl, setAvatarUrl] = useState<string | undefined>((user as any).avatar || undefined);
 
     const form = useForm<SettingsFormData>({
         resolver: zodResolver(settingsSchema),

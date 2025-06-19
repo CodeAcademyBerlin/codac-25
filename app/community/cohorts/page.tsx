@@ -1,11 +1,11 @@
 import { Users, Calendar, Search, Filter } from 'lucide-react';
 
 import { CohortCard } from '@/components/community/cohort-card';
-import { getCohorts } from '@/data/cohort/get-cohorts';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { getCohorts } from '@/data/cohort/get-cohorts';
 
 export default async function CohortsPage() {
     const result = await getCohorts();

@@ -1,8 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
+
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { LearningProgress } from "@/components/dashboard/learning-progress"
 import { RecentActivity } from "@/components/dashboard/recent-activity"

@@ -1,6 +1,7 @@
 import { LogOut } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
 import { SignOutButton } from "@/components/auth/signout-button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function SignOutPage() {
     return (
