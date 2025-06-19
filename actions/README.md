@@ -45,7 +45,7 @@ import { z } from "zod";
 export const createUserSchema = z.object({
   email: z.string().email("Invalid email address"),
   name: z.string().min(1, "Name is required"),
-  role: z.enum(["STUDENT", "ALUMNI", "INSTRUCTOR", "ADMIN"]),
+  role: z.enum(["STUDENT", "ALUMNI", "MENTOR", "ADMIN"]),
   status: z.enum(["ACTIVE", "INACTIVE", "GRADUATED"]),
 });
 

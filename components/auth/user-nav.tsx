@@ -41,7 +41,7 @@ export function UserNav() {
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
                         <AvatarImage
-                            src={user.image || user.avatar || ""}
+                            src={user.image || ""}
                             alt={user.name || user.email || "User"}
                         />
                         <AvatarFallback>
@@ -74,7 +74,7 @@ export function UserNav() {
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                    <Link href="/settings" className="cursor-pointer">
+                    <Link href="/profile/settings" className="cursor-pointer">
                         <Settings className="mr-2 h-4 w-4" />
                         Settings
                     </Link>

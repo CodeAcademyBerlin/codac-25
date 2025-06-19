@@ -7,7 +7,7 @@ This project uses NextAuth.js (Auth.js v5) with Prisma adapter for authenticatio
 - **Email Magic Links**: Password-less authentication via email
 - **Google OAuth**: Sign in with Google account
 - **Database Sessions**: Sessions stored in SQLite database
-- **Role-based Access**: Support for different user roles (STUDENT, ALUMNI, INSTRUCTOR, ADMIN)
+- **Role-based Access**: Support for different user roles (STUDENT, ALUMNI, MENTOR, ADMIN)
 - **User Status**: Track user status (ACTIVE, INACTIVE, GRADUATED)
 
 ## Environment Variables
