@@ -7,19 +7,62 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// NextAuth Models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
 // User Management
 model User {
-  id     String     @id @default(cuid())
-  email  String     @unique
-  name   String?
-  avatar String? // Profile picture URL
-  bio    String? // User bio
-  role   UserRole   @default(STUDENT)
-  status UserStatus @default(ACTIVE)
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String? // For credentials authentication
 
-  // Code Academy Berlin specific
+  // Code Academy Berlin specific fields
+  bio            String? // User bio
+  avatar         String? // User avatar URL or base64 data
+  role           UserRole   @default(STUDENT)
+  status         UserStatus @default(ACTIVE)
   cohortId       String?
-  cohort         Cohort?   @relation(fields: [cohortId], references: [id])
+  cohort         Cohort?    @relation(fields: [cohortId], references: [id])
   graduationDate DateTime?
   linkedinUrl    String?
   githubUrl      String?
@@ -29,6 +72,10 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // NextAuth Relations
+  accounts Account[]
+  sessions Session[]
 
   // Learning Relations
   enrollments  CourseEnrollment[]
@@ -67,7 +114,8 @@ model Cohort {
   name        String
   startDate   DateTime
   description String?
-  avatar      String?
+  image       String?
+  avatar      String? // Cohort avatar URL or base64 data
   slug        String   @unique
 
   createdAt DateTime @default(now())

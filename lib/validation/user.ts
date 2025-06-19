@@ -26,13 +26,13 @@ export const userSchema = z.object({
     name: z.string().min(1, 'Name is required').max(100, 'Name too long').optional(),
     avatar: avatarSchema,
     bio: z.string().max(500, 'Bio too long').optional(),
-    role: z.enum(['STUDENT', 'ALUMNI', 'INSTRUCTOR', 'ADMIN']).default('STUDENT'),
+    role: z.enum(['STUDENT', 'ALUMNI', 'MENTOR', 'ADMIN']).default('STUDENT'),
     status: z.enum(['ACTIVE', 'INACTIVE', 'GRADUATED']).default('ACTIVE'),
     cohort: z.string().max(100, 'Cohort name too long').optional(),
     graduationDate: z.date().optional(),
-    linkedinUrl: z.string().url('Invalid LinkedIn URL').optional(),
-    githubUrl: z.string().url('Invalid GitHub URL').optional(),
-    portfolioUrl: z.string().url('Invalid portfolio URL').optional(),
+    linkedinUrl: z.string().url('Invalid LinkedIn URL').optional().or(z.literal('')),
+    githubUrl: z.string().url('Invalid GitHub URL').optional().or(z.literal('')),
+    portfolioUrl: z.string().url('Invalid portfolio URL').optional().or(z.literal('')),
     currentJob: z.string().max(100, 'Job title too long').optional(),
     currentCompany: z.string().max(100, 'Company name too long').optional(),
 });
@@ -87,13 +87,7 @@ export const bulkDeleteUsersSchema = z.object({
     ids: z.array(z.string().cuid()).min(1, 'At least one user ID is required'),
 });
 
-// Profile update schema (for user's own profile)
-export const updateProfileSchema = userSchema
-    .omit({ role: true, status: true })
-    .partial()
-    .extend({
-        id: z.string().cuid('Invalid user ID'),
-    });
+
 
 // Inferred types for type safety
 export type CreateUserInput = z.infer<typeof createUserSchema>;
@@ -104,4 +98,3 @@ export type GetUsersInput = z.infer<typeof getUsersSchema>;
 export type ChangeUserRoleInput = z.infer<typeof changeUserRoleSchema>;
 export type ChangeUserStatusInput = z.infer<typeof changeUserStatusSchema>;
 export type BulkDeleteUsersInput = z.infer<typeof bulkDeleteUsersSchema>;
-export type UpdateProfileInput = z.infer<typeof updateProfileSchema>; 

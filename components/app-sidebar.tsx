@@ -33,14 +33,6 @@ import { NavSecondary } from './nav-secondary';
 import { NavUser } from './nav-user';
 
 const data = {
-  user: {
-    id: 'user_alex_mueller_2024', // This would come from your auth system
-    name: 'Alex Müller',
-    email: 'alex.mueller@student.codeacademyberlin.com',
-    avatar: '/avatars/student-1.jpg',
-    role: 'Web Development Student',
-    cohort: '2024-Web-Dev-Bootcamp',
-  },
   navMain: [
 
     {
@@ -245,7 +237,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <ThemePicker variant="popover" align="end" />
         </div> */}
         <NavSecondary items={data.footer} />
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );

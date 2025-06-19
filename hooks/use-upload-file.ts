@@ -7,7 +7,7 @@ import type {
 } from 'uploadthing/types';
 import { z } from 'zod';
 
-import type { OurFileRouter } from '@/lib/uploadthing';
+import type { OurFileRouter } from '@/lib/editor/uploadthing';
 
 export type UploadedFile<T = unknown> = ClientUploadedFileData<T>;
 

@@ -65,7 +65,7 @@ function getRoleColor(role: string) {
             return 'bg-purple-500';
         case 'MENTOR':
             return 'bg-green-500';
-        case 'INSTRUCTOR':
+        case 'MENTOR':
             return 'bg-orange-500';
         default:
             return 'bg-gray-500';

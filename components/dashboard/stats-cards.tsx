@@ -1,3 +1,5 @@
+"use client"
+
 import { Book, Clock, TrendingUp, Trophy } from "lucide-react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,34 +11,44 @@ interface StatCard {
     icon: React.ComponentType<{ className?: string }>
 }
 
-const statsData: StatCard[] = [
-    {
-        title: "Current Streak",
-        value: "12 days",
-        change: "+2 from last week",
-        icon: TrendingUp
-    },
-    {
-        title: "Completed Lessons",
-        value: "87",
-        change: "+5 this week",
-        icon: Book
-    },
-    {
-        title: "Study Time",
-        value: "42h",
-        change: "This month",
-        icon: Clock
-    },
-    {
-        title: "Achievements",
-        value: "23",
-        change: "+3 this week",
-        icon: Trophy
+interface StatsCardsProps {
+    userStats?: {
+        documentsCount?: number
+        achievementsCount?: number
+        studyStreak?: number
+        monthlyStudyTime?: number
     }
-]
+}
 
-export function StatsCards() {
+export function StatsCards({ userStats }: StatsCardsProps) {
+    // Default stats data with personalized values if available
+    const statsData: StatCard[] = [
+        {
+            title: "Current Streak",
+            value: userStats?.studyStreak ? `${userStats.studyStreak} days` : "0 days",
+            change: "Keep it up!",
+            icon: TrendingUp
+        },
+        {
+            title: "Documents Created",
+            value: userStats?.documentsCount?.toString() || "0",
+            change: "All time",
+            icon: Book
+        },
+        {
+            title: "Study Time",
+            value: userStats?.monthlyStudyTime ? `${userStats.monthlyStudyTime}h` : "0h",
+            change: "This month",
+            icon: Clock
+        },
+        {
+            title: "Achievements",
+            value: userStats?.achievementsCount?.toString() || "0",
+            change: "Unlocked",
+            icon: Trophy
+        }
+    ]
+
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {statsData.map((stat) => {

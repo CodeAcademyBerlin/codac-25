@@ -179,3 +179,14 @@ export const getBlockType = (block: TElement) => {
 
   return block.type;
 };
+
+// Upload history function for media placeholders
+export const updateUploadHistory = (_editor: PlateEditor, node: any) => {
+  // This is a placeholder function that can be expanded to track upload history
+  // For now, it simply logs the uploaded node
+  console.info('Media upload completed:', {
+    type: node.type,
+    url: node.url,
+    placeholderId: node.placeholderId
+  });
+};
