@@ -43,3 +43,5 @@ next-env.d.ts
 # lms content
 /content
 /exported-content
+prisma/dev.db
+prisma/dev.db
