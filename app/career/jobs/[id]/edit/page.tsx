@@ -34,7 +34,7 @@ export default async function EditJobPage({ params }: EditJobPageProps) {
     notFound();
   }
 
-  const canEdit = user.role === "ADMIN" || user.id === job.postedById;
+  const canEdit = user.role === "ADMIN" || user.role === "MENTOR";
 
   if (!canEdit) {
     return (

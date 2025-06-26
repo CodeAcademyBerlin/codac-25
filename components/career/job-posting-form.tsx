@@ -60,6 +60,7 @@ export function JobPostingForm() {
         toast.success("Success!", {
           description: "Your job has been posted.",
         });
+        router.refresh();
         router.push("/career/jobs");
         return;
       }

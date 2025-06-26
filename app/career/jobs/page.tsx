@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getJobs } from "@/actions/job/get-jobs";
 import { JobCard } from "@/components/career/job-card";
 import { JobFilters } from "@/components/career/job-filters";
+import { auth } from "@/lib/auth/auth";
 
 type Job = Awaited<ReturnType<typeof getJobs>>[number];
 
@@ -22,6 +23,11 @@ interface JobsPageProps {
 }
 
 export default async function JobsPage({ searchParams }: JobsPageProps) {
+  const session = await auth();
+  const user = session?.user;
+
+  const canPostJob = user?.role === "ADMIN" || user?.role === "MENTOR";
+
   return (
     <div className="container mx-auto py-8">
       <div className="flex items-center justify-between mb-8">
@@ -31,12 +37,14 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
             Discover career opportunities from our community and partners
           </p>
         </div>
-        <Button asChild>
-          <Link href="/career/jobs/post">
-            <Plus className="h-4 w-4 mr-2" />
-            Post a Job
-          </Link>
-        </Button>
+        {canPostJob && (
+          <Button asChild>
+            <Link href="/career/jobs/post">
+              <Plus className="h-4 w-4 mr-2" />
+              Post a Job
+            </Link>
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
