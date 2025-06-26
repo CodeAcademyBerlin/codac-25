@@ -4,12 +4,10 @@ import {
   ArrowLeft,
   Briefcase,
   Building,
-  Calendar,
   IndianRupee,
   Link as LinkIcon,
   Mail,
   MapPin,
-  User,
 } from "lucide-react";
 
 import { getJobById } from "@/actions/job/get-jobs";
@@ -20,11 +18,9 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { formatDistanceToNow } from "date-fns";
 
 interface JobDetailsPageProps {

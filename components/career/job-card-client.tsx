@@ -34,6 +34,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type Job = Awaited<ReturnType<typeof getJobs>>[number];
 
@@ -43,6 +44,7 @@ interface JobCardClientProps {
 }
 
 export function JobCardClient({ job, session }: JobCardClientProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const user = session?.user;
 
@@ -61,6 +63,11 @@ export function JobCardClient({ job, session }: JobCardClientProps) {
     });
   };
 
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    router.push(`/career/jobs/${job.id}/edit`);
+  };
+
   return (
     <Link href={`/career/jobs/${job.id}`} className="block">
       <Card className="relative group hover:bg-muted/40 transition-colors">
@@ -70,12 +77,9 @@ export function JobCardClient({ job, session }: JobCardClientProps) {
               variant="ghost"
               size="icon"
               className="h-7 w-7"
-              asChild
-              onClick={(e) => e.stopPropagation()}
+              onClick={handleEdit}
             >
-              <Link href={`/career/jobs/${job.id}/edit`}>
-                <Pencil className="h-4 w-4" />
-              </Link>
+              <Pencil className="h-4 w-4" />
             </Button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
