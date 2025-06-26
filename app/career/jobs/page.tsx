@@ -1,22 +1,24 @@
-import { Suspense } from 'react'
-import Link from 'next/link'
-import { Plus } from 'lucide-react'
+import { Suspense } from "react";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
-import { getJobs } from '@/actions/job/get-jobs'
-import { JobCard } from '@/components/career/job-card'
-import { JobFilters } from '@/components/career/job-filters'
+import { getJobs } from "@/actions/job/get-jobs";
+import { JobCard } from "@/components/career/job-card";
+import { JobFilters } from "@/components/career/job-filters";
+
+type Job = Awaited<ReturnType<typeof getJobs>>[number];
 
 interface JobsPageProps {
   searchParams: {
-    search?: string
-    type?: string
-    level?: string
-    remote?: string
-    company?: string
-  }
+    search?: string;
+    type?: string;
+    level?: string;
+    remote?: string;
+    company?: string;
+  };
 }
 
 export default async function JobsPage({ searchParams }: JobsPageProps) {
@@ -51,11 +53,15 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-async function JobsList({ searchParams }: { searchParams: JobsPageProps['searchParams'] }) {
-  const jobs = await getJobs(searchParams)
+type JobsListProps = {
+  searchParams: JobsPageProps["searchParams"];
+};
+
+async function JobsList({ searchParams }: JobsListProps) {
+  const jobs = await getJobs(searchParams);
 
   if (jobs.length === 0) {
     return (
@@ -65,16 +71,16 @@ async function JobsList({ searchParams }: { searchParams: JobsPageProps['searchP
           Try adjusting your filters or check back later for new opportunities.
         </p>
       </div>
-    )
+    );
   }
 
   return (
     <div className="space-y-6">
-      {jobs.map((job) => (
+      {jobs.map((job: Job) => (
         <JobCard key={job.id} job={job} />
       ))}
     </div>
-  )
+  );
 }
 
 function JobsLoading() {
@@ -93,5 +99,5 @@ function JobsLoading() {
         </div>
       ))}
     </div>
-  )
-} 
+  );
+}

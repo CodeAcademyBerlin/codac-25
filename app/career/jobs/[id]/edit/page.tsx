@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { notFound, redirect } from "next/navigation";
 
+import { getJobById } from "@/actions/job/get-jobs";
 import { auth } from "@/lib/auth/auth";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,19 +12,36 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { JobPostingForm } from "@/components/career/job-posting-form";
+import { JobEditForm } from "@/components/career/job-edit-form";
 
-export default async function PostJobPage() {
+interface EditJobPageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default async function EditJobPage({ params }: EditJobPageProps) {
   const session = await auth();
   const user = session?.user;
 
-  if (!user || (user.role !== "ADMIN" && user.role !== "MENTOR")) {
+  if (!user) {
+    redirect("/auth/signin");
+  }
+
+  const job = await getJobById(params.id);
+
+  if (!job) {
+    notFound();
+  }
+
+  const canEdit = user.role === "ADMIN" || user.id === job.postedById;
+
+  if (!canEdit) {
     return (
       <div className="container mx-auto py-8 text-center">
         <h1 className="text-3xl font-bold">Unauthorized</h1>
         <p className="text-muted-foreground mt-2">
-          You do not have permission to post a job. Please contact an
-          administrator if you believe this is a mistake.
+          You do not have permission to edit this job.
         </p>
         <Button asChild className="mt-4">
           <Link href="/career/jobs">
@@ -44,22 +63,22 @@ export default async function PostJobPage() {
           </Link>
         </Button>
 
-        <h1 className="text-3xl font-bold">Post a Job</h1>
+        <h1 className="text-3xl font-bold">Edit Job</h1>
         <p className="text-muted-foreground mt-2">
-          Share career opportunities with our community
+          Update the details of your job opportunity
         </p>
       </div>
 
       <div className="max-w-2xl">
         <Card>
           <CardHeader>
-            <CardTitle>Job Posting Form</CardTitle>
+            <CardTitle>Job Edit Form</CardTitle>
             <CardDescription>
-              Fill out the details below to post your job opportunity
+              Modify the fields below to update the job post
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <JobPostingForm />
+            <JobEditForm job={job} />
           </CardContent>
         </Card>
       </div>
