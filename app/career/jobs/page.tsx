@@ -9,8 +9,13 @@ import { getJobs } from "@/actions/job/get-jobs";
 import { JobCard } from "@/components/career/job-card";
 import { JobFilters } from "@/components/career/job-filters";
 import { auth } from "@/lib/auth/auth";
+import { SecretDuckForm } from "@/components/career/secret-duck-form";
+import { getDucks } from "@/actions/duck/get-ducks";
+import { DuckCard } from "@/components/career/duck-card";
+import { Duck, Job as JobType } from "@prisma/client";
 
 type Job = Awaited<ReturnType<typeof getJobs>>[number];
+type DuckItem = Awaited<ReturnType<typeof getDucks>>[number];
 
 interface JobsPageProps {
   searchParams: {
@@ -60,6 +65,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
           </Suspense>
         </div>
       </div>
+      <SecretDuckForm />
     </div>
   );
 }
@@ -70,8 +76,13 @@ type JobsListProps = {
 
 async function JobsList({ searchParams }: JobsListProps) {
   const jobs = await getJobs(searchParams);
+  const ducks = await getDucks();
 
-  if (jobs.length === 0) {
+  const combinedList = [...jobs, ...ducks].sort(
+    (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+  );
+
+  if (combinedList.length === 0) {
     return (
       <div className="text-center py-12">
         <h3 className="text-lg font-semibold mb-2">No jobs found</h3>
@@ -82,11 +93,18 @@ async function JobsList({ searchParams }: JobsListProps) {
     );
   }
 
+  // Type guard to check if an item is a job
+  const isJob = (item: Job | DuckItem): item is Job => "company" in item;
+
   return (
     <div className="space-y-6">
-      {jobs.map((job: Job) => (
-        <JobCard key={job.id} job={job} />
-      ))}
+      {combinedList.map((item) =>
+        isJob(item) ? (
+          <JobCard key={`job-${item.id}`} job={item} />
+        ) : (
+          <DuckCard key={`duck-${item.id}`} duck={item} />
+        )
+      )}
     </div>
   );
 }
