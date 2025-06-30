@@ -712,3 +712,25 @@ enum JobApplicationStatus {
   REJECTED
   ACCEPTED
 }
+
+model Quiz {
+  id          String     @id @default(cuid())
+  topic       String
+  difficulty  String
+  questions   Question[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([topic, difficulty])
+}
+
+model Question {
+  id            String   @id @default(cuid())
+  text          String
+  options       String // Stored as a JSON string
+  correctAnswer String
+  explanation   String?
+  quizId        String
+  quiz          Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+}
