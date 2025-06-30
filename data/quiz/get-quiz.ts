@@ -1,8 +1,8 @@
-import { db } from '@/lib/db/prisma';
+import { prisma } from '@/lib/db/prisma';
 
 export async function getQuiz(topic: string, difficulty: string) {
     try {
-        const quiz = await db.quiz.findUnique({
+        const quiz = await prisma.quiz.findUnique({
             where: {
                 topic_difficulty: {
                     topic,
