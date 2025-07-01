@@ -1,4 +1,5 @@
 import { PrismaAdapter } from "@auth/prisma-adapter"
+import { UserRole, UserStatus } from "@prisma/client"
 import bcrypt from "bcryptjs"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -90,8 +91,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             // Add user data from token to session
             if (token) {
                 session.user.id = token.sub as string
-                session.user.role = token.role as string
-                session.user.status = token.status as string
+                session.user.role = (token.role || 'STUDENT') as UserRole
+                session.user.status = (token.status || 'ACTIVE') as UserStatus
                 session.user.cohortId = token.cohortId as string | null
             }
 

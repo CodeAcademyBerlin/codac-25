@@ -220,7 +220,12 @@ const UnifiedStateUpdater = React.memo(function UnifiedStateUpdater({
                     metadata: { isManual, contentLength: JSON.stringify(content).length }
                 });
             } else {
-                throw new Error(result.error || `Failed to save ${contentType}`);
+                const errorMessage = typeof result.error === 'string'
+                    ? result.error
+                    : Array.isArray(result.error)
+                        ? result.error.map(e => e.message).join(', ')
+                        : `Failed to save ${contentType}`;
+                throw new Error(errorMessage);
             }
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
