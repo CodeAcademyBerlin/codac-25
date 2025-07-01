@@ -1,20 +1,20 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { Prisma } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
 
 import { auth } from '@/lib/auth/auth';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import {
-    type UpdateProfileInput,
-    updateProfileSchema
-} from '@/lib/validation/auth';
-import {
     type ServerActionResult,
     type UserPrivate,
     commonSelects
 } from '@/lib/server-action-utils';
+import {
+    type UpdateProfileInput,
+    updateProfileSchema
+} from '@/lib/validation/auth';
 
 // Define return type using Prisma's generated types
 type UpdateProfileResult = ServerActionResult<UserPrivate>;
