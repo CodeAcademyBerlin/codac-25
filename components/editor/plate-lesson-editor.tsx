@@ -122,7 +122,7 @@ export const PlateLessonEditor = ({ lessonId, initialValue, showStatusBar = fals
     return (
         <PlateController>
             <div className="h-full flex flex-col">
-                <PlateEditor initialValue={initialValue}>
+                <PlateEditor initialValue={initialValue} readOnly={!canEdit}>
                     <PlateStateUpdater lessonId={lessonId} showStatusBar={showStatusBar} initialValue={initialValue} canEdit={canEdit} />
                 </PlateEditor>
             </div>

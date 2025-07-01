@@ -229,11 +229,23 @@ export function LMSSidebar({ enrolledCourses, allCourses, userRole }: LMSSidebar
                             <h3 className="mb-3 text-sm font-medium text-muted-foreground">
                                 Instructor Tools
                             </h3>
-                            <Link href="/lms/admin/courses">
-                                <Button variant="outline" size="sm" className="w-full">
-                                    Manage Courses
-                                </Button>
-                            </Link>
+                            <div className="space-y-2">
+                                <Link href="/lms/admin">
+                                    <Button variant="outline" size="sm" className="w-full justify-start">
+                                        Admin Dashboard
+                                    </Button>
+                                </Link>
+                                <Link href="/lms/admin/courses">
+                                    <Button variant="outline" size="sm" className="w-full justify-start">
+                                        Manage Courses
+                                    </Button>
+                                </Link>
+                                <Link href="/lms/admin/enrollments">
+                                    <Button variant="outline" size="sm" className="w-full justify-start">
+                                        Manage Enrollments
+                                    </Button>
+                                </Link>
+                            </div>
                         </div>
                     )}
                 </div>

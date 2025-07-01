@@ -12,6 +12,7 @@ import { EditorKit } from './editor-kit';
 export function PlateEditor({
   initialValue,
   children,
+  readOnly = false,
 }: {
   /**
    * Initial document value to load into the editor. When omitted, a default
@@ -24,6 +25,10 @@ export function PlateEditor({
    * hooks like `useEditorRef` or `useEditorSelector`.
    */
   children?: React.ReactNode;
+  /**
+   * Whether the editor should be in read-only mode. Defaults to false.
+   */
+  readOnly?: boolean;
 }) {
 
   //   const editor = usePlateEditor({
@@ -36,7 +41,7 @@ export function PlateEditor({
   });
   return (
     <div className="w-full max-w-full overflow-hidden">
-      <Plate editor={editor}>
+      <Plate editor={editor} readOnly={readOnly}>
         {children}
         <EditorContainer className="max-w-full">
           <Editor variant="default" className="max-w-full" />

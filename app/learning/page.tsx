@@ -87,7 +87,7 @@ export default async function LearningPage() {
 
                 {/* Action Button */}
                 <Link
-                  href={`/learning/${track}`}
+                  href="/lms"
                   className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3 w-full"
                 >
                   {trackInfo?.status === 'In Progress' ? 'Continue Learning' : 'Start Track'}
@@ -143,17 +143,17 @@ export default async function LearningPage() {
       {/* Quick Access to All Content */}
       <Card>
         <CardHeader>
-          <CardTitle>All Learning Materials</CardTitle>
+          <CardTitle>Learning Management System</CardTitle>
           <CardDescription>
-            Browse all available course content and resources
+            Access the full LMS with structured courses, lessons, and interactive content
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Link
-            href="/docs?type=COURSE_MATERIAL"
+            href="/lms"
             className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
           >
-            Browse All Course Materials
+            Browse All Courses
           </Link>
         </CardContent>
       </Card>

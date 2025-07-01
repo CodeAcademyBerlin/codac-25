@@ -170,7 +170,7 @@ export default function ThemeDemoPage() {
                                         <div className="text-xs text-muted-foreground">Completion</div>
                                     </div>
                                     <div className="text-center">
-                                        <div className="text-2xl font-bold text-green-600">14</div>
+                                        <div className="text-2xl font-bold">14</div>
                                         <div className="text-xs text-muted-foreground">Day Streak</div>
                                     </div>
                                 </div>
