@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/db/prisma';
+import { prisma } from '@/lib/db/prisma'; 
 
 export async function getQuiz(topic: string, difficulty: string) {
     try {
