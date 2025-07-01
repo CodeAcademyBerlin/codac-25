@@ -6,7 +6,8 @@ import {
     CheckCircle2,
     TrendingUp,
     Calendar,
-    Award
+    Award,
+    ArrowLeft
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -49,7 +50,14 @@ interface LMSDashboardProps {
     allCourses: Course[];
 }
 
-export function LMSDashboard({ user, enrolledCourses, allCourses }: LMSDashboardProps) {
+// Map course categories to learning tracks
+const categoryToTrack = {
+    'WEB_DEVELOPMENT': { name: 'Web Development', slug: 'web' },
+    'DATA_SCIENCE': { name: 'Data Science', slug: 'data' },
+    'CAREER_DEVELOPMENT': { name: 'Career Services', slug: 'career' }
+};
+
+export function LMSDashboard({ user: _user, enrolledCourses, allCourses }: LMSDashboardProps) {
     const calculateCourseProgress = (course: Course) => {
         const totalLessons = course.projects.reduce((acc, project) => acc + project.lessons.length, 0);
         const completedLessons = course.projects.reduce((acc, project) =>
@@ -83,14 +91,32 @@ export function LMSDashboard({ user, enrolledCourses, allCourses }: LMSDashboard
 
     const overallProgress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
+    // Group courses by track
+    const coursesByTrack = allCourses.reduce((acc, course) => {
+        const track = categoryToTrack[course.category as keyof typeof categoryToTrack];
+        if (track) {
+            if (!acc[track.slug]) acc[track.slug] = { info: track, courses: [] };
+            acc[track.slug].courses.push(course);
+        }
+        return acc;
+    }, {} as Record<string, { info: typeof categoryToTrack[keyof typeof categoryToTrack], courses: Course[] }>);
+
     return (
         <div className="space-y-6">
-            {/* Welcome Header */}
-            <div>
-                <h1 className="text-3xl font-bold">Welcome back, {user.name || 'Student'}!</h1>
-                <p className="text-muted-foreground">
-                    Continue your learning journey and track your progress.
-                </p>
+            {/* Header with Navigation */}
+            <div className="flex items-center justify-between">
+                <div>
+                    <div className="flex items-center gap-2 mb-2">
+                        <Link href="/learning" className="text-muted-foreground hover:text-foreground">
+                            <ArrowLeft className="h-4 w-4" />
+                        </Link>
+                        <span className="text-sm text-muted-foreground">Learning / Course Management</span>
+                    </div>
+                    <h1 className="text-3xl font-bold">Course Management</h1>
+                    <p className="text-muted-foreground">
+                        Manage your enrolled courses, track progress, and explore new learning opportunities.
+                    </p>
+                </div>
             </div>
 
             {/* Stats Overview */}
@@ -146,121 +172,140 @@ export function LMSDashboard({ user, enrolledCourses, allCourses }: LMSDashboard
                 </Card>
             </div>
 
-            {/* Current Courses */}
-            {enrolledCourses.length > 0 && (
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Your Courses</CardTitle>
-                        <CardDescription>
-                            Continue learning from where you left off
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {enrolledCourses.map((course) => {
-                                const progress = calculateCourseProgress(course);
-                                const nextLesson = course.projects
-                                    .flatMap(project => project.lessons)
-                                    .find(lesson =>
-                                        !lesson.progress.some(p => p.status === 'COMPLETED')
-                                    );
+            {/* Learning Tracks Organization */}
+            {Object.entries(coursesByTrack).map(([trackSlug, { info, courses }]) => {
+                const enrolledInTrack = courses.filter(course =>
+                    enrolledCourses.some(enrolled => enrolled.id === course.id)
+                );
+                const availableInTrack = courses.filter(course =>
+                    !enrolledCourses.some(enrolled => enrolled.id === course.id)
+                );
 
-                                return (
-                                    <Card key={course.id} className="hover:shadow-md transition-shadow">
-                                        <CardHeader className="pb-3">
-                                            <div className="flex items-start justify-between">
-                                                <Badge variant="secondary" className="text-xs">
-                                                    {course.category.replace('_', ' ')}
-                                                </Badge>
-                                                <div className="text-right">
-                                                    <div className="text-sm font-medium">{progress}%</div>
-                                                    <Progress value={progress} className="w-16 h-1 mt-1" />
-                                                </div>
-                                            </div>
-                                            <CardTitle className="text-lg">{course.title}</CardTitle>
-                                            <CardDescription className="text-sm line-clamp-2">
-                                                {course.description}
-                                            </CardDescription>
-                                        </CardHeader>
-                                        <CardContent className="pt-0">
-                                            <div className="flex items-center justify-between">
-                                                <div className="text-sm text-muted-foreground">
-                                                    {course._count.projects} projects
-                                                </div>
-                                                {nextLesson ? (
-                                                    <Link href={`/lms/lessons/${nextLesson.id}`}>
-                                                        <Button size="sm">Continue</Button>
-                                                    </Link>
-                                                ) : (
-                                                    <Link href={`/lms/courses/${course.id}`}>
-                                                        <Button size="sm" variant="outline">
-                                                            <Award className="h-4 w-4 mr-1" />
-                                                            Complete
-                                                        </Button>
-                                                    </Link>
-                                                )}
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                );
-                            })}
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
+                if (courses.length === 0) return null;
 
-            {/* Explore New Courses */}
-            {allCourses.length > enrolledCourses.length && (
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Explore New Courses</CardTitle>
-                        <CardDescription>
-                            Discover new skills and expand your knowledge
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {allCourses
-                                .filter(course => !enrolledCourses.some(enrolled => enrolled.id === course.id))
-                                .slice(0, 6)
-                                .map((course) => (
-                                    <Card key={course.id} className="hover:shadow-md transition-shadow">
-                                        <CardHeader className="pb-3">
-                                            <Badge variant="secondary" className="text-xs w-fit">
-                                                {course.category.replace('_', ' ')}
-                                            </Badge>
-                                            <CardTitle className="text-lg">{course.title}</CardTitle>
-                                            <CardDescription className="text-sm line-clamp-2">
-                                                {course.description}
-                                            </CardDescription>
-                                        </CardHeader>
-                                        <CardContent className="pt-0">
-                                            <div className="flex items-center justify-between">
-                                                <div className="text-sm text-muted-foreground">
-                                                    {course._count.projects} projects • {course._count.enrollments} students
-                                                </div>
-                                                <Link href={`/lms/courses/${course.id}`}>
-                                                    <Button size="sm" variant="outline">
-                                                        View Course
-                                                    </Button>
-                                                </Link>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                ))}
-                        </div>
-                        {allCourses.length - enrolledCourses.length > 6 && (
-                            <div className="mt-4 text-center">
-                                <Link href="/lms/courses">
-                                    <Button variant="outline">
-                                        View All Courses ({allCourses.length - enrolledCourses.length} total)
+                return (
+                    <Card key={trackSlug}>
+                        <CardHeader>
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <CardTitle className="flex items-center gap-2">
+                                        <BookOpen className="h-5 w-5" />
+                                        {info.name}
+                                    </CardTitle>
+                                    <CardDescription>
+                                        {enrolledInTrack.length} enrolled • {availableInTrack.length} available
+                                    </CardDescription>
+                                </div>
+                                <Link href={`/learning/${trackSlug}`}>
+                                    <Button variant="outline" size="sm">
+                                        View Track
                                     </Button>
                                 </Link>
                             </div>
-                        )}
-                    </CardContent>
-                </Card>
-            )}
+                        </CardHeader>
+                        <CardContent>
+                            {/* Enrolled Courses in Track */}
+                            {enrolledInTrack.length > 0 && (
+                                <div className="mb-6">
+                                    <h4 className="font-medium mb-3 text-sm text-muted-foreground">YOUR COURSES</h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {enrolledInTrack.map((course) => {
+                                            const progress = calculateCourseProgress(course);
+                                            const nextLesson = course.projects
+                                                .flatMap(project => project.lessons)
+                                                .find(lesson =>
+                                                    !lesson.progress.some(p => p.status === 'COMPLETED')
+                                                );
+
+                                            return (
+                                                <Card key={course.id} className="hover:shadow-md transition-shadow">
+                                                    <CardHeader className="pb-3">
+                                                        <div className="flex items-start justify-between">
+                                                            <Badge variant="default" className="text-xs">
+                                                                Enrolled
+                                                            </Badge>
+                                                            <div className="text-right">
+                                                                <div className="text-sm font-medium">{progress}%</div>
+                                                                <Progress value={progress} className="w-16 h-1 mt-1" />
+                                                            </div>
+                                                        </div>
+                                                        <CardTitle className="text-lg">{course.title}</CardTitle>
+                                                        <CardDescription className="text-sm line-clamp-2">
+                                                            {course.description}
+                                                        </CardDescription>
+                                                    </CardHeader>
+                                                    <CardContent className="pt-0">
+                                                        <div className="flex items-center justify-between">
+                                                            <div className="text-sm text-muted-foreground">
+                                                                {course._count.projects} projects
+                                                            </div>
+                                                            {nextLesson ? (
+                                                                <Link href={`/lms/lessons/${nextLesson.id}`}>
+                                                                    <Button size="sm">Continue</Button>
+                                                                </Link>
+                                                            ) : (
+                                                                <Link href={`/lms/courses/${course.id}`}>
+                                                                    <Button size="sm" variant="outline">
+                                                                        <Award className="h-4 w-4 mr-1" />
+                                                                        Complete
+                                                                    </Button>
+                                                                </Link>
+                                                            )}
+                                                        </div>
+                                                    </CardContent>
+                                                </Card>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Available Courses in Track */}
+                            {availableInTrack.length > 0 && (
+                                <div>
+                                    <h4 className="font-medium mb-3 text-sm text-muted-foreground">AVAILABLE COURSES</h4>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {availableInTrack.slice(0, 3).map((course) => (
+                                            <Card key={course.id} className="hover:shadow-md transition-shadow">
+                                                <CardHeader className="pb-3">
+                                                    <Badge variant="secondary" className="text-xs w-fit">
+                                                        {course._count.enrollments} students
+                                                    </Badge>
+                                                    <CardTitle className="text-lg">{course.title}</CardTitle>
+                                                    <CardDescription className="text-sm line-clamp-2">
+                                                        {course.description}
+                                                    </CardDescription>
+                                                </CardHeader>
+                                                <CardContent className="pt-0">
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="text-sm text-muted-foreground">
+                                                            {course._count.projects} projects
+                                                        </div>
+                                                        <Link href={`/lms/courses/${course.id}`}>
+                                                            <Button size="sm" variant="outline">
+                                                                View Course
+                                                            </Button>
+                                                        </Link>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        ))}
+                                    </div>
+                                    {availableInTrack.length > 3 && (
+                                        <div className="mt-4">
+                                            <Link href={`/learning/${trackSlug}`}>
+                                                <Button variant="ghost" size="sm">
+                                                    View {availableInTrack.length - 3} more courses →
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                );
+            })}
 
             {/* Getting Started */}
             {enrolledCourses.length === 0 && (
@@ -268,10 +313,10 @@ export function LMSDashboard({ user, enrolledCourses, allCourses }: LMSDashboard
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Calendar className="h-5 w-5" />
-                            Get Started
+                            Get Started with Structured Learning
                         </CardTitle>
                         <CardDescription>
-                            Welcome to the Learning Management System! Here's how to begin your journey.
+                            Choose a learning track to begin your educational journey with guided courses and projects.
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -281,9 +326,9 @@ export function LMSDashboard({ user, enrolledCourses, allCourses }: LMSDashboard
                                     1
                                 </div>
                                 <div>
-                                    <h4 className="font-medium">Browse Available Courses</h4>
+                                    <h4 className="font-medium">Choose a Learning Track</h4>
                                     <p className="text-sm text-muted-foreground">
-                                        Explore our course catalog and find subjects that interest you.
+                                        Start with Web Development, Data Science, or Career Services.
                                     </p>
                                 </div>
                             </div>
@@ -294,7 +339,7 @@ export function LMSDashboard({ user, enrolledCourses, allCourses }: LMSDashboard
                                 <div>
                                     <h4 className="font-medium">Enroll in Courses</h4>
                                     <p className="text-sm text-muted-foreground">
-                                        Click on any course to view details and enroll.
+                                        Join structured courses with projects and assessments.
                                     </p>
                                 </div>
                             </div>
@@ -303,18 +348,23 @@ export function LMSDashboard({ user, enrolledCourses, allCourses }: LMSDashboard
                                     3
                                 </div>
                                 <div>
-                                    <h4 className="font-medium">Start Learning</h4>
+                                    <h4 className="font-medium">Track Your Progress</h4>
                                     <p className="text-sm text-muted-foreground">
-                                        Work through lessons at your own pace and track your progress.
+                                        Monitor your advancement and earn certificates.
                                     </p>
                                 </div>
                             </div>
                         </div>
-                        <div className="mt-6">
-                            <Link href="/lms/courses">
+                        <div className="mt-6 flex gap-3">
+                            <Link href="/learning">
                                 <Button>
                                     <BookOpen className="h-4 w-4 mr-2" />
-                                    Browse Courses
+                                    Explore Learning Tracks
+                                </Button>
+                            </Link>
+                            <Link href="/lms/courses">
+                                <Button variant="outline">
+                                    Browse All Courses
                                 </Button>
                             </Link>
                         </div>

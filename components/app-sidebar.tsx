@@ -34,7 +34,6 @@ import { NavUser } from './nav-user';
 
 const data = {
   navMain: [
-
     {
       title: 'Dashboard',
       url: '/',
@@ -56,7 +55,7 @@ const data = {
       ],
     },
     {
-      title: 'My Learning',
+      title: 'Learning',
       url: '/learning',
       icon: Book,
       items: [
@@ -77,8 +76,8 @@ const data = {
           url: '/learning/career',
         },
         {
-          title: 'All Materials',
-          url: '/docs?type=COURSE_MATERIAL',
+          title: 'Course Management',
+          url: '/lms',
         },
       ],
     },
@@ -103,18 +102,6 @@ const data = {
           title: 'Alumni',
           url: '/community/alumni',
         },
-        // {
-        //   title: 'Showcase',
-        //   url: '/community/showcase',
-        // },
-        // {
-        //   title: 'Events',
-        //   url: '/community/events',
-        // },
-        // {
-        //   title: 'Study Groups',
-        //   url: '/community/groups',
-        // },
       ],
     },
     {
@@ -127,8 +114,8 @@ const data = {
           url: '/career/jobs',
         },
         {
-          title: 'Alumni Network',
-          url: '/career/alumni',
+          title: 'Post a Job',
+          url: '/career/jobs/post',
         },
         {
           title: 'Portfolio',

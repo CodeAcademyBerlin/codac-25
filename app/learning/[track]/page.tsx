@@ -1,11 +1,13 @@
-import { BookOpen, Clock, ChevronRight, FileText, Folder } from "lucide-react";
+import { BookOpen, Clock, ChevronRight, FileText, Folder, GraduationCap, Users } from "lucide-react";
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { getDocsHierarchy } from '@/data/docs/docs-hierarchy';
+import { getCourses } from '@/data/lms/courses';
 import { getTrackProgress } from '@/data/tracks';
 
 interface TreeNode {
@@ -16,8 +18,6 @@ interface TreeNode {
   children?: TreeNode[];
   isExpanded?: boolean;
 }
-
-
 
 function findTrackContent(nodes: TreeNode[], trackName: string): TreeNode | null {
   for (const node of nodes) {
@@ -56,6 +56,13 @@ function renderContentTree(nodes: TreeNode[], level = 0): React.ReactNode {
   ));
 }
 
+// Map track slugs to course categories
+const trackCategoryMap = {
+  'web': 'WEB_DEVELOPMENT',
+  'data': 'DATA_SCIENCE',
+  'career': 'CAREER_DEVELOPMENT'
+};
+
 export default async function TrackPage({ params }: { params: Promise<{ track: string }> }) {
   const { track } = await params;
 
@@ -65,13 +72,19 @@ export default async function TrackPage({ params }: { params: Promise<{ track: s
   }
 
   const trackInfo = await getTrackProgress(track);
+
   if (!trackInfo) {
     notFound();
   }
 
-  const hierarchy = await getDocsHierarchy('COURSE_MATERIAL');
+  // Get courses for this track
+  const allCourses = await getCourses();
+  const trackCourses = allCourses.filter(course =>
+    course.category === trackCategoryMap[track as keyof typeof trackCategoryMap]
+  );
 
-  // Find the specific track content in the hierarchy
+  // Get document hierarchy
+  const hierarchy = await getDocsHierarchy('COURSE_MATERIAL');
   const trackContent = findTrackContent(hierarchy, track);
 
   return (
@@ -124,14 +137,67 @@ export default async function TrackPage({ params }: { params: Promise<{ track: s
         </CardContent>
       </Card>
 
-      {/* Course Content */}
+      {/* Courses and Content */}
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-6">
+          {/* Available Courses */}
+          {trackCourses.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <GraduationCap className="h-5 w-5" />
+                  Structured Courses
+                </CardTitle>
+                <CardDescription>
+                  Enroll in courses to get guided learning with projects and assessments
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {trackCourses.map((course) => (
+                    <Card key={course.id} className="hover:shadow-md transition-shadow">
+                      <CardHeader className="pb-3">
+                        <div className="flex items-start justify-between">
+                          <Badge variant="outline" className="text-xs">
+                            {course.category.replace('_', ' ')}
+                          </Badge>
+                          <Badge variant="secondary" className="text-xs">
+                            {course._count.enrollments} enrolled
+                          </Badge>
+                        </div>
+                        <CardTitle className="text-lg">{course.title}</CardTitle>
+                        <CardDescription className="text-sm line-clamp-2">
+                          {course.description}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <div className="flex items-center justify-between">
+                          <div className="text-sm text-muted-foreground">
+                            {course._count.projects} projects
+                          </div>
+                          <Link href={`/lms/courses/${course.id}`}>
+                            <Button size="sm">
+                              {course.enrollments && course.enrollments.length > 0 ? 'Continue' : 'Enroll'}
+                            </Button>
+                          </Link>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Learning Materials */}
           <Card>
             <CardHeader>
-              <CardTitle>Course Content</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen className="h-5 w-5" />
+                Learning Materials
+              </CardTitle>
               <CardDescription>
-                Navigate through modules, projects, and lessons
+                Additional resources, documentation, and reference materials
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -141,11 +207,11 @@ export default async function TrackPage({ params }: { params: Promise<{ track: s
                 </div>
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
-                  <BookOpen className="h-12 w-12 mx-auto mb-4" />
-                  <p>No content available for this track yet.</p>
+                  <FileText className="h-12 w-12 mx-auto mb-4" />
+                  <p>No additional materials available for this track yet.</p>
                   <Link
                     href="/docs?type=COURSE_MATERIAL"
-                    className="text-primary hover:underline"
+                    className="text-primary hover:underline mt-2 inline-block"
                   >
                     Browse all course materials
                   </Link>
@@ -163,38 +229,53 @@ export default async function TrackPage({ params }: { params: Promise<{ track: s
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Link
-                href={trackContent ? `/docs/${trackContent.id}` : '/docs'}
-                className="w-full inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3"
-              >
-                Continue Learning
-              </Link>
-              <Link
-                href="/community/discussions"
-                className="w-full inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3"
-              >
-                Join Discussion
+              {trackCourses.length > 0 ? (
+                <Link href={`/lms/courses/${trackCourses[0].id}`}>
+                  <Button className="w-full">
+                    {trackCourses[0].enrollments && trackCourses[0].enrollments.length > 0 ? 'Continue Course' : 'Start First Course'}
+                  </Button>
+                </Link>
+              ) : (
+                <Link href="/lms">
+                  <Button className="w-full">
+                    Browse All Courses
+                  </Button>
+                </Link>
+              )}
+              <Link href="/community">
+                <Button variant="outline" className="w-full">
+                  Join Community
+                </Button>
               </Link>
             </CardContent>
           </Card>
 
-          {/* Resources */}
+          {/* Track Info */}
           <Card>
             <CardHeader>
-              <CardTitle>Resources</CardTitle>
+              <CardTitle>Track Details</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
+            <CardContent className="space-y-3">
               <div className="text-sm space-y-1">
-                <p className="font-medium">Study Materials</p>
-                <p className="text-muted-foreground">Documentation, guides, and references</p>
+                <p className="font-medium flex items-center gap-2">
+                  <Users className="h-4 w-4" />
+                  Community
+                </p>
+                <p className="text-muted-foreground">Connect with fellow learners</p>
               </div>
               <div className="text-sm space-y-1">
-                <p className="font-medium">Community</p>
-                <p className="text-muted-foreground">Connect with fellow students</p>
+                <p className="font-medium flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  Estimated Time
+                </p>
+                <p className="text-muted-foreground">{trackInfo.estimatedTime} to complete</p>
               </div>
               <div className="text-sm space-y-1">
-                <p className="font-medium">Mentorship</p>
-                <p className="text-muted-foreground">Get help from experienced developers</p>
+                <p className="font-medium flex items-center gap-2">
+                  <GraduationCap className="h-4 w-4" />
+                  Certification
+                </p>
+                <p className="text-muted-foreground">Earn certificates upon completion</p>
               </div>
             </CardContent>
           </Card>
