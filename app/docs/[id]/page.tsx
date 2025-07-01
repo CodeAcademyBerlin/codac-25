@@ -1,6 +1,6 @@
 import { Value } from "platejs";
 
-import { PlateAutoSaveEditor } from "@/components/editor/plate-provider";
+import { UnifiedEditor } from "@/components/editor/unified-editor";
 import { getDoc } from "@/data/docs/docs";
 
 export default async function DocPage({ params }: { params: Promise<{ id: string }> }) {
@@ -9,7 +9,13 @@ export default async function DocPage({ params }: { params: Promise<{ id: string
 
   return (
     <div className="h-full w-full">
-      <PlateAutoSaveEditor docId={id} initialValue={doc?.content as Value} />
+      <UnifiedEditor
+        contentId={id}
+        contentType="document"
+        initialValue={doc?.content as Value}
+        showStatusBar={true}
+        canEdit={true}
+      />
     </div>
   );
 }

@@ -2,10 +2,10 @@
 import { AlertCircle, CheckCircle2, Cloud, CloudOff, Save } from "lucide-react";
 import { Value } from "platejs";
 import { PlateController, useEditorRef, useEditorSelector } from "platejs/react";
-import { createContext, useContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import * as React from "react";
+import React, { createContext, useContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { updateDoc } from "@/actions/doc/update-doc";
+import { updateLessonContent } from "@/actions/lms/update-lesson";
 import { Button } from "@/components/ui/button";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useHasActiveUploads } from "@/hooks/use-upload-file";
@@ -21,7 +21,6 @@ interface SaveStatus {
     hasUnsavedChanges: boolean;
 }
 
-// Context for save functionality
 interface SaveContextValue {
     triggerSave: () => Promise<void>;
     saveStatus: SaveStatus;
@@ -32,7 +31,6 @@ const SaveContext = createContext<SaveContextValue | null>(null);
 export const useSave = () => {
     const context = useContext(SaveContext);
     if (!context) {
-        // Provide a fallback when context is not available
         return {
             triggerSave: async () => {
                 console.warn('Save context not available - save operation skipped');
@@ -103,98 +101,95 @@ const SaveStatusIndicator = React.memo(function SaveStatusIndicator({
                 disabled={status.status === 'saving'}
             >
                 <Save className="h-4 w-4 mr-1" />
-                Save
+                Save Now
             </Button>
         </div>
     );
 });
 
-export const PlateRefEditor = React.memo(function PlateRefEditor({
-    docId,
-    initialValue,
-    showStatusBar = false
-}: {
-    docId: string;
+interface UnifiedEditorProps {
     initialValue: Value;
+    contentId: string;
+    contentType: 'document' | 'lesson';
     showStatusBar?: boolean;
-}) {
+    canEdit?: boolean;
+    readOnly?: boolean;
+    children?: React.ReactNode;
+}
+
+export const UnifiedEditor = React.memo(function UnifiedEditor({
+    initialValue,
+    contentId,
+    contentType,
+    showStatusBar = false,
+    canEdit = false,
+    readOnly,
+    children
+}: UnifiedEditorProps) {
+    const isReadOnly = readOnly ?? !canEdit;
+
     return (
         <PlateController>
             <div className="h-full flex flex-col">
-                <PlateEditor initialValue={initialValue}>
-                    <PlateStateUpdater docId={docId} showStatusBar={showStatusBar} initialValue={initialValue} />
+                <PlateEditor initialValue={initialValue} readOnly={isReadOnly}>
+                    {children}
+                    <UnifiedStateUpdater
+                        contentId={contentId}
+                        contentType={contentType}
+                        showStatusBar={showStatusBar}
+                        initialValue={initialValue}
+                        canEdit={canEdit}
+                    />
                 </PlateEditor>
             </div>
         </PlateController>
-    )
+    );
 });
 
-export const PlateAutoSaveEditor = React.memo(function PlateAutoSaveEditor({
-    docId,
-    initialValue
-}: {
-    docId: string;
-    initialValue: Value;
-}) {
-    return (
-        <PlateController>
-            <div className="h-full w-full flex flex-col">
-                <PlateEditor initialValue={initialValue}>
-                    <PlateStateUpdater docId={docId} showStatusBar={true} initialValue={initialValue} />
-                </PlateEditor>
-            </div>
-        </PlateController>
-    )
-});
-
-const PlateStateUpdater = React.memo(function PlateStateUpdater({
-    docId,
+const UnifiedStateUpdater = React.memo(function UnifiedStateUpdater({
+    contentId,
+    contentType,
     showStatusBar = false,
-    initialValue
+    initialValue,
+    canEdit = false
 }: {
-    docId: string;
+    contentId: string;
+    contentType: 'document' | 'lesson';
     showStatusBar?: boolean;
     initialValue?: Value;
+    canEdit?: boolean;
 }) {
     const editor = useEditorRef();
-    const hasSelection = useEditorSelector((editor) => !!editor?.selection, []);
     const hasActiveUploads = useHasActiveUploads();
 
-    // Track only the editor content (children), not the entire state
     const editorContent = useEditorSelector((editor) => editor?.children, []);
 
-    // Save status state
     const [saveStatus, setSaveStatus] = useState<SaveStatus>({
         status: 'idle',
         hasUnsavedChanges: false,
     });
 
-    // Debounce only the content changes, not all editor state changes
     const debouncedContent = useDebounce(editorContent, 5000);
 
-    // Keep track of save status
     const isSavingRef = useRef(false);
     const lastSavedContentRef = useRef<Value | null>(initialValue || null);
     const hasInitializedRef = useRef(false);
 
-    // Save to database function
     const saveToDatabase = useCallback(async (content: Value, isManual = false) => {
-        if (isSavingRef.current || !content || !editor?.children) {
+        if (!canEdit || isSavingRef.current || !content || !editor?.children) {
             return;
         }
 
-        // Prevent autosave when uploads are in progress (but allow manual saves)
         if (!isManual && hasActiveUploads) {
             logger.debug('Skipping autosave due to active uploads', {
                 action: 'autosave_skipped',
-                resource: 'document',
-                resourceId: docId,
+                resource: contentType,
+                resourceId: contentId,
                 metadata: { hasActiveUploads }
             });
             return;
         }
 
-        // Check if content has actually changed (skip for manual saves)
         if (!isManual && JSON.stringify(content) === JSON.stringify(lastSavedContentRef.current)) {
             return;
         }
@@ -203,10 +198,12 @@ const PlateStateUpdater = React.memo(function PlateStateUpdater({
         setSaveStatus(prev => ({ ...prev, status: 'saving' }));
 
         try {
-            const result = await updateDoc({
-                id: docId,
-                content: content,
-            });
+            let result;
+            if (contentType === 'lesson') {
+                result = await updateLessonContent(contentId, content);
+            } else {
+                result = await updateDoc({ id: contentId, content: content });
+            }
 
             if (result.success) {
                 lastSavedContentRef.current = content;
@@ -216,79 +213,74 @@ const PlateStateUpdater = React.memo(function PlateStateUpdater({
                     hasUnsavedChanges: false,
                 });
 
-                logger.info('Document auto-saved successfully', {
-                    action: 'document_autosave',
-                    resource: 'document',
-                    resourceId: docId,
+                logger.info(`${contentType} auto-saved successfully`, {
+                    action: `${contentType}_autosave`,
+                    resource: contentType,
+                    resourceId: contentId,
                     metadata: { isManual, contentLength: JSON.stringify(content).length }
                 });
             } else {
-                // Handle both string and ZodIssue array errors
-                const errorMessage = Array.isArray(result.error)
-                    ? result.error.map(err => err.message).join(', ')
-                    : result.error || 'Failed to save document';
-                throw new Error(errorMessage);
+                throw new Error(result.error || `Failed to save ${contentType}`);
             }
         } catch (error) {
-            setSaveStatus(prev => ({
-                ...prev,
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+            setSaveStatus({
                 status: 'error',
-                error: error instanceof Error ? error.message : 'Unknown error'
-            }));
+                error: errorMessage,
+                hasUnsavedChanges: true,
+            });
 
-            logger.error('Error saving editor content', error instanceof Error ? error : new Error(String(error)), {
-                action: isManual ? 'manual_save' : 'auto_save',
-                resource: 'document',
-                resourceId: docId
+            logger.error(`${contentType} auto-save failed`, error instanceof Error ? error : new Error(String(error)), {
+                action: `${contentType}_autosave`,
+                resource: contentType,
+                resourceId: contentId,
+                metadata: { isManual }
             });
         } finally {
             isSavingRef.current = false;
         }
-    }, [docId, editor, hasSelection, hasActiveUploads]);
+    }, [contentId, contentType, canEdit, editor, hasActiveUploads]);
 
-    // Manual save function
-    const handleManualSave = useCallback(async () => {
-        if (editorContent) {
-            await saveToDatabase(editorContent as Value, true);
+    const triggerManualSave = useCallback(async () => {
+        if (editor?.children) {
+            await saveToDatabase(editor.children, true);
         }
-    }, [editorContent, saveToDatabase]);
+    }, [editor, saveToDatabase]);
 
-    // Initialize the saved content reference when editor first loads
     useEffect(() => {
-        if (!hasInitializedRef.current && editorContent && initialValue) {
-            lastSavedContentRef.current = initialValue;
+        if (!canEdit || !hasInitializedRef.current) {
             hasInitializedRef.current = true;
+            return;
         }
-    }, [editorContent, initialValue]);
 
-    // Save when debounced content changes
-    useEffect(() => {
-        if (debouncedContent && debouncedContent.length > 0 && hasInitializedRef.current) {
-            saveToDatabase(debouncedContent as Value);
+        if (debouncedContent) {
+            saveToDatabase(debouncedContent, false);
         }
-    }, [debouncedContent, saveToDatabase]);
+    }, [debouncedContent, saveToDatabase, canEdit]);
 
-    // Track unsaved changes
     useEffect(() => {
-        if (!editorContent) return;
+        if (!canEdit || !editorContent) return;
 
         const hasChanges = JSON.stringify(editorContent) !== JSON.stringify(lastSavedContentRef.current);
         setSaveStatus(prev => ({
             ...prev,
             hasUnsavedChanges: hasChanges && prev.status !== 'saving'
         }));
-    }, [editorContent]);
+    }, [editorContent, canEdit]);
 
     const saveContextValue: SaveContextValue = useMemo(() => ({
-        triggerSave: handleManualSave,
+        triggerSave: triggerManualSave,
         saveStatus,
-    }), [handleManualSave, saveStatus]);
+    }), [triggerManualSave, saveStatus]);
 
     return (
         <SaveContext.Provider value={saveContextValue}>
-            {showStatusBar && (
-                <SaveStatusIndicator status={saveStatus} onManualSave={handleManualSave} />
+            {showStatusBar && canEdit && (
+                <SaveStatusIndicator status={saveStatus} onManualSave={triggerManualSave} />
             )}
         </SaveContext.Provider>
     );
 });
+
+// Export the save context for use in toolbars
+export { SaveContext }; 

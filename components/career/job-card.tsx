@@ -1,19 +1,19 @@
-import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
-import { 
-  MapPin, 
-  Building2, 
-  Clock, 
-  DollarSign, 
+import {
+  MapPin,
+  Building2,
+  Clock,
+  DollarSign,
   Users,
   Star,
   ExternalLink
 } from 'lucide-react'
+import Link from 'next/link'
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 interface JobCardProps {
   job: {
@@ -26,8 +26,8 @@ interface JobCardProps {
     level: string
     salary: string | null
     remote: boolean
-    skills: any
-    benefits: any
+    skills: string[] | null
+    benefits: string[] | null
     featured: boolean
     createdAt: Date
     postedBy: {
@@ -43,8 +43,8 @@ interface JobCardProps {
 }
 
 export function JobCard({ job }: JobCardProps) {
-  const skills = Array.isArray(job.skills) ? job.skills : []
-  const benefits = Array.isArray(job.benefits) ? job.benefits : []
+  const skills = job.skills || []
+  const benefits = job.benefits || []
 
   return (
     <Card className={`relative ${job.featured ? 'border-primary shadow-md' : ''}`}>
@@ -56,7 +56,7 @@ export function JobCard({ job }: JobCardProps) {
           </Badge>
         </div>
       )}
-      
+
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex-1">
@@ -65,26 +65,26 @@ export function JobCard({ job }: JobCardProps) {
               <Badge variant="outline">{job.type.replace('_', ' ')}</Badge>
               <Badge variant="secondary">{job.level}</Badge>
             </div>
-            
+
             <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
               <div className="flex items-center gap-1">
                 <Building2 className="h-4 w-4" />
                 {job.company}
               </div>
-              
+
               {job.location && (
                 <div className="flex items-center gap-1">
                   <MapPin className="h-4 w-4" />
                   {job.location}
                 </div>
               )}
-              
+
               {job.remote && (
                 <Badge variant="outline" className="text-xs">
                   Remote
                 </Badge>
               )}
-              
+
               <div className="flex items-center gap-1">
                 <Clock className="h-4 w-4" />
                 {formatDistanceToNow(job.createdAt, { addSuffix: true })}
@@ -169,7 +169,7 @@ export function JobCard({ job }: JobCardProps) {
               View Details
             </Link>
           </Button>
-          
+
           <Button size="sm" asChild>
             <Link href={`/career/jobs/${job.id}/apply`}>
               <ExternalLink className="h-4 w-4 mr-1" />

@@ -1,6 +1,5 @@
 'use client';
 
-
 import {
   BoldIcon,
   Code2Icon,
@@ -17,6 +16,7 @@ import * as React from 'react';
 import { InlineEquationToolbarButton } from './equation-toolbar-button';
 import { LinkToolbarButton } from './link-toolbar-button';
 import { MarkToolbarButton } from './mark-toolbar-button';
+import { ModeToolbarButton } from './mode-toolbar-button';
 import { MoreToolbarButton } from './more-toolbar-button';
 import { SuggestionToolbarButton } from './suggestion-toolbar-button';
 import { ToolbarGroup } from './toolbar';
@@ -69,13 +69,17 @@ export function FloatingToolbarButtons() {
 
             <LinkToolbarButton />
           </ToolbarGroup>
+
+          <ToolbarGroup>
+            <MoreToolbarButton />
+          </ToolbarGroup>
         </>
       )}
 
+      {/* Always show mode switcher and suggestions - even in read-only mode */}
       <ToolbarGroup>
         <SuggestionToolbarButton />
-
-        {!readOnly && <MoreToolbarButton />}
+        <ModeToolbarButton />
       </ToolbarGroup>
     </>
   );

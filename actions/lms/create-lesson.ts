@@ -10,7 +10,7 @@ export interface CreateLessonData {
     title: string;
     description?: string;
     content?: any; // JSON content for the Plate editor
-    type?: 'TEXT' | 'VIDEO' | 'INTERACTIVE' | 'ASSIGNMENT' | 'QUIZ';
+    type?: 'TEXT' | 'VIDEO' | 'INTERACTIVE' | 'QUIZ' | 'EXERCISE';
     duration?: number;
     isPublished?: boolean;
     projectId: string;
@@ -72,7 +72,7 @@ export async function createLesson(data: CreateLessonData) {
             resource: 'lesson',
             resourceId: lesson.id,
             userId: user.id,
-            metadata: { 
+            metadata: {
                 title: lesson.title,
                 projectId: data.projectId,
                 courseId: project.courseId,
@@ -115,10 +115,10 @@ export async function updateLessonDetails(id: string, data: Partial<CreateLesson
 
         const existingLesson = await prisma.lesson.findUnique({
             where: { id },
-            include: { 
-                project: { 
-                    include: { course: true } 
-                } 
+            include: {
+                project: {
+                    include: { course: true }
+                }
             }
         });
 
@@ -130,7 +130,7 @@ export async function updateLessonDetails(id: string, data: Partial<CreateLesson
         }
 
         const updateData: any = {};
-        
+
         if (data.title !== undefined) {
             if (!data.title.trim()) {
                 return {
@@ -140,11 +140,11 @@ export async function updateLessonDetails(id: string, data: Partial<CreateLesson
             }
             updateData.title = data.title.trim();
         }
-        
+
         if (data.description !== undefined) {
             updateData.description = data.description?.trim();
         }
-        
+
         if (data.type !== undefined) updateData.type = data.type;
         if (data.duration !== undefined) updateData.duration = data.duration;
         if (data.isPublished !== undefined) updateData.isPublished = data.isPublished;
@@ -159,7 +159,7 @@ export async function updateLessonDetails(id: string, data: Partial<CreateLesson
             resource: 'lesson',
             resourceId: lesson.id,
             userId: user.id,
-            metadata: { 
+            metadata: {
                 title: lesson.title,
                 projectId: existingLesson.projectId,
                 courseId: existingLesson.project.courseId,
@@ -235,7 +235,7 @@ export async function deleteLesson(id: string) {
             resource: 'lesson',
             resourceId: id,
             userId: user.id,
-            metadata: { 
+            metadata: {
                 title: lesson.title,
                 projectId: lesson.projectId,
                 courseId: lesson.project.courseId,

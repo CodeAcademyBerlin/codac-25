@@ -1,11 +1,10 @@
+import { Plus, BookOpen, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { Plus, BookOpen, Settings } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-
 import { prisma } from '@/lib/db';
 
 async function CoursesContent() {

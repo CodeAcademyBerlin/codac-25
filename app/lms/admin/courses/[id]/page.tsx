@@ -1,15 +1,15 @@
-import { notFound } from 'next/navigation';
+import { Settings, BookOpen, Users } from 'lucide-react';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Plus, Settings, BookOpen, Users, Trash2 } from 'lucide-react';
-import { prisma } from '@/lib/db';
+import { CourseEnrollmentsManager } from '@/components/lms/course-enrollments-manager';
 import { CourseForm } from '@/components/lms/course-form';
 import { CourseProjectsManager } from '@/components/lms/course-projects-manager';
-import { CourseEnrollmentsManager } from '@/components/lms/course-enrollments-manager';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { prisma } from '@/lib/db';
 
 async function CourseManagementContent({ id }: { id: string }) {
     const course = await prisma.course.findUnique({
@@ -88,7 +88,7 @@ async function CourseManagementContent({ id }: { id: string }) {
                         <div className="text-2xl font-bold">{course._count.projects}</div>
                     </CardContent>
                 </Card>
-                
+
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Lessons</CardTitle>
@@ -142,7 +142,7 @@ async function CourseManagementContent({ id }: { id: string }) {
 
 export default async function CourseManagementPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    
+
     return (
         <Suspense fallback={<div>Loading course management...</div>}>
             <CourseManagementContent id={id} />

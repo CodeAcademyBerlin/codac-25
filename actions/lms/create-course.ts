@@ -9,7 +9,7 @@ import { logger } from '@/lib/logger';
 export interface CreateCourseData {
     title: string;
     description: string;
-    category: 'FRONTEND' | 'BACKEND' | 'FULLSTACK' | 'DATA_SCIENCE' | 'DEVOPS' | 'MOBILE' | 'DESIGN' | 'AI_ML' | 'BLOCKCHAIN';
+    category: 'WEB_DEVELOPMENT' | 'DATA_SCIENCE' | 'UX_UI_DESIGN' | 'DIGITAL_MARKETING' | 'CAREER_DEVELOPMENT' | 'SOFT_SKILLS';
     thumbnail?: string;
     duration?: number;
     isPublished?: boolean;
@@ -63,7 +63,7 @@ export async function createCourse(data: CreateCourseData) {
             resource: 'course',
             resourceId: course.id,
             userId: user.id,
-            metadata: { 
+            metadata: {
                 title: course.title,
                 category: course.category,
                 isPublished: course.isPublished
@@ -112,7 +112,7 @@ export async function updateCourse(id: string, data: Partial<CreateCourseData>) 
         }
 
         const updateData: any = {};
-        
+
         if (data.title !== undefined) {
             if (!data.title.trim()) {
                 return {
@@ -122,7 +122,7 @@ export async function updateCourse(id: string, data: Partial<CreateCourseData>) 
             }
             updateData.title = data.title.trim();
         }
-        
+
         if (data.description !== undefined) {
             if (!data.description.trim()) {
                 return {
@@ -132,7 +132,7 @@ export async function updateCourse(id: string, data: Partial<CreateCourseData>) 
             }
             updateData.description = data.description.trim();
         }
-        
+
         if (data.category !== undefined) updateData.category = data.category;
         if (data.thumbnail !== undefined) updateData.thumbnail = data.thumbnail;
         if (data.duration !== undefined) updateData.duration = data.duration;
@@ -148,7 +148,7 @@ export async function updateCourse(id: string, data: Partial<CreateCourseData>) 
             resource: 'course',
             resourceId: course.id,
             userId: user.id,
-            metadata: { 
+            metadata: {
                 title: course.title,
                 changes: Object.keys(updateData)
             }

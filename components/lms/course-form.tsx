@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
+import { createCourse, updateCourse, CreateCourseData } from '@/actions/lms/create-course';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import {
     Select,
     SelectContent,
@@ -16,8 +16,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { createCourse, updateCourse, CreateCourseData } from '@/actions/lms/create-course';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 
 interface Course {
     id: string;
@@ -35,15 +35,12 @@ interface CourseFormProps {
 }
 
 const courseCategories = [
-    { value: 'FRONTEND', label: 'Frontend Development' },
-    { value: 'BACKEND', label: 'Backend Development' },
-    { value: 'FULLSTACK', label: 'Full Stack Development' },
+    { value: 'WEB_DEVELOPMENT', label: 'Web Development' },
     { value: 'DATA_SCIENCE', label: 'Data Science' },
-    { value: 'DEVOPS', label: 'DevOps' },
-    { value: 'MOBILE', label: 'Mobile Development' },
-    { value: 'DESIGN', label: 'Design' },
-    { value: 'AI_ML', label: 'AI & Machine Learning' },
-    { value: 'BLOCKCHAIN', label: 'Blockchain' },
+    { value: 'UX_UI_DESIGN', label: 'UX/UI Design' },
+    { value: 'DIGITAL_MARKETING', label: 'Digital Marketing' },
+    { value: 'CAREER_DEVELOPMENT', label: 'Career Development' },
+    { value: 'SOFT_SKILLS', label: 'Soft Skills' },
 ];
 
 export function CourseForm({ course, mode }: CourseFormProps) {
@@ -83,14 +80,16 @@ export function CourseForm({ course, mode }: CourseFormProps) {
             if (result.success) {
                 toast.success(result.message);
                 if (mode === 'create') {
-                    router.push(`/lms/admin/courses/${result.data.id}`);
+                    if (result.data) {
+                        router.push(`/lms/admin/courses/${result.data.id}`);
+                    }
                 } else {
                     router.refresh();
                 }
             } else {
                 toast.error(result.error);
             }
-        } catch (error) {
+        } catch {
             toast.error('An unexpected error occurred');
         } finally {
             setIsLoading(false);
@@ -111,7 +110,7 @@ export function CourseForm({ course, mode }: CourseFormProps) {
                     {mode === 'create' ? 'Create New Course' : 'Edit Course'}
                 </CardTitle>
                 <CardDescription>
-                    {mode === 'create' 
+                    {mode === 'create'
                         ? 'Fill in the details to create a new course'
                         : 'Update the course information'
                     }
@@ -144,8 +143,8 @@ export function CourseForm({ course, mode }: CourseFormProps) {
 
                     <div className="space-y-2">
                         <Label htmlFor="category">Category</Label>
-                        <Select 
-                            value={formData.category} 
+                        <Select
+                            value={formData.category}
                             onValueChange={(value) => handleInputChange('category', value)}
                         >
                             <SelectTrigger>
@@ -193,8 +192,8 @@ export function CourseForm({ course, mode }: CourseFormProps) {
                         />
                         <Label htmlFor="isPublished">Published</Label>
                         <span className="text-sm text-muted-foreground">
-                            {formData.isPublished 
-                                ? 'Course is visible to students' 
+                            {formData.isPublished
+                                ? 'Course is visible to students'
                                 : 'Course is hidden from students'
                             }
                         </span>
@@ -202,14 +201,14 @@ export function CourseForm({ course, mode }: CourseFormProps) {
 
                     <div className="flex space-x-3">
                         <Button type="submit" disabled={isLoading}>
-                            {isLoading 
+                            {isLoading
                                 ? (mode === 'create' ? 'Creating...' : 'Updating...')
                                 : (mode === 'create' ? 'Create Course' : 'Update Course')
                             }
                         </Button>
-                        <Button 
-                            type="button" 
-                            variant="outline" 
+                        <Button
+                            type="button"
+                            variant="outline"
                             onClick={() => router.back()}
                         >
                             Cancel

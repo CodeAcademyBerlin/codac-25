@@ -1,25 +1,25 @@
-import { Suspense } from 'react'
-import Link from 'next/link'
 import { Plus } from 'lucide-react'
-
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
+import Link from 'next/link'
+import { Suspense } from 'react'
 
 import { getJobs } from '@/actions/job/get-jobs'
 import { JobCard } from '@/components/career/job-card'
 import { JobFilters } from '@/components/career/job-filters'
+import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface JobsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     search?: string
     type?: string
     level?: string
     remote?: string
     company?: string
-  }
+  }>
 }
 
 export default async function JobsPage({ searchParams }: JobsPageProps) {
+  const resolvedSearchParams = await searchParams
   return (
     <div className="container mx-auto py-8">
       <div className="flex items-center justify-between mb-8">
@@ -46,7 +46,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
         {/* Jobs List */}
         <div className="lg:col-span-3">
           <Suspense fallback={<JobsLoading />}>
-            <JobsList searchParams={searchParams} />
+            <JobsList searchParams={resolvedSearchParams} />
           </Suspense>
         </div>
       </div>
@@ -54,7 +54,15 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
   )
 }
 
-async function JobsList({ searchParams }: { searchParams: JobsPageProps['searchParams'] }) {
+async function JobsList({ searchParams }: {
+  searchParams: {
+    search?: string
+    type?: string
+    level?: string
+    remote?: string
+    company?: string
+  }
+}) {
   const jobs = await getJobs(searchParams)
 
   if (jobs.length === 0) {
@@ -68,9 +76,28 @@ async function JobsList({ searchParams }: { searchParams: JobsPageProps['searchP
     )
   }
 
+  // Transform the jobs data to match JobCard expectations
+  const transformedJobs = jobs.map(job => ({
+    id: job.id,
+    title: job.title,
+    description: job.description,
+    company: job.company,
+    location: job.location,
+    type: job.type,
+    level: job.level,
+    salary: job.salary,
+    remote: job.remote,
+    skills: Array.isArray(job.skills) ? job.skills as string[] : null,
+    benefits: Array.isArray(job.benefits) ? job.benefits as string[] : null,
+    featured: job.featured,
+    createdAt: job.createdAt,
+    postedBy: job.postedBy,
+    _count: job._count,
+  }))
+
   return (
     <div className="space-y-6">
-      {jobs.map((job) => (
+      {transformedJobs.map((job) => (
         <JobCard key={job.id} job={job} />
       ))}
     </div>

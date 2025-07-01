@@ -1,15 +1,13 @@
-import Link from 'next/link';
 import { BookOpen, Users, GraduationCap, Plus, Settings } from 'lucide-react';
+import Link from 'next/link';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-
-import { getEnrollmentStats } from '@/actions/lms/manage-enrollment';
 import { prisma } from '@/lib/db';
 
 export default async function AdminDashboard() {
-    const [courseStats, enrollmentData] = await Promise.all([
+    const [courseStats, totalEnrollments] = await Promise.all([
         prisma.course.findMany({
             select: {
                 id: true,
@@ -24,13 +22,12 @@ export default async function AdminDashboard() {
                 }
             }
         }),
-        getEnrollmentStats()
+        prisma.courseEnrollment.count()
     ]);
 
     const totalCourses = courseStats.length;
     const publishedCourses = courseStats.filter(c => c.isPublished).length;
     const totalProjects = courseStats.reduce((sum, course) => sum + course._count.projects, 0);
-    const totalEnrollments = enrollmentData.success ? enrollmentData.data.totalEnrollments : 0;
 
     return (
         <div className="space-y-6">
@@ -48,7 +45,7 @@ export default async function AdminDashboard() {
                         </p>
                     </CardContent>
                 </Card>
-                
+
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Total Projects</CardTitle>
@@ -105,7 +102,7 @@ export default async function AdminDashboard() {
                                 Create New Course
                             </Button>
                         </Link>
-                        
+
                         <Link href="/lms/admin/courses">
                             <Button className="w-full justify-start" variant="outline">
                                 <BookOpen className="mr-2 h-4 w-4" />
@@ -161,7 +158,7 @@ export default async function AdminDashboard() {
                                 </div>
                             </div>
                         ))}
-                        
+
                         {courseStats.length === 0 && (
                             <div className="text-center py-8 text-muted-foreground">
                                 No courses found. Create your first course to get started.

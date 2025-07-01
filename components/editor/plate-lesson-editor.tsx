@@ -2,7 +2,7 @@
 import { AlertCircle, CheckCircle2, Cloud, CloudOff, Save } from "lucide-react";
 import { Value } from "platejs";
 import { PlateController, useEditorRef, useEditorSelector } from "platejs/react";
-import { createContext, useContext, useCallback, useEffect, useRef, useState } from "react";
+import React, { createContext, useContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { updateLessonContent } from "@/actions/lms/update-lesson";
 import { Button } from "@/components/ui/button";
@@ -45,7 +45,10 @@ export const useSave = () => {
     return context;
 };
 
-function SaveStatusIndicator({ status, onManualSave }: {
+const SaveStatusIndicator = React.memo(function SaveStatusIndicator({
+    status,
+    onManualSave
+}: {
     status: SaveStatus;
     onManualSave: () => void;
 }) {
@@ -99,11 +102,11 @@ function SaveStatusIndicator({ status, onManualSave }: {
                 disabled={status.status === 'saving'}
             >
                 <Save className="h-4 w-4 mr-1" />
-                Save
+                Save Now
             </Button>
         </div>
     );
-}
+});
 
 export function PlateProvider({ children }: { children: React.ReactNode }) {
     return (
@@ -113,29 +116,44 @@ export function PlateProvider({ children }: { children: React.ReactNode }) {
     )
 }
 
-export const PlateLessonEditor = ({ lessonId, initialValue, showStatusBar = false, canEdit = false }: {
+export const PlateLessonEditor = React.memo(function PlateLessonEditor({
+    lessonId,
+    initialValue,
+    showStatusBar = false,
+    canEdit = false
+}: {
     lessonId: string;
     initialValue: Value;
     showStatusBar?: boolean;
     canEdit?: boolean;
-}) => {
+}) {
     return (
         <PlateController>
             <div className="h-full flex flex-col">
                 <PlateEditor initialValue={initialValue} readOnly={!canEdit}>
-                    <PlateStateUpdater lessonId={lessonId} showStatusBar={showStatusBar} initialValue={initialValue} canEdit={canEdit} />
+                    <PlateStateUpdater
+                        lessonId={lessonId}
+                        showStatusBar={showStatusBar}
+                        initialValue={initialValue}
+                        canEdit={canEdit}
+                    />
                 </PlateEditor>
             </div>
         </PlateController>
     )
-}
+});
 
-const PlateStateUpdater = ({ lessonId, showStatusBar = false, initialValue, canEdit = false }: {
+const PlateStateUpdater = React.memo(function PlateStateUpdater({
+    lessonId,
+    showStatusBar = false,
+    initialValue,
+    canEdit = false
+}: {
     lessonId: string;
     showStatusBar?: boolean;
     initialValue?: Value;
     canEdit?: boolean;
-}) => {
+}) {
     const editor = useEditorRef();
     const hasActiveUploads = useHasActiveUploads();
 
@@ -250,10 +268,10 @@ const PlateStateUpdater = ({ lessonId, showStatusBar = false, initialValue, canE
         }));
     }, [editorContent, canEdit]);
 
-    const saveContextValue: SaveContextValue = {
+    const saveContextValue: SaveContextValue = useMemo(() => ({
         triggerSave: triggerManualSave,
         saveStatus,
-    };
+    }), [triggerManualSave, saveStatus]);
 
     return (
         <SaveContext.Provider value={saveContextValue}>
@@ -262,4 +280,4 @@ const PlateStateUpdater = ({ lessonId, showStatusBar = false, initialValue, canE
             )}
         </SaveContext.Provider>
     );
-}; 
+}); 

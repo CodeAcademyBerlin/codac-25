@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
 
+import { DndWrapper } from '@/app/docs/components/dnd-wrapper';
 import { getEnrolledCourses, getCourses } from '@/data/lms/courses';
+import { getLMSHierarchy } from '@/data/lms/lms-hierarchy';
 import { getCurrentUser } from '@/lib/auth/auth-utils';
 
 import { LMSNavbar } from './components/lms-navbar';
@@ -17,25 +19,29 @@ export default async function LMSLayout({
         redirect('/auth/signin?callbackUrl=/lms');
     }
 
-    // Get enrolled courses and all available courses
-    const [enrolledCourses, allCourses] = await Promise.all([
+    // Get enrolled courses, all available courses, and LMS hierarchy
+    const [enrolledCourses, allCourses, lmsHierarchy] = await Promise.all([
         getEnrolledCourses(),
         getCourses(),
+        getLMSHierarchy(),
     ]);
 
     return (
-        <div className="flex h-full flex-col">
-            <LMSNavbar user={user} />
-            <div className="flex flex-1 overflow-hidden">
-                <LMSSidebar
-                    enrolledCourses={enrolledCourses}
-                    allCourses={allCourses}
-                    userRole={user.role}
-                />
-                <main className="flex-1 overflow-y-auto">
-                    {children}
-                </main>
+        <DndWrapper>
+            <div className="flex h-full flex-col">
+                <LMSNavbar user={user} />
+                <div className="flex flex-1 overflow-hidden">
+                    <LMSSidebar
+                        enrolledCourses={enrolledCourses}
+                        allCourses={allCourses}
+                        userRole={user.role}
+                        lmsHierarchy={lmsHierarchy}
+                    />
+                    <main className="flex-1 overflow-y-auto">
+                        {children}
+                    </main>
+                </div>
             </div>
-        </div>
+        </DndWrapper>
     );
 } 

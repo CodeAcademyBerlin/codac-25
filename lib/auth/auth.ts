@@ -2,31 +2,14 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import bcrypt from "bcryptjs"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import EmailProvider from "next-auth/providers/email"
-import GoogleProvider from "next-auth/providers/google"
 
 import { prisma } from "@/lib/db/prisma"
-
+import { logger } from "@/lib/logger"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(prisma),
     trustHost: true,
     providers: [
-        GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-        }),
-        EmailProvider({
-            server: {
-                host: process.env.EMAIL_SERVER_HOST,
-                port: Number(process.env.EMAIL_SERVER_PORT),
-                auth: {
-                    user: process.env.EMAIL_SERVER_USER,
-                    pass: process.env.EMAIL_SERVER_PASSWORD,
-                },
-            },
-            from: process.env.EMAIL_FROM,
-        }),
         CredentialsProvider({
             name: "credentials",
             credentials: {
@@ -107,56 +90,40 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             // Add user data from token to session
             if (token) {
                 session.user.id = token.sub as string
-                session.user.role = token.role as any
-                session.user.status = token.status as any
+                session.user.role = token.role as string
+                session.user.status = token.status as string
                 session.user.cohortId = token.cohortId as string | null
             }
 
             return session
         },
-        async jwt({ token, user, account, trigger }) {
-            console.log("JWT callback triggered:", {
-                provider: account?.provider,
-                hasUser: !!user,
-                trigger,
-                tokenSub: token.sub
-            })
-
+        async jwt({ token, user }) {
             // For credentials provider, user data is already complete
-            if (user && account?.provider === "credentials") {
-                console.log("Setting token data from credentials user")
+            if (user) {
                 token.role = user.role
                 token.status = user.status
                 token.cohortId = user.cohortId
             }
-            // For all other cases, always fetch from database
-            else if (token.sub) {
-                console.log("Fetching user data from database for provider:", account?.provider || "unknown")
+            // For existing tokens, fetch from database if needed
+            else if (token.sub && !token.role) {
                 try {
-                    // Add a small delay for OAuth providers to ensure user is created
-                    if (account?.provider !== "credentials" && user) {
-                        await new Promise(resolve => setTimeout(resolve, 100))
-                    }
-
                     const dbUser = await prisma.user.findUnique({
                         where: { id: token.sub },
                         select: { role: true, status: true, cohortId: true },
                     })
-
-                    console.log("Database user found:", !!dbUser, dbUser)
 
                     if (dbUser) {
                         token.role = dbUser.role
                         token.status = dbUser.status
                         token.cohortId = dbUser.cohortId
                     } else {
-                        console.log("No database user found, setting defaults")
+                        // Set defaults
                         token.role = "STUDENT"
                         token.status = "ACTIVE"
                         token.cohortId = null
                     }
                 } catch (error) {
-                    console.error("Error fetching user data in JWT callback:", error)
+                    logger.error("Error fetching user data in JWT callback", error instanceof Error ? error : new Error(String(error)))
                     // Set defaults on error
                     token.role = "STUDENT"
                     token.status = "ACTIVE"
@@ -164,25 +131,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 }
             }
 
-            console.log("JWT callback result:", { role: token.role, status: token.status, cohortId: token.cohortId })
             return token
         },
     },
     events: {
         async createUser({ user }) {
-            console.log("createUser event triggered for user:", user.id, user.email)
             try {
                 // Set default role and status for new users
-                const updatedUser = await prisma.user.update({
+                await prisma.user.update({
                     where: { id: user.id },
                     data: {
                         role: "STUDENT",
                         status: "ACTIVE",
                     },
                 })
-                console.log("User updated successfully:", updatedUser.id, updatedUser.role, updatedUser.status)
             } catch (error) {
-                console.error("Error updating user in createUser event:", error)
+                logger.error("Error updating user in createUser event", error instanceof Error ? error : new Error(String(error)))
             }
         },
     },

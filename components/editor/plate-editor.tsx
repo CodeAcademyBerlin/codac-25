@@ -8,11 +8,10 @@ import { Editor, EditorContainer } from '@/components/ui/editor';
 
 import { EditorKit } from './editor-kit';
 
-
 export function PlateEditor({
   initialValue,
   children,
-  readOnly = false,
+  readOnly = true,
 }: {
   /**
    * Initial document value to load into the editor. When omitted, a default
@@ -26,19 +25,15 @@ export function PlateEditor({
    */
   children?: React.ReactNode;
   /**
-   * Whether the editor should be in read-only mode. Defaults to false.
+   * Whether the editor should be in read-only mode. Defaults to true (viewing mode).
    */
   readOnly?: boolean;
 }) {
-
-  //   const editor = usePlateEditor({
-  //     plugins: EditorKit,
-  //     value: initialValue ?? defaultValue,
-  // });
-  const editor = createPlateEditor({
+  const editor = React.useMemo(() => createPlateEditor({
     plugins: EditorKit,
     value: initialValue ?? defaultValue,
-  });
+  }), [initialValue]);
+
   return (
     <div className="w-full max-w-full overflow-hidden">
       <Plate editor={editor} readOnly={readOnly}>

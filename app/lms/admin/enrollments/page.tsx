@@ -1,13 +1,14 @@
+import { Users, BookOpen, TrendingUp } from 'lucide-react';
 import { Suspense } from 'react';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Users, BookOpen, TrendingUp } from 'lucide-react';
-
-import { prisma } from '@/lib/db';
-import { EnrollmentStatsCard } from '@/components/lms/enrollment-stats-card';
 import { GlobalEnrollmentManager } from '@/components/lms/global-enrollment-manager';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { prisma } from '@/lib/db';
+
+
+
 
 async function EnrollmentManagementContent() {
     const [enrollmentStats, courseEnrollments, recentEnrollments] = await Promise.all([

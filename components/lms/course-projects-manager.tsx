@@ -1,22 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { Plus, Settings, BookOpen, Trash2, Edit } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { createLesson, updateLessonDetails, deleteLesson } from '@/actions/lms/create-lesson';
+import { createProject, updateProject, deleteProject } from '@/actions/lms/create-project';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Plus, Settings, BookOpen, Trash2, Edit } from 'lucide-react';
-
-import { createProject, updateProject, deleteProject } from '@/actions/lms/create-project';
-import { createLesson, updateLessonDetails, deleteLesson } from '@/actions/lms/create-lesson';
+import { Textarea } from '@/components/ui/textarea';
 
 interface Course {
     id: string;
@@ -90,7 +89,7 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
             } else {
                 toast.error(result.error);
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to create project');
         } finally {
             setIsLoading(false);
@@ -119,7 +118,7 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
             } else {
                 toast.error(result.error);
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to update project');
         } finally {
             setIsLoading(false);
@@ -137,7 +136,7 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
             } else {
                 toast.error(result.error);
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to delete project');
         } finally {
             setIsLoading(false);
@@ -168,7 +167,7 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
             } else {
                 toast.error(result.error);
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to create lesson');
         } finally {
             setIsLoading(false);
@@ -198,7 +197,7 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
             } else {
                 toast.error(result.error);
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to update lesson');
         } finally {
             setIsLoading(false);
@@ -216,7 +215,7 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
             } else {
                 toast.error(result.error);
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to delete lesson');
         } finally {
             setIsLoading(false);
@@ -382,14 +381,14 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
                                             </div>
                                         </DialogContent>
                                     </Dialog>
-                                    
+
                                     <Button size="sm" variant="outline" onClick={() => setEditingProject({
                                         ...project,
                                         duration: project.duration?.toString() || ''
                                     })}>
                                         <Edit className="h-4 w-4" />
                                     </Button>
-                                    
+
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
                                             <Button size="sm" variant="outline">

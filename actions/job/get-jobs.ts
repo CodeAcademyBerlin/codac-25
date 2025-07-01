@@ -23,16 +23,16 @@ export async function getJobs(params: GetJobsParams = {}) {
                     search
                         ? {
                             OR: [
-                                { title: { contains: search, mode: 'insensitive' } },
-                                { description: { contains: search, mode: 'insensitive' } },
-                                { company: { contains: search, mode: 'insensitive' } },
+                                { title: { contains: search } },
+                                { description: { contains: search } },
+                                { company: { contains: search } },
                             ],
                         }
                         : {},
                     type && type !== 'all' ? { type: type as JobType } : {},
                     level && level !== 'all' ? { level: level as JobLevel } : {},
                     remote === 'true' ? { remote: true } : {},
-                    company ? { company: { contains: company, mode: 'insensitive' } } : {},
+                    company ? { company: { contains: company } } : {},
                 ],
             },
             include: {

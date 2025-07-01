@@ -1,20 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { Users, Plus, Search, UserPlus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { bulkEnrollStudents } from '@/actions/lms/manage-enrollment';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Users, Plus, Search, UserPlus } from 'lucide-react';
-
-import { bulkEnrollStudents } from '@/actions/lms/manage-enrollment';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getUsersForEnrollment } from '@/data/user/get-users-for-enrollment';
 
 interface Course {
@@ -45,7 +44,7 @@ export function GlobalEnrollmentManager({ courses }: GlobalEnrollmentManagerProp
             // Filter to only show students, alumni, etc. (non-staff)
             const students = users.filter(user => ['STUDENT', 'ALUMNI'].includes(user.role));
             setAvailableUsers(students);
-        } catch (error) {
+        } catch {
             toast.error('Failed to load users');
         }
     };
@@ -74,7 +73,7 @@ export function GlobalEnrollmentManager({ courses }: GlobalEnrollmentManagerProp
             } else {
                 toast.error(result.error);
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to enroll students');
         } finally {
             setIsLoading(false);
@@ -212,7 +211,7 @@ export function GlobalEnrollmentManager({ courses }: GlobalEnrollmentManagerProp
 
                                         {filteredUsers.length === 0 && (
                                             <div className="text-center py-8 text-muted-foreground">
-                                                {availableUsers.length === 0 
+                                                {availableUsers.length === 0
                                                     ? 'No students found'
                                                     : 'No students found matching your search'
                                                 }
@@ -234,8 +233,8 @@ export function GlobalEnrollmentManager({ courses }: GlobalEnrollmentManagerProp
                                         <Button variant="outline" onClick={() => setShowBulkEnrollDialog(false)}>
                                             Cancel
                                         </Button>
-                                        <Button 
-                                            onClick={handleBulkEnroll} 
+                                        <Button
+                                            onClick={handleBulkEnroll}
                                             disabled={isLoading || selectedUsers.length === 0 || !selectedCourse}
                                         >
                                             {isLoading ? 'Enrolling...' : `Enroll ${selectedUsers.length} Students`}

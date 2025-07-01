@@ -7,7 +7,9 @@ import {
     ArrowLeft,
     ArrowRight,
     Play,
-    RotateCcw
+    RotateCcw,
+    Edit3,
+    Eye
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -16,7 +18,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { updateLessonProgress } from '@/actions/lms/update-lesson';
-import { PlateLessonEditor } from '@/components/editor/plate-lesson-editor';
+import { UnifiedEditor } from '@/components/editor/unified-editor';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -78,6 +80,7 @@ export function LessonContent({ lesson, user: _user, canEdit }: LessonContentPro
     const [currentStatus, setCurrentStatus] = useState(
         lesson.progress[0]?.status || 'NOT_STARTED'
     );
+    const [isEditing, setIsEditing] = useState(false);
 
     const handleProgressUpdate = async (status: 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED') => {
         setIsUpdatingProgress(true);
@@ -97,7 +100,9 @@ export function LessonContent({ lesson, user: _user, canEdit }: LessonContentPro
         }
     };
 
-
+    const toggleEditMode = () => {
+        setIsEditing(!isEditing);
+    };
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -139,6 +144,27 @@ export function LessonContent({ lesson, user: _user, canEdit }: LessonContentPro
                     </div>
 
                     <div className="flex items-center space-x-2">
+                        {/* Edit Mode Toggle */}
+                        {canEdit && (
+                            <Button
+                                variant={isEditing ? "default" : "outline"}
+                                size="sm"
+                                onClick={toggleEditMode}
+                            >
+                                {isEditing ? (
+                                    <>
+                                        <Eye className="h-4 w-4 mr-2" />
+                                        Exit Edit
+                                    </>
+                                ) : (
+                                    <>
+                                        <Edit3 className="h-4 w-4 mr-2" />
+                                        Edit Content
+                                    </>
+                                )}
+                            </Button>
+                        )}
+
                         <Badge variant="outline" className={getStatusColor(currentStatus)}>
                             {getStatusIcon(currentStatus)}
                             <span className="ml-1 capitalize">
@@ -156,6 +182,13 @@ export function LessonContent({ lesson, user: _user, canEdit }: LessonContentPro
                         <Badge variant="secondary">
                             {lesson.type}
                         </Badge>
+
+                        {isEditing && (
+                            <Badge variant="default" className="bg-blue-500">
+                                <Edit3 className="h-3 w-3 mr-1" />
+                                Editing
+                            </Badge>
+                        )}
                     </div>
                 </div>
             </div>
@@ -220,12 +253,13 @@ export function LessonContent({ lesson, user: _user, canEdit }: LessonContentPro
                 {/* Main Content */}
                 <div className="flex-1 overflow-y-auto">
                     <div className="p-6">
-                        <div className={canEdit ? "h-full" : "prose prose-neutral dark:prose-invert max-w-none"}>
-                            <PlateLessonEditor
-                                lessonId={lesson.id}
+                        <div className={isEditing ? "h-full" : "prose prose-neutral dark:prose-invert max-w-none"}>
+                            <UnifiedEditor
+                                contentId={lesson.id}
+                                contentType="lesson"
                                 initialValue={lesson.content}
-                                showStatusBar={canEdit}
-                                canEdit={canEdit}
+                                showStatusBar={isEditing}
+                                canEdit={isEditing}
                             />
                         </div>
                     </div>
@@ -234,6 +268,45 @@ export function LessonContent({ lesson, user: _user, canEdit }: LessonContentPro
                 {/* Sidebar */}
                 <div className="w-80 border-l bg-muted/30 overflow-y-auto">
                     <div className="p-4 space-y-4">
+                        {/* Edit Mode Info */}
+                        {canEdit && (
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="text-sm">Content Editing</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-2">
+                                        <div className="text-xs text-muted-foreground">
+                                            Mode: {isEditing ? 'Editing' : 'Viewing'}
+                                        </div>
+                                        <Button
+                                            variant={isEditing ? "outline" : "default"}
+                                            size="sm"
+                                            onClick={toggleEditMode}
+                                            className="w-full"
+                                        >
+                                            {isEditing ? (
+                                                <>
+                                                    <Eye className="h-4 w-4 mr-2" />
+                                                    Switch to View
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Edit3 className="h-4 w-4 mr-2" />
+                                                    Edit Content
+                                                </>
+                                            )}
+                                        </Button>
+                                        {isEditing && (
+                                            <div className="text-xs text-muted-foreground">
+                                                💡 Changes are automatically saved
+                                            </div>
+                                        )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
+
                         {/* Progress */}
                         <Card>
                             <CardHeader>

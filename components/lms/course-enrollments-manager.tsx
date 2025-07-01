@@ -1,21 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { Users, Plus, UserMinus, Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { unenrollStudent, bulkEnrollStudents } from '@/actions/lms/manage-enrollment';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Users, Plus, UserMinus, Search } from 'lucide-react';
-
-import { enrollStudent, unenrollStudent, bulkEnrollStudents } from '@/actions/lms/manage-enrollment';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { getUsersForEnrollment } from '@/data/user/get-users-for-enrollment';
 
 interface Course {
@@ -49,28 +47,12 @@ export function CourseEnrollmentsManager({ course }: CourseEnrollmentsManagerPro
             const enrolledUserIds = new Set(course.enrollments.map(e => e.user.id));
             const available = users.filter(user => !enrolledUserIds.has(user.id));
             setAvailableUsers(available);
-        } catch (error) {
+        } catch {
             toast.error('Failed to load users');
         }
     };
 
-    const handleEnrollStudent = async (userId: string) => {
-        setIsLoading(true);
-        try {
-            const result = await enrollStudent(userId, course.id);
 
-            if (result.success) {
-                toast.success(result.message);
-                router.refresh();
-            } else {
-                toast.error(result.error);
-            }
-        } catch (error) {
-            toast.error('Failed to enroll student');
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const handleBulkEnroll = async () => {
         if (selectedUsers.length === 0) {
@@ -90,7 +72,7 @@ export function CourseEnrollmentsManager({ course }: CourseEnrollmentsManagerPro
             } else {
                 toast.error(result.error);
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to enroll students');
         } finally {
             setIsLoading(false);
@@ -108,7 +90,7 @@ export function CourseEnrollmentsManager({ course }: CourseEnrollmentsManagerPro
             } else {
                 toast.error(result.error);
             }
-        } catch (error) {
+        } catch {
             toast.error('Failed to unenroll student');
         } finally {
             setIsLoading(false);
@@ -199,7 +181,7 @@ export function CourseEnrollmentsManager({ course }: CourseEnrollmentsManagerPro
 
                                     {filteredAvailableUsers.length === 0 && (
                                         <div className="text-center py-8 text-muted-foreground">
-                                            {availableUsers.length === 0 
+                                            {availableUsers.length === 0
                                                 ? 'All students are already enrolled'
                                                 : 'No students found matching your search'
                                             }
@@ -215,8 +197,8 @@ export function CourseEnrollmentsManager({ course }: CourseEnrollmentsManagerPro
                                         <Button variant="outline" onClick={() => setShowAddDialog(false)}>
                                             Cancel
                                         </Button>
-                                        <Button 
-                                            onClick={handleBulkEnroll} 
+                                        <Button
+                                            onClick={handleBulkEnroll}
                                             disabled={isLoading || selectedUsers.length === 0}
                                         >
                                             {isLoading ? 'Enrolling...' : `Enroll ${selectedUsers.length} Students`}
@@ -261,7 +243,7 @@ export function CourseEnrollmentsManager({ course }: CourseEnrollmentsManagerPro
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div className="flex items-center space-x-2">
                                     <AlertDialog>
                                         <AlertDialogTrigger asChild>
@@ -274,13 +256,13 @@ export function CourseEnrollmentsManager({ course }: CourseEnrollmentsManagerPro
                                             <AlertDialogHeader>
                                                 <AlertDialogTitle>Unenroll Student</AlertDialogTitle>
                                                 <AlertDialogDescription>
-                                                    Are you sure you want to unenroll {enrollment.user.name || enrollment.user.email} from {course.title}? 
+                                                    Are you sure you want to unenroll {enrollment.user.name || enrollment.user.email} from {course.title}?
                                                     This will remove their access to the course and delete their progress.
                                                 </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
                                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                <AlertDialogAction 
+                                                <AlertDialogAction
                                                     onClick={() => handleUnenrollStudent(enrollment.user.id)}
                                                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                                                 >
