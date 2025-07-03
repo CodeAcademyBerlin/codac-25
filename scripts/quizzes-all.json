@@ -378,5 +378,260 @@
           "explanation": "useState is the primary hook for state in functional components."
         }
       ]
+    },
+    {
+      "topic": "React",
+      "difficulty": "Medium",
+      "quizTitle": "React Intermediate Concepts",
+      "questions": [
+        {
+          "text": "What hook is used to perform side effects in functional components?",
+          "options": ["useEffect", "useState", "useMemo", "useCallback"],
+          "correctAnswer": "useEffect",
+          "explanation": "useEffect lets you perform side effects like data fetching or subscriptions."
+        },
+        {
+          "text": "How do you pass data from a parent component to a child component?",
+          "options": ["Using state", "Using props", "Using context", "Using hooks"],
+          "correctAnswer": "Using props",
+          "explanation": "Props are used to pass data from parent to child components."
+        },
+        {
+          "text": "What does the React key prop help with?",
+          "options": ["Improving rendering performance", "Managing component state", "Passing data to children", "Handling events"],
+          "correctAnswer": "Improving rendering performance",
+          "explanation": "Keys help React identify which items have changed, improving rendering."
+        },
+        {
+          "text": "What is the purpose of React Context?",
+          "options": [
+            "To manage global state",
+            "To style components",
+            "To create class components",
+            "To handle events"
+          ],
+          "correctAnswer": "To manage global state",
+          "explanation": "Context provides a way to pass data through the component tree without props drilling."
+        },
+        {
+          "text": "Which method is used to optimize expensive calculations by memoizing results?",
+          "options": ["useEffect", "useMemo", "useCallback", "useReducer"],
+          "correctAnswer": "useMemo",
+          "explanation": "useMemo memoizes computed values to avoid expensive recalculations."
+        }
+      ]
+    },
+    {
+      "topic": "React",
+      "difficulty": "Advanced",
+      "quizTitle": "React Advanced Patterns",
+      "questions": [
+        {
+          "text": "What is a Higher-Order Component (HOC)?",
+          "options": [
+            "A component that returns JSX",
+            "A function that takes a component and returns a new component",
+            "A hook for managing state",
+            "A way to style components"
+          ],
+          "correctAnswer": "A function that takes a component and returns a new component",
+          "explanation": "HOCs are functions that add additional functionality to a component."
+        },
+        {
+          "text": "What does the useCallback hook do?",
+          "options": [
+            "Memoizes a function to prevent re-creation on every render",
+            "Manages component state",
+            "Performs side effects",
+            "Memoizes computed values"
+          ],
+          "correctAnswer": "Memoizes a function to prevent re-creation on every render",
+          "explanation": "useCallback returns a memoized callback to optimize rendering."
+        },
+        {
+          "text": "Which feature enables code-splitting in React apps?",
+          "options": ["React.lazy", "useEffect", "React.memo", "useReducer"],
+          "correctAnswer": "React.lazy",
+          "explanation": "React.lazy allows components to load lazily for code-splitting."
+        },
+        {
+          "text": "What is the purpose of React.memo?",
+          "options": [
+            "To memoize components and avoid unnecessary re-renders",
+            "To handle form inputs",
+            "To create context providers",
+            "To fetch data"
+          ],
+          "correctAnswer": "To memoize components and avoid unnecessary re-renders",
+          "explanation": "React.memo optimizes functional components by memoizing their output."
+        },
+        {
+          "text": "How can you handle errors in React components?",
+          "options": [
+            "Using try/catch inside render",
+            "Using error boundaries",
+            "Using useEffect",
+            "Using HOCs"
+          ],
+          "correctAnswer": "Using error boundaries",
+          "explanation": "Error boundaries catch JavaScript errors in the component tree."
+        }
+      ]
+    }
+    {
+      "topic": "TypeScript",
+      "difficulty": "Beginner",
+      "quizTitle": "TypeScript Basics",
+      "questions": [
+        {
+          "text": "What is TypeScript?",
+          "options": [
+            "A styling language",
+            "A superset of JavaScript that adds types",
+            "A database query language",
+            "A JavaScript framework"
+          ],
+          "correctAnswer": "A superset of JavaScript that adds types",
+          "explanation": "TypeScript extends JavaScript by adding static typing."
+        },
+        {
+          "text": "Which file extension is used for TypeScript files?",
+          "options": [".ts", ".js", ".tsx", ".json"],
+          "correctAnswer": ".ts",
+          "explanation": "TypeScript files have the .ts extension."
+        },
+        {
+          "text": "How do you declare a variable with a specific type in TypeScript?",
+          "options": [
+            "let age = number;",
+            "let age: number;",
+            "let number: age;",
+            "let age = 'number';"
+          ],
+          "correctAnswer": "let age: number;",
+          "explanation": "Type annotations use a colon to specify the variable type."
+        },
+        {
+          "text": "Which TypeScript feature helps catch errors before runtime?",
+          "options": ["Static typing", "Dynamic typing", "Garbage collection", "Just-in-time compilation"],
+          "correctAnswer": "Static typing",
+          "explanation": "Static typing allows errors to be caught during compilation."
+        },
+        {
+          "text": "What keyword is used to define an interface in TypeScript?",
+          "options": ["class", "interface", "type", "implements"],
+          "correctAnswer": "interface",
+          "explanation": "The interface keyword defines a structure for objects."
+        }
+      ]
+    },
+    {
+      "topic": "TypeScript",
+      "difficulty": "Medium",
+      "quizTitle": "TypeScript Intermediate Concepts",
+      "questions": [
+        {
+          "text": "What is the difference between 'interface' and 'type' in TypeScript?",
+          "options": [
+            "No difference, they are identical",
+            "Interfaces can be merged, types cannot",
+            "Types can be merged, interfaces cannot",
+            "Interfaces are for variables, types are for functions"
+          ],
+          "correctAnswer": "Interfaces can be merged, types cannot",
+          "explanation": "Interfaces support declaration merging, types do not."
+        },
+        {
+          "text": "How do you declare an optional property in an interface?",
+          "options": [
+            "property?: type;",
+            "property!: type;",
+            "property: optional type;",
+            "optional property: type;"
+          ],
+          "correctAnswer": "property?: type;",
+          "explanation": "Adding a question mark makes a property optional."
+        },
+        {
+          "text": "What does the 'never' type represent?",
+          "options": [
+            "A value that never occurs",
+            "Any value",
+            "A string or number",
+            "Undefined values"
+          ],
+          "correctAnswer": "A value that never occurs",
+          "explanation": "The 'never' type represents values that never happen, like thrown errors."
+        },
+        {
+          "text": "What keyword is used to assert a type?",
+          "options": ["as", "assert", "typeof", "cast"],
+          "correctAnswer": "as",
+          "explanation": "The 'as' keyword tells TypeScript to treat a value as a specific type."
+        },
+        {
+          "text": "Which utility type makes all properties optional?",
+          "options": ["Partial", "Readonly", "Pick", "Record"],
+          "correctAnswer": "Partial",
+          "explanation": "Partial<T> constructs a type with all properties optional."
+        }
+      ]
+    },
+    {
+      "topic": "TypeScript",
+      "difficulty": "Advanced",
+      "quizTitle": "TypeScript Advanced Features",
+      "questions": [
+        {
+          "text": "What are generics in TypeScript?",
+          "options": [
+            "Functions that return numbers",
+            "Types that work with any data type",
+            "Classes that extend other classes",
+            "Interfaces that merge types"
+          ],
+          "correctAnswer": "Types that work with any data type",
+          "explanation": "Generics allow writing reusable components with types as parameters."
+        },
+        {
+          "text": "What is a mapped type?",
+          "options": [
+            "A type that modifies properties of another type",
+            "A function returning a type",
+            "A way to create unions",
+            "A type of interface"
+          ],
+          "correctAnswer": "A type that modifies properties of another type",
+          "explanation": "Mapped types create new types by transforming properties of existing types."
+        },
+        {
+          "text": "How do you enforce that a function parameter must be a key of an object type?",
+          "options": [
+            "Using keyof keyword",
+            "Using typeof keyword",
+            "Using extends keyword",
+            "Using implements keyword"
+          ],
+          "correctAnswer": "Using keyof keyword",
+          "explanation": "The keyof operator extracts keys of a type for use in constraints."
+        },
+        {
+          "text": "What is conditional typing?",
+          "options": [
+            "Types that depend on a condition",
+            "Types that are always true",
+            "Types for error handling",
+            "Types used in interfaces"
+          ],
+          "correctAnswer": "Types that depend on a condition",
+          "explanation": "Conditional types select types based on a condition using syntax like T extends U ? X : Y."
+        },
+        {
+          "text": "Which utility type constructs a type with only the properties required from another type?",
+          "options": ["Pick", "Omit", "Exclude", "Required"],
+          "correctAnswer": "Pick",
+          "explanation": "Pick<T, K> creates a new type by selecting specific keys from T."
+        }
+      ]
     }
 ]
