@@ -21,12 +21,12 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 
-import { NavMain } from './nav-main';
 import { NavSecondary } from './nav-secondary';
+import { NavTop } from './nav-top';
 import { NavUser } from './nav-user';
 
 const navigationData = {
-    navMain: [
+    navTop: [
         {
             title: 'Dashboard',
             url: '/',
@@ -37,58 +37,17 @@ const navigationData = {
             title: 'Learning',
             url: '/learning',
             icon: Book,
-            items: [
-                {
-                    title: 'Learning Overview',
-                    url: '/learning',
-                },
-                {
-                    title: 'Web Development',
-                    url: '/learning/web',
-                },
-                {
-                    title: 'Data Science',
-                    url: '/learning/data',
-                },
-                {
-                    title: 'Career Services',
-                    url: '/learning/career',
-                },
-                {
-                    title: 'Course Management',
-                    url: '/lms',
-                },
-            ],
         },
         {
             title: 'Community',
             url: '/community',
             icon: Users,
-            items: [
-                {
-                    title: 'Community Hub',
-                    url: '/community',
-                },
-                {
-                    title: 'Cohorts',
-                    url: '/community/cohorts',
-                },
-            ],
         },
         {
             title: 'Career Center',
-            url: '/career',
-            icon: Briefcase,
-            items: [
-                {
-                    title: 'Job Board',
-                    url: '/career/jobs',
-                },
-                {
-                    title: 'Post a Job',
-                    url: '/career/jobs/post',
-                },
-            ],
+            url: '/career/jobs',
+            icon: Briefcase
+
         },
     ],
     navSecondary: [
@@ -128,7 +87,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                <NavMain items={navigationData.navMain} />
+
+                <NavTop items={navigationData.navTop} />
                 <NavSecondary items={navigationData.navSecondary} className="mt-auto" />
             </SidebarContent>
             <SidebarFooter>

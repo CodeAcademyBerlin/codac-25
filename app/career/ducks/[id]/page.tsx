@@ -1,7 +1,7 @@
+import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 
 import { getDuckById } from "@/actions/duck/get-duck-by-id";
 import { DeleteDuckButton } from "@/components/career/delete-duck-button";
@@ -17,13 +17,14 @@ import {
 import { auth } from "@/lib/auth/auth";
 
 interface DuckPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function DuckPage({ params }: DuckPageProps) {
-  const [duck, session] = await Promise.all([getDuckById(params.id), auth()]);
+  const { id } = await params;
+  const [duck, session] = await Promise.all([getDuckById(id), auth()]);
 
   if (!duck) {
     notFound();

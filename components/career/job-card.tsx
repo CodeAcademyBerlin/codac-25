@@ -1,6 +1,7 @@
-import { auth } from "@/lib/auth/auth";
-import { JobCardClient } from "./job-card-client";
 import { getJobs } from "@/actions/job/get-jobs";
+import { auth } from "@/lib/auth/auth";
+
+import { JobCardClient } from "./job-card-client";
 
 type Job = Awaited<ReturnType<typeof getJobs>>[number];
 

@@ -1,6 +1,7 @@
 import fs from 'fs';
 
 import { PrismaClient, UserRole, UserStatus, CourseCategory, LessonType, AssignmentType, PostType, LessonProgressStatus, DocumentType } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -8,6 +9,10 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Starting CODAC Attack on Titan seed...');
+
+  // Hash default password for all seeded users
+  const defaultPassword = await bcrypt.hash('password123', 10);
+  console.log('🔐 Default password for all users: password123');
 
   // Ensure required directories exist
   const requiredDirs = ['docs', 'public', 'uploads'];
@@ -77,6 +82,7 @@ async function main() {
         data: {
           email: `${student.name.toLowerCase().replace(' ', '.')}@codac.academy`,
           name: student.name,
+          password: defaultPassword,
           role: UserRole.STUDENT,
           status: UserStatus.ACTIVE,
           cohortId: cohorts.find(c => c.slug === student.cohort)?.id,
@@ -97,6 +103,7 @@ async function main() {
         data: {
           email: `${mentor.name.toLowerCase().replace(' ', '.')}@codac.academy`,
           name: mentor.name,
+          password: defaultPassword,
           role: UserRole.MENTOR,
           status: UserStatus.ACTIVE,
           cohortId: mentorsCohort?.id,
@@ -115,6 +122,7 @@ async function main() {
       data: {
         email: 'admin@codac.academy',
         name: 'Admin User',
+        password: defaultPassword,
         role: UserRole.ADMIN,
         status: UserStatus.ACTIVE,
         image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2RjMjYyNiIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjMwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QUQ8L3RleHQ+PC9zdmc+',
@@ -127,6 +135,7 @@ async function main() {
       data: {
         email: 'kenny.ackerman@codac.academy',
         name: 'Kenny Ackerman',
+        password: defaultPassword,
         role: UserRole.ADMIN,
         status: UserStatus.ACTIVE,
         image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzM3NDE1MSIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjMwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+S0E8L3RleHQ+PC9zdmc+',
@@ -143,6 +152,7 @@ async function main() {
       data: {
         email: 'marco.bott@alumni.codac.academy',
         name: 'Marco Bott',
+        password: defaultPassword,
         role: UserRole.ALUMNI,
         status: UserStatus.GRADUATED,
         graduationDate: new Date('2023-12-15'),
@@ -159,6 +169,7 @@ async function main() {
       data: {
         email: 'annie.leonhart@alumni.codac.academy',
         name: 'Annie Leonhart',
+        password: defaultPassword,
         role: UserRole.ALUMNI,
         status: UserStatus.GRADUATED,
         graduationDate: new Date('2023-08-30'),

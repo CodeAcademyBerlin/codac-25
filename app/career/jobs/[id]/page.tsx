@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import { formatDistanceToNow } from "date-fns";
 import {
   ArrowLeft,
   Briefcase,
@@ -9,6 +8,8 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import { getJobById } from "@/actions/job/get-jobs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,16 +22,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { formatDistanceToNow } from "date-fns";
 
 interface JobDetailsPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
-  const job = await getJobById(params.id);
+  const { id } = await params;
+  const job = await getJobById(id);
 
   if (!job) {
     notFound();

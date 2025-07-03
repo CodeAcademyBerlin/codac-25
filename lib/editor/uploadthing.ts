@@ -1,8 +1,6 @@
 import type { FileRouter } from "uploadthing/next";
 import { createUploadthing } from "uploadthing/next";
 
-import { prisma } from "@/lib/db/prisma";
-
 const f = createUploadthing();
 
 export const ourFileRouter = {
@@ -24,7 +22,6 @@ export const ourFileRouter = {
       return {};
     })
     .onUploadComplete(async ({ file }) => {
-      console.log("Upload complete for file:", file.url);
       return { url: file.url };
     }),
 } satisfies FileRouter;

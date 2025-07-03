@@ -18,12 +18,12 @@ export default function VerifyRequestPage() {
                         Check your email
                     </CardTitle>
                     <CardDescription>
-                        We've sent a sign-in link to your email address. Click the link in the email to sign in to your account.
+                        We&apos;ve sent a sign-in link to your email address. Click the link in the email to sign in to your account.
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="text-sm text-muted-foreground text-center">
-                        <p>Didn't receive the email? Check your spam folder or try signing in again.</p>
+                        <p>Didn&apos;t receive the email? Check your spam folder or try signing in again.</p>
                     </div>
                     <Button asChild className="w-full" variant="outline">
                         <Link href="/auth/signin">

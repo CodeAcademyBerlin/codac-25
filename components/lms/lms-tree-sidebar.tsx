@@ -394,7 +394,7 @@ export function LMSTreeSidebar({ nodes, onNodesChange: _onNodesChange, canEdit =
         nodes: LMSTreeNode[],
         dragId: string,
         dropId: string,
-        dropType: 'COURSE' | 'PROJECT' | 'LESSON',
+        _dropType: 'COURSE' | 'PROJECT' | 'LESSON',
         position: 'before' | 'after' | 'inside'
     ): LMSTreeNode[] => {
         const clonedNodes = JSON.parse(JSON.stringify(nodes)) as LMSTreeNode[];

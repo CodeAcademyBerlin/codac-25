@@ -28,7 +28,7 @@ interface LMSNavbarProps {
 
 const navigation = [
     { name: 'Dashboard', href: '/lms', icon: BookOpen },
-    { name: 'My Courses', href: '/lms/my-courses', icon: GraduationCap },
+    { name: 'My Courses', href: '/learning', icon: GraduationCap },
 ];
 
 export function LMSNavbar({ user }: LMSNavbarProps) {

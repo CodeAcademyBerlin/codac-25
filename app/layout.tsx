@@ -4,7 +4,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 
 import "./globals.css";
+import { AppHeaderClient } from "@/components/app-header-client";
 import { AppSidebar } from "@/components/app-sidebar";
+import { HeaderProvider } from "@/components/header-provider";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner"
 
@@ -66,10 +68,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMonoFont.variable} ${codacBrandFont.variable} antialiased `}
       >
         <Providers>
-          <AppSidebar />
-          <main className="w-full h-full">
-            {children}
-          </main>
+          <HeaderProvider>
+            <AppSidebar />
+            <main className="w-full h-full">
+              <AppHeaderClient />
+              {children}
+            </main>
+          </HeaderProvider>
         </Providers>
         <Toaster />
       </body>

@@ -46,7 +46,7 @@ export function JobEditForm({ job }: JobEditFormProps) {
       title: job.title,
       description: job.description ?? "",
       company: job.company,
-      location: job.location,
+      location: job.location ?? "",
       type: job.type,
       level: job.level,
       salary: job.salary ?? "",

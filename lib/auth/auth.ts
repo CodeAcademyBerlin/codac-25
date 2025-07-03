@@ -8,7 +8,7 @@ import { prisma } from "@/lib/db/prisma"
 import { logger } from "@/lib/logger"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-    adapter: PrismaAdapter(prisma),
+    adapter: PrismaAdapter(prisma) as any,
     trustHost: true,
     providers: [
         CredentialsProvider({

@@ -1,14 +1,7 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { useTransition } from "react";
+
 import {
   Building,
   MapPin,
@@ -17,10 +10,12 @@ import {
   Trash2,
   Pencil,
 } from "lucide-react";
-import { useTransition } from "react";
-import { deleteJob } from "@/actions/job/delete-job";
-import { toast } from "sonner";
 import { Session } from "next-auth";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+import { deleteJob } from "@/actions/job/delete-job";
 import { getJobs } from "@/actions/job/get-jobs";
 import {
   AlertDialog,
@@ -33,8 +28,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 type Job = Awaited<ReturnType<typeof getJobs>>[number];
 

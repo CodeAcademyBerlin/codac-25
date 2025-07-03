@@ -18,35 +18,8 @@ interface Activity {
 }
 
 const activityData: Activity[] = [
-    {
-        id: "1",
-        avatar: "/avatars/mentor-1.jpg",
-        name: "Sarah Johnson",
-        action: "shared new resources - Added 3 new React patterns examples",
-        time: "2 hours ago",
-        badge: {
-            text: "New",
-            variant: "secondary"
-        }
-    },
-    {
-        id: "2",
-        avatar: "/avatars/student-2.jpg",
-        name: "Mike Chen",
-        action: "completed Advanced JavaScript - Finished with 95% score",
-        time: "4 hours ago",
-        badge: {
-            text: "Complete",
-            variant: "outline"
-        }
-    },
-    {
-        id: "3",
-        avatar: "/avatars/student-3.jpg",
-        name: "Emma Davis",
-        action: "started new project - Building a full-stack application",
-        time: "6 hours ago"
-    }
+
+
 ]
 
 export function RecentActivity() {
