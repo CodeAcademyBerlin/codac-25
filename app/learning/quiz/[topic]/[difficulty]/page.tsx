@@ -102,6 +102,9 @@ export default function QuizPage({
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded shadow">
+      <div className="mb-4">
+        <a href="/learning/quiz" className="text-blue-600 hover:underline font-medium">← Back to quiz selection</a>
+      </div>
       <h1 className="text-xl font-bold mb-2">{quiz.topic} Quiz ({quiz.difficulty})</h1>
       <div className="mb-4">
         <span className="text-gray-600">Question {current + 1} of {quiz.questions.length}</span>

@@ -1,22 +1,7 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-
-const CATEGORIES = [
-  'JavaScript',
-  'Vanilla JavaScript',
-  'HTML',
-  'CSS',
-  'React',
-  // Add more categories if you have them
-];
-
-const LEVELS = [
-  'Beginner',
-  'Medium',
-  'Advanced',
-];
+import { useState, useEffect } from 'react';
 
 interface Quiz {
   id: string;
@@ -25,11 +10,29 @@ interface Quiz {
 
 export default function QuizSelectorPage() {
   const router = useRouter();
-  const [category, setCategory] = useState(CATEGORIES[0]);
-  const [level, setLevel] = useState(LEVELS[0]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [levels, setLevels] = useState<string[]>([]);
+  const [category, setCategory] = useState<string>('');
+  const [level, setLevel] = useState<string>('');
   const [quizzes, setQuizzes] = useState<Quiz[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchOptions() {
+      try {
+        const res = await fetch('/api/quiz');
+        const data = await res.json();
+        setCategories(data.topics || []);
+        setLevels(data.difficulties || []);
+        setCategory((data.topics && data.topics[0]) || '');
+        setLevel((data.difficulties && data.difficulties[0]) || '');
+      } catch (err) {
+        setError('Failed to load quiz options');
+      }
+    }
+    fetchOptions();
+  }, []);
 
   const handleStart = async () => {
     setLoading(true);
@@ -58,29 +61,29 @@ export default function QuizSelectorPage() {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h1 className="text-2xl font-bold mb-6 text-center">Selecciona tu Quiz</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center">Quiz Selection</h1>
       <div className="mb-4">
         <label className="block mb-1 font-medium">Category</label>
         <select
           className="w-full border rounded px-3 py-2"
           value={category}
           onChange={e => setCategory(e.target.value)}
-          disabled={loading}
+          disabled={loading || categories.length === 0}
         >
-          {CATEGORIES.map(cat => (
+          {categories.map(cat => (
             <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
       </div>
       <div className="mb-6">
-        <label className="block mb-1 font-medium">Nivel</label>
+        <label className="block mb-1 font-medium">Level</label>
         <select
           className="w-full border rounded px-3 py-2"
           value={level}
           onChange={e => setLevel(e.target.value)}
-          disabled={loading}
+          disabled={loading || levels.length === 0}
         >
-          {LEVELS.map(lvl => (
+          {levels.map(lvl => (
             <option key={lvl} value={lvl}>{lvl}</option>
           ))}
         </select>
