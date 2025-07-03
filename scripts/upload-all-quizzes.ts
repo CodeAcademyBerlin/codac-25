@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db/prisma";
-import quizzes from "./quizzes-all.json"; // Asegúrate de que la ruta sea correcta
+import quizzes from "./quizzes-all.json"; // Make sure the path is correct
 
 async function main() {
   for (const quiz of quizzes) {
@@ -25,7 +25,7 @@ async function main() {
           },
         });
       }
-      console.log(`Preguntas agregadas al quiz existente: ${existingQuiz.id} (${quiz.quizTitle})`);
+      console.log(`Questions added to the existing quiz: ${existingQuiz.id} (${quiz.quizTitle})`);
     } else {
       // Crea el quiz y sus preguntas
       const createdQuiz = await prisma.quiz.create({
@@ -43,7 +43,7 @@ async function main() {
           },
         },
       });
-      console.log(`Quiz creado: ${createdQuiz.id} (${quiz.quizTitle})`);
+      console.log(`Quiz created: ${createdQuiz.id} (${quiz.quizTitle})`);
     }
   }
 }

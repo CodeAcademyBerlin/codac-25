@@ -84,18 +84,18 @@ export default function QuizPage({
   if (finished) {
     return (
       <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded shadow">
-        <h1 className="text-2xl font-bold mb-4 text-center">¡Quiz terminado!</h1>
-        <p className="text-center mb-4">Puntaje: <span className="font-bold">{score} / {quiz.questions.length}</span></p>
+        <h1 className="text-2xl font-bold mb-4 text-center">Quiz completed!</h1>
+        <p className="text-center mb-4">Score: <span className="font-bold">{score} / {quiz.questions.length}</span></p>
         <ul className="mb-6">
           {quiz.questions.map((q, i) => (
             <li key={q.id} className="mb-2">
               <span className="font-medium">{i + 1}. {q.text}</span>
               <br />
-              <span className="text-green-700">Respuesta correcta: {q.correctAnswer}</span>
+              <span className="text-green-700">Correct answer: {q.correctAnswer}</span>
             </li>
           ))}
         </ul>
-        <a href="/learning/quiz" className="block text-center text-blue-600 hover:underline">Volver a selección de quiz</a>
+        <a href="/learning/quiz" className="block text-center text-blue-600 hover:underline">Back to quiz selection</a>
       </div>
     );
   }
@@ -104,7 +104,7 @@ export default function QuizPage({
     <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded shadow">
       <h1 className="text-xl font-bold mb-2">{quiz.topic} Quiz ({quiz.difficulty})</h1>
       <div className="mb-4">
-        <span className="text-gray-600">Pregunta {current + 1} de {quiz.questions.length}</span>
+        <span className="text-gray-600">Question {current + 1} of {quiz.questions.length}</span>
       </div>
       <div className="mb-4 font-medium">{question.text}</div>
       <div className="space-y-2 mb-4">
@@ -129,9 +129,9 @@ export default function QuizPage({
       {showAnswer && (
         <div className="mb-4">
           {selected === question.correctAnswer ? (
-            <div className="text-green-700 font-semibold">¡Correcto!</div>
+            <div className="text-green-700 font-semibold">Correct!</div>
           ) : (
-            <div className="text-red-700 font-semibold">Incorrecto. La respuesta correcta es: {question.correctAnswer}</div>
+            <div className="text-red-700 font-semibold">Incorrect. The correct answer is: {question.correctAnswer}</div>
           )}
           {question.explanation && (
             <div className="text-gray-600 mt-2">{question.explanation}</div>
@@ -143,7 +143,7 @@ export default function QuizPage({
         onClick={handleNext}
         disabled={!showAnswer}
       >
-        {current + 1 < quiz.questions.length ? 'Siguiente' : 'Ver resultado'}
+        {current + 1 < quiz.questions.length ? 'Next' : 'View result'}
       </button>
     </div>
   );

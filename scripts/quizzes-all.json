@@ -148,6 +148,90 @@
       ]
     },
     {
+      "topic": "HTML",
+      "difficulty": "Medium",
+      "quizTitle": "Intermediate HTML Structure and Elements",
+      "questions": [
+        {
+          "text": "Which HTML element is used to embed a video?",
+          "options": ["<video>", "<media>", "<movie>", "<embed>"],
+          "correctAnswer": "<video>",
+          "explanation": "The <video> tag embeds video content in HTML."
+        },
+        {
+          "text": "What is the purpose of the <section> tag?",
+          "options": ["To define a footer", "To define a section in a document", "To create a table", "To insert a script"],
+          "correctAnswer": "To define a section in a document",
+          "explanation": "<section> groups related content into a thematic section."
+        },
+        {
+          "text": "Which input type creates a checkbox?",
+          "options": ["checkbox", "radio", "button", "submit"],
+          "correctAnswer": "checkbox",
+          "explanation": "Input type 'checkbox' creates checkboxes for user selection."
+        },
+        {
+          "text": "Which attribute is used to link an external CSS file?",
+          "options": ["src", "href", "rel", "link"],
+          "correctAnswer": "href",
+          "explanation": "The href attribute specifies the URL of the linked CSS file inside a <link> tag."
+        },
+        {
+          "text": "What does the <canvas> element do?",
+          "options": ["Creates a drawing area", "Defines a table", "Inserts an image", "Adds a script"],
+          "correctAnswer": "Creates a drawing area",
+          "explanation": "<canvas> provides a space for dynamic graphics with JavaScript."
+        }
+      ]
+    },
+    {
+      "topic": "HTML",
+      "difficulty": "Advanced",
+      "quizTitle": "Advanced HTML5 Features",
+      "questions": [
+        {
+          "text": "Which HTML5 element is used to define navigation links?",
+          "options": ["<nav>", "<navigation>", "<menu>", "<header>"],
+          "correctAnswer": "<nav>",
+          "explanation": "<nav> defines a section with navigation links."
+        },
+        {
+          "text": "What is the use of the <template> element?",
+          "options": [
+            "To embed external pages",
+            "To declare reusable HTML fragments",
+            "To insert scripts",
+            "To include styles"
+          ],
+          "correctAnswer": "To declare reusable HTML fragments",
+          "explanation": "<template> holds content that is not rendered but can be cloned via JavaScript."
+        },
+        {
+          "text": "Which attribute allows an input field to have a predefined valid pattern?",
+          "options": ["pattern", "validate", "type", "format"],
+          "correctAnswer": "pattern",
+          "explanation": "The pattern attribute lets you define a regex the input value must match."
+        },
+        {
+          "text": "What does the 'download' attribute in an <a> tag do?",
+          "options": [
+            "Opens the link in a new tab",
+            "Forces download of the linked file",
+            "Links to external stylesheet",
+            "Adds a tooltip"
+          ],
+          "correctAnswer": "Forces download of the linked file",
+          "explanation": "The download attribute prompts file download instead of navigation."
+        },
+        {
+          "text": "Which attribute makes an input field mandatory to fill before submitting a form?",
+          "options": ["required", "validate", "mandatory", "check"],
+          "correctAnswer": "required",
+          "explanation": "The required attribute forces user input in the form field."
+        }
+      ]
+    },
+    {
       "topic": "CSS",
       "difficulty": "Beginner",
       "quizTitle": "Introduction to CSS",
