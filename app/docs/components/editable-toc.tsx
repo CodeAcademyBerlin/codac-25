@@ -13,8 +13,9 @@ import {
   FolderPlus
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 
 import { createDoc } from '@/actions/doc/create-doc';
 import { deleteDoc } from '@/actions/doc/delete-doc';
@@ -99,14 +100,38 @@ function TreeNodeComponent({
   const [dropPosition, setDropPosition] = useState<'before' | 'after' | 'inside' | null>(null);
   const router = useRouter();
   const dropRef = useRef<HTMLDivElement>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
-  const [{ isDragging }, drag] = useDrag({
+  const [{ isDragging }, drag, preview] = useDrag({
     type: ItemTypes.NODE,
     item: { id: node.id, type: node.type, title: node.title, parentId: node.parentId },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
+    end: (_item, _monitor) => {
+      // Reset drop position when drag ends
+      setDropPosition(null);
+      // Clear any pending timeouts
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+        hoverTimeoutRef.current = undefined;
+      }
+    },
   });
+
+  // Use empty drag preview to prevent interference with hover detection
+  useEffect(() => {
+    preview(getEmptyImage(), { captureDraggingState: true });
+  }, [preview]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const [{ isOver }, drop] = useDrop({
     accept: ItemTypes.NODE,
@@ -118,30 +143,50 @@ function TreeNodeComponent({
 
       if (dragId === dropId) return;
 
-      const hoverBoundingRect = dropRef.current.getBoundingClientRect();
-      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-      const clientOffset = monitor.getClientOffset();
-
-      if (!clientOffset) return;
-
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-
-      // Determine drop position
-      let position: 'before' | 'after' | 'inside' = 'inside';
-
-      if (node.type === 'FOLDER') {
-        if (hoverClientY < hoverMiddleY / 2) {
-          position = 'before';
-        } else if (hoverClientY > hoverMiddleY + hoverMiddleY / 2) {
-          position = 'after';
-        } else {
-          position = 'inside';
-        }
-      } else {
-        position = hoverClientY < hoverMiddleY ? 'before' : 'after';
+      // Clear any existing timeout
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
       }
 
-      setDropPosition(position);
+      // Throttle hover updates to prevent conflicts
+      hoverTimeoutRef.current = setTimeout(() => {
+        if (!dropRef.current) return;
+
+        const hoverBoundingRect = dropRef.current.getBoundingClientRect();
+        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+        const clientOffset = monitor.getClientOffset();
+
+        if (!clientOffset) return;
+
+        const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+
+        // Ensure we're still over the element
+        if (hoverClientY < 0 || hoverClientY > hoverBoundingRect.height) return;
+
+        // Determine drop position
+        let position: 'before' | 'after' | 'inside' = 'inside';
+
+        if (node.type === 'FOLDER') {
+          // Create more generous drop zones for better UX
+          const topThreshold = hoverMiddleY * 0.25; // Top 25%
+          const bottomThreshold = hoverMiddleY * 1.75; // Bottom 25%
+
+          if (hoverClientY < topThreshold) {
+            position = 'before';
+          } else if (hoverClientY > bottomThreshold) {
+            position = 'after';
+          } else {
+            position = 'inside';
+          }
+        } else {
+          position = hoverClientY < hoverMiddleY ? 'before' : 'after';
+        }
+
+        // Only update if position changed to prevent unnecessary re-renders
+        if (dropPosition !== position) {
+          setDropPosition(position);
+        }
+      }, 16); // ~60fps throttling
     },
     drop: (item: DragItem) => {
       onMove(item.id, node.id, dropPosition || 'inside');
@@ -444,20 +489,94 @@ export function EditableToc({ nodes, onNodesChange }: EditableTocProps) {
     }
   }, [nodes, onNodesChange]);
 
+  // Optimistic move function for immediate UI updates
+  const performOptimisticMove = useCallback((
+    nodes: TreeNode[],
+    dragId: string,
+    dropId: string,
+    position: 'before' | 'after' | 'inside'
+  ): TreeNode[] => {
+    const clonedNodes = JSON.parse(JSON.stringify(nodes)) as TreeNode[];
+
+    // Find and remove the dragged node
+    let draggedNode: TreeNode | null = null;
+
+    const removeNode = (nodeList: TreeNode[]): TreeNode[] => {
+      return nodeList.filter(node => {
+        if (node.id === dragId) {
+          draggedNode = { ...node };
+          return false;
+        }
+        if (node.children) {
+          node.children = removeNode(node.children);
+        }
+        return true;
+      });
+    };
+
+    const resultNodes = removeNode(clonedNodes);
+
+    if (!draggedNode) return nodes; // If node not found, return original
+
+    // Insert the node at the new position
+    const insertNode = (nodeList: TreeNode[]): TreeNode[] => {
+      const newList: TreeNode[] = [];
+
+      for (let i = 0; i < nodeList.length; i++) {
+        const node = nodeList[i];
+
+        if (node.id === dropId && draggedNode) {
+          if (position === 'before') {
+            newList.push({ ...draggedNode, parentId: node.parentId } as TreeNode);
+            newList.push(node);
+          } else if (position === 'after') {
+            newList.push(node);
+            newList.push({ ...draggedNode, parentId: node.parentId } as TreeNode);
+          } else { // inside
+            if (node.children) {
+              node.children.push({ ...draggedNode, parentId: node.id } as TreeNode);
+            } else {
+              node.children = [{ ...draggedNode, parentId: node.id } as TreeNode];
+            }
+            newList.push(node);
+          }
+        } else {
+          if (node.children) {
+            node.children = insertNode(node.children);
+          }
+          newList.push(node);
+        }
+      }
+
+      return newList;
+    };
+
+    return insertNode(resultNodes);
+  }, []);
+
   const handleMove = useCallback(async (dragId: string, dropId: string, position: 'before' | 'after' | 'inside') => {
+    // Store original state for potential revert
+    const originalNodes = nodes;
+
     try {
+      // Optimistically update the UI first
+      const updatedNodes = performOptimisticMove(nodes, dragId, dropId, position);
+      onNodesChange(updatedNodes);
+
       const result = await moveDoc({ dragId, dropId, position });
       if (result.success) {
-        // The move was successful, but we don't need to update local state here
-        // as the parent component should refetch the data
-        // Document moved successfully
+        // Document moved successfully - the optimistic update was correct
       } else {
+        // Revert optimistic update on failure
+        onNodesChange(originalNodes);
         console.error('Failed to move document:', result.error);
       }
     } catch (error) {
+      // Revert optimistic update on error
+      onNodesChange(originalNodes);
       console.error('Failed to move:', error);
     }
-  }, []);
+  }, [nodes, onNodesChange, performOptimisticMove]);
 
   const handleAddChild = useCallback(async (parentId: string, type: 'FOLDER' | 'DOCUMENT') => {
     try {
