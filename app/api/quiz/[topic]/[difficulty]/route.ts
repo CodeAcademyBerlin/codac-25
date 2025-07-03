@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getQuiz } from '@/data/quiz/get-quiz';
+import { getQuizzes } from '@/data/quiz/get-quiz';
 
 export async function GET(
     request: Request,
@@ -15,23 +15,19 @@ export async function GET(
     }
 
     try {
-        const quiz = await getQuiz(topic, difficulty);
-
-        if (!quiz) {
-            return NextResponse.json({ error: 'Quiz not found' }, { status: 404 });
+        const quizzes = await getQuizzes(topic, difficulty);
+        if (!quizzes.length) {
+            return NextResponse.json({ error: 'No quizzes found' }, { status: 404 });
         }
-
-        // Parse the options string back into an array for each question
-        const quizWithParsedOptions = {
+        // Parse options for each quiz/question
+        const quizzesWithParsedOptions = quizzes.map((quiz) => ({
             ...quiz,
-            questions: quiz.questions.map((q) => ({
+            questions: quiz.questions.map((q: any) => ({
                 ...q,
-                options: JSON.parse(q.options as string),
+                options: Array.isArray(q.options) ? q.options : JSON.parse(q.options),
             })),
-        };
-
-
-        return NextResponse.json(quizWithParsedOptions);
+        }));
+        return NextResponse.json(quizzesWithParsedOptions);
     } catch (error) {
         console.error(`Failed to fetch quiz for topic ${topic}:`, error);
         return NextResponse.json(

@@ -717,11 +717,10 @@ model Quiz {
   id          String     @id @default(cuid())
   topic       String
   difficulty  String
+  quizTitle   String     
   questions   Question[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
-
-  @@unique([topic, difficulty])
 }
 
 model Question {

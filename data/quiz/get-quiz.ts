@@ -1,22 +1,19 @@
 import { prisma } from '@/lib/db/prisma'; 
 
-export async function getQuiz(topic: string, difficulty: string) {
+export async function getQuizzes(topic: string, difficulty: string) {
     try {
-        const quiz = await prisma.quiz.findUnique({
+        const quizzes = await prisma.quiz.findMany({
             where: {
-                topic_difficulty: {
-                    topic,
-                    difficulty,
-                },
+                topic,
+                difficulty,
             },
             include: {
                 questions: true,
             },
         });
-
-        return quiz;
+        return quizzes;
     } catch (error) {
-        console.error('Failed to fetch quiz:', error);
-        return null;
+        console.error('Failed to fetch quizzes:', error);
+        return [];
     }
 } 

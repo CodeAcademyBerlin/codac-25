@@ -1,33 +1,36 @@
 "use client";
-import { use } from "react";
-import { useEffect, useState } from 'react';
 
-type Question = {
+import { use } from "react";
+import { useEffect, useState } from "react";
+
+// Tipos locales
+interface Question {
   id: string;
   text: string;
   options: string[];
   correctAnswer: string;
   explanation?: string;
-};
+}
 
-type Quiz = {
+interface Quiz {
   id: string;
   topic: string;
   difficulty: string;
+  quizTitle: string;
   questions: Question[];
-};
+}
 
-export default function QuizPage({
+export default function QuizByIdPage({
   params,
 }: {
-  params: Promise<{ topic: string; difficulty: string }>;
+  params: Promise<{ topic: string; difficulty: string; quizId: string }>;
 }) {
-  const { topic, difficulty } = use(params);
+  const { quizId } = use(params);
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Estado para el quiz interactivo
+  // Estado interactivo
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [showAnswer, setShowAnswer] = useState(false);
@@ -38,13 +41,11 @@ export default function QuizPage({
     async function fetchQuiz() {
       try {
         setLoading(true);
-        const response = await fetch(`/api/quiz/${topic}/${difficulty}`);
+        const response = await fetch(`/api/quiz/by-id/${quizId}`);
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to fetch quiz');
+          throw new Error("Quiz not found");
         }
         const data = await response.json();
-        // Parse options if needed
         const questions = data.questions.map((q: any) => ({
           ...q,
           options: Array.isArray(q.options) ? q.options : JSON.parse(q.options),
@@ -57,7 +58,7 @@ export default function QuizPage({
       }
     }
     fetchQuiz();
-  }, [topic, difficulty]);
+  }, [quizId]);
 
   if (loading) return <div>Loading quiz...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -68,14 +69,14 @@ export default function QuizPage({
   function handleSelect(option: string) {
     setSelected(option);
     setShowAnswer(true);
-    if (option === question.correctAnswer) setScore(s => s + 1);
+    if (option === question.correctAnswer) setScore((s) => s + 1);
   }
 
   function handleNext() {
     setSelected(null);
     setShowAnswer(false);
     if (current + 1 < quiz.questions.length) {
-      setCurrent(c => c + 1);
+      setCurrent((c) => c + 1);
     } else {
       setFinished(true);
     }
@@ -102,13 +103,14 @@ export default function QuizPage({
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h1 className="text-xl font-bold mb-2">{quiz.topic} Quiz ({quiz.difficulty})</h1>
+      <h1 className="text-xl font-bold mb-2">{quiz.quizTitle}</h1>
+      <div className="mb-2 text-gray-600">{quiz.topic} ({quiz.difficulty})</div>
       <div className="mb-4">
         <span className="text-gray-600">Pregunta {current + 1} de {quiz.questions.length}</span>
       </div>
       <div className="mb-4 font-medium">{question.text}</div>
       <div className="space-y-2 mb-4">
-        {question.options.map(option => (
+        {question.options.map((option) => (
           <button
             key={option}
             className={`w-full text-left px-4 py-2 rounded border

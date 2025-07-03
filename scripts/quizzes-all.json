@@ -1,0 +1,298 @@
+[
+    {
+      "topic": "JavaScript",
+      "difficulty": "Beginner",
+      "quizTitle": "Getting Started with JavaScript",
+      "questions": [
+        {
+          "text": "What is the correct syntax to print a message in the console?",
+          "options": ["console.print('Hello')", "print('Hello')", "console.log('Hello')", "log.console('Hello')"],
+          "correctAnswer": "console.log('Hello')",
+          "explanation": "The correct method to print to the console is console.log()."
+        },
+        {
+          "text": "Which keyword is used to declare a variable in JavaScript?",
+          "options": ["var", "int", "define", "create"],
+          "correctAnswer": "var",
+          "explanation": "var, let, and const are used to declare variables in JavaScript."
+        },
+        {
+          "text": "Which data type is NOT a primitive in JavaScript?",
+          "options": ["String", "Number", "Object", "Boolean"],
+          "correctAnswer": "Object",
+          "explanation": "Objects are reference types, not primitives."
+        },
+        {
+          "text": "Which symbol is used for single-line comments?",
+          "options": ["//", "/*", "#", "<!--"],
+          "correctAnswer": "//",
+          "explanation": "JavaScript uses // for single-line comments."
+        },
+        {
+          "text": "What is the output of '2' + 2 in JavaScript?",
+          "options": ["4", "22", "NaN", "Error"],
+          "correctAnswer": "22",
+          "explanation": "The number 2 is coerced into a string, resulting in string concatenation."
+        }
+      ]
+    },
+    {
+      "topic": "JavaScript",
+      "difficulty": "Medium",
+      "quizTitle": "Intermediate JavaScript Concepts",
+      "questions": [
+        {
+          "text": "What is the result of typeof null in JavaScript?",
+          "options": ["null", "object", "undefined", "boolean"],
+          "correctAnswer": "object",
+          "explanation": "This is a well-known bug in JavaScript; typeof null returns 'object'."
+        },
+        {
+          "text": "Which method is used to parse a JSON string?",
+          "options": ["JSON.stringify()", "JSON.decode()", "JSON.parse()", "parse.JSON()"],
+          "correctAnswer": "JSON.parse()",
+          "explanation": "JSON.parse() is used to convert a JSON string into an object."
+        },
+        {
+          "text": "What does the 'this' keyword refer to inside a regular function?",
+          "options": ["The current function", "The global object", "undefined", "The parent object"],
+          "correctAnswer": "The global object",
+          "explanation": "In non-strict mode, 'this' refers to the global object in regular functions."
+        },
+        {
+          "text": "Which of the following is a falsy value?",
+          "options": ["0", "[]", "{}", "1"],
+          "correctAnswer": "0",
+          "explanation": "0 is a falsy value, while [] and {} are truthy."
+        },
+        {
+          "text": "Which array method executes a function on each array element?",
+          "options": ["filter", "forEach", "map", "reduce"],
+          "correctAnswer": "forEach",
+          "explanation": "forEach runs a callback on each element of the array."
+        }
+      ]
+    },
+    {
+      "topic": "JavaScript",
+      "difficulty": "Advanced",
+      "quizTitle": "Mastering JavaScript",
+      "questions": [
+        {
+          "text": "Which concept does JavaScript use to allow a function to access variables from its outer scope?",
+          "options": ["Scope chaining", "Currying", "Hoisting", "Closure"],
+          "correctAnswer": "Closure",
+          "explanation": "Closures allow functions to retain access to their lexical scope."
+        },
+        {
+          "text": "Which method is used to deeply clone an object in modern JavaScript?",
+          "options": ["Object.assign()", "JSON.parse(JSON.stringify())", "Object.create()", "Array.slice()"],
+          "correctAnswer": "JSON.parse(JSON.stringify())",
+          "explanation": "This method creates a deep clone of objects without functions or circular refs."
+        },
+        {
+          "text": "What is the output of `Promise.resolve(5).then(console.log)`?",
+          "options": ["Promise", "5", "undefined", "Error"],
+          "correctAnswer": "5",
+          "explanation": "The resolved value is passed to the .then() callback."
+        },
+        {
+          "text": "What does the 'async' keyword before a function declaration signify?",
+          "options": ["The function will run concurrently", "The function returns a Promise", "The function blocks execution", "The function is delayed"],
+          "correctAnswer": "The function returns a Promise",
+          "explanation": "Async functions always return a Promise."
+        },
+        {
+          "text": "Which operator is used to handle errors in async/await syntax?",
+          "options": ["try/catch", "error()", "catch()", "onError"],
+          "correctAnswer": "try/catch",
+          "explanation": "try/catch blocks are used to catch errors in async/await."
+        }
+      ]
+    },
+    {
+      "topic": "HTML",
+      "difficulty": "Beginner",
+      "quizTitle": "HTML Basics",
+      "questions": [
+        {
+          "text": "What does HTML stand for?",
+          "options": ["Hyper Text Markup Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language", "Hyperlink Tool Management Language"],
+          "correctAnswer": "Hyper Text Markup Language",
+          "explanation": "HTML stands for Hyper Text Markup Language."
+        },
+        {
+          "text": "Which tag is used to create a hyperlink?",
+          "options": ["<a>", "<link>", "<href>", "<url>"],
+          "correctAnswer": "<a>",
+          "explanation": "The <a> tag defines a hyperlink."
+        },
+        {
+          "text": "Which HTML element is used to define the title of a document?",
+          "options": ["<head>", "<meta>", "<title>", "<header>"],
+          "correctAnswer": "<title>",
+          "explanation": "The <title> tag sets the document title shown in the browser tab."
+        },
+        {
+          "text": "What is the correct HTML element for inserting a line break?",
+          "options": ["<br>", "<lb>", "<break>", "<line>"],
+          "correctAnswer": "<br>",
+          "explanation": "<br> is used to insert a line break."
+        },
+        {
+          "text": "Which attribute is used to provide alternative text for an image?",
+          "options": ["title", "alt", "src", "href"],
+          "correctAnswer": "alt",
+          "explanation": "The alt attribute provides alternative text for images."
+        }
+      ]
+    },
+    {
+      "topic": "CSS",
+      "difficulty": "Beginner",
+      "quizTitle": "Introduction to CSS",
+      "questions": [
+        {
+          "text": "What does CSS stand for?",
+          "options": ["Computer Style Sheets", "Creative Style Syntax", "Cascading Style Sheets", "Colorful Style Sheets"],
+          "correctAnswer": "Cascading Style Sheets",
+          "explanation": "CSS stands for Cascading Style Sheets and is used to style HTML elements."
+        },
+        {
+          "text": "Which HTML tag is used to link an external CSS file?",
+          "options": ["<css>", "<style>", "<link>", "<script>"],
+          "correctAnswer": "<link>",
+          "explanation": "<link> is used in the <head> to connect external stylesheets."
+        },
+        {
+          "text": "Which property is used to change the text color?",
+          "options": ["font-color", "text-color", "color", "background-color"],
+          "correctAnswer": "color",
+          "explanation": "The 'color' property defines the text color."
+        },
+        {
+          "text": "How do you add a background color in CSS?",
+          "options": ["bg-color", "backgroundColor", "background-color", "color-bg"],
+          "correctAnswer": "background-color",
+          "explanation": "'background-color' is the correct CSS property."
+        },
+        {
+          "text": "Which symbol is used to select a class in CSS?",
+          "options": [".", "#", "@", "*"],
+          "correctAnswer": ".",
+          "explanation": "A class selector starts with a period (.) in CSS."
+        }
+      ]
+    },
+    {
+      "topic": "CSS",
+      "difficulty": "Medium",
+      "quizTitle": "Styling Techniques in CSS",
+      "questions": [
+        {
+          "text": "Which unit is relative to the font-size of the parent element?",
+          "options": ["px", "em", "%", "vw"],
+          "correctAnswer": "em",
+          "explanation": "em is relative to the parent's font size."
+        },
+        {
+          "text": "What is the default position value of an HTML element?",
+          "options": ["absolute", "relative", "static", "fixed"],
+          "correctAnswer": "static",
+          "explanation": "By default, HTML elements have a static position."
+        },
+        {
+          "text": "How do you apply a style to all <p> elements inside a <div>?",
+          "options": ["div p", "div.p", "div > p", "div + p"],
+          "correctAnswer": "div p",
+          "explanation": "The space selector targets all <p> inside <div> regardless of depth."
+        },
+        {
+          "text": "Which property controls the stacking order of elements?",
+          "options": ["z-index", "order", "position", "display"],
+          "correctAnswer": "z-index",
+          "explanation": "z-index determines the vertical stacking order."
+        },
+        {
+          "text": "What does the 'inherit' keyword do in CSS?",
+          "options": ["Ignores parent style", "Applies browser default", "Copies value from parent", "Resets the style"],
+          "correctAnswer": "Copies value from parent",
+          "explanation": "'inherit' forces the property to use the parent's value."
+        }
+      ]
+    },
+    {
+      "topic": "CSS",
+      "difficulty": "Advanced",
+      "quizTitle": "Advanced CSS Layouts and Techniques",
+      "questions": [
+        {
+          "text": "Which of the following is NOT a valid display value?",
+          "options": ["inline-block", "grid", "block", "collapse"],
+          "correctAnswer": "collapse",
+          "explanation": "'collapse' is used in tables, not general layout."
+        },
+        {
+          "text": "What does the ':' pseudo-class do?",
+          "options": ["Selects only hovered elements", "Selects everything", "Excludes specified selector", "Applies when element is hidden"],
+          "correctAnswer": "Excludes specified selector",
+          "explanation": ": is used to exclude a selector from styling."
+        },
+        {
+          "text": "Which CSS layout technique allows for 2D grid structures?",
+          "options": ["Flexbox", "Float", "Grid", "Positioning"],
+          "correctAnswer": "Grid",
+          "explanation": "CSS Grid is designed for 2D layouts."
+        },
+        {
+          "text": "Which media query detects screen widths less than 600px?",
+          "options": ["@media (width < 600px)", "@media max-width:600px", "@media (max-width: 600px)", "@media screen-size 600px"],
+          "correctAnswer": "@media (max-width: 600px)",
+          "explanation": "This is the correct syntax for max-width queries."
+        },
+        {
+          "text": "What is the purpose of the 'contain' property in CSS?",
+          "options": ["Limit layout recalculation", "Prevent image loading", "Stop JavaScript execution", "Hide overflow"],
+          "correctAnswer": "Limit layout recalculation",
+          "explanation": "'contain' helps browsers optimize rendering by isolating elements."
+        }
+      ]
+    },
+    {
+      "topic": "React",
+      "difficulty": "Beginner",
+      "quizTitle": "React Fundamentals",
+      "questions": [
+        {
+          "text": "What is React?",
+          "options": ["A CSS library", "A JavaScript framework", "A JavaScript library", "A database tool"],
+          "correctAnswer": "A JavaScript library",
+          "explanation": "React is a JavaScript library for building user interfaces."
+        },
+        {
+          "text": "Which command creates a new React app using Create React App?",
+          "options": ["npx create-react-app myApp", "npm react init", "create-react myApp", "npm new react-app"],
+          "correctAnswer": "npx create-react-app myApp",
+          "explanation": "npx create-react-app is the standard method to scaffold a React app."
+        },
+        {
+          "text": "What is the correct file extension for a React component?",
+          "options": [".html", ".js", ".jsx", ".component"],
+          "correctAnswer": ".jsx",
+          "explanation": ".jsx is used for JavaScript files that contain JSX syntax."
+        },
+        {
+          "text": "What does JSX stand for?",
+          "options": ["JavaScript XML", "Java Syntax Extension", "JSON Syntax Extension", "JavaScript Extension"],
+          "correctAnswer": "JavaScript XML",
+          "explanation": "JSX allows writing HTML in JavaScript."
+        },
+        {
+          "text": "Which hook is used to add state to functional components?",
+          "options": ["useEffect", "useReducer", "useState", "useContext"],
+          "correctAnswer": "useState",
+          "explanation": "useState is the primary hook for state in functional components."
+        }
+      ]
+    }
+]
