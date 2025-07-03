@@ -1,5 +1,6 @@
 "use client"
 
+import { CodacLogo } from "@/components/codac-logo"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { LearningProgress } from "@/components/dashboard/learning-progress"
 import { RecentActivity } from "@/components/dashboard/recent-activity"
@@ -14,7 +15,11 @@ export default function Page() {
   return (
     <div>
       <DashboardHeader />
+      {/* <CodacLogo
 
+        leftDiamondAnimation="animate-slide-in-left"
+        rightDiamondAnimation="animate-slide-in-right"
+      /> */}
       <div className="flex flex-1 flex-col gap-4 p-4">
         {/* Welcome Section */}
         <div className="space-y-2">

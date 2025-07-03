@@ -1,0 +1,22 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simplified logo for favicon -->
+  <!-- Left Diamond -->
+  <path d="M10 3L6 16L10 29L2 16L10 3Z" fill="white"/>
+  
+  <!-- Right Diamond -->
+  <path d="M22 29L26 16L22 3L30 16L22 29Z" fill="white"/>
+  
+  <!-- Center divider for better separation at small sizes -->
+  <line x1="16" y1="8" x2="16" y2="24" stroke="#fff" stroke-width="1" opacity="0.3"/>
+  
+  <defs>
+    <linearGradient id="gradient1" x1="6" y1="29" x2="6" y2="3" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E77096"/>
+      <stop offset="1" stop-color="#52EACE"/>
+    </linearGradient>
+    <linearGradient id="gradient2" x1="26" y1="29" x2="26" y2="3" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E77096"/>
+      <stop offset="1" stop-color="#52EACE"/>
+    </linearGradient>
+  </defs>
+</svg> 
