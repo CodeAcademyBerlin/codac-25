@@ -274,6 +274,342 @@ async function main() {
         }
     }
 
+    // Create portfolio documents with visualizations for all students
+    console.log('📊 Creating portfolio documents with visualizations...');
+
+    const portfolioTemplates = [
+        {
+            title: 'Climate Data Analysis Portfolio',
+            content: [
+                {
+                    type: 'h1',
+                    children: [{ text: '🌡️ Climate Data Analysis Portfolio' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'A comprehensive analysis of global temperature trends using machine learning and data visualization techniques.' },
+                    ],
+                },
+                {
+                    type: 'h2',
+                    children: [{ text: 'Project Overview' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'This project analyzes 150+ years of climate data to identify patterns and predict future temperature trends using LSTM neural networks.' },
+                    ],
+                },
+                {
+                    type: 'h2',
+                    children: [{ text: 'Key Findings' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'Our analysis reveals significant temperature trends over the past century:' },
+                    ],
+                },
+                {
+                    type: 'chart',
+                    chartType: 'line',
+                    title: 'Global Temperature Trends (1880-2023)',
+                    width: 500,
+                    height: 300,
+                    children: [{ text: '' }],
+                },
+                {
+                    type: 'h2',
+                    children: [{ text: 'Technical Skills Applied' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'This project showcases proficiency in various data science tools and techniques:' },
+                    ],
+                },
+                {
+                    type: 'chart',
+                    chartType: 'bar',
+                    title: 'Technical Skills Proficiency',
+                    width: 450,
+                    height: 300,
+                    children: [{ text: '' }],
+                },
+                {
+                    type: 'h2',
+                    children: [{ text: 'Model Performance' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'The LSTM model achieved excellent performance metrics across different validation datasets:' },
+                    ],
+                },
+                {
+                    type: 'chart',
+                    chartType: 'scatter',
+                    title: 'Machine Learning Model Performance',
+                    width: 450,
+                    height: 300,
+                    children: [{ text: '' }],
+                },
+            ],
+        },
+        {
+            title: 'AI-Powered E-Commerce Platform',
+            content: [
+                {
+                    type: 'h1',
+                    children: [{ text: '🛍️ AI-Powered E-Commerce Platform' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'A modern shopping platform built with React and Node.js, featuring ML-based product recommendations and real-time analytics.' },
+                    ],
+                },
+                {
+                    type: 'h2',
+                    children: [{ text: 'Technical Stack' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'Frontend: ' },
+                        { code: true, text: 'React' },
+                        { text: ', ' },
+                        { code: true, text: 'TypeScript' },
+                        { text: ', ' },
+                        { code: true, text: 'Tailwind CSS' },
+                    ],
+                },
+                {
+                    type: 'h2',
+                    children: [{ text: 'User Engagement Analytics' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'Real-time analytics dashboard showing user behavior patterns and conversion metrics:' },
+                    ],
+                },
+                {
+                    type: 'chart',
+                    chartType: 'line',
+                    title: 'User Engagement Over Time',
+                    width: 500,
+                    height: 300,
+                    children: [{ text: '' }],
+                },
+                {
+                    type: 'h2',
+                    children: [{ text: 'Development Skills' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'This project demonstrates proficiency in modern web development technologies:' },
+                    ],
+                },
+                {
+                    type: 'chart',
+                    chartType: 'bar',
+                    title: 'Frontend Development Skills',
+                    width: 450,
+                    height: 300,
+                    children: [{ text: '' }],
+                },
+            ],
+        },
+        {
+            title: 'Financial Analytics Dashboard',
+            content: [
+                {
+                    type: 'h1',
+                    children: [{ text: '💰 Financial Analytics Dashboard' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'A comprehensive financial analysis tool built with Python and React, featuring real-time market data visualization and predictive modeling.' },
+                    ],
+                },
+                {
+                    type: 'h2',
+                    children: [{ text: 'Market Performance Analysis' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'Track and analyze market performance across different sectors:' },
+                    ],
+                },
+                {
+                    type: 'chart',
+                    chartType: 'line',
+                    title: 'Market Performance Trends',
+                    width: 500,
+                    height: 300,
+                    children: [{ text: '' }],
+                },
+                {
+                    type: 'h2',
+                    children: [{ text: 'Portfolio Allocation' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'Optimal portfolio allocation based on risk assessment and return projections:' },
+                    ],
+                },
+                {
+                    type: 'chart',
+                    chartType: 'doughnut',
+                    title: 'Portfolio Asset Allocation',
+                    width: 400,
+                    height: 400,
+                    children: [{ text: '' }],
+                },
+                {
+                    type: 'h2',
+                    children: [{ text: 'Risk vs Return Analysis' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'Comprehensive risk-return analysis for investment decision making:' },
+                    ],
+                },
+                {
+                    type: 'chart',
+                    chartType: 'scatter',
+                    title: 'Risk vs Return Analysis',
+                    width: 450,
+                    height: 300,
+                    children: [{ text: '' }],
+                },
+            ],
+        },
+        {
+            title: 'Social Media Analytics Platform',
+            content: [
+                {
+                    type: 'h1',
+                    children: [{ text: '📱 Social Media Analytics Platform' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'A powerful social media analytics tool that tracks engagement, sentiment, and growth metrics across multiple platforms.' },
+                    ],
+                },
+                {
+                    type: 'h2',
+                    children: [{ text: 'Engagement Metrics' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'Track engagement rates and user interaction patterns:' },
+                    ],
+                },
+                {
+                    type: 'chart',
+                    chartType: 'area',
+                    title: 'Social Media Engagement Over Time',
+                    width: 500,
+                    height: 300,
+                    children: [{ text: '' }],
+                },
+                {
+                    type: 'h2',
+                    children: [{ text: 'Platform Comparison' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'Compare performance across different social media platforms:' },
+                    ],
+                },
+                {
+                    type: 'chart',
+                    chartType: 'bar',
+                    title: 'Platform Performance Comparison',
+                    width: 450,
+                    height: 300,
+                    children: [{ text: '' }],
+                },
+                {
+                    type: 'h2',
+                    children: [{ text: 'Sentiment Analysis' }],
+                },
+                {
+                    type: 'p',
+                    children: [
+                        { text: 'Real-time sentiment analysis of social media mentions and interactions:' },
+                    ],
+                },
+                {
+                    type: 'chart',
+                    chartType: 'radar',
+                    title: 'Sentiment Analysis Breakdown',
+                    width: 400,
+                    height: 400,
+                    children: [{ text: '' }],
+                },
+            ],
+        },
+    ];
+
+    // Create portfolio documents for each student
+    for (const student of students) {
+        // Determine which portfolios to create based on student's course enrollments
+        const hasDataScience = student.enrollments.some(e =>
+            e.courseSlug.includes('data-science') ||
+            e.courseSlug.includes('python') ||
+            e.courseSlug.includes('ml')
+        );
+        const hasWebDev = student.enrollments.some(e =>
+            e.courseSlug.includes('frontend') ||
+            e.courseSlug.includes('fullstack') ||
+            e.courseSlug.includes('react')
+        );
+
+        const selectedTemplates = [];
+
+        if (hasDataScience) {
+            selectedTemplates.push(portfolioTemplates[0]); // Climate Data Analysis
+            selectedTemplates.push(portfolioTemplates[2]); // Financial Analytics
+        }
+
+        if (hasWebDev) {
+            selectedTemplates.push(portfolioTemplates[1]); // E-Commerce Platform
+            selectedTemplates.push(portfolioTemplates[3]); // Social Media Analytics
+        }
+
+        // If no specific track, give them a mix
+        if (selectedTemplates.length === 0) {
+            selectedTemplates.push(portfolioTemplates[0], portfolioTemplates[1]);
+        }
+
+        // Create documents for this student
+        for (const template of selectedTemplates) {
+            const firstName = student.name?.split(' ')[0] || 'Student';
+            await prisma.document.create({
+                data: {
+                    title: `${firstName}'s ${template.title}`,
+                    content: JSON.stringify(template.content),
+                    isPublished: true,
+                    authorId: student.id,
+                },
+            });
+        }
+
+        console.log(`✅ Created ${selectedTemplates.length} portfolio document(s) for ${student.name || 'Student'}`);
+    }
+
     // Create admin user
     console.log('👨‍💼 Creating admin user...');
     const adminUser = await prisma.user.create({
@@ -298,6 +634,7 @@ async function main() {
     console.log(`📋 Projects: ${courseWithProjects.length}`);
     console.log(`📝 Lessons: ${courseWithProjects.reduce((sum, c) => sum + c.lessons.length, 0)}`);
     console.log(`🎯 Enrollments: ${students.reduce((sum, s) => sum + s.enrollments.length, 0)}`);
+    console.log(`📊 Portfolio Documents: ${students.length * 2} (with interactive visualizations)`);
     console.log('\n🔐 Login with any student email and password: password123');
     console.log('🔐 Admin login: admin@codac.academy / password123');
     console.log('\n📊 Student Progress Summary:');
