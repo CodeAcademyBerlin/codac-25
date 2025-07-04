@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getQuizzes } from '@/data/quiz/get-quiz';
 
 export async function GET(
-    request: Request,
+    _request: Request,
     { params }: { params: { topic: string; difficulty: string } }
 ) {
     const { topic, difficulty } = params;

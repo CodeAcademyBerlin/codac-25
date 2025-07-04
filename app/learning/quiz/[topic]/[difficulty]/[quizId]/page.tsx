@@ -3,6 +3,7 @@
 import { use } from "react";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 // Tipos locales
 interface Question {
@@ -98,7 +99,7 @@ export default function QuizByIdPage({
   function handleNext() {
     setSelected(null);
     setShowAnswer(false);
-    if (current + 1 < quiz.questions.length) {
+    if (quiz && current + 1 < quiz.questions.length) {
       setCurrent((c) => c + 1);
     } else {
       setFinished(true);
@@ -122,7 +123,7 @@ export default function QuizByIdPage({
             </li>
           ))}
         </ul>
-        <a href="/learning/quiz" className="block text-center text-blue-600 hover:underline">Back to quiz selection</a>
+        <Link href="/learning/quiz" className="block text-center text-blue-600 hover:underline">Back to quiz selection</Link>
       </div>
     );
   }
@@ -131,7 +132,7 @@ export default function QuizByIdPage({
     <div className="relative min-h-screen flex items-center justify-center py-10 px-2" style={{ backgroundImage: 'url(/codacback.png)', backgroundSize: '77px 61px', backgroundRepeat: 'repeat', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
       <div className="max-w-lg w-full p-6 bg-white/90 dark:bg-zinc-900/90 rounded shadow-lg z-10">
         <div className="mb-4">
-          <a href="/learning/quiz" className="text-blue-600 hover:underline font-medium">← Back to quiz selection</a>
+          <Link href="/learning/quiz" className="text-blue-600 hover:underline font-medium">← Back to quiz selection</Link>
         </div>
         <h1 className="text-xl font-bold mb-2">{quiz.quizTitle}</h1>
         <div className="mb-2 text-gray-600">{quiz.topic} ({quiz.difficulty})</div>

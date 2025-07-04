@@ -1,6 +1,7 @@
 "use client";
 import { use } from "react";
 import { useEffect, useState } from 'react';
+import Link from "next/link";
 
 type Question = {
   id: string;
@@ -74,7 +75,7 @@ export default function QuizPage({
   function handleNext() {
     setSelected(null);
     setShowAnswer(false);
-    if (current + 1 < quiz.questions.length) {
+    if (quiz && current + 1 < quiz.questions.length) {
       setCurrent(c => c + 1);
     } else {
       setFinished(true);
@@ -95,7 +96,7 @@ export default function QuizPage({
             </li>
           ))}
         </ul>
-        <a href="/learning/quiz" className="block text-center text-blue-600 hover:underline">Back to quiz selection</a>
+        <Link href="/learning/quiz" className="block text-center text-blue-600 hover:underline">Back to quiz selection</Link>
       </div>
     );
   }
@@ -104,7 +105,7 @@ export default function QuizPage({
     <div className="relative min-h-screen flex items-center justify-center py-10 px-2" style={{ backgroundImage: 'url(/codacback.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
       <div className="max-w-lg w-full p-6 bg-white/90 dark:bg-zinc-900/90 rounded shadow-lg z-10">
         <div className="mb-4">
-          <a href="/learning/quiz" className="text-blue-600 hover:underline font-medium">← Back to quiz selection</a>
+          <Link href="/learning/quiz" className="text-blue-600 hover:underline font-medium">← Back to quiz selection</Link>
         </div>
         <h1 className="text-xl font-bold mb-2">{quiz.topic} Quiz ({quiz.difficulty})</h1>
         <div className="mb-4">
