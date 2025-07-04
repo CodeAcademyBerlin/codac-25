@@ -25,8 +25,10 @@ import {
 import { NavSecondary } from './nav-secondary';
 import { NavTop } from './nav-top';
 import { NavUser } from './nav-user';
+import { useSession } from 'next-auth/react';
+import { User } from 'next-auth';
 
-const navigationData = {
+const buildNavigationData = (_role?: string) => ({
   navTop: [
     {
       title: 'Dashboard',
@@ -64,14 +66,14 @@ const navigationData = {
     },
   ],
   footer: [],
-};
+});
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = useSession();
-  const [navData, setNavData] = useState(() => buildNavigationData(undefined));
+  const [navData, setNavData] = React.useState(() => buildNavigationData(undefined));
 
   // Update navigation when user role is available
-  useEffect(() => {
+  React.useEffect(() => {
     if (session?.user) {
       const userData = session.user as User;
       setNavData(buildNavigationData(userData.role));
@@ -105,11 +107,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
 
-        <NavTop items={navigationData.navTop} />
-        <NavSecondary items={navigationData.navSecondary} className="mt-auto" />
+        <NavTop items={navData.navTop} />
+        <NavSecondary items={navData.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavSecondary items={navigationData.footer} />
+        <NavSecondary items={navData.footer} />
         <NavUser />
       </SidebarFooter>
     </Sidebar>

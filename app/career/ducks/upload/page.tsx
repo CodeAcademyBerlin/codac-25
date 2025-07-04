@@ -48,7 +48,7 @@ export default function DuckUploadPage() {
     onUploadBegin: () => {
       toast.loading("Your duck is taking flight...", { id: "duck-upload" });
     },
-    onUploadProgress: (progress) => {
+    onUploadProgress: () => {
       // You could update the loading toast with progress here
     },
   });

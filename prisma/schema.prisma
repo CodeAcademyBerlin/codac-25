@@ -622,6 +622,14 @@ enum MentorshipStatus {
   DECLINED
 }
 
+enum MentorSessionStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  DECLINED
+}
+
 enum AchievementType {
   COURSE_COMPLETION
   STREAK
