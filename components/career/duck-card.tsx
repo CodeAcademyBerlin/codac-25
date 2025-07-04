@@ -1,9 +1,15 @@
 import Link from "next/link";
-import { formatDistanceToNow } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Duck } from "@prisma/client";
+import { deleteDuck } from "@/actions/duck/delete-duck";
 import { getDucks } from "@/actions/duck/get-ducks";
 
 type DuckForCard = Awaited<ReturnType<typeof getDucks>>[number];

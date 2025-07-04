@@ -356,8 +356,30 @@ model Mentorship {
   acceptedAt DateTime?
   endedAt    DateTime?
 
+  // Add sessions relation
+  sessions MentorSession[]
+
   @@unique([mentorId, menteeId])
   @@map("mentorships")
+}
+
+// Mentor Session Booking Model
+model MentorSession {
+  id        String             @id @default(cuid())
+  status    MentorSessionStatus @default(PENDING)
+  scheduledFor DateTime
+  completedAt DateTime?
+  notes      String?
+  feedback   String?
+  
+  // Relation to mentorship
+  mentorshipId String
+  mentorship   Mentorship @relation(fields: [mentorshipId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("mentor_sessions")
 }
 
 // Gamification & Achievements
@@ -726,4 +748,13 @@ enum JobApplicationStatus {
   INTERVIEW
   REJECTED
   ACCEPTED
+}
+
+// Add new enum for session status
+enum MentorSessionStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  DECLINED
 }

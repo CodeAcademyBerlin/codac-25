@@ -12,7 +12,6 @@ import { auth } from "@/lib/auth/auth";
 import { SecretDuckForm } from "@/components/career/secret-duck-form";
 import { getDucks } from "@/actions/duck/get-ducks";
 import { DuckCard } from "@/components/career/duck-card";
-import { Duck, Job as JobType } from "@prisma/client";
 
 type Job = Awaited<ReturnType<typeof getJobs>>[number];
 type DuckItem = Awaited<ReturnType<typeof getDucks>>[number];

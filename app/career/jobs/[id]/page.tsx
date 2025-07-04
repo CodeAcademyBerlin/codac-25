@@ -87,7 +87,9 @@ export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
               </div>
               {job.salary && (
                 <div className="flex items-center gap-2">
-                  <IndianRupee className="h-5 w-5 text-muted-foreground" />
+                  <span className="text-lg font-semibold text-muted-foreground">
+                    €
+                  </span>
                   <span>{job.salary}</span>
                 </div>
               )}

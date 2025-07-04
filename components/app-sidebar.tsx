@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Book,
@@ -14,9 +14,10 @@ import {
   GraduationCap,
   FileText,
   Pyramid,
-} from 'lucide-react';
-import Link from 'next/link';
-import * as React from 'react';
+} from "lucide-react";
+import Link from "next/link";
+import * as React from "react";
+import { useEffect, useState } from "react";
 
 import {
   Sidebar,
@@ -26,186 +27,200 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
+} from "@/components/ui/sidebar";
 
-import { NavMain } from './nav-main';
-import { NavSecondary } from './nav-secondary';
-import { NavUser } from './nav-user';
+import { NavMain } from "./nav-main";
+import { NavSecondary } from "./nav-secondary";
+import { NavUser } from "./nav-user";
+import { useSession } from "next-auth/react";
+import { User } from "@prisma/client";
 
-const data = {
-  navMain: [
+// Build navigation data with appropriate items based on user role
+const buildNavigationData = (userRole?: string) => {
+  const isMentor = userRole === "MENTOR" || userRole === "ADMIN";
 
-    {
-      title: 'Dashboard',
-      url: '/',
-      icon: BarChart3,
-      isActive: false,
-      items: [
+  const mentorshipItems = isMentor
+    ? [
         {
-          title: 'Overview',
-          url: '/dashboard',
+          title: "My Sessions",
+          url: "/mentorship/sessions",
+        },
+      ]
+    : [
+        {
+          title: "Find a Mentor",
+          url: "/mentorship/find",
         },
         {
-          title: 'Progress',
-          url: '/dashboard/progress',
+          title: "My Mentors",
+          url: "/mentorship/my-mentors",
         },
         {
-          title: 'Achievements',
-          url: '/dashboard/achievements',
+          title: "Become a Mentor",
+          url: "/mentorship/become-mentor",
         },
-      ],
-    },
-    {
-      title: 'My Learning',
-      url: '/learning',
-      icon: Book,
-      items: [
-        {
-          title: 'Learning Overview',
-          url: '/learning',
-        },
-        {
-          title: 'Web Development',
-          url: '/learning/web',
-        },
-        {
-          title: 'Data Science',
-          url: '/learning/data',
-        },
-        {
-          title: 'Career Services',
-          url: '/learning/career',
-        },
-        {
-          title: 'All Materials',
-          url: '/docs?type=COURSE_MATERIAL',
-        },
-      ],
-    },
-    {
-      title: 'Community',
-      url: '/community',
-      icon: Users,
-      items: [
-        {
-          title: 'Cohorts',
-          url: '/community/cohorts',
-        },
-        {
-          title: 'Students',
-          url: '/community/students',
-        },
-        {
-          title: 'Mentors',
-          url: '/community/mentors',
-        },
-        {
-          title: 'Alumni',
-          url: '/community/alumni',
-        },
-        // {
-        //   title: 'Showcase',
-        //   url: '/community/showcase',
-        // },
-        // {
-        //   title: 'Events',
-        //   url: '/community/events',
-        // },
-        // {
-        //   title: 'Study Groups',
-        //   url: '/community/groups',
-        // },
-      ],
-    },
-    {
-      title: 'Career Center',
-      url: '/career',
-      icon: Briefcase,
-      items: [
-        {
-          title: 'Job Board',
-          url: '/career/jobs',
-        },
-        {
-          title: 'Alumni Network',
-          url: '/career/alumni',
-        },
-        {
-          title: 'Portfolio',
-          url: '/career/portfolio',
-        },
-        {
-          title: 'Interview Prep',
-          url: '/career/interview-prep',
-        },
-      ],
-    },
-    {
-      title: 'Mentorship',
-      url: '/mentorship',
-      icon: GraduationCap,
-      items: [
-        {
-          title: 'Find a Mentor',
-          url: '/mentorship/find',
-        },
-        {
-          title: 'My Mentors',
-          url: '/mentorship/my-mentors',
-        },
-        {
-          title: 'Become a Mentor',
-          url: '/mentorship/become-mentor',
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: 'Documents',
-      url: '/docs',
-      icon: FileText,
-    },
-    {
-      title: 'Messages',
-      url: '/messages',
-      icon: MessageSquare,
-      badge: '3',
-    },
-    {
-      title: 'Calendar',
-      url: '/calendar',
-      icon: Calendar,
-    },
-    {
-      title: 'Achievements',
-      url: '/achievements',
-      icon: Trophy,
-    },
-    {
-      title: 'Search',
-      url: '/search',
-      icon: Search,
-    },
-  ],
-  footer: [
-    {
-      title: 'Settings',
-      url: '/settings',
-      icon: Settings,
-    },
-    {
-      title: 'Help & Support',
-      url: '/help',
-      icon: HelpCircle,
-    },
-  ],
+      ];
+
+  return {
+    navMain: [
+      {
+        title: "Dashboard",
+        url: "/",
+        icon: BarChart3,
+        isActive: false,
+        items: [
+          {
+            title: "Overview",
+            url: "/dashboard",
+          },
+          {
+            title: "Progress",
+            url: "/dashboard/progress",
+          },
+          {
+            title: "Achievements",
+            url: "/dashboard/achievements",
+          },
+        ],
+      },
+      {
+        title: "My Learning",
+        url: "/learning",
+        icon: Book,
+        items: [
+          {
+            title: "Learning Overview",
+            url: "/learning",
+          },
+          {
+            title: "Web Development",
+            url: "/learning/web",
+          },
+          {
+            title: "Data Science",
+            url: "/learning/data",
+          },
+          {
+            title: "Career Services",
+            url: "/learning/career",
+          },
+          {
+            title: "All Materials",
+            url: "/docs?type=COURSE_MATERIAL",
+          },
+        ],
+      },
+      {
+        title: "Community",
+        url: "/community",
+        icon: Users,
+        items: [
+          {
+            title: "Cohorts",
+            url: "/community/cohorts",
+          },
+          {
+            title: "Students",
+            url: "/community/students",
+          },
+          {
+            title: "Mentors",
+            url: "/community/mentors",
+          },
+          {
+            title: "Alumni",
+            url: "/community/alumni",
+          },
+        ],
+      },
+      {
+        title: "Career Center",
+        url: "/career",
+        icon: Briefcase,
+        items: [
+          {
+            title: "Job Board",
+            url: "/career/jobs",
+          },
+          {
+            title: "Alumni Network",
+            url: "/career/alumni",
+          },
+          {
+            title: "Portfolio",
+            url: "/career/portfolio",
+          },
+          {
+            title: "Interview Prep",
+            url: "/career/interview-prep",
+          },
+        ],
+      },
+      {
+        title: "Mentorship",
+        url: "/mentorship",
+        icon: GraduationCap,
+        items: mentorshipItems,
+      },
+    ],
+    navSecondary: [
+      {
+        title: "Documents",
+        url: "/docs",
+        icon: FileText,
+      },
+      {
+        title: "Messages",
+        url: "/messages",
+        icon: MessageSquare,
+        badge: "3",
+      },
+      {
+        title: "Calendar",
+        url: "/calendar",
+        icon: Calendar,
+      },
+      {
+        title: "Achievements",
+        url: "/achievements",
+        icon: Trophy,
+      },
+      {
+        title: "Search",
+        url: "/search",
+        icon: Search,
+      },
+    ],
+    footer: [
+      {
+        title: "Settings",
+        url: "/settings",
+        icon: Settings,
+      },
+      {
+        title: "Help & Support",
+        url: "/help",
+        icon: HelpCircle,
+      },
+    ],
+  };
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session } = useSession();
+  const [navData, setNavData] = useState(() => buildNavigationData(undefined));
+
+  // Update navigation when user role is available
+  useEffect(() => {
+    if (session?.user) {
+      const userData = session.user as User;
+      setNavData(buildNavigationData(userData.role));
+    }
+  }, [session]);
+
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader >
+      <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
@@ -217,10 +232,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Pyramid className="!size-5" />
                 </div>
                 <div className=" flex-1 text-left text-sm hidden sm:grid leading-tight">
-                  <span className="truncate font-semibold  text-2xl ">codac </span>
-                  {/* <span className="truncate text-xs text-muted-foreground">
-                    community
-                  </span> */}
+                  <span className="truncate font-semibold  text-2xl ">
+                    codac{" "}
+                  </span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -228,15 +242,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={navData.navMain} />
+        <NavSecondary items={navData.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        {/* <div className="flex items-center justify-between px-2 pb-2">
-          <span className="text-xs text-muted-foreground">Customize</span>
-          <ThemePicker variant="popover" align="end" />
-        </div> */}
-        <NavSecondary items={data.footer} />
+        <NavSecondary items={navData.footer} />
         <NavUser />
       </SidebarFooter>
     </Sidebar>

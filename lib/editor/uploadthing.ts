@@ -1,7 +1,5 @@
-import type { FileRouter } from "uploadthing/next";
-import { createUploadthing } from "uploadthing/next";
-
-import { prisma } from "@/lib/db/prisma";
+import { createUploadthing, type FileRouter } from "uploadthing/next";
+import { UploadThingError } from "uploadthing/server";
 
 const f = createUploadthing();
 
