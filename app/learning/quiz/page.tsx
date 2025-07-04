@@ -32,7 +32,7 @@ export default function QuizSelectorPage() {
         setLevels(data.difficulties || []);
         setCategory((data.topics && data.topics[0]) || '');
         setLevel((data.difficulties && data.difficulties[0]) || '');
-      } catch (err) {
+      } catch {
         setError('Failed to load quiz options');
       }
     }
@@ -88,8 +88,8 @@ export default function QuizSelectorPage() {
       const quizzesList = Array.isArray(data) ? data : (data.quizzes || [data]);
       if (!quizzesList.length) throw new Error('No hay quizzes disponibles.');
       setQuizzes(quizzesList.map((q: any) => ({ id: q.id, quizTitle: q.quizTitle })));
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }

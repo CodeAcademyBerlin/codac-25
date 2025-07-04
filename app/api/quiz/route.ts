@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { getAvailableTopics, getAvailableDifficulties } from '@/data/quiz/get-quiz';
 
 export async function GET() {
@@ -8,7 +9,7 @@ export async function GET() {
       getAvailableDifficulties(),
     ]);
     return NextResponse.json({ topics, difficulties });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch topics or difficulties' }, { status: 500 });
   }
 } 

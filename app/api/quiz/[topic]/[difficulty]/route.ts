@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
+
 import { getQuizzes } from '@/data/quiz/get-quiz';
 
 export async function GET(
     _request: Request,
-    { params }: { params: { topic: string; difficulty: string } }
+    { params }: { params: Promise<{ topic: string; difficulty: string }> }
 ) {
-    const { topic, difficulty } = params;
+    const { topic, difficulty } = await params;
 
     if (!topic || !difficulty) {
         return NextResponse.json(

@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+
 import { prisma } from "@/lib/db/prisma";
 
 export async function GET(
   _request: Request,
-  { params }: { params: { quizId: string } }
+  { params }: { params: Promise<{ quizId: string }> }
 ) {
-  const { quizId } = params;
+  const { quizId } = await params;
   if (!quizId) {
     return NextResponse.json({ error: "Missing quizId" }, { status: 400 });
   }
