@@ -82,6 +82,7 @@ model User {
   progress     LessonProgress[]
   assignments  AssignmentSubmission[]
   achievements UserAchievement[]
+  quizResults  QuizResult[]
 
   // Community Relations
   posts             CommunityPost[]
@@ -721,6 +722,8 @@ model Quiz {
   questions   Question[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+
+  quizResults QuizResult[]
 }
 
 model Question {
@@ -732,4 +735,16 @@ model Question {
   quizId        String
   quiz          Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   createdAt     DateTime @default(now())
+}
+
+model QuizResult {
+  id        String   @id @default(cuid())
+  userId    String
+  quizId    String
+  score     Int
+  total     Int
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
 }
