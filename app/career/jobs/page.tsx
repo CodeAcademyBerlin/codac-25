@@ -1,25 +1,38 @@
-import { Suspense } from 'react'
-import Link from 'next/link'
-import { Plus } from 'lucide-react'
+import { Plus } from "lucide-react";
+import Link from "next/link";
+import { Suspense } from "react";
 
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
+import { getDucks } from "@/actions/duck/get-ducks";
+import { getJobs } from "@/actions/job/get-jobs";
+import { DuckCard } from "@/components/career/duck-card";
+import { JobCard } from "@/components/career/job-card";
+import { JobFilters } from "@/components/career/job-filters";
+import { SecretDuckForm } from "@/components/career/secret-duck-form";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { auth } from "@/lib/auth/auth";
 
-import { getJobs } from '@/actions/job/get-jobs'
-import { JobCard } from '@/components/career/job-card'
-import { JobFilters } from '@/components/career/job-filters'
+
+type Job = Awaited<ReturnType<typeof getJobs>>[number];
+type DuckItem = Awaited<ReturnType<typeof getDucks>>[number];
 
 interface JobsPageProps {
-  searchParams: {
-    search?: string
-    type?: string
-    level?: string
-    remote?: string
-    company?: string
-  }
+  searchParams: Promise<{
+    search?: string;
+    type?: string;
+    level?: string;
+    remote?: string;
+    company?: string;
+  }>;
 }
 
 export default async function JobsPage({ searchParams }: JobsPageProps) {
+  const params = await searchParams;
+  const session = await auth();
+  const user = session?.user;
+
+  const canPostJob = user?.role === "ADMIN" || user?.role === "MENTOR";
+
   return (
     <div className="container mx-auto py-8">
       <div className="flex items-center justify-between mb-8">
@@ -29,12 +42,14 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
             Discover career opportunities from our community and partners
           </p>
         </div>
-        <Button asChild>
-          <Link href="/career/jobs/post">
-            <Plus className="h-4 w-4 mr-2" />
-            Post a Job
-          </Link>
-        </Button>
+        {canPostJob && (
+          <Button asChild>
+            <Link href="/career/jobs/post">
+              <Plus className="h-4 w-4 mr-2" />
+              Post a Job
+            </Link>
+          </Button>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -46,18 +61,41 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
         {/* Jobs List */}
         <div className="lg:col-span-3">
           <Suspense fallback={<JobsLoading />}>
-            <JobsList searchParams={searchParams} />
+            <JobsList searchParams={params} />
           </Suspense>
         </div>
       </div>
+      <SecretDuckForm />
     </div>
-  )
+  );
 }
 
-async function JobsList({ searchParams }: { searchParams: JobsPageProps['searchParams'] }) {
-  const jobs = await getJobs(searchParams)
+type JobsListProps = {
+  searchParams: {
+    search?: string;
+    type?: string;
+    level?: string;
+    remote?: string;
+    company?: string;
+  };
+};
 
-  if (jobs.length === 0) {
+async function JobsList({ searchParams }: JobsListProps) {
+  const jobs = await getJobs(searchParams);
+
+  // Handle ducks gracefully - if table doesn't exist, use empty array
+  let ducks: DuckItem[] = [];
+  try {
+    ducks = await getDucks();
+  } catch (error) {
+    console.warn('Failed to fetch ducks:', error);
+  }
+
+  const combinedList = [...jobs, ...ducks].sort(
+    (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+  );
+
+  if (combinedList.length === 0) {
     return (
       <div className="text-center py-12">
         <h3 className="text-lg font-semibold mb-2">No jobs found</h3>
@@ -65,16 +103,23 @@ async function JobsList({ searchParams }: { searchParams: JobsPageProps['searchP
           Try adjusting your filters or check back later for new opportunities.
         </p>
       </div>
-    )
+    );
   }
+
+  // Type guard to check if an item is a job
+  const isJob = (item: Job | DuckItem): item is Job => "company" in item;
 
   return (
     <div className="space-y-6">
-      {jobs.map((job) => (
-        <JobCard key={job.id} job={job} />
-      ))}
+      {combinedList.map((item) =>
+        isJob(item) ? (
+          <JobCard key={`job-${item.id}`} job={item} />
+        ) : (
+          <DuckCard key={`duck-${item.id}`} duck={item} />
+        )
+      )}
     </div>
-  )
+  );
 }
 
 function JobsLoading() {
@@ -93,5 +138,5 @@ function JobsLoading() {
         </div>
       ))}
     </div>
-  )
-} 
+  );
+}

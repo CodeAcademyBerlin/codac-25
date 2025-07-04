@@ -48,7 +48,7 @@ type SettingsFormData = z.infer<typeof settingsSchema>;
 export function ProfileSettingsForm({ user }: ProfileSettingsFormProps) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
-    const [avatarUrl, setAvatarUrl] = useState<string | undefined>((user as any).avatar || undefined);
+    const [avatarUrl, setAvatarUrl] = useState<string | undefined>(user.avatar || undefined);
 
     const form = useForm<SettingsFormData>({
         resolver: zodResolver(settingsSchema),

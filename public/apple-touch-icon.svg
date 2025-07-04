@@ -1,0 +1,28 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Apple Touch Icon - larger, more detailed version -->
+  <rect width="180" height="180" rx="30" fill="url(#background)"/>
+  
+  <!-- Left Diamond -->
+  <path d="M60 20L35 90L60 160L10 90L60 20Z" fill="url(#gradient1)" stroke="#000" stroke-width="2" stroke-opacity="0.1"/>
+  
+  <!-- Right Diamond -->
+  <path d="M120 160L145 90L120 20L170 90L120 160Z" fill="url(#gradient2)" stroke="#000" stroke-width="2" stroke-opacity="0.1"/>
+  
+  <!-- Center highlight -->
+  <line x1="90" y1="40" x2="90" y2="140" stroke="#fff" stroke-width="2" opacity="0.2"/>
+  
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1a1a1a"/>
+      <stop offset="1" stop-color="#2a2a2a"/>
+    </linearGradient>
+    <linearGradient id="gradient1" x1="35" y1="160" x2="35" y2="20" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E77096"/>
+      <stop offset="1" stop-color="#52EACE"/>
+    </linearGradient>
+    <linearGradient id="gradient2" x1="145" y1="160" x2="145" y2="20" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E77096"/>
+      <stop offset="1" stop-color="#52EACE"/>
+    </linearGradient>
+  </defs>
+</svg> 

@@ -1,6 +1,5 @@
 'use client';
 
-
 import { insertCallout } from '@platejs/callout';
 import { insertCodeBlock } from '@platejs/code-block';
 import { insertDate } from '@platejs/date';
@@ -24,6 +23,8 @@ import {
   PathApi,
 } from 'platejs';
 import type { PlateEditor } from 'platejs/react';
+
+import { logger } from '@/lib/logger';
 
 const ACTION_THREE_COLUMNS = 'action_three_columns';
 
@@ -181,12 +182,8 @@ export const getBlockType = (block: TElement) => {
 };
 
 // Upload history function for media placeholders
-export const updateUploadHistory = (_editor: PlateEditor, node: any) => {
+export const updateUploadHistory = (_editor: PlateEditor, node: { type: string; url?: string; placeholderId?: string }) => {
   // This is a placeholder function that can be expanded to track upload history
-  // For now, it simply logs the uploaded node
-  console.info('Media upload completed:', {
-    type: node.type,
-    url: node.url,
-    placeholderId: node.placeholderId
-  });
+  // For now, it logs the uploaded node
+  logger.info(`Media upload completed: ${node.type}${node.url ? ` - ${node.url}` : ''}${node.placeholderId ? ` (${node.placeholderId})` : ''}`);
 };

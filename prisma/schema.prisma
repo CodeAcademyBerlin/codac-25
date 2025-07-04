@@ -101,6 +101,9 @@ model User {
   postedJobs      Job[]            @relation("PostedJobs")
   jobApplications JobApplication[] @relation("JobApplications")
 
+  // Duck Relations
+  ducks           Duck[]
+
   @@map("users")
 }
 
@@ -669,6 +672,18 @@ model Job {
   applications JobApplication[]
 
   @@map("jobs")
+}
+
+model Duck {
+  id        String   @id @default(cuid())
+  title     String
+  imageUrl  String
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("ducks")
 }
 
 model JobApplication {

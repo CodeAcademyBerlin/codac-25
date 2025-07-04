@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
 
 interface SignInFormProps {
     callbackUrl?: string
@@ -47,7 +48,10 @@ export function SignInForm({ callbackUrl: initialCallbackUrl }: SignInFormProps)
     // Form state
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [magicLinkEmail, setMagicLinkEmail] = useState("")
     const [isCredentialsLoading, setIsCredentialsLoading] = useState(false)
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+    const [isMagicLinkLoading, setIsMagicLinkLoading] = useState(false)
 
     // Get parameters from URL
     const callbackUrl = initialCallbackUrl || searchParams.get('callbackUrl') || "/"
@@ -99,7 +103,51 @@ export function SignInForm({ callbackUrl: initialCallbackUrl }: SignInFormProps)
         }
     }
 
+    const handleGoogleSignIn = async () => {
+        setIsGoogleLoading(true)
+        setError(undefined)
 
+        try {
+            await signIn("google", {
+                callbackUrl,
+                redirect: true,
+            })
+        } catch {
+            setError("An error occurred during Google sign in.")
+            setIsGoogleLoading(false)
+        }
+    }
+
+    const handleMagicLinkSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        if (!magicLinkEmail) {
+            setError("Email is required for magic link")
+            return
+        }
+
+        setIsMagicLinkLoading(true)
+        setError(undefined)
+
+        try {
+            const result = await signIn("email", {
+                email: magicLinkEmail,
+                callbackUrl,
+                redirect: false,
+            })
+
+            if (result?.error) {
+                setError(result.error)
+            } else if (result?.ok) {
+                // Email provider returns ok=true when email is sent
+                router.push("/auth/verify-request")
+            }
+        } catch {
+            setError("An error occurred while sending the magic link.")
+        } finally {
+            setIsMagicLinkLoading(false)
+        }
+    }
 
     // Show loading while checking authentication status
     if (status === "loading") {
@@ -115,6 +163,8 @@ export function SignInForm({ callbackUrl: initialCallbackUrl }: SignInFormProps)
         return null
     }
 
+    const isAnyLoading = isCredentialsLoading || isGoogleLoading || isMagicLinkLoading
+
     return (
         <div className="space-y-6">
             {error && (
@@ -125,6 +175,70 @@ export function SignInForm({ callbackUrl: initialCallbackUrl }: SignInFormProps)
                 </Alert>
             )}
 
+            {/* Google OAuth */}
+            <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={handleGoogleSignIn}
+                disabled={isAnyLoading}
+            >
+                {isGoogleLoading ? (
+                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                    <Icons.google className="mr-2 h-4 w-4" />
+                )}
+                Continue with Google
+            </Button>
+
+            <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                    <Separator className="w-full" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                        Or continue with
+                    </span>
+                </div>
+            </div>
+
+            {/* Email Magic Link */}
+            <form onSubmit={handleMagicLinkSubmit} className="space-y-4">
+                <div className="space-y-2">
+                    <Label htmlFor="magic-link-email">Email (Magic Link)</Label>
+                    <Input
+                        id="magic-link-email"
+                        name="magic-link-email"
+                        type="email"
+                        placeholder="Enter your email for magic link"
+                        value={magicLinkEmail}
+                        onChange={(e) => setMagicLinkEmail(e.target.value)}
+                        required
+                        disabled={isAnyLoading}
+                    />
+                </div>
+                <Button type="submit" variant="outline" className="w-full" disabled={isAnyLoading}>
+                    {isMagicLinkLoading ? (
+                        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                        <Icons.email className="mr-2 h-4 w-4" />
+                    )}
+                    Send Magic Link
+                </Button>
+            </form>
+
+            <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                    <Separator className="w-full" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                        Or sign in with password
+                    </span>
+                </div>
+            </div>
+
+            {/* Credentials Form */}
             <form onSubmit={handleCredentialsSubmit} className="space-y-4">
                 <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
@@ -136,7 +250,7 @@ export function SignInForm({ callbackUrl: initialCallbackUrl }: SignInFormProps)
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
-                        disabled={isCredentialsLoading}
+                        disabled={isAnyLoading}
                     />
                 </div>
                 <div className="space-y-2">
@@ -149,17 +263,17 @@ export function SignInForm({ callbackUrl: initialCallbackUrl }: SignInFormProps)
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        disabled={isCredentialsLoading}
+                        disabled={isAnyLoading}
                     />
                 </div>
-                <Button type="submit" className="w-full" disabled={isCredentialsLoading}>
+                <Button type="submit" className="w-full" disabled={isAnyLoading}>
                     {isCredentialsLoading && <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />}
                     Sign In
                 </Button>
             </form>
 
             <div className="text-center text-sm">
-                <span className="text-muted-foreground">Don't have an account? </span>
+                <span className="text-muted-foreground">Don&apos;t have an account? </span>
                 <Button
                     variant="link"
                     className="p-0 h-auto font-normal"

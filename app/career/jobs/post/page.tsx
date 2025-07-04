@@ -1,10 +1,39 @@
-import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { JobPostingForm } from "@/components/career/job-posting-form";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { auth } from "@/lib/auth/auth";
 
-export default function PostJobPage() {
+export default async function PostJobPage() {
+  const session = await auth();
+  const user = session?.user;
+
+  if (!user || (user.role !== "ADMIN" && user.role !== "MENTOR")) {
+    return (
+      <div className="container mx-auto py-8 text-center">
+        <h1 className="text-3xl font-bold">Unauthorized</h1>
+        <p className="text-muted-foreground mt-2">
+          You do not have permission to post a job. Please contact an
+          administrator if you believe this is a mistake.
+        </p>
+        <Button asChild className="mt-4">
+          <Link href="/career/jobs">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Jobs
+          </Link>
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto py-8">
       <div className="mb-6">
@@ -14,7 +43,7 @@ export default function PostJobPage() {
             Back to Jobs
           </Link>
         </Button>
-        
+
         <h1 className="text-3xl font-bold">Post a Job</h1>
         <p className="text-muted-foreground mt-2">
           Share career opportunities with our community
@@ -30,17 +59,10 @@ export default function PostJobPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">
-                Job posting form will be implemented here.
-              </p>
-              <p className="text-sm text-muted-foreground mt-2">
-                This feature requires authentication and form handling.
-              </p>
-            </div>
+            <JobPostingForm />
           </CardContent>
         </Card>
       </div>
     </div>
-  )
-} 
+  );
+}

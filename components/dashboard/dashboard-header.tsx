@@ -20,7 +20,7 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({
     breadcrumbItems = [
-        { label: "Dashboard", href: "/dashboard" },
+        { label: "Dashboard", href: "/" },
         { label: "Overview" }
     ]
 }: DashboardHeaderProps) {

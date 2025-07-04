@@ -154,7 +154,6 @@ async function createCourse(
                 title: name.charAt(0).toUpperCase() + name.slice(1).replace(/[-_]/g, ' '),
                 description: description || `${name} course content`,
                 category: getCourseCategory(name),
-                difficulty: 'BEGINNER',
                 isPublished: true,
                 order: extractOrder(name),
             },
