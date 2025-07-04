@@ -477,7 +477,7 @@
           "explanation": "Error boundaries catch JavaScript errors in the component tree."
         }
       ]
-    }
+    },
     {
       "topic": "TypeScript",
       "difficulty": "Beginner",

@@ -80,6 +80,11 @@ const data = {
           title: 'All Materials',
           url: '/docs?type=COURSE_MATERIAL',
         },
+        {
+          title: 'Quizzes',
+          url: '/learning/quiz',
+          icon: Pyramid,
+        },
       ],
     },
     {

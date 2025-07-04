@@ -83,7 +83,7 @@ export default function QuizPage({
 
   if (finished) {
     return (
-      <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded shadow">
+      <div className="max-w-lg mx-auto mt-10 p-6 bg-white dark:bg-zinc-900 rounded shadow">
         <h1 className="text-2xl font-bold mb-4 text-center">Quiz completed!</h1>
         <p className="text-center mb-4">Score: <span className="font-bold">{score} / {quiz.questions.length}</span></p>
         <ul className="mb-6">
@@ -101,7 +101,7 @@ export default function QuizPage({
   }
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded shadow">
+    <div className="max-w-lg mx-auto mt-10 p-6 bg-white dark:bg-zinc-900 rounded shadow">
       <div className="mb-4">
         <a href="/learning/quiz" className="text-blue-600 hover:underline font-medium">← Back to quiz selection</a>
       </div>
@@ -114,12 +114,12 @@ export default function QuizPage({
         {question.options.map(option => (
           <button
             key={option}
-            className={`w-full text-left px-4 py-2 rounded border
+            className={`w-full text-left text-zinc-900 dark:text-zinc-100 px-4 py-2 rounded border
               ${selected === option
                 ? option === question.correctAnswer
                   ? 'bg-green-200 border-green-500'
                   : 'bg-red-200 border-red-500'
-                : 'bg-white border-gray-300 hover:bg-gray-100'}
+                : 'bg-white border-gray-300 hover:bg-gray-100 dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700'}
               ${showAnswer && option === question.correctAnswer ? 'font-bold' : ''}
             `}
             disabled={showAnswer}
