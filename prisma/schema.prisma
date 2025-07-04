@@ -82,6 +82,7 @@ model User {
   progress     LessonProgress[]
   assignments  AssignmentSubmission[]
   achievements UserAchievement[]
+  quizResults  QuizResult[]
 
   // Community Relations
   posts             CommunityPost[]
@@ -101,7 +102,7 @@ model User {
   jobApplications JobApplication[] @relation("JobApplications")
 
   // Duck Relations
-  ducks           Duck[]
+  ducks Duck[]
 
   @@map("users")
 }
@@ -365,13 +366,13 @@ model Mentorship {
 
 // Mentor Session Booking Model
 model MentorSession {
-  id        String             @id @default(cuid())
-  status    MentorSessionStatus @default(PENDING)
+  id           String              @id @default(cuid())
+  status       MentorSessionStatus @default(PENDING)
   scheduledFor DateTime
-  completedAt DateTime?
-  notes      String?
-  feedback   String?
-  
+  completedAt  DateTime?
+  notes        String?
+  feedback     String?
+
   // Relation to mentorship
   mentorshipId String
   mentorship   Mentorship @relation(fields: [mentorshipId], references: [id], onDelete: Cascade)
@@ -750,11 +751,37 @@ enum JobApplicationStatus {
   ACCEPTED
 }
 
-// Add new enum for session status
-enum MentorSessionStatus {
-  PENDING
-  CONFIRMED
-  COMPLETED
-  CANCELLED
-  DECLINED
+model Quiz {
+  id         String     @id @default(cuid())
+  topic      String
+  difficulty String
+  quizTitle  String
+  questions  Question[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  quizResults QuizResult[]
+}
+
+model Question {
+  id            String   @id @default(cuid())
+  text          String
+  options       String // Stored as a JSON string
+  correctAnswer String
+  explanation   String?
+  quizId        String
+  quiz          Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+}
+
+model QuizResult {
+  id        String   @id @default(cuid())
+  userId    String
+  quizId    String
+  score     Int
+  total     Int
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
 }

@@ -1,3 +1,4 @@
+import { HideHeader } from '@/components/hide-header';
 import { ThemePicker } from '@/components/theme-picker';
 import { getDocs } from '@/data/docs/docs';
 import { getDocsHierarchy } from '@/data/docs/docs-hierarchy';
@@ -18,6 +19,7 @@ export default async function DocLayout({
 
   return (
     <DndWrapper>
+      <HideHeader />
       <div className="flex items-center gap-4" >
         <DocsNavbar docs={docs} />
         <div className="ml-auto pr-4">

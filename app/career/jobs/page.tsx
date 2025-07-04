@@ -60,7 +60,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
         {/* Jobs List */}
         <div className="lg:col-span-3">
           <Suspense fallback={<JobsLoading />}>
-            <JobsList searchParams={searchParams} />
+            <JobsList searchParams={params} />
           </Suspense>
         </div>
       </div>

@@ -1,5 +1,7 @@
+import Link from 'next/link'
 import { ReactNode } from 'react'
 
+import { HideHeader } from '@/components/hide-header'
 import { Separator } from '@/components/ui/separator'
 
 interface CareerLayoutProps {
@@ -9,30 +11,31 @@ interface CareerLayoutProps {
 export default function CareerLayout({ children }: CareerLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
+      <HideHeader />
       <div className="border-b">
         <div className="container mx-auto py-4">
           <nav className="flex items-center space-x-6">
             <h2 className="text-lg font-semibold">Career Center</h2>
             <Separator orientation="vertical" className="h-6" />
             <div className="flex space-x-6">
-              <a 
-                href="/career/jobs" 
+              <Link
+                href="/career/jobs"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Job Board
-              </a>
-              <a 
-                href="/career/resources" 
+              </Link>
+              <Link
+                href="/career/resources"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Resources
-              </a>
-              <a 
-                href="/career/events" 
+              </Link>
+              <Link
+                href="/career/events"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 Events
-              </a>
+              </Link>
             </div>
           </nav>
         </div>

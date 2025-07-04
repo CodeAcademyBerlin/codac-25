@@ -1,6 +1,5 @@
 'use client';
 
-
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 import { DropdownMenuItemIndicator } from '@radix-ui/react-dropdown-menu';
 import {
@@ -21,6 +20,7 @@ import { KEYS } from 'platejs';
 import { useEditorRef, useSelectionFragmentProp } from 'platejs/react';
 import * as React from 'react';
 
+import { setBlockType, insertBlock } from '@/components/editor/transforms';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -104,6 +104,7 @@ export function TurnIntoToolbarButton(props: DropdownMenuProps) {
 
   const value = useSelectionFragmentProp({
     defaultValue: KEYS.p,
+    getProp: (node) => node.type,
   });
   const selectedItem = React.useMemo(
     () =>
@@ -111,6 +112,23 @@ export function TurnIntoToolbarButton(props: DropdownMenuProps) {
       turnIntoItems[0],
     [value]
   );
+
+  const handleValueChange = React.useCallback((newValue: string) => {
+    if (!newValue || newValue === value) return;
+
+    // Handle special cases that require insertBlock
+    if (newValue === 'action_three_columns' ||
+      newValue === KEYS.codeBlock ||
+      newValue === KEYS.table ||
+      newValue === KEYS.toc) {
+      insertBlock(editor, newValue);
+    } else {
+      // Use setBlockType for standard block type changes
+      setBlockType(editor, newValue);
+    }
+
+    setOpen(false);
+  }, [editor, value]);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen} modal={false} {...props}>
@@ -135,8 +153,7 @@ export function TurnIntoToolbarButton(props: DropdownMenuProps) {
       >
         <ToolbarMenuGroup
           value={value}
-          onValueChange={() => {
-          }}
+          onValueChange={handleValueChange}
           label="Turn into"
         >
           {turnIntoItems.map(({ icon, label, value: itemValue }) => (

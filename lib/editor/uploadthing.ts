@@ -1,5 +1,5 @@
-import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { UploadThingError } from "uploadthing/server";
+import type { FileRouter } from "uploadthing/next";
+import { createUploadthing } from "uploadthing/next";
 
 const f = createUploadthing();
 
@@ -22,7 +22,6 @@ export const ourFileRouter = {
       return {};
     })
     .onUploadComplete(async ({ file }) => {
-      console.log("Upload complete for file:", file.url);
       return { url: file.url };
     }),
 } satisfies FileRouter;

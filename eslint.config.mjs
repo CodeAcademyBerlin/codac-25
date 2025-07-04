@@ -15,32 +15,32 @@ const eslintConfig = [
     rules: {
       // Enforce naming conventions
       'camelcase': ['error', { properties: 'never', ignoreDestructuring: false }],
-      
+
       // Prefer named exports
       'import/prefer-default-export': 'off',
       'import/no-default-export': 'warn',
-      
+
       // TypeScript specific rules
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
-      
+
       // React specific rules
       'react/jsx-props-no-spreading': 'off',
       'react/require-default-props': 'off',
       'react/jsx-uses-react': 'off',
       'react/react-in-jsx-scope': 'off',
       'react/no-unescaped-entities': 'warn',
-      
+
       // General code quality
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'error',
       'no-var': 'error',
-      
+
       // Import organization
       'import/order': [
-        'error',
+        'warn',
         {
           groups: [
             'builtin',

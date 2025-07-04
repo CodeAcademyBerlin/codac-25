@@ -41,7 +41,7 @@ type ProfileEditModalProps = {
 export function ProfileEditModal({ user, isOpen, onClose }: ProfileEditModalProps) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
-    const [avatarUrl, setAvatarUrl] = useState<string>((user as any).avatar || '');
+    const [avatarUrl, setAvatarUrl] = useState<string>(user.avatar || '');
 
     const form = useForm<UpdateProfileInput>({
         resolver: zodResolver(updateProfileSchema),

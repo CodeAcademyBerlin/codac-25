@@ -22,12 +22,12 @@ export async function getJobs(params: GetJobsParams = {}) {
         AND: [
           search
             ? {
-                OR: [
-                  { title: { contains: search } },
-                  { description: { contains: search } },
-                  { company: { contains: search } },
-                ],
-              }
+              OR: [
+                { title: { contains: search } },
+                { description: { contains: search } },
+                { company: { contains: search } },
+              ],
+            }
             : {},
           type && type !== "all" ? { type: type as JobType } : {},
           level && level !== "all" ? { level: level as JobLevel } : {},
