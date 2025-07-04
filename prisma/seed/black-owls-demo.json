@@ -1,0 +1,134 @@
+{
+  "cohort": {
+    "name": "Black Owls",
+    "slug": "black-owls",
+    "startDate": "2024-07-01T00:00:00.000Z",
+    "description": "Elite data science and web development cohort graduating December 2024. Focused on AI-driven projects and modern full-stack applications.",
+    "avatar": "🦉",
+    "image": "/black-owls-logo.svg"
+  },
+  "students": [
+    {
+      "name": "Alex Chen",
+      "email": "alex.chen@blackowls.codeacademyberlin.com",
+      "role": "STUDENT",
+      "status": "GRADUATED",
+      "bio": "Data scientist passionate about climate modeling and machine learning. Built predictive models for environmental impact assessment.",
+      "avatar": "/avatars/alex-chen.jpg",
+      "githubUrl": "https://github.com/alexchen-climate",
+      "linkedinUrl": "https://linkedin.com/in/alex-chen-datascience",
+      "portfolioUrl": "https://alexchen-climate-models.vercel.app",
+      "currentJob": "Data Scientist",
+      "currentCompany": "Green Analytics GmbH",
+      "graduationDate": "2024-12-15T00:00:00.000Z"
+    },
+    {
+      "name": "Maya Rodriguez",
+      "email": "maya.rodriguez@blackowls.codeacademyberlin.com",
+      "role": "STUDENT",
+      "status": "GRADUATED",
+      "bio": "Full-stack developer specializing in React and Node.js. Created modern e-commerce platforms with AI-powered recommendations.",
+      "avatar": "/avatars/maya-rodriguez.jpg",
+      "githubUrl": "https://github.com/maya-dev",
+      "linkedinUrl": "https://linkedin.com/in/maya-rodriguez-fullstack",
+      "portfolioUrl": "https://maya-rodriguez.dev",
+      "currentJob": "Frontend Developer",
+      "currentCompany": "TechFlow Berlin",
+      "graduationDate": "2024-12-15T00:00:00.000Z"
+    },
+    {
+      "name": "David Kim",
+      "email": "david.kim@blackowls.codeacademyberlin.com",
+      "role": "STUDENT",
+      "status": "GRADUATED",
+      "bio": "Data visualization expert and machine learning engineer. Specializes in creating interactive dashboards and predictive analytics.",
+      "avatar": "/avatars/david-kim.jpg",
+      "githubUrl": "https://github.com/davidkim-viz",
+      "linkedinUrl": "https://linkedin.com/in/david-kim-dataviz",
+      "portfolioUrl": "https://davidkim-analytics.com",
+      "currentJob": "ML Engineer",
+      "currentCompany": "Insight Analytics",
+      "graduationDate": "2024-12-15T00:00:00.000Z"
+    },
+    {
+      "name": "Sofia Müller",
+      "email": "sofia.mueller@blackowls.codeacademyberlin.com",
+      "role": "STUDENT",
+      "status": "GRADUATED",
+      "bio": "Full-stack developer with expertise in TypeScript and modern frameworks. Built scalable applications with focus on user experience.",
+      "avatar": "/avatars/sofia-mueller.jpg",
+      "githubUrl": "https://github.com/sofia-codes",
+      "linkedinUrl": "https://linkedin.com/in/sofia-mueller-dev",
+      "portfolioUrl": "https://sofia-mueller.codes",
+      "currentJob": "Software Engineer",
+      "currentCompany": "Digital Innovations AG",
+      "graduationDate": "2024-12-15T00:00:00.000Z"
+    },
+    {
+      "name": "Omar Hassan",
+      "email": "omar.hassan@blackowls.codeacademyberlin.com",
+      "role": "STUDENT",
+      "status": "GRADUATED",
+      "bio": "Data scientist with focus on financial analytics and algorithmic trading. Built ML models for market prediction and risk assessment.",
+      "avatar": "/avatars/omar-hassan.jpg",
+      "githubUrl": "https://github.com/omar-fintech",
+      "linkedinUrl": "https://linkedin.com/in/omar-hassan-fintech",
+      "portfolioUrl": "https://omar-hassan-analytics.com",
+      "currentJob": "Quantitative Analyst",
+      "currentCompany": "FinTech Solutions",
+      "graduationDate": "2024-12-15T00:00:00.000Z"
+    },
+    {
+      "name": "Luna Andersson",
+      "email": "luna.andersson@blackowls.codeacademyberlin.com",
+      "role": "STUDENT",
+      "status": "GRADUATED",
+      "bio": "Creative technologist blending design and development. Specializes in interactive web experiences and data storytelling.",
+      "avatar": "/avatars/luna-andersson.jpg",
+      "githubUrl": "https://github.com/luna-interactive",
+      "linkedinUrl": "https://linkedin.com/in/luna-andersson-dev",
+      "portfolioUrl": "https://luna-andersson.art",
+      "currentJob": "Creative Developer",
+      "currentCompany": "Digital Arts Studio",
+      "graduationDate": "2024-12-15T00:00:00.000Z"
+    }
+  ],
+  "sampleJobs": [
+    {
+      "title": "Junior Data Scientist",
+      "company": "Berlin AI Labs",
+      "location": "Berlin, Germany",
+      "type": "FULL_TIME",
+      "level": "JUNIOR",
+      "salary": "€45,000 - €55,000",
+      "description": "Join our team working on cutting-edge AI projects. Perfect for recent bootcamp graduates with strong Python and ML skills.",
+      "skills": ["Python", "Machine Learning", "Pandas", "Scikit-learn"],
+      "remote": false,
+      "isActive": true
+    },
+    {
+      "title": "Frontend Developer (React)",
+      "company": "TechStart GmbH",
+      "location": "Berlin, Germany",
+      "type": "FULL_TIME",
+      "level": "JUNIOR",
+      "salary": "€40,000 - €50,000",
+      "description": "Build modern web applications using React and TypeScript. Great opportunity for bootcamp graduates to grow their career.",
+      "skills": ["React", "TypeScript", "JavaScript", "CSS"],
+      "remote": true,
+      "isActive": true
+    },
+    {
+      "title": "Full Stack Developer",
+      "company": "Innovation Hub",
+      "location": "Berlin, Germany",
+      "type": "FULL_TIME",
+      "level": "JUNIOR",
+      "salary": "€42,000 - €52,000",
+      "description": "Work on exciting projects using modern tech stack. Perfect for developers with full-stack experience.",
+      "skills": ["Node.js", "React", "MongoDB", "Express"],
+      "remote": true,
+      "isActive": true
+    }
+  ]
+}

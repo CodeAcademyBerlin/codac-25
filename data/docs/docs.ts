@@ -19,11 +19,30 @@ export async function getDocs(type?: string) {
   return docs;
 }
 
-
-
 export const getDoc = cache(async (id: string) => {
   const doc = await prisma.document.findFirst({
     where: { id },
   });
-  return doc;
+
+  if (!doc) return null;
+
+  // Parse the JSON content string into a JavaScript object for PlateJS
+  let parsedContent;
+  try {
+    parsedContent = typeof doc.content === 'string' ? JSON.parse(doc.content) : doc.content;
+  } catch (error) {
+    console.warn('Failed to parse document content:', error);
+    // Fallback to default content if parsing fails
+    parsedContent = [
+      {
+        type: 'p',
+        children: [{ text: 'Failed to load document content.' }],
+      },
+    ];
+  }
+
+  return {
+    ...doc,
+    content: parsedContent,
+  };
 })

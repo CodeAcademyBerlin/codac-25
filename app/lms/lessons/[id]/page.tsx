@@ -9,6 +9,21 @@ import { LessonContent } from '../components/lesson-content';
 
 // Utility function to transform lesson content to Plate editor format
 function transformLessonContent(content: any): Value {
+    // If content is a JSON string, parse it first
+    if (typeof content === 'string') {
+        try {
+            content = JSON.parse(content);
+        } catch {
+            // If parsing fails, treat as plain text
+            return [
+                {
+                    type: 'p',
+                    children: [{ text: content }]
+                }
+            ];
+        }
+    }
+
     // If content is already a valid Plate format (array), return it
     if (Array.isArray(content)) {
         return content;
