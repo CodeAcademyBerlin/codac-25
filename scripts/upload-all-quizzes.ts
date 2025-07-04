@@ -1,9 +1,9 @@
 import { prisma } from "@/lib/db/prisma";
-import quizzes from "./quizzes-all.json"; // Make sure the path is correct
+import quizzes from "./quizzes-all.json"; 
 
 async function main() {
   for (const quiz of quizzes) {
-    // Busca si ya existe un quiz con ese topic y difficulty
+    // Busca si ya existe un quiz con ese topic y difficultad
     const existingQuiz = await prisma.quiz.findFirst({
       where: {
         topic: quiz.topic,
