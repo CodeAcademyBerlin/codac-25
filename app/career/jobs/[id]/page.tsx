@@ -1,4 +1,5 @@
-import { formatDistanceToNow } from "date-fns";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import {
   ArrowLeft,
   Briefcase,
@@ -8,8 +9,6 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
-import Link from "next/link";
-import { notFound } from "next/navigation";
 
 import { getJobById } from "@/actions/job/get-jobs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -22,16 +21,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { formatDistanceToNow } from "date-fns";
 
 interface JobDetailsPageProps {
-  params: Promise<{
+  params: {
     id: string;
-  }>;
+  };
 }
 
 export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
-  const { id } = await params;
-  const job = await getJobById(id);
+  const job = await getJobById(params.id);
 
   if (!job) {
     notFound();
@@ -88,7 +87,9 @@ export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
               </div>
               {job.salary && (
                 <div className="flex items-center gap-2">
-                  <IndianRupee className="h-5 w-5 text-muted-foreground" />
+                  <span className="text-lg font-semibold text-muted-foreground">
+                    €
+                  </span>
                   <span>{job.salary}</span>
                 </div>
               )}
