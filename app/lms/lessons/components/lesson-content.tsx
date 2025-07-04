@@ -22,8 +22,10 @@ import { UnifiedEditor } from '@/components/editor/unified-editor';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CourseCompletionModal } from '@/components/ui/course-completion-modal';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
+import { useConfetti } from '@/components/ui/confetti';
 
 interface Lesson {
     id: string;
@@ -81,6 +83,8 @@ export function LessonContent({ lesson, user: _user, canEdit }: LessonContentPro
         lesson.progress[0]?.status || 'NOT_STARTED'
     );
     const [isEditing, setIsEditing] = useState(false);
+    const [showCompletionModal, setShowCompletionModal] = useState(false);
+    const { celebrate } = useConfetti();
 
     const handleProgressUpdate = async (status: 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED') => {
         setIsUpdatingProgress(true);
@@ -88,7 +92,23 @@ export function LessonContent({ lesson, user: _user, canEdit }: LessonContentPro
             const result = await updateLessonProgress(lesson.id, status);
             if (result.success) {
                 setCurrentStatus(status);
-                toast.success(result.message);
+
+                // Check if course was completed and trigger confetti
+                if (result.courseCompleted) {
+                    celebrate();
+                    setShowCompletionModal(true);
+                    toast.success('🎉 Congratulations! You completed the course!', {
+                        duration: 6000,
+                        style: {
+                            background: 'linear-gradient(to right, #f59e0b, #ef4444)',
+                            color: 'white',
+                            fontWeight: 'bold',
+                        }
+                    });
+                } else {
+                    toast.success(result.message);
+                }
+
                 router.refresh();
             } else {
                 toast.error(result.error);
@@ -409,6 +429,14 @@ export function LessonContent({ lesson, user: _user, canEdit }: LessonContentPro
                     </div>
                 </div>
             </div>
+
+            {/* Course Completion Modal */}
+            <CourseCompletionModal
+                isOpen={showCompletionModal}
+                onClose={() => setShowCompletionModal(false)}
+                courseTitle={lesson.project.course.title}
+                totalLessons={undefined} // Could be calculated if needed
+            />
         </div>
     );
 } 

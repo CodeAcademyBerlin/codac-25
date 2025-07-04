@@ -13,7 +13,6 @@ import {
   Building,
   MapPin,
   Briefcase,
-  IndianRupee,
   Trash2,
   Pencil,
 } from "lucide-react";
@@ -33,7 +32,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 type Job = Awaited<ReturnType<typeof getJobs>>[number];

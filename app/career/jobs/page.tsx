@@ -17,16 +17,17 @@ type Job = Awaited<ReturnType<typeof getJobs>>[number];
 type DuckItem = Awaited<ReturnType<typeof getDucks>>[number];
 
 interface JobsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     search?: string;
     type?: string;
     level?: string;
     remote?: string;
     company?: string;
-  };
+  }>;
 }
 
 export default async function JobsPage({ searchParams }: JobsPageProps) {
+  const resolvedSearchParams = await searchParams;
   const session = await auth();
   const user = session?.user;
 
@@ -60,7 +61,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
         {/* Jobs List */}
         <div className="lg:col-span-3">
           <Suspense fallback={<JobsLoading />}>
-            <JobsList searchParams={params} />
+            <JobsList searchParams={resolvedSearchParams} />
           </Suspense>
         </div>
       </div>
@@ -70,7 +71,13 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
 }
 
 type JobsListProps = {
-  searchParams: JobsPageProps["searchParams"];
+  searchParams: {
+    search?: string;
+    type?: string;
+    level?: string;
+    remote?: string;
+    company?: string;
+  };
 };
 
 async function JobsList({ searchParams }: JobsListProps) {

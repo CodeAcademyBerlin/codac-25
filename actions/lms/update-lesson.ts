@@ -167,13 +167,72 @@ export async function updateLessonProgress(lessonId: string, status: 'NOT_STARTE
             metadata: { status }
         });
 
+        // Check if course is completed when lesson is marked as completed
+        let courseCompleted = false;
+        if (status === 'COMPLETED') {
+            const courseId = lesson.project.course.id;
+
+            // Get all lessons in the course
+            const courseWithLessons = await prisma.course.findUnique({
+                where: { id: courseId },
+                include: {
+                    projects: {
+                        include: {
+                            lessons: {
+                                include: {
+                                    progress: {
+                                        where: { userId: user.id }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            if (courseWithLessons) {
+                const allLessons = courseWithLessons.projects.flatMap(project => project.lessons);
+                const completedLessons = allLessons.filter(lesson =>
+                    lesson.progress.some(p => p.status === 'COMPLETED')
+                );
+
+                courseCompleted = allLessons.length > 0 && completedLessons.length === allLessons.length;
+
+                // Update course enrollment progress
+                if (courseCompleted) {
+                    await prisma.courseEnrollment.updateMany({
+                        where: {
+                            userId: user.id,
+                            courseId: courseId
+                        },
+                        data: {
+                            progress: 100,
+                            completedAt: new Date()
+                        }
+                    });
+
+                    logger.info('Course completed', {
+                        action: 'complete',
+                        resource: 'course',
+                        resourceId: courseId,
+                        userId: user.id,
+                        metadata: {
+                            courseTitle: lesson.project.course.title,
+                            totalLessons: allLessons.length
+                        }
+                    });
+                }
+            }
+        }
+
         // Revalidate relevant paths
         revalidatePath(`/lms/lessons/${lessonId}`);
         revalidatePath(`/lms/courses/${lesson.project.course.id}`);
 
         return {
             success: true,
-            message: 'Progress updated successfully'
+            message: 'Progress updated successfully',
+            courseCompleted
         };
 
     } catch (error) {

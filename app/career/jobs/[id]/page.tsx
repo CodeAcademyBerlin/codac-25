@@ -4,7 +4,6 @@ import {
   ArrowLeft,
   Briefcase,
   Building,
-  IndianRupee,
   Link as LinkIcon,
   Mail,
   MapPin,
@@ -24,13 +23,14 @@ import {
 import { formatDistanceToNow } from "date-fns";
 
 interface JobDetailsPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function JobDetailsPage({ params }: JobDetailsPageProps) {
-  const job = await getJobById(params.id);
+  const { id } = await params;
+  const job = await getJobById(id);
 
   if (!job) {
     notFound();

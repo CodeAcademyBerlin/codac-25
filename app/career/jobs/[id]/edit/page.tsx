@@ -15,12 +15,13 @@ import {
 import { JobEditForm } from "@/components/career/job-edit-form";
 
 interface EditJobPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function EditJobPage({ params }: EditJobPageProps) {
+  const { id } = await params;
   const session = await auth();
   const user = session?.user;
 
@@ -28,7 +29,7 @@ export default async function EditJobPage({ params }: EditJobPageProps) {
     redirect("/auth/signin");
   }
 
-  const job = await getJobById(params.id);
+  const job = await getJobById(id);
 
   if (!job) {
     notFound();
