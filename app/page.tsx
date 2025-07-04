@@ -1,14 +1,22 @@
-"use client"
+import { redirect } from "next/navigation"
 
 import { LearningProgress } from "@/components/dashboard/learning-progress"
 import { RecentActivity } from "@/components/dashboard/recent-activity"
 import { StatsCards } from "@/components/dashboard/stats-cards"
 import { UpcomingEvents } from "@/components/dashboard/upcoming-events"
+import { getUserStats } from "@/data/dashboard"
+import { getCurrentUser } from "@/lib/auth/auth-utils"
 
-export default function Page() {
-  // Temporarily simplified - no session dependency
-  const firstName = "there"
+export default async function Page() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect('/auth/signin?callbackUrl=/');
+  }
+
+  const firstName = user.name?.split(' ')[0]
   const greeting = getGreeting()
+  const userStats = await getUserStats()
 
   return (
     <div>
@@ -29,7 +37,7 @@ export default function Page() {
         </div>
 
         {/* Stats Cards */}
-        <StatsCards />
+        <StatsCards userStats={userStats} />
 
         {/* Main Content Grid */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">

@@ -2,95 +2,265 @@
   "cohort": {
     "name": "Black Owls",
     "slug": "black-owls",
-    "startDate": "2024-07-01T00:00:00.000Z",
-    "description": "Elite data science and web development cohort graduating December 2024. Focused on AI-driven projects and modern full-stack applications.",
+    "startDate": "2025-01-27T00:00:00.000Z",
+    "description": "Elite data science and web development cohort graduating July 2025. Started January 27th, 2025 and completing their final projects today. Focused on AI-driven projects and modern full-stack applications.",
     "avatar": "🦉",
     "image": "/black-owls-logo.svg"
   },
   "students": [
     {
-      "name": "Alex Chen",
-      "email": "alex.chen@blackowls.codeacademyberlin.com",
+      "name": "Max",
+      "email": "max@codac.academy",
       "role": "STUDENT",
-      "status": "GRADUATED",
-      "bio": "Data scientist passionate about climate modeling and machine learning. Built predictive models for environmental impact assessment.",
-      "avatar": "/avatars/alex-chen.jpg",
-      "githubUrl": "https://github.com/alexchen-climate",
-      "linkedinUrl": "https://linkedin.com/in/alex-chen-datascience",
-      "portfolioUrl": "https://alexchen-climate-models.vercel.app",
-      "currentJob": "Data Scientist",
-      "currentCompany": "Green Analytics GmbH",
-      "graduationDate": "2024-12-15T00:00:00.000Z"
+      "status": "ACTIVE",
+      "bio": "Web developer passionate about front-end technologies and user experience. Currently completing final projects in web development track.",
+      "avatar": "/avatars/max.jpg",
+      "githubUrl": "https://github.com/max-climate",
+      "linkedinUrl": "https://linkedin.com/in/max-datascience",
+      "portfolioUrl": "https://max-climate-models.vercel.app",
+      "courseEnrollments": [
+        {
+          "courseSlug": "frontend-development",
+          "progress": 95,
+          "enrolledAt": "2025-01-27T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "fullstack-development",
+          "progress": 92,
+          "enrolledAt": "2025-03-15T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "career-development",
+          "progress": 88,
+          "enrolledAt": "2025-05-15T00:00:00.000Z"
+        }
+      ]
     },
     {
-      "name": "Maya Rodriguez",
-      "email": "maya.rodriguez@blackowls.codeacademyberlin.com",
+      "name": "Fernando",
+      "email": "fernando@codac.academy",
       "role": "STUDENT",
-      "status": "GRADUATED",
-      "bio": "Full-stack developer specializing in React and Node.js. Created modern e-commerce platforms with AI-powered recommendations.",
-      "avatar": "/avatars/maya-rodriguez.jpg",
-      "githubUrl": "https://github.com/maya-dev",
-      "linkedinUrl": "https://linkedin.com/in/maya-rodriguez-fullstack",
-      "portfolioUrl": "https://maya-rodriguez.dev",
-      "currentJob": "Frontend Developer",
-      "currentCompany": "TechFlow Berlin",
-      "graduationDate": "2024-12-15T00:00:00.000Z"
+      "status": "ACTIVE",
+      "bio": "Full-stack developer specializing in React and Node.js. Currently finishing final projects in web development track.",
+      "avatar": "/avatars/fernando.jpg",
+      "githubUrl": "https://github.com/fernando-dev",
+      "linkedinUrl": "https://linkedin.com/in/fernando-fullstack",
+      "portfolioUrl": "https://fernando-rodriguez.dev",
+      "courseEnrollments": [
+        {
+          "courseSlug": "frontend-development",
+          "progress": 91,
+          "enrolledAt": "2025-01-27T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "fullstack-development",
+          "progress": 96,
+          "enrolledAt": "2025-03-15T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "career-development",
+          "progress": 90,
+          "enrolledAt": "2025-05-15T00:00:00.000Z"
+        }
+      ]
     },
     {
-      "name": "David Kim",
-      "email": "david.kim@blackowls.codeacademyberlin.com",
+      "name": "Julien",
+      "email": "julien@codac.academy",
       "role": "STUDENT",
-      "status": "GRADUATED",
-      "bio": "Data visualization expert and machine learning engineer. Specializes in creating interactive dashboards and predictive analytics.",
-      "avatar": "/avatars/david-kim.jpg",
-      "githubUrl": "https://github.com/davidkim-viz",
-      "linkedinUrl": "https://linkedin.com/in/david-kim-dataviz",
-      "portfolioUrl": "https://davidkim-analytics.com",
-      "currentJob": "ML Engineer",
-      "currentCompany": "Insight Analytics",
-      "graduationDate": "2024-12-15T00:00:00.000Z"
+      "status": "ACTIVE",
+      "bio": "Data visualization expert and machine learning engineer. Currently completing final projects in data science track.",
+      "avatar": "/avatars/julien.jpg",
+      "githubUrl": "https://github.com/julien-viz",
+      "linkedinUrl": "https://linkedin.com/in/julien-dataviz",
+      "portfolioUrl": "https://julien-analytics.com",
+      "courseEnrollments": [
+        {
+          "courseSlug": "data-analysis",
+          "progress": 98,
+          "enrolledAt": "2025-01-27T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "data-visualization-ml",
+          "progress": 94,
+          "enrolledAt": "2025-03-10T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "data-engineering",
+          "progress": 85,
+          "enrolledAt": "2025-04-28T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "career-development",
+          "progress": 92,
+          "enrolledAt": "2025-06-02T00:00:00.000Z"
+        }
+      ]
     },
     {
-      "name": "Sofia Müller",
-      "email": "sofia.mueller@blackowls.codeacademyberlin.com",
+      "name": "Marc",
+      "email": "marc@codac.academy",
       "role": "STUDENT",
-      "status": "GRADUATED",
-      "bio": "Full-stack developer with expertise in TypeScript and modern frameworks. Built scalable applications with focus on user experience.",
-      "avatar": "/avatars/sofia-mueller.jpg",
-      "githubUrl": "https://github.com/sofia-codes",
-      "linkedinUrl": "https://linkedin.com/in/sofia-mueller-dev",
-      "portfolioUrl": "https://sofia-mueller.codes",
-      "currentJob": "Software Engineer",
-      "currentCompany": "Digital Innovations AG",
-      "graduationDate": "2024-12-15T00:00:00.000Z"
+      "status": "ACTIVE",
+      "bio": "Data science student with expertise in statistical analysis and machine learning. Currently completing final projects in data science track.",
+      "avatar": "/avatars/marc.jpg",
+      "githubUrl": "https://github.com/marc-codes",
+      "linkedinUrl": "https://linkedin.com/in/marc-dev",
+      "portfolioUrl": "https://marc-codes.dev",
+      "courseEnrollments": [
+        {
+          "courseSlug": "data-analysis",
+          "progress": 95,
+          "enrolledAt": "2025-01-27T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "data-visualization-ml",
+          "progress": 89,
+          "enrolledAt": "2025-03-10T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "data-engineering",
+          "progress": 82,
+          "enrolledAt": "2025-04-28T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "career-development",
+          "progress": 87,
+          "enrolledAt": "2025-06-02T00:00:00.000Z"
+        }
+      ]
     },
     {
-      "name": "Omar Hassan",
-      "email": "omar.hassan@blackowls.codeacademyberlin.com",
+      "name": "Katharina",
+      "email": "katharina@codac.academy",
       "role": "STUDENT",
-      "status": "GRADUATED",
-      "bio": "Data scientist with focus on financial analytics and algorithmic trading. Built ML models for market prediction and risk assessment.",
-      "avatar": "/avatars/omar-hassan.jpg",
-      "githubUrl": "https://github.com/omar-fintech",
-      "linkedinUrl": "https://linkedin.com/in/omar-hassan-fintech",
-      "portfolioUrl": "https://omar-hassan-analytics.com",
-      "currentJob": "Quantitative Analyst",
-      "currentCompany": "FinTech Solutions",
-      "graduationDate": "2024-12-15T00:00:00.000Z"
+      "status": "ACTIVE",
+      "bio": "Data scientist with focus on financial analytics and algorithmic trading. Currently completing final projects in data science track.",
+      "avatar": "/avatars/katharina.jpg",
+      "githubUrl": "https://github.com/katharina-fintech",
+      "linkedinUrl": "https://linkedin.com/in/katharina-fintech",
+      "portfolioUrl": "https://katharina-analytics.com",
+      "courseEnrollments": [
+        {
+          "courseSlug": "data-analysis",
+          "progress": 97,
+          "enrolledAt": "2025-01-27T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "data-visualization-ml",
+          "progress": 93,
+          "enrolledAt": "2025-03-10T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "data-engineering",
+          "progress": 88,
+          "enrolledAt": "2025-04-28T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "career-development",
+          "progress": 95,
+          "enrolledAt": "2025-06-02T00:00:00.000Z"
+        }
+      ]
     },
     {
-      "name": "Luna Andersson",
-      "email": "luna.andersson@blackowls.codeacademyberlin.com",
+      "name": "Gökce",
+      "email": "gokce@codac.academy",
       "role": "STUDENT",
-      "status": "GRADUATED",
-      "bio": "Creative technologist blending design and development. Specializes in interactive web experiences and data storytelling.",
-      "avatar": "/avatars/luna-andersson.jpg",
-      "githubUrl": "https://github.com/luna-interactive",
-      "linkedinUrl": "https://linkedin.com/in/luna-andersson-dev",
-      "portfolioUrl": "https://luna-andersson.art",
-      "currentJob": "Creative Developer",
-      "currentCompany": "Digital Arts Studio",
-      "graduationDate": "2024-12-15T00:00:00.000Z"
+      "status": "ACTIVE",
+      "bio": "Data scientist blending analytics with creative visualization. Currently completing final projects in data science track.",
+      "avatar": "/avatars/gokce.jpg",
+      "githubUrl": "https://github.com/gokce-interactive",
+      "linkedinUrl": "https://linkedin.com/in/gokce-dev",
+      "portfolioUrl": "https://gokce-art.com",
+      "courseEnrollments": [
+        {
+          "courseSlug": "data-analysis",
+          "progress": 93,
+          "enrolledAt": "2025-01-27T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "data-visualization-ml",
+          "progress": 91,
+          "enrolledAt": "2025-03-10T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "data-engineering",
+          "progress": 86,
+          "enrolledAt": "2025-04-28T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "career-development",
+          "progress": 89,
+          "enrolledAt": "2025-06-02T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "name": "Tiba",
+      "email": "tiba@codac.academy",
+      "role": "STUDENT",
+      "status": "ACTIVE",
+      "bio": "Data science student with expertise in modern analytical techniques. Currently completing final projects in data science track.",
+      "avatar": "/avatars/tiba.jpg",
+      "githubUrl": "https://github.com/tiba-dev",
+      "linkedinUrl": "https://linkedin.com/in/tiba-fullstack",
+      "portfolioUrl": "https://tiba-dev.com",
+      "courseEnrollments": [
+        {
+          "courseSlug": "data-analysis",
+          "progress": 90,
+          "enrolledAt": "2025-01-27T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "data-visualization-ml",
+          "progress": 87,
+          "enrolledAt": "2025-03-10T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "data-engineering",
+          "progress": 83,
+          "enrolledAt": "2025-04-28T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "career-development",
+          "progress": 91,
+          "enrolledAt": "2025-06-02T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "name": "Aleksandra",
+      "email": "aleksandra@codac.academy",
+      "role": "STUDENT",
+      "status": "ACTIVE",
+      "bio": "Data scientist and AI engineer with focus on natural language processing and computer vision. Currently completing final projects in data science track.",
+      "avatar": "/avatars/aleksandra.jpg",
+      "githubUrl": "https://github.com/aleksandra-ai",
+      "linkedinUrl": "https://linkedin.com/in/aleksandra-ai",
+      "portfolioUrl": "https://aleksandra-ai.com",
+      "courseEnrollments": [
+        {
+          "courseSlug": "data-analysis",
+          "progress": 99,
+          "enrolledAt": "2025-01-27T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "data-visualization-ml",
+          "progress": 96,
+          "enrolledAt": "2025-03-10T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "data-engineering",
+          "progress": 92,
+          "enrolledAt": "2025-04-28T00:00:00.000Z"
+        },
+        {
+          "courseSlug": "career-development",
+          "progress": 94,
+          "enrolledAt": "2025-06-02T00:00:00.000Z"
+        }
+      ]
     }
   ],
   "sampleJobs": [
@@ -102,7 +272,12 @@
       "level": "JUNIOR",
       "salary": "€45,000 - €55,000",
       "description": "Join our team working on cutting-edge AI projects. Perfect for recent bootcamp graduates with strong Python and ML skills.",
-      "skills": ["Python", "Machine Learning", "Pandas", "Scikit-learn"],
+      "skills": [
+        "Python",
+        "Machine Learning",
+        "Pandas",
+        "Scikit-learn"
+      ],
       "remote": false,
       "isActive": true
     },
@@ -114,7 +289,12 @@
       "level": "JUNIOR",
       "salary": "€40,000 - €50,000",
       "description": "Build modern web applications using React and TypeScript. Great opportunity for bootcamp graduates to grow their career.",
-      "skills": ["React", "TypeScript", "JavaScript", "CSS"],
+      "skills": [
+        "React",
+        "TypeScript",
+        "JavaScript",
+        "CSS"
+      ],
       "remote": true,
       "isActive": true
     },
@@ -126,7 +306,12 @@
       "level": "JUNIOR",
       "salary": "€42,000 - €52,000",
       "description": "Work on exciting projects using modern tech stack. Perfect for developers with full-stack experience.",
-      "skills": ["Node.js", "React", "MongoDB", "Express"],
+      "skills": [
+        "Node.js",
+        "React",
+        "MongoDB",
+        "Express"
+      ],
       "remote": true,
       "isActive": true
     }

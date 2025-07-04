@@ -1,42 +1,62 @@
 [
   {
     "id": 1,
-    "name": "Titan Combat Tactics",
-    "description": "Master the fundamentals of Titan combat, including weak point identification, formation strategies, and survival techniques.",
-    "slug": "titan-combat",
+    "name": "Front-End Development",
+    "description": "Learn to build modern web applications with HTML, CSS, JavaScript, and React. Master responsive design and user interface development.",
+    "slug": "frontend-development",
     "category": "WEB_DEVELOPMENT",
-    "duration": 40,
+    "duration": 120,
     "isPublished": true,
     "order": 1
   },
   {
     "id": 2,
-    "name": "ODM Gear Mastery",
-    "description": "Advanced techniques for Vertical Maneuvering Equipment operation, maintenance, and combat applications.",
-    "slug": "odm-gear",
+    "name": "Full-Stack Development",
+    "description": "Master both client-side and server-side development with Node.js, Express, MongoDB, and React. Learn to build complete web applications.",
+    "slug": "fullstack-development",
     "category": "WEB_DEVELOPMENT",
-    "duration": 50,
+    "duration": 80,
     "isPublished": true,
     "order": 2
   },
   {
     "id": 3,
-    "name": "Military Strategy & Formation",
-    "description": "Learn advanced military formations, battlefield tactics, and expedition planning for beyond-the-walls missions.",
-    "slug": "military-strategy",
-    "category": "WEB_DEVELOPMENT",
-    "duration": 45,
+    "name": "Data Analysis Fundamentals",
+    "description": "Learn Python fundamentals, data manipulation with pandas, and statistical analysis. Build your foundation as a data analyst.",
+    "slug": "data-analysis",
+    "category": "DATA_SCIENCE",
+    "duration": 100,
+    "isPublished": true,
+    "order": 1
+  },
+  {
+    "id": 4,
+    "name": "Data Visualization & Machine Learning",
+    "description": "Create compelling visualizations and learn machine learning basics. Master data storytelling and predictive analytics.",
+    "slug": "data-visualization-ml",
+    "category": "DATA_SCIENCE",
+    "duration": 80,
+    "isPublished": true,
+    "order": 2
+  },
+  {
+    "id": 5,
+    "name": "Data Engineering",
+    "description": "Build data pipelines, work with databases, and create data engineering solutions. Advanced data science specialization.",
+    "slug": "data-engineering",
+    "category": "DATA_SCIENCE",
+    "duration": 100,
     "isPublished": true,
     "order": 3
   },
   {
-    "id": 4,
-    "name": "Titan Research & Analysis",
-    "description": "Scientific approach to understanding Titan behavior, anatomy, and characteristics through observation and experimentation.",
-    "slug": "titan-research",
-    "category": "DATA_SCIENCE",
-    "duration": 60,
+    "id": 6,
+    "name": "Career Development",
+    "description": "Prepare for your job search with CV writing, interview skills, networking, and understanding the German job market.",
+    "slug": "career-development",
+    "category": "CAREER_DEVELOPMENT",
+    "duration": 40,
     "isPublished": true,
-    "order": 4
+    "order": 1
   }
 ]

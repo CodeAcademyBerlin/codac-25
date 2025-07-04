@@ -2,22 +2,11 @@ import Link from 'next/link';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { getLearningProgress } from '@/data/dashboard'
 
-interface ProgressItem {
-    name: string
-    progress: number
-    track: string
-}
+export async function LearningProgress() {
+    const progressData = await getLearningProgress()
 
-// Updated to match the imported LMS content structure
-const progressData: ProgressItem[] = [
-    { name: "Web Development - Module 2", progress: 75, track: "web" },
-    { name: "Data Science - Module 1", progress: 45, track: "data" },
-    { name: "Career Services - Step 1", progress: 20, track: "career" },
-    { name: "JavaScript Fundamentals", progress: 85, track: "web" }
-]
-
-export function LearningProgress() {
     return (
         <Card className="col-span-4">
             <CardHeader>
@@ -27,29 +16,52 @@ export function LearningProgress() {
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                {progressData.map((item, index) => (
-                    <div key={index} className="space-y-2">
-                        <div className="flex items-center justify-between">
-                            <Link
-                                href={`/learning/${item.track}`}
-                                className="text-sm font-medium hover:text-primary transition-colors"
-                            >
-                                {item.name}
-                            </Link>
-                            <span className="text-sm text-muted-foreground">{item.progress}%</span>
+                {progressData.length > 0 ? (
+                    progressData.map((item) => (
+                        <div key={item.id} className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <Link
+                                    href={`/lms/courses/${item.courseId}`}
+                                    className="text-sm font-medium hover:text-primary transition-colors"
+                                >
+                                    {item.name}
+                                </Link>
+                                <span className="text-sm text-muted-foreground">{Math.round(item.progress)}%</span>
+                            </div>
+                            <Progress value={item.progress} className="h-2" />
+                            <div className="flex items-center justify-between text-xs text-muted-foreground">
+                                <span>{item.category.replace('_', ' ')}</span>
+                                <Link
+                                    href={`/learning/${item.track}`}
+                                    className="hover:text-primary transition-colors"
+                                >
+                                    View track →
+                                </Link>
+                            </div>
                         </div>
-                        <Progress value={item.progress} className="h-2" />
+                    ))
+                ) : (
+                    <div className="text-center py-8">
+                        <p className="text-muted-foreground mb-4">No courses enrolled yet</p>
+                        <Link
+                            href="/learning"
+                            className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3"
+                        >
+                            Browse Learning Tracks
+                        </Link>
                     </div>
-                ))}
+                )}
 
-                <div className="pt-4 mt-4 border-t">
-                    <Link
-                        href="/learning"
-                        className="text-sm text-primary hover:underline"
-                    >
-                        View all learning tracks →
-                    </Link>
-                </div>
+                {progressData.length > 0 && (
+                    <div className="pt-4 mt-4 border-t">
+                        <Link
+                            href="/learning"
+                            className="text-sm text-primary hover:underline"
+                        >
+                            View all learning tracks →
+                        </Link>
+                    </div>
+                )}
             </CardContent>
         </Card>
     )

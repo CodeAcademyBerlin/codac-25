@@ -1,8 +1,9 @@
 "use client"
 
-import { Book, Clock, TrendingUp, Trophy } from "lucide-react"
+import { BookCheck, BookOpen, Clock, TrendingUp } from "lucide-react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { UserStats } from "@/data/dashboard"
 
 interface StatCard {
     title: string
@@ -12,28 +13,23 @@ interface StatCard {
 }
 
 interface StatsCardsProps {
-    userStats?: {
-        documentsCount?: number
-        achievementsCount?: number
-        studyStreak?: number
-        monthlyStudyTime?: number
-    }
+    userStats?: UserStats
 }
 
 export function StatsCards({ userStats }: StatsCardsProps) {
-    // Default stats data with personalized values if available
+    // Learning-focused stats data with real values
     const statsData: StatCard[] = [
         {
-            title: "Current Streak",
-            value: userStats?.studyStreak ? `${userStats.studyStreak} days` : "0 days",
-            change: "Keep it up!",
-            icon: TrendingUp
+            title: "Courses Enrolled",
+            value: userStats?.totalEnrollments?.toString() || "0",
+            change: userStats?.coursesInProgress ? `${userStats.coursesInProgress} in progress` : "Start learning",
+            icon: BookOpen
         },
         {
-            title: "Documents Created",
-            value: userStats?.documentsCount?.toString() || "0",
-            change: "All time",
-            icon: Book
+            title: "Courses Completed",
+            value: userStats?.coursesCompleted?.toString() || "0",
+            change: userStats?.totalEnrollments ? `${Math.round((userStats.coursesCompleted / userStats.totalEnrollments) * 100) || 0}% completion rate` : "No completions yet",
+            icon: BookCheck
         },
         {
             title: "Study Time",
@@ -42,10 +38,10 @@ export function StatsCards({ userStats }: StatsCardsProps) {
             icon: Clock
         },
         {
-            title: "Achievements",
-            value: userStats?.achievementsCount?.toString() || "0",
-            change: "Unlocked",
-            icon: Trophy
+            title: "Average Progress",
+            value: userStats?.averageProgress ? `${userStats.averageProgress}%` : "0%",
+            change: userStats?.studyStreak ? `${userStats.studyStreak} day streak` : "Start studying",
+            icon: TrendingUp
         }
     ]
 

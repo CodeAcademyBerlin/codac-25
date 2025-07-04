@@ -328,7 +328,7 @@ async function main() {
         // Check if the required models exist in the database
         try {
             await (prisma as any).course.findMany({ take: 1 });
-        } catch (error) {
+        } catch {
             console.error('❌ Course model not found. Please run "npx prisma generate" and "npx prisma db push" first.');
             process.exit(1);
         }
