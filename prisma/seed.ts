@@ -1,7 +1,8 @@
 import fs from 'fs';
 
-import { PrismaClient, UserRole, UserStatus, CourseCategory, LessonType, AssignmentType, PostType, LessonProgressStatus, DocumentType } from '@prisma/client';
+import { PrismaClient, UserRole, UserStatus, CourseCategory } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { logger } from '../lib/logger';
 
 const prisma = new PrismaClient();
 
@@ -215,163 +216,57 @@ async function main() {
     );
 
     console.log('✅ Created courses');
+    console.log('📊 Course details:', courses.map(c => ({ id: c.id, title: c.title })));
 
-    // Create projects for Full Stack Web Development course
-    const fullStackProjects = await Promise.all([
-      prisma.project.create({
-        data: {
-          title: 'Frontend Fundamentals',
-          description: 'Building responsive web interfaces with HTML, CSS, and JavaScript',
-          duration: 80,
-          order: 1,
-          isPublished: true,
-          courseId: courses[0].id,
-        },
-      }),
-      prisma.project.create({
-        data: {
-          title: 'React Development',
-          description: 'Building modern single-page applications with React and state management',
-          duration: 120,
-          order: 2,
-          isPublished: true,
-          courseId: courses[0].id,
-        },
-      }),
-      prisma.project.create({
-        data: {
-          title: 'Backend Development',
-          description: 'Server-side development with Node.js, Express, and database integration',
-          duration: 100,
-          order: 3,
-          isPublished: true,
-          courseId: courses[0].id,
-        },
-      }),
-      prisma.project.create({
-        data: {
-          title: 'Full Stack Project',
-          description: 'Complete web application from design to deployment',
-          duration: 160,
-          order: 4,
-          isPublished: true,
-          courseId: courses[0].id,
-        },
-      }),
-    ]);
+    // Skip project and lesson creation for now - focus on quiz seeding
+    console.log('⏭️  Skipping project and lesson creation to focus on quiz seeding...');
 
-    // Create projects for Data Science course
-    const dataScienceProjects = await Promise.all([
-      prisma.project.create({
-        data: {
-          title: 'Python for Data Science',
-          description: 'Python fundamentals and data manipulation with pandas',
-          duration: 60,
-          order: 1,
-          isPublished: true,
-          courseId: courses[1].id,
-        },
-      }),
-      prisma.project.create({
-        data: {
-          title: 'Data Visualization',
-          description: 'Creating compelling visualizations with matplotlib and seaborn',
-          duration: 40,
-          order: 2,
-          isPublished: true,
-          courseId: courses[1].id,
-        },
-      }),
-      prisma.project.create({
-        data: {
-          title: 'Machine Learning Basics',
-          description: 'Introduction to supervised and unsupervised learning algorithms',
-          duration: 80,
-          order: 3,
-          isPublished: true,
-          courseId: courses[1].id,
-        },
-      }),
-    ]);
+    console.log('📚 Starting quiz seeding process...');
 
-    // Create lessons for Frontend Fundamentals project
-    const frontendLessons = await Promise.all([
-      prisma.lesson.create({
-        data: {
-          title: 'HTML Semantics and Structure',
-          description: 'Building accessible and semantic HTML documents',
-          type: LessonType.VIDEO,
-          duration: 45,
-          order: 1,
-          isPublished: true,
-          projectId: fullStackProjects[0].id,
-          content: {
-            type: 'video',
-            videoUrl: 'https://example.com/html-semantics',
-            transcript: 'Welcome to Frontend Development. Today we\'ll learn about semantic HTML and document structure...',
-          },
-        },
-      }),
-      prisma.lesson.create({
-        data: {
-          title: 'CSS Flexbox and Grid',
-          description: 'Modern CSS layout techniques for responsive design',
-          type: LessonType.INTERACTIVE,
-          duration: 60,
-          order: 2,
-          isPublished: true,
-          projectId: fullStackProjects[0].id,
-          content: {
-            type: 'interactive',
-            exercises: [
-              { question: 'What is the difference between Flexbox and CSS Grid?', answer: 'Flexbox is one-dimensional, Grid is two-dimensional' }
-            ],
-          },
-        },
-      });
-    logger.info('Sample quiz seeded successfully.');
-    await prisma.quiz.create({
-      data: {
-        topic: 'JavaScript',
-        difficulty: 'Beginner',
-        questions: {
-          create: [
-            {
-              text: 'What keyword is used to declare a variable in JavaScript?',
-              options: JSON.stringify(['var', 'let', 'const', 'all of the above']),
-              correctAnswer: 'all of the above',
-              explanation: '`var` is the oldest keyword. `let` and `const` were introduced in ES6. `let` allows reassignment, while `const` does not.',
-            },
-            {
-              text: 'Which of the following is NOT a primitive data type in JavaScript?',
-              options: JSON.stringify(['String', 'Number', 'Object', 'Boolean']),
-              correctAnswer: 'Object',
-              explanation: 'In JavaScript, primitive data types are String, Number, Boolean, Null, Undefined, Symbol, and BigInt. Object is a complex data type.',
-            },
-            {
-              text: 'What does the `===` operator do?',
-              options: JSON.stringify(['Compares for equality without type conversion', 'Compares for equality with type conversion', 'Assigns a value', 'None of the above']),
-              correctAnswer: 'Compares for equality without type conversion',
-              explanation: 'The strict equality operator `===` checks if two operands are equal, returning a Boolean result. Unlike the abstract equality operator (`==`), it does not perform type conversion.',
-            },
-            {
-              text: 'How do you write a single-line comment in JavaScript?',
-              options: JSON.stringify(['// This is a comment', '<!-- This is a comment -->', '/* This is a comment */', '# This is a comment']),
-              correctAnswer: '// This is a comment',
-              explanation: 'Single-line comments in JavaScript start with `//`. Multi-line comments start with `/*` and end with `*/`.',
-            },
-            {
-              text: 'Which function is used to print content to the console?',
-              options: JSON.stringify(['console.log()', 'print()', 'log.console()', 'debug.print()']),
-              correctAnswer: 'console.log()',
-              explanation: 'The `console.log()` method is used to output messages to the web console.',
-            },
-          ],
-        },
-      },
-    });
+    // Load and seed all quizzes from JSON file
+    console.log('📖 Loading quiz data from JSON file...');
+    const quizzesData = JSON.parse(fs.readFileSync('scripts/quizzes-all.json', 'utf-8'));
 
-    logger.info('Sample quiz seeded successfully.');
+    console.log(`📋 Found ${quizzesData.length} quizzes to seed`);
+    logger.info(`Starting to seed ${quizzesData.length} quizzes...`);
+
+    try {
+      // Clean existing quiz data
+      console.log('🧹 Cleaning existing quiz data...');
+      await prisma.question.deleteMany();
+      await prisma.quiz.deleteMany();
+      console.log('✅ Cleaned existing quiz data');
+
+      // Create all quizzes with their questions
+      console.log('📝 Creating quizzes and questions...');
+      const quizzes = await Promise.all(
+        quizzesData.map((quizData: any) =>
+          prisma.quiz.create({
+            data: {
+              quizTitle: quizData.quizTitle,
+              topic: quizData.topic,
+              difficulty: quizData.difficulty,
+              questions: {
+                create: quizData.questions.map((question: any) => ({
+                  text: question.text,
+                  options: JSON.stringify(question.options),
+                  correctAnswer: question.correctAnswer,
+                  explanation: question.explanation,
+                })),
+              },
+            },
+          })
+        )
+      );
+
+      console.log(`✅ Successfully seeded ${quizzes.length} quizzes with questions`);
+      logger.info(`✅ Successfully seeded ${quizzes.length} quizzes with questions`);
+    } catch (error) {
+      const quizError = error instanceof Error ? error : new Error(String(error));
+      console.error('❌ Error during quiz seeding:', quizError);
+      logger.error('❌ Quiz seeding failed:', quizError);
+      throw quizError;
+    }
   } catch (e) {
     const error = e instanceof Error ? e : new Error(String(e));
     logger.error('❌ Simplified Seed failed:', error);

@@ -1,130 +1,251 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (g && (g = 0, op[0] && (_ = 0)), _) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var client_1 = require("@prisma/client");
-var logger_1 = require("../lib/logger");
-var prisma = new client_1.PrismaClient();
-function main() {
-    return __awaiter(this, void 0, void 0, function () {
-        var e_1, error;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, 3, 5]);
-                    logger_1.logger.info('Database seeding started (Quiz Only).');
-                    // Seed a sample quiz
-                    logger_1.logger.info('Seeding sample quiz...');
-                    return [4 /*yield*/, prisma.quiz.create({
-                            data: {
-                                topic: 'JavaScript',
-                                difficulty: 'Beginner',
-                                questions: {
-                                    create: [
-                                        {
-                                            text: 'What keyword is used to declare a variable in JavaScript?',
-                                            options: JSON.stringify(['var', 'let', 'const', 'all of the above']),
-                                            correctAnswer: 'all of the above',
-                                            explanation: '`var` is the oldest keyword. `let` and `const` were introduced in ES6. `let` allows reassignment, while `const` does not.',
-                                        },
-                                        {
-                                            text: 'Which of the following is NOT a primitive data type in JavaScript?',
-                                            options: JSON.stringify(['String', 'Number', 'Object', 'Boolean']),
-                                            correctAnswer: 'Object',
-                                            explanation: 'In JavaScript, primitive data types are String, Number, Boolean, Null, Undefined, Symbol, and BigInt. Object is a complex data type.',
-                                        },
-                                        {
-                                            text: 'What does the `===` operator do?',
-                                            options: JSON.stringify(['Compares for equality without type conversion', 'Compares for equality with type conversion', 'Assigns a value', 'None of the above']),
-                                            correctAnswer: 'Compares for equality without type conversion',
-                                            explanation: 'The strict equality operator `===` checks if two operands are equal, returning a Boolean result. Unlike the abstract equality operator (`==`), it does not perform type conversion.',
-                                        },
-                                        {
-                                            text: 'How do you write a single-line comment in JavaScript?',
-                                            options: JSON.stringify(['// This is a comment', '<!-- This is a comment -->', '/* This is a comment */', '# This is a comment']),
-                                            correctAnswer: '// This is a comment',
-                                            explanation: 'Single-line comments in JavaScript start with `//`. Multi-line comments start with `/*` and end with `*/`.',
-                                        },
-                                        {
-                                            text: 'Which function is used to print content to the console?',
-                                            options: JSON.stringify(['console.log()', 'print()', 'log.console()', 'debug.print()']),
-                                            correctAnswer: 'console.log()',
-                                            explanation: 'The `console.log()` method is used to output messages to the web console.',
-                                        },
-                                    ],
-                                },
-                            },
-                        })];
-                case 1:
-                    _a.sent();
-                    logger_1.logger.info('Sample quiz seeded successfully.');
-                    return [3 /*break*/, 5];
-                case 2:
-                    e_1 = _a.sent();
-                    error = e_1 instanceof Error ? e_1 : new Error(String(e_1));
-                    logger_1.logger.error('❌ Simplified Seed failed:', error);
-                    process.exit(1);
-                    return [3 /*break*/, 5];
-                case 3: return [4 /*yield*/, prisma.$disconnect()];
-                case 4:
-                    _a.sent();
-                    return [7 /*endfinally*/];
-                case 5: return [2 /*return*/];
+const fs_1 = __importDefault(require("fs"));
+const client_1 = require("@prisma/client");
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const logger_1 = require("../lib/logger");
+const prisma = new client_1.PrismaClient();
+async function main() {
+    try {
+        logger_1.logger.info('Database seeding started (Quiz Only).');
+        // Hash default password for all seeded users
+        const defaultPassword = await bcryptjs_1.default.hash('password123', 10);
+        console.log('🔐 Default password for all users: password123');
+        // Ensure required directories exist
+        const requiredDirs = ['docs', 'public', 'uploads'];
+        requiredDirs.forEach(dir => {
+            if (!fs_1.default.existsSync(dir)) {
+                fs_1.default.mkdirSync(dir, { recursive: true });
+                console.log(`📁 Created missing directory: ${dir}`);
             }
         });
-    });
+        // Clean existing data
+        await prisma.userAchievement.deleteMany();
+        await prisma.achievement.deleteMany();
+        await prisma.assignmentSubmission.deleteMany();
+        await prisma.lessonProgress.deleteMany();
+        await prisma.courseEnrollment.deleteMany();
+        await prisma.mentorship.deleteMany();
+        await prisma.like.deleteMany();
+        await prisma.comment.deleteMany();
+        await prisma.communityPost.deleteMany();
+        await prisma.assignmentResource.deleteMany();
+        await prisma.lessonResource.deleteMany();
+        await prisma.assignment.deleteMany();
+        await prisma.lesson.deleteMany();
+        await prisma.project.deleteMany();
+        await prisma.coursePrerequisite.deleteMany();
+        await prisma.course.deleteMany();
+        await prisma.documentVersion.deleteMany();
+        await prisma.documentCollaborator.deleteMany();
+        await prisma.suggestion.deleteMany();
+        await prisma.favorite.deleteMany();
+        await prisma.document.deleteMany();
+        await prisma.jobApplication.deleteMany();
+        await prisma.job.deleteMany();
+        await prisma.user.deleteMany();
+        await prisma.cohort.deleteMany();
+        // Load seed data from JSON files
+        const cohortsData = JSON.parse(fs_1.default.readFileSync('prisma/seed/cohorts.json', 'utf-8'));
+        const studentsData = JSON.parse(fs_1.default.readFileSync('prisma/seed/students.json', 'utf-8'));
+        const coursesData = JSON.parse(fs_1.default.readFileSync('prisma/seed/courses.json', 'utf-8'));
+        const mentorsData = JSON.parse(fs_1.default.readFileSync('prisma/seed/mentors.json', 'utf-8'));
+        // Create cohorts first
+        const cohorts = await Promise.all(cohortsData.map((cohortData) => prisma.cohort.create({
+            data: {
+                name: cohortData.name,
+                startDate: new Date(cohortData.startDate),
+                description: cohortData.description,
+                image: cohortData.image,
+                slug: cohortData.slug,
+            },
+        })));
+        console.log('✅ Created cohorts');
+        // Create users from students JSON data
+        const studentUsers = await Promise.all(studentsData.map((student) => {
+            const cohort = cohorts.find(c => c.slug === student.cohort);
+            return prisma.user.create({
+                data: {
+                    email: `${student.name.toLowerCase().replace(' ', '.')}@codac.academy`,
+                    name: student.name,
+                    password: defaultPassword,
+                    role: client_1.UserRole.STUDENT,
+                    status: client_1.UserStatus.ACTIVE,
+                    cohortId: cohorts.find(c => c.slug === student.cohort)?.id,
+                    image: student.avatar,
+                    bio: `Coding academy student specializing in ${cohort?.name || 'software development'}.`,
+                    githubUrl: `https://github.com/${student.name.toLowerCase().replace(' ', '')}`,
+                    linkedinUrl: `https://linkedin.com/in/${student.name.toLowerCase().replace(' ', '-')}`,
+                },
+            });
+        }));
+        const mentorsCohort = cohorts.find(c => c.slug === 'mentors');
+        const mentorUsers = await Promise.all(mentorsData.map((mentor) => prisma.user.create({
+            data: {
+                email: `${mentor.name.toLowerCase().replace(' ', '.')}@codac.academy`,
+                name: mentor.name,
+                password: defaultPassword,
+                role: client_1.UserRole.MENTOR,
+                status: client_1.UserStatus.ACTIVE,
+                cohortId: mentorsCohort?.id,
+                image: mentor.avatar,
+                bio: mentor.bio,
+                githubUrl: `https://github.com/${mentor.name.toLowerCase().replace(' ', '')}`,
+                linkedinUrl: `https://linkedin.com/in/${mentor.name.toLowerCase().replace(' ', '-')}`,
+            },
+        })));
+        // Create admin users
+        const adminUsers = await Promise.all([
+            prisma.user.create({
+                data: {
+                    email: 'admin@codac.academy',
+                    name: 'Admin User',
+                    password: defaultPassword,
+                    role: client_1.UserRole.ADMIN,
+                    status: client_1.UserStatus.ACTIVE,
+                    image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2RjMjYyNiIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjMwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QUQ8L3RleHQ+PC9zdmc+',
+                    bio: 'System administrator responsible for platform management and user oversight.',
+                    githubUrl: 'https://github.com/codac-admin',
+                    linkedinUrl: 'https://linkedin.com/company/codac-academy',
+                },
+            }),
+            prisma.user.create({
+                data: {
+                    email: 'kenny.ackerman@codac.academy',
+                    name: 'Kenny Ackerman',
+                    password: defaultPassword,
+                    role: client_1.UserRole.ADMIN,
+                    status: client_1.UserStatus.ACTIVE,
+                    image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzM3NDE1MSIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjMwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+S0E8L3RleHQ+PC9zdmc+',
+                    bio: 'The Underground King turned academy administrator. Expert in anti-personnel combat and database management.',
+                    githubUrl: 'https://github.com/kenny-underground',
+                    linkedinUrl: 'https://linkedin.com/in/kenny-ackerman',
+                },
+            }),
+        ]);
+        // Create alumni users
+        const alumniUsers = await Promise.all([
+            prisma.user.create({
+                data: {
+                    email: 'marco.bott@alumni.codac.academy',
+                    name: 'Marco Bott',
+                    password: defaultPassword,
+                    role: client_1.UserRole.ALUMNI,
+                    status: client_1.UserStatus.GRADUATED,
+                    graduationDate: new Date('2023-12-15'),
+                    image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzE2YTM0YSIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjMwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TUI8L3RleHQ+PC9zdmc+',
+                    bio: 'Full-stack developer at a leading tech company. CODAC graduate specializing in React and Node.js.',
+                    githubUrl: 'https://github.com/marco-dev',
+                    linkedinUrl: 'https://linkedin.com/in/marco-bott',
+                    currentJob: 'Senior Full-Stack Developer',
+                    currentCompany: 'TechCorp Inc.',
+                    portfolioUrl: 'https://marco-portfolio.dev',
+                },
+            }),
+            prisma.user.create({
+                data: {
+                    email: 'annie.leonhart@alumni.codac.academy',
+                    name: 'Annie Leonhart',
+                    password: defaultPassword,
+                    role: client_1.UserRole.ALUMNI,
+                    status: client_1.UserStatus.GRADUATED,
+                    graduationDate: new Date('2023-08-30'),
+                    image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzFmMjkzNyIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjMwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QUw8L3RleHQ+PC9zdmc+',
+                    bio: 'Data scientist and machine learning engineer. CODAC graduate now working in AI research.',
+                    githubUrl: 'https://github.com/annie-ml',
+                    linkedinUrl: 'https://linkedin.com/in/annie-leonhart',
+                    currentJob: 'Machine Learning Engineer',
+                    currentCompany: 'AI Research Labs',
+                    portfolioUrl: 'https://annie-ml.com',
+                },
+            }),
+        ]);
+        const users = [...studentUsers, ...mentorUsers, ...adminUsers, ...alumniUsers];
+        console.log('✅ Created users');
+        // Assign users to cohorts
+        await Promise.all(users.map((user) => {
+            return prisma.user.update({
+                where: { id: user.id },
+                data: { cohortId: user.cohortId },
+            });
+        }));
+        console.log('✅ Assigned users to cohorts');
+        // Create courses based on JSON seed data
+        const courses = await Promise.all(coursesData.map((courseData) => prisma.course.create({
+            data: {
+                title: courseData.name,
+                description: courseData.description,
+                category: courseData.category,
+                duration: courseData.duration,
+                isPublished: courseData.isPublished,
+                order: courseData.order,
+            },
+        })));
+        console.log('✅ Created courses');
+        console.log('📊 Course details:', courses.map(c => ({ id: c.id, title: c.title })));
+        // Skip project and lesson creation for now - focus on quiz seeding
+        console.log('⏭️  Skipping project and lesson creation to focus on quiz seeding...');
+        console.log('📚 Starting quiz seeding process...');
+        // Load and seed all quizzes from JSON file
+        console.log('📖 Loading quiz data from JSON file...');
+        const quizzesData = JSON.parse(fs_1.default.readFileSync('scripts/quizzes-all.json', 'utf-8'));
+        console.log(`📋 Found ${quizzesData.length} quizzes to seed`);
+        logger_1.logger.info(`Starting to seed ${quizzesData.length} quizzes...`);
+        try {
+            // Clean existing quiz data
+            console.log('🧹 Cleaning existing quiz data...');
+            await prisma.question.deleteMany();
+            await prisma.quiz.deleteMany();
+            console.log('✅ Cleaned existing quiz data');
+            // Create all quizzes with their questions
+            console.log('📝 Creating quizzes and questions...');
+            const quizzes = await Promise.all(quizzesData.map((quizData) => prisma.quiz.create({
+                data: {
+                    quizTitle: quizData.quizTitle,
+                    topic: quizData.topic,
+                    difficulty: quizData.difficulty,
+                    questions: {
+                        create: quizData.questions.map((question) => ({
+                            text: question.text,
+                            options: JSON.stringify(question.options),
+                            correctAnswer: question.correctAnswer,
+                            explanation: question.explanation,
+                        })),
+                    },
+                },
+            })));
+            console.log(`✅ Successfully seeded ${quizzes.length} quizzes with questions`);
+            logger_1.logger.info(`✅ Successfully seeded ${quizzes.length} quizzes with questions`);
+        }
+        catch (error) {
+            const quizError = error instanceof Error ? error : new Error(String(error));
+            console.error('❌ Error during quiz seeding:', quizError);
+            logger_1.logger.error('❌ Quiz seeding failed:', quizError);
+            throw quizError;
+        }
+    }
+    catch (e) {
+        const error = e instanceof Error ? e : new Error(String(e));
+        logger_1.logger.error('❌ Simplified Seed failed:', error);
+        process.exit(1);
+    }
+    finally {
+        await prisma.$disconnect();
+    }
 }
 main()
-    .then(function () {
+    .then(() => {
     logger_1.logger.info('✅ Simplified Seed completed successfully!');
     process.exit(0);
 })
-    .catch(function (e) {
-    var error = e instanceof Error ? e : new Error(String(e));
+    .catch((e) => {
+    const error = e instanceof Error ? e : new Error(String(e));
     logger_1.logger.error('❌ Simplified Seed failed:', error);
     process.exit(1);
 })
-    .finally(function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, prisma.$disconnect()];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); });
+    .finally(async () => {
+    await prisma.$disconnect();
+});

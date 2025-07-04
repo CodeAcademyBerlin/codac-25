@@ -4,7 +4,10 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "target": "ES2022",
-    "outDir": "../dist"
+    "outDir": "../dist",
+    "noEmit": false
   },
-  "include": ["seed.ts"]
-} 
+  "include": [
+    "seed.ts"
+  ]
+}
