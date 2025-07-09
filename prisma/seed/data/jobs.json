@@ -1,0 +1,192 @@
+[
+  {
+    "title": "Junior Data Scientist",
+    "company": "Berlin AI Labs",
+    "location": "Berlin, Germany",
+    "type": "FULL_TIME",
+    "level": "JUNIOR",
+    "salary": "€45,000 - €55,000",
+    "description": "Join our team working on cutting-edge AI projects. Perfect for recent bootcamp graduates with strong Python and ML skills. You'll work on real-world machine learning problems and contribute to our AI research initiatives.",
+    "requirements": [
+      "Strong Python programming skills",
+      "Experience with machine learning frameworks (scikit-learn, TensorFlow, PyTorch)",
+      "Knowledge of data manipulation libraries (pandas, numpy)",
+      "Basic understanding of statistics and probability",
+      "Experience with version control (Git)",
+      "Bachelor's degree in Computer Science, Statistics, or related field"
+    ],
+    "skills": [
+      "Python",
+      "Machine Learning",
+      "Pandas",
+      "Scikit-learn",
+      "TensorFlow",
+      "Statistics"
+    ],
+    "benefits": [
+      "Competitive salary and equity",
+      "Flexible working hours",
+      "Professional development budget",
+      "Modern office in Berlin",
+      "Team events and conferences"
+    ],
+    "remote": false,
+    "isActive": true
+  },
+  {
+    "title": "Frontend Developer (React)",
+    "company": "TechStart GmbH",
+    "location": "Berlin, Germany",
+    "type": "FULL_TIME",
+    "level": "JUNIOR",
+    "salary": "€40,000 - €50,000",
+    "description": "Build modern web applications using React and TypeScript. Great opportunity for bootcamp graduates to grow their career in a dynamic startup environment.",
+    "requirements": [
+      "2+ years of React experience",
+      "Strong TypeScript skills",
+      "Experience with modern CSS frameworks",
+      "Knowledge of responsive design principles",
+      "Experience with REST APIs",
+      "Familiarity with Git and CI/CD"
+    ],
+    "skills": ["React", "TypeScript", "JavaScript", "CSS", "HTML", "REST APIs"],
+    "benefits": [
+      "Flexible remote work",
+      "Learning and development budget",
+      "Stock options",
+      "Health insurance",
+      "Gym membership"
+    ],
+    "remote": true,
+    "isActive": true
+  },
+  {
+    "title": "Full Stack Developer",
+    "company": "Innovation Hub",
+    "location": "Berlin, Germany",
+    "type": "FULL_TIME",
+    "level": "JUNIOR",
+    "salary": "€42,000 - €52,000",
+    "description": "Work on exciting projects using modern tech stack. Perfect for developers with full-stack experience looking to grow in a collaborative environment.",
+    "requirements": [
+      "Experience with Node.js and Express",
+      "React frontend development",
+      "MongoDB or other NoSQL databases",
+      "RESTful API design",
+      "Version control with Git",
+      "Understanding of web security principles"
+    ],
+    "skills": [
+      "Node.js",
+      "React",
+      "MongoDB",
+      "Express",
+      "JavaScript",
+      "REST APIs"
+    ],
+    "benefits": [
+      "Hybrid work model",
+      "Personal development budget",
+      "Team building activities",
+      "Modern tech stack",
+      "Mentorship program"
+    ],
+    "remote": true,
+    "isActive": true
+  },
+  {
+    "title": "Data Analyst",
+    "company": "FinTech Solutions",
+    "location": "Munich, Germany",
+    "type": "FULL_TIME",
+    "level": "JUNIOR",
+    "salary": "€38,000 - €45,000",
+    "description": "Analyze financial data and create insights for our fintech products. Perfect for graduates with strong analytical skills and interest in finance.",
+    "requirements": [
+      "Strong SQL skills",
+      "Experience with Python for data analysis",
+      "Knowledge of statistical analysis",
+      "Excel/Google Sheets proficiency",
+      "Understanding of financial concepts",
+      "Experience with data visualization tools"
+    ],
+    "skills": [
+      "SQL",
+      "Python",
+      "Excel",
+      "Statistics",
+      "Data Visualization",
+      "Pandas"
+    ],
+    "benefits": [
+      "Competitive salary",
+      "Performance bonuses",
+      "Professional certification support",
+      "Flexible hours",
+      "Team lunch allowance"
+    ],
+    "remote": false,
+    "isActive": true
+  },
+  {
+    "title": "UX/UI Designer",
+    "company": "Creative Digital Agency",
+    "location": "Hamburg, Germany",
+    "type": "FULL_TIME",
+    "level": "JUNIOR",
+    "salary": "€35,000 - €42,000",
+    "description": "Design user-friendly interfaces for web and mobile applications. Great opportunity for creative professionals to work on diverse projects.",
+    "requirements": [
+      "Proficiency in Figma or Sketch",
+      "Understanding of user-centered design principles",
+      "Experience with prototyping tools",
+      "Knowledge of HTML/CSS basics",
+      "Portfolio demonstrating design skills",
+      "Understanding of accessibility standards"
+    ],
+    "skills": [
+      "Figma",
+      "Sketch",
+      "Prototyping",
+      "User Research",
+      "HTML",
+      "CSS"
+    ],
+    "benefits": [
+      "Creative freedom",
+      "Design software licenses",
+      "Conference attendance",
+      "Flexible work arrangements",
+      "Inspiration budget"
+    ],
+    "remote": true,
+    "isActive": true
+  },
+  {
+    "title": "DevOps Engineer",
+    "company": "Cloud Solutions AG",
+    "location": "Frankfurt, Germany",
+    "type": "FULL_TIME",
+    "level": "JUNIOR",
+    "salary": "€48,000 - €58,000",
+    "description": "Manage cloud infrastructure and deployment pipelines. Entry-level position for those interested in DevOps and cloud technologies.",
+    "requirements": [
+      "Basic knowledge of AWS or Azure",
+      "Experience with Docker containers",
+      "Understanding of CI/CD principles",
+      "Linux system administration",
+      "Scripting skills (Bash, Python)",
+      "Knowledge of version control systems"
+    ],
+    "skills": ["AWS", "Docker", "Linux", "CI/CD", "Python", "Bash"],
+    "benefits": [
+      "Cloud certifications paid",
+      "Latest hardware",
+      "Remote work options",
+      "Training budget",
+      "Health benefits"
+    ],
+    "remote": true,
+    "isActive": true
+  }
+]

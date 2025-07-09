@@ -433,7 +433,7 @@ const InteractiveBarChart = ({ data, width = 450, height = 300, title }: any) =>
                     <svg ref={svgRef} width={width} height={height} className="drop-shadow-lg">
                         <defs>
                             {/* Artistic gradients for bars - single color with opacity variations */}
-                            {sortedData.map((item: any, i: number) => {
+                            {sortedData.map((_, i: number) => {
                                 const primaryColor = 'var(--chart-1)'; // Using chart-1 for bars
                                 const baseOpacity = 0.9 + (i % 3) * 0.05; // Slightly higher opacity for bars
 
@@ -648,7 +648,7 @@ const InteractiveScatterPlot = ({ data, width = 450, height = 300, title }: any)
                     <svg ref={svgRef} width={width} height={height} className="drop-shadow-lg">
                         <defs>
                             {/* Artistic filters for each category - single color with variations */}
-                            {categories.map((category, i) => {
+                            {categories.map((_, i) => {
                                 const opacityVariation = 0.7 + (i * 0.15); // More variation for scatter plot depth
 
                                 return (
