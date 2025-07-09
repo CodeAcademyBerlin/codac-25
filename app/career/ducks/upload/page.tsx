@@ -1,10 +1,10 @@
 "use client";
 
-import { UploadCloud, Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { UploadCloud, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { createDuck } from "@/actions/duck/create-duck";
 import { Button } from "@/components/ui/button";
@@ -48,7 +48,7 @@ export default function DuckUploadPage() {
     onUploadBegin: () => {
       toast.loading("Your duck is taking flight...", { id: "duck-upload" });
     },
-    onUploadProgress: (_progress) => {
+    onUploadProgress: () => {
       // You could update the loading toast with progress here
     },
   });

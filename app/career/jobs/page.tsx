@@ -1,33 +1,32 @@
-import { Plus } from "lucide-react";
-import Link from "next/link";
 import { Suspense } from "react";
+import Link from "next/link";
+import { Plus } from "lucide-react";
 
-import { getDucks } from "@/actions/duck/get-ducks";
-import { getJobs } from "@/actions/job/get-jobs";
-import { DuckCard } from "@/components/career/duck-card";
-import { JobCard } from "@/components/career/job-card";
-import { JobFilters } from "@/components/career/job-filters";
-import { SecretDuckForm } from "@/components/career/secret-duck-form";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { auth } from "@/lib/auth/auth";
 
+import { getJobs } from "@/actions/job/get-jobs";
+import { JobCard } from "@/components/career/job-card";
+import { JobFilters } from "@/components/career/job-filters";
+import { auth } from "@/lib/auth/auth";
+import { SecretDuckForm } from "@/components/career/secret-duck-form";
+import { getDucks } from "@/actions/duck/get-ducks";
+import { DuckCard } from "@/components/career/duck-card";
 
 type Job = Awaited<ReturnType<typeof getJobs>>[number];
 type DuckItem = Awaited<ReturnType<typeof getDucks>>[number];
 
 interface JobsPageProps {
-  searchParams: Promise<{
+  searchParams: {
     search?: string;
     type?: string;
     level?: string;
     remote?: string;
     company?: string;
-  }>;
+  };
 }
 
 export default async function JobsPage({ searchParams }: JobsPageProps) {
-  const params = await searchParams;
   const session = await auth();
   const user = session?.user;
 
@@ -71,25 +70,12 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
 }
 
 type JobsListProps = {
-  searchParams: {
-    search?: string;
-    type?: string;
-    level?: string;
-    remote?: string;
-    company?: string;
-  };
+  searchParams: JobsPageProps["searchParams"];
 };
 
 async function JobsList({ searchParams }: JobsListProps) {
   const jobs = await getJobs(searchParams);
-
-  // Handle ducks gracefully - if table doesn't exist, use empty array
-  let ducks: DuckItem[] = [];
-  try {
-    ducks = await getDucks();
-  } catch (error) {
-    console.warn('Failed to fetch ducks:', error);
-  }
+  const ducks = await getDucks();
 
   const combinedList = [...jobs, ...ducks].sort(
     (a, b) => b.createdAt.getTime() - a.createdAt.getTime()

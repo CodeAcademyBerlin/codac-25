@@ -1,9 +1,9 @@
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { notFound, redirect } from "next/navigation";
 
 import { getJobById } from "@/actions/job/get-jobs";
-import { JobEditForm } from "@/components/career/job-edit-form";
+import { auth } from "@/lib/auth/auth";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,16 +12,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { auth } from "@/lib/auth/auth";
+import { JobEditForm } from "@/components/career/job-edit-form";
 
 interface EditJobPageProps {
-  params: Promise<{
+  params: {
     id: string;
-  }>;
+  };
 }
 
 export default async function EditJobPage({ params }: EditJobPageProps) {
-  const { id } = await params;
   const session = await auth();
   const user = session?.user;
 
@@ -29,7 +28,7 @@ export default async function EditJobPage({ params }: EditJobPageProps) {
     redirect("/auth/signin");
   }
 
-  const job = await getJobById(id);
+  const job = await getJobById(params.id);
 
   if (!job) {
     notFound();
