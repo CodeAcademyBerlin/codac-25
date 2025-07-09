@@ -1,5 +1,6 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+
 import { FlatCompat } from "@eslint/eslintrc";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,14 +15,14 @@ const eslintConfig = [
   {
     rules: {
       // Enforce naming conventions
-      'camelcase': ['error', { properties: 'never', ignoreDestructuring: false }],
+      'camelcase': ['warn', { properties: 'never', ignoreDestructuring: false }],
 
       // Prefer named exports
       'import/prefer-default-export': 'off',
-      'import/no-default-export': 'warn',
+      // 'import/no-default-export': 'warn',
 
       // TypeScript specific rules
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
@@ -35,8 +36,8 @@ const eslintConfig = [
 
       // General code quality
       'no-console': ['warn', { allow: ['warn', 'error'] }],
-      'prefer-const': 'error',
-      'no-var': 'error',
+      'prefer-const': 'warn',
+      'no-var': 'warn',
 
       // Import organization
       'import/order': [

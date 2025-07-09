@@ -3,6 +3,7 @@ import path from 'path';
 import { PrismaClient, UserRole, UserStatus, CourseCategory, LessonProgressStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { logger } from '../../../lib/logger';
+import { encodeSeedImageToBase64 } from '../../../lib/imaging/encode-image-to-base64';
 
 const prisma = new PrismaClient();
 
@@ -91,13 +92,14 @@ export async function seedBlackOwls() {
 
         // Create Black Owls cohort
         logger.info('🏫 Creating Black Owls cohort...');
+        const cohortImageBase64 = await encodeSeedImageToBase64(cohortData.image);
         const cohort = await prisma.cohort.create({
             data: {
                 name: cohortData.name,
                 slug: cohortData.slug,
                 startDate: new Date(cohortData.startDate),
                 description: cohortData.description,
-                image: cohortData.image,
+                image: cohortImageBase64,
             },
         });
 
@@ -237,6 +239,7 @@ export async function seedBlackOwls() {
         logger.info('👥 Creating Black Owls students...');
         const students = await Promise.all(
             usersData.map(async (userData) => {
+                const userImageBase64 = await encodeSeedImageToBase64(userData.image);
                 const student = await prisma.user.create({
                     data: {
                         name: userData.name,
@@ -245,7 +248,7 @@ export async function seedBlackOwls() {
                         role: userData.role as UserRole,
                         status: userData.status as UserStatus,
                         bio: userData.bio,
-                        image: userData.image,
+                        image: userImageBase64,
                         githubUrl: userData.githubUrl,
                         linkedinUrl: userData.linkedinUrl,
                         portfolioUrl: userData.portfolioUrl,

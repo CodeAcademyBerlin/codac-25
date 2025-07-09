@@ -6,7 +6,7 @@
     "status": "ACTIVE",
     "cohort": "scouts",
     "bio": "Determined coding student with a passion for full-stack development. Believes in the power of technology to break down barriers.",
-    "image": "/uploads/Eren.png",
+    "image": "Eren.png",
     "githubUrl": "https://github.com/eren-freedom",
     "linkedinUrl": "https://linkedin.com/in/eren-yeager"
   },
@@ -17,7 +17,7 @@
     "status": "ACTIVE",
     "cohort": "scouts",
     "bio": "Skilled developer specializing in security and performance optimization. Known for writing clean, efficient code.",
-    "image": "/uploads/Mikasa.png",
+    "image": "Mikasa.png",
     "githubUrl": "https://github.com/mikasa-secure",
     "linkedinUrl": "https://linkedin.com/in/mikasa-ackerman"
   },
@@ -28,7 +28,7 @@
     "status": "ACTIVE",
     "cohort": "scouts",
     "bio": "Strategic thinker with expertise in system architecture and data analysis. Loves solving complex problems.",
-    "image": "/uploads/Armin.png",
+    "image": "Armin.png",
     "githubUrl": "https://github.com/armin-strategist",
     "linkedinUrl": "https://linkedin.com/in/armin-arlert"
   },
@@ -39,7 +39,7 @@
     "status": "ACTIVE",
     "cohort": "scouts",
     "bio": "Pragmatic developer focused on creating practical solutions. Skilled in project management and team leadership.",
-    "image": "/uploads/Jean.png",
+    "image": "Thomas.png",
     "githubUrl": "https://github.com/jean-leader",
     "linkedinUrl": "https://linkedin.com/in/jean-kirstein"
   },
@@ -50,7 +50,7 @@
     "status": "ACTIVE",
     "cohort": "scouts",
     "bio": "Enthusiastic developer with a talent for mobile app development and user experience design.",
-    "image": "/uploads/Connie.png",
+    "image": "Thomas.png",
     "githubUrl": "https://github.com/connie-mobile",
     "linkedinUrl": "https://linkedin.com/in/connie-springer"
   },
@@ -61,7 +61,7 @@
     "status": "ACTIVE",
     "cohort": "scouts",
     "bio": "Creative developer specializing in frontend technologies and interactive user interfaces.",
-    "image": "/uploads/Sasha.png",
+    "image": "Thomas.png",
     "githubUrl": "https://github.com/sasha-creative",
     "linkedinUrl": "https://linkedin.com/in/sasha-blouse"
   },
@@ -72,7 +72,7 @@
     "status": "ACTIVE",
     "cohort": "scouts",
     "bio": "Aspiring tech leader with interests in AI and machine learning. Focused on ethical technology development.",
-    "image": "/uploads/Historia.png",
+    "image": "Thomas.png",
     "githubUrl": "https://github.com/historia-ai",
     "linkedinUrl": "https://linkedin.com/in/historia-reiss"
   },
@@ -83,7 +83,7 @@
     "status": "ACTIVE",
     "cohort": "scouts",
     "bio": "Independent developer with expertise in backend systems and database architecture.",
-    "image": "/uploads/Ymir.png",
+    "image": "Thomas.png",
     "githubUrl": "https://github.com/ymir-backend",
     "linkedinUrl": "https://linkedin.com/in/ymir"
   },
@@ -94,7 +94,7 @@
     "status": "ACTIVE",
     "cohort": "scouts",
     "bio": "Robust developer focused on building scalable and resilient systems. Skilled in DevOps and cloud architecture.",
-    "image": "/uploads/Reiner.png",
+    "image": "Thomas.png",
     "githubUrl": "https://github.com/reiner-devops",
     "linkedinUrl": "https://linkedin.com/in/reiner-braun"
   },
@@ -105,7 +105,7 @@
     "status": "ACTIVE",
     "cohort": "scouts",
     "bio": "Thoughtful developer with a focus on software testing and quality assurance.",
-    "image": "/uploads/Bertholdt.png",
+    "image": "Thomas.png",
     "githubUrl": "https://github.com/bertholdt-qa",
     "linkedinUrl": "https://linkedin.com/in/bertholdt-hoover"
   },
@@ -116,7 +116,7 @@
     "status": "ACTIVE",
     "cohort": "mentors",
     "bio": "Senior software engineer with 15+ years of experience. Expert in clean code practices and system optimization.",
-    "image": "/uploads/Levi.png",
+    "image": "Thomas.png",
     "githubUrl": "https://github.com/levi-clean-code",
     "linkedinUrl": "https://linkedin.com/in/levi-ackerman"
   },
@@ -127,7 +127,7 @@
     "status": "ACTIVE",
     "cohort": "mentors",
     "bio": "Research-focused developer specializing in data science and machine learning. Passionate about exploring new technologies.",
-    "image": "/uploads/Hange.png",
+    "image": "Thomas.png",
     "githubUrl": "https://github.com/hange-research",
     "linkedinUrl": "https://linkedin.com/in/hange-zoe"
   },
@@ -138,7 +138,7 @@
     "status": "ACTIVE",
     "cohort": "mentors",
     "bio": "Tech lead and strategic planner with expertise in large-scale system design and team management.",
-    "image": "/uploads/Erwin.png",
+    "image": "Thomas.png",
     "githubUrl": "https://github.com/erwin-strategy",
     "linkedinUrl": "https://linkedin.com/in/erwin-smith"
   },
@@ -149,7 +149,7 @@
     "status": "ACTIVE",
     "cohort": "mentors",
     "bio": "The Underground King turned academy administrator. Expert in anti-personnel combat and database management.",
-    "image": "/uploads/Kenny.png",
+    "image": "Thomas.png",
     "githubUrl": "https://github.com/kenny-underground",
     "linkedinUrl": "https://linkedin.com/in/kenny-ackerman"
   },
@@ -160,7 +160,7 @@
     "status": "GRADUATED",
     "cohort": "scouts",
     "bio": "Full-stack developer at a leading tech company. CODAC graduate specializing in React and Node.js.",
-    "image": "/uploads/Marco.png",
+    "image": "Thomas.png",
     "githubUrl": "https://github.com/marco-dev",
     "linkedinUrl": "https://linkedin.com/in/marco-bott",
     "currentJob": "Senior Full-Stack Developer",
@@ -175,7 +175,7 @@
     "status": "GRADUATED",
     "cohort": "scouts",
     "bio": "Data scientist and machine learning engineer. CODAC graduate now working in AI research.",
-    "image": "/uploads/Annie.png",
+    "image": "Thomas.png",
     "githubUrl": "https://github.com/annie-ml",
     "linkedinUrl": "https://linkedin.com/in/annie-leonhart",
     "currentJob": "Machine Learning Engineer",

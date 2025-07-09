@@ -36,7 +36,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           // Find user in database
           const user = await prisma.user.findUnique({
-            where: { email }
+            where: { email },
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              image: true,
+              password: true,
+              role: true,
+              status: true,
+              cohortId: true,
+              emailVerified: true,
+            }
           })
 
           if (!user || !user.password) {

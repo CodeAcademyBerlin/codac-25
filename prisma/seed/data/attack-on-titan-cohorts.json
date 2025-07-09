@@ -5,7 +5,7 @@
     "startDate": "2024-01-01T00:00:00Z",
     "endDate": "2024-12-31T23:59:59Z",
     "description": "Elite soldiers training to fight Titans and master ODM gear",
-    "image": "/uploads/Scouts.png",
+    "image": "Scouts.png",
     "isActive": true
   },
   {
@@ -14,7 +14,7 @@
     "startDate": "2024-01-01T00:00:00Z",
     "endDate": "2024-12-31T23:59:59Z",
     "description": "The Scout Regiment is the military's main expeditionary force, responsible for exploring the world outside the walls and fighting against the Titans.",
-    "image": "/uploads/Scouts.png",
+    "image": "Scouts.png",
     "isActive": true
   },
   {
@@ -23,7 +23,7 @@
     "startDate": "2024-01-01T00:00:00Z",
     "endDate": "2024-12-31T23:59:59Z",
     "description": "The Garrison Regiment is responsible for defending the walls and maintaining order within the walls.",
-    "image": "/uploads/Garrison.png",
+    "image": "Scouts.png",
     "isActive": true
   },
   {
@@ -32,7 +32,7 @@
     "startDate": "2024-01-01T00:00:00Z",
     "endDate": "2024-12-31T23:59:59Z",
     "description": "The Military Police Regiment is responsible for maintaining order within the walls and protecting the royal family.",
-    "image": "/uploads/MilitaryPolice.png",
+    "image": "MilitaryPolice.png",
     "isActive": true
   },
   {
@@ -41,7 +41,7 @@
     "startDate": "2024-01-01T00:00:00Z",
     "endDate": "2024-12-31T23:59:59Z",
     "description": "The Mentors are responsible for mentoring the students and helping them learn.",
-    "image": "/uploads/Mentors.png",
+    "image": "Scouts.png",
     "isActive": true
   }
 ]

@@ -3,6 +3,7 @@ import path from 'path';
 import { PrismaClient, UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { logger } from '../../../lib/logger';
+import { encodeSeedImageToBase64 } from '../../../lib/imaging/encode-image-to-base64';
 
 const prisma = new PrismaClient();
 
@@ -66,24 +67,26 @@ export async function seedAttackOnTitan() {
         // Create cohorts
         logger.info('🏫 Creating Attack on Titan cohorts...');
         const cohorts = await Promise.all(
-            cohortsData.map(cohortData =>
-                prisma.cohort.create({
+            cohortsData.map(async (cohortData) => {
+                const cohortImageBase64 = await encodeSeedImageToBase64(cohortData.image);
+                return prisma.cohort.create({
                     data: {
                         name: cohortData.name,
                         slug: cohortData.slug,
                         startDate: new Date(cohortData.startDate),
                         description: cohortData.description,
-                        image: cohortData.image,
+                        image: cohortImageBase64,
                     },
-                })
-            )
+                });
+            })
         );
 
         // Create users
         logger.info('👥 Creating Attack on Titan users...');
         const users = await Promise.all(
-            usersData.map(userData => {
+            usersData.map(async (userData) => {
                 const cohort = cohorts.find(c => c.slug === userData.cohort);
+                const userImageBase64 = await encodeSeedImageToBase64(userData.image);
                 return prisma.user.create({
                     data: {
                         name: userData.name,
@@ -93,7 +96,7 @@ export async function seedAttackOnTitan() {
                         status: userData.status as UserStatus,
                         cohortId: cohort?.id,
                         bio: userData.bio,
-                        image: userData.image,
+                        image: userImageBase64,
                         githubUrl: userData.githubUrl,
                         linkedinUrl: userData.linkedinUrl,
                         currentJob: userData.currentJob,
