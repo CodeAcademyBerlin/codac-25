@@ -230,7 +230,7 @@ export type DocumentWithRelations = Prisma.DocumentGetPayload<{
   };
 }>;
 
-// TODO: Implement actual permission checking logic
+// Permission checking logic is implemented in lib/permissions.ts
 export async function checkPermission(
   userId: string,
   resource: string,

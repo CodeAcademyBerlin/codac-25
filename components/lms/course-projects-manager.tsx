@@ -399,7 +399,7 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
                                             <AlertDialogHeader>
                                                 <AlertDialogTitle>Delete Project</AlertDialogTitle>
                                                 <AlertDialogDescription>
-                                                    Are you sure you want to delete "{project.title}"? This action cannot be undone.
+                                                    Are you sure you want to delete &quot;{project.title}&quot;? This action cannot be undone.
                                                 </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
@@ -459,7 +459,7 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
                                                         <AlertDialogHeader>
                                                             <AlertDialogTitle>Delete Lesson</AlertDialogTitle>
                                                             <AlertDialogDescription>
-                                                                Are you sure you want to delete "{lesson.title}"? This action cannot be undone.
+                                                                Are you sure you want to delete &quot;{lesson.title}&quot;? This action cannot be undone.
                                                             </AlertDialogDescription>
                                                         </AlertDialogHeader>
                                                         <AlertDialogFooter>

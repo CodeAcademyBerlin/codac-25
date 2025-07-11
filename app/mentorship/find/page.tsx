@@ -1,8 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { GraduationCap } from "lucide-react";
+import { useEffect, useState } from "react";
 
+import {
+  getMentors,
+  UserWithMentorCounts,
+} from "@/actions/mentorship/get-mentors";
+import { MentorBookingDialog } from "@/components/mentorship/mentor-booking-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,13 +18,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import {
-  getMentors,
-  UserWithMentorCounts,
-} from "@/actions/mentorship/get-mentors";
-import { MentorBookingDialog } from "@/components/mentorship/mentor-booking-dialog";
 
 export default function FindMentorPage() {
   const [mentors, setMentors] = useState<UserWithMentorCounts[]>([]);

@@ -1,7 +1,7 @@
+import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 
 import { getDuckById } from "@/actions/duck/get-duck-by-id";
 import { DeleteDuckButton } from "@/components/career/delete-duck-button";

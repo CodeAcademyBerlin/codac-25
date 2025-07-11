@@ -1,9 +1,9 @@
 "use client";
 
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { use } from "react";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
 
 // Tipos locales
 interface Question {

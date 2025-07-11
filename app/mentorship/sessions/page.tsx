@@ -1,23 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { CalendarIcon, CheckCircle, Clock, XCircle } from "lucide-react";
 import { format } from "date-fns";
+import { CalendarIcon, CheckCircle, Clock, XCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getMentorSessions } from "@/actions/mentorship/get-mentor-sessions";
-import { MentorSession, MentorSessionStatus } from "@/types/mentorship";
 import { updateMentorSession } from "@/actions/mentorship/update-session";
 import {
   AlertDialog,
@@ -29,7 +18,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MentorSession, MentorSessionStatus } from "@/types/mentorship";
+
 
 export default function MentorSessionsPage() {
   const [upcomingSessions, setUpcomingSessions] = useState<MentorSession[]>([]);

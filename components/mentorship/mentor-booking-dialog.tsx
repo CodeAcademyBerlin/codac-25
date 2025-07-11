@@ -1,9 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { ChevronRight } from "lucide-react";
+import { useState } from "react";
 
+import { createMentorshipBooking } from "@/actions/mentorship/create-booking";
+import { UserWithMentorCounts } from "@/actions/mentorship/get-mentors";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +16,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Select,
   SelectContent,
@@ -21,9 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { UserWithMentorCounts } from "@/actions/mentorship/get-mentors";
-import { createMentorshipBooking } from "@/actions/mentorship/create-booking";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface MentorBookingDialogProps {
   mentor: UserWithMentorCounts;

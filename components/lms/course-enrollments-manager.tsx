@@ -285,7 +285,7 @@ export function CourseEnrollmentsManager({ course }: CourseEnrollmentsManagerPro
                             <div className="text-center py-8 text-muted-foreground">
                                 <Users className="mx-auto h-12 w-12 mb-4 opacity-50" />
                                 <p>No students enrolled yet.</p>
-                                <p className="text-sm">Use the "Enroll Students" button to add students to this course.</p>
+                                <p className="text-sm">Use the &quot;Enroll Students&quot; button to add students to this course.</p>
                             </div>
                         )}
                     </div>

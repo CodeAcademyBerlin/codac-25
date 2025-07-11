@@ -127,7 +127,7 @@ export async function UpcomingEvents() {
                             Congratulations on completing your coding journey! 🎉
                         </p>
                         <p className="text-xs text-purple-600 mt-1">
-                            You've successfully completed {user?.role === 'STUDENT' ? 'your bootcamp' : 'the program'}
+                            You&apos;ve successfully completed {user?.role === 'STUDENT' ? 'your bootcamp' : 'the program'}
                         </p>
                     </div>
                 )}

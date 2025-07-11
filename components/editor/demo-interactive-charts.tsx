@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
-import { DataVisualizationNode } from '@/components/ui/data-visualization-node';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DataVisualizationNode } from '@/components/ui/data-visualization-node';
 import { Separator } from '@/components/ui/separator';
 
 // Enhanced demo page showcasing all interactive features

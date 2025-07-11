@@ -14,7 +14,7 @@ export const useSave = (): { triggerSave: () => Promise<void>; saveStatus: SaveS
     // The actual save functionality is now in UnifiedEditor
     return {
         triggerSave: async () => {
-            console.warn('Save context not available - save operation skipped');
+            // Save context not available - save operation skipped
         },
         saveStatus: {
             status: 'idle' as const,

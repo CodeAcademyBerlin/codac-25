@@ -1,14 +1,14 @@
-import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
+import Link from "next/link";
 
+import { getDucks } from "@/actions/duck/get-ducks";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { getDucks } from "@/actions/duck/get-ducks";
 
 type DuckForCard = Awaited<ReturnType<typeof getDucks>>[number];
 

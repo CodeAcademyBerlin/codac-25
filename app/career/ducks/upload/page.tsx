@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { UploadCloud, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { UploadCloud, Loader2 } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 import { createDuck } from "@/actions/duck/create-duck";

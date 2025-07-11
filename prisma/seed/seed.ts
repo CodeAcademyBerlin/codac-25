@@ -1,8 +1,8 @@
 #!/usr/bin/env tsx
 
 import { PrismaClient } from '@prisma/client';
-import { logger } from '../../lib/logger';
 import * as readline from 'readline';
+import { logger } from '../../lib/logger';
 
 // Import all seeder modules
 import { seedAttackOnTitan, cleanAttackOnTitan } from './seeders/attack-on-titan';
@@ -131,8 +131,9 @@ async function cleanAll() {
         console.log('\n🧹 All data cleaned successfully!');
 
     } catch (error) {
-        logger.error('❌ Complete cleanup failed:', error);
-        throw error;
+        const errorMessage = error instanceof Error ? error : new Error(String(error));
+        logger.error('❌ Complete cleanup failed:', errorMessage);
+        throw errorMessage;
     }
 }
 
@@ -180,7 +181,6 @@ async function processSelection(input: string) {
 }
 
 async function interactiveMode() {
-    const readline = require('readline');
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
@@ -189,7 +189,7 @@ async function interactiveMode() {
     function askQuestion(): Promise<string> {
         return new Promise((resolve) => {
             displayMenu();
-            rl.question('> ', (answer) => {
+            rl.question('> ', (answer: string) => {
                 resolve(answer);
             });
         });
@@ -208,7 +208,7 @@ async function interactiveMode() {
 
             // Ask if user wants to continue
             const continueAnswer = await new Promise<string>((resolve) => {
-                rl.question('\nContinue? (y/n): ', (answer) => {
+                rl.question('\nContinue? (y/n): ', (answer: string) => {
                     resolve(answer);
                 });
             });

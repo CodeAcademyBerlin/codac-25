@@ -1,7 +1,7 @@
 "use client";
+import Link from "next/link";
 import { use } from "react";
 import { useEffect, useState } from 'react';
-import Link from "next/link";
 
 type Question = {
   id: string;

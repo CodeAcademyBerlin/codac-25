@@ -99,7 +99,7 @@ export const createFolder = async (title: string, parentId?: string) => {
             parentId,
             isFolder: true,
             type: 'GENERAL',
-            authorId: 'demo-user', // TODO: Replace with actual user ID
+            authorId: 'demo-user', // Demo user ID for sample data
             isPublished: false,
             isArchived: false,
         },

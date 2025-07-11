@@ -1,6 +1,7 @@
 'use client';
 
 import { createPlatePlugin } from 'platejs/react';
+
 import { DataVisualizationNode } from '@/components/ui/data-visualization-node';
 
 export const ChartPlugin = createPlatePlugin({

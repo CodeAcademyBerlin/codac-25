@@ -1,17 +1,16 @@
-import { Suspense } from "react";
-import Link from "next/link";
 import { Plus } from "lucide-react";
+import Link from "next/link";
+import { Suspense } from "react";
 
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-
+import { getDucks } from "@/actions/duck/get-ducks";
 import { getJobs } from "@/actions/job/get-jobs";
+import { DuckCard } from "@/components/career/duck-card";
 import { JobCard } from "@/components/career/job-card";
 import { JobFilters } from "@/components/career/job-filters";
-import { auth } from "@/lib/auth/auth";
 import { SecretDuckForm } from "@/components/career/secret-duck-form";
-import { getDucks } from "@/actions/duck/get-ducks";
-import { DuckCard } from "@/components/career/duck-card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { auth } from "@/lib/auth/auth";
 
 type Job = Awaited<ReturnType<typeof getJobs>>[number];
 type DuckItem = Awaited<ReturnType<typeof getDucks>>[number];

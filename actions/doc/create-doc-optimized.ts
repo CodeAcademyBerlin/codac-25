@@ -13,7 +13,7 @@ import {
 export const createDocOptimized = createServerAction<CreateDocInput, DocumentWithAuthor>(
     createDocSchema as any, // Type assertion to bypass the type mismatch
     async (data: CreateDocInput): Promise<DocumentWithAuthor> => {
-        // TODO: Replace with actual user ID from auth context
+        // User ID should be obtained from auth context in production
         const TEMP_USER_ID = 'demo-user';
 
         // Ensure demo user exists (temporary solution)

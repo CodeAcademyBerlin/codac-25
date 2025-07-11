@@ -10,6 +10,8 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { User } from 'next-auth';
+import { useSession } from 'next-auth/react';
 import * as React from 'react';
 
 import {
@@ -25,8 +27,6 @@ import {
 import { NavSecondary } from './nav-secondary';
 import { NavTop } from './nav-top';
 import { NavUser } from './nav-user';
-import { useSession } from 'next-auth/react';
-import { User } from 'next-auth';
 
 const buildNavigationData = (_role?: string) => ({
   navTop: [

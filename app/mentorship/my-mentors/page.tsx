@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { format } from "date-fns";
 import {
   Calendar as CalendarIcon,
   GraduationCap,
@@ -8,30 +8,14 @@ import {
   XCircle,
   X,
 } from "lucide-react";
-import { format } from "date-fns";
-import { useLocalStorage } from "@/hooks/use-local-storage";
-
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getMyMentorships } from "@/actions/mentorship/get-my-mentorships";
-import {
-  MentorSession,
-  MentorSessionStatus,
-  Mentorship,
-} from "@/types/mentorship";
-import { UserWithMentorCounts } from "@/actions/mentorship/get-mentors";
-import { MentorBookingDialog } from "@/components/mentorship/mentor-booking-dialog";
-import { updateMentorSession } from "@/actions/mentorship/update-session";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+import { UserWithMentorCounts } from "@/actions/mentorship/get-mentors";
+import { getMyMentorships } from "@/actions/mentorship/get-my-mentorships";
+import { updateMentorSession } from "@/actions/mentorship/update-session";
+import { MentorBookingDialog } from "@/components/mentorship/mentor-booking-dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,6 +26,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -57,8 +52,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "sonner";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useLocalStorage } from "@/hooks/use-local-storage";
+import {
+  MentorSession,
+  MentorSessionStatus,
+  Mentorship,
+} from "@/types/mentorship";
 
 // Available time slots for booking
 const TIME_SLOTS = [
@@ -467,7 +467,7 @@ export default function MyMentorsPage() {
                   )
                 ) : (
                   <div className="text-center py-8 text-muted-foreground">
-                    You don't have any active mentors yet.{" "}
+                    You don&apos;t have any active mentors yet.{" "}
                     <a
                       href="/mentorship/find"
                       className="text-primary underline"

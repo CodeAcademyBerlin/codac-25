@@ -247,7 +247,7 @@ export default async function CommunityRolePage({ params }: { params: Promise<Pa
                             <h3 className="text-xl font-semibold mb-2">Alumni Success Stories</h3>
                             <p className="text-muted-foreground mb-6">
                                 Our graduates are making incredible contributions across the tech industry.
-                                From startups to Fortune 500 companies, they're building the future.
+                                From startups to Fortune 500 companies, they&apos;re building the future.
                             </p>
                             <div className="flex justify-center gap-4">
                                 <Button variant="outline">Share Your Story</Button>

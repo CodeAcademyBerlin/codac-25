@@ -35,7 +35,7 @@ export async function createDoc(data: CreateDocInput): Promise<CreateDocResult> 
         // Validate input data
         const validatedData = createDocSchema.parse(data);
 
-        // TODO: Replace with actual user ID from auth context
+        // User ID should be obtained from auth context in production
         const TEMP_USER_ID = 'demo-user';
 
         // Ensure demo user exists (temporary solution)

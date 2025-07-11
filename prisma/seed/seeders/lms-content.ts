@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { PrismaClient, CourseCategory } from '@prisma/client';
+import { PrismaClient, CourseCategory, LessonType } from '@prisma/client';
 import { MarkdownPlugin } from '@platejs/markdown';
 import matter from 'gray-matter';
 import { createPlateEditor } from 'platejs/react';
@@ -96,7 +96,7 @@ async function readDirectory(dirPath: string): Promise<FileNode[]> {
                         order: extractOrder(entry.name, frontmatter),
                     });
                 } catch (error) {
-                    logger.warn(`Failed to read frontmatter from ${fullPath}:`, error);
+                    logger.warn(`Failed to read frontmatter from ${fullPath}:`);
                     nodes.push({
                         name: entry.name,
                         path: fullPath,
@@ -120,7 +120,7 @@ async function readDirectory(dirPath: string): Promise<FileNode[]> {
             return a.name.localeCompare(b.name);
         });
     } catch (error) {
-        logger.warn(`Failed to read directory ${dirPath}:`, error);
+        logger.warn(`Failed to read directory ${dirPath}:`);
         return [];
     }
 }
@@ -130,7 +130,7 @@ function markdownToPlateJS(markdown: string): any[] {
         const api = serverEditor.getApi(MarkdownPlugin);
         return api.markdown.deserialize(markdown) || [];
     } catch (error) {
-        logger.warn('Failed to convert markdown to PlateJS:', error);
+        logger.warn('Failed to convert markdown to PlateJS:');
         return [
             {
                 type: 'p',
@@ -212,7 +212,7 @@ async function createLesson(filePath: string, projectId: string): Promise<string
 
         const plateContent = markdownToPlateJS(markdownContent);
 
-        let lessonType = 'TEXT';
+        let lessonType: LessonType = 'TEXT';
         if (markdownContent.includes('video') || markdownContent.includes('youtube')) {
             lessonType = 'VIDEO';
         } else if (markdownContent.includes('quiz') || markdownContent.includes('question')) {

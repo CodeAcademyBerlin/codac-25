@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { getJobById } from "@/actions/job/get-jobs";
-import { auth } from "@/lib/auth/auth";
+import { JobEditForm } from "@/components/career/job-edit-form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { JobEditForm } from "@/components/career/job-edit-form";
+import { auth } from "@/lib/auth/auth";
 
 interface EditJobPageProps {
   params: Promise<{

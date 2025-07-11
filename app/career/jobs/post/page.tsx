@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
-import { auth } from "@/lib/auth/auth";
+import { JobPostingForm } from "@/components/career/job-posting-form";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { JobPostingForm } from "@/components/career/job-posting-form";
+import { auth } from "@/lib/auth/auth";
 
 export default async function PostJobPage() {
   const session = await auth();

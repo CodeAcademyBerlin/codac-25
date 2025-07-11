@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
 import { useSession, signIn } from "next-auth/react";
+import { useState, useEffect } from 'react';
 
 interface Quiz {
   id: string;

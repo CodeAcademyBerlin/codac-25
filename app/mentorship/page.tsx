@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { User } from "@prisma/client";
+import { useEffect, useState } from "react";
 
 export default function MentorshipIndexPage() {
   const router = useRouter();

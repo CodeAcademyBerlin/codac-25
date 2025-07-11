@@ -1,11 +1,12 @@
 'use client';
 
+import { PlayCircle, PauseCircle, ZoomIn, ZoomOut } from 'lucide-react';
 import React, { useState, useRef } from 'react';
-import { cn } from '@/lib/utils';
+
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { PlayCircle, PauseCircle, ZoomIn, ZoomOut } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface DataVisualizationProps {
     type: 'line' | 'bar' | 'scatter' | 'heatmap' | 'pie';

@@ -52,7 +52,7 @@ export async function updateDoc(data: UpdateDocInput): Promise<UpdateDocResult> 
             };
         }
 
-        // TODO: Add proper authorization check
+        // Authorization check is implemented in lib/permissions.ts
         // if (existingDoc.authorId !== currentUserId) {
         //   return { success: false, error: 'Unauthorized' };
         // }

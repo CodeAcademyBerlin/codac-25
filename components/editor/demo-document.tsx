@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
-import { PlateEditor } from './plate-editor';
-import { dataSciencePortfolioContent } from './demo-data-science-content';
+
 import { ClimateChart, SkillsChart, MLModelChart } from '@/components/ui/data-visualization-node';
+
+import { dataSciencePortfolioContent } from './demo-data-science-content';
+import { PlateEditor } from './plate-editor';
 
 // Enhanced content with embedded visualizations
 const enhancedDataScienceContent = [
