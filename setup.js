@@ -2,6 +2,7 @@
 
 const { execSync } = require('child_process');
 const fs = require('fs');
+const path = require('path');
 
 const colors = {
   reset: '\x1b[0m',
@@ -46,7 +47,7 @@ function executeCommand(command, errorMessage, successMessage) {
 
 function installPnpm() {
   log('\n📦 Installing pnpm...', 'bold');
-  
+
   try {
     // Check if pnpm is already installed
     execSync('pnpm --version', { stdio: 'ignore' });
@@ -55,7 +56,7 @@ function installPnpm() {
     return true;
   } catch {
     info('pnpm not found, installing...');
-    
+
     try {
       // Try installing pnpm using npm
       executeCommand(
@@ -63,7 +64,7 @@ function installPnpm() {
         'Failed to install pnpm globally',
         'pnpm installed successfully'
       );
-      
+
       // Verify installation
       const pnpmVersion = execSync('pnpm --version', { encoding: 'utf8' }).trim();
       success(`pnpm ${pnpmVersion} installed successfully`);
@@ -82,7 +83,7 @@ function installPnpm() {
 
 function checkPrerequisites() {
   log('\n🔍 Checking prerequisites...', 'bold');
-  
+
   // Check Node.js version
   try {
     const nodeVersion = execSync('node --version', { encoding: 'utf8' }).trim();
@@ -98,17 +99,17 @@ function checkPrerequisites() {
 
   // Install and check pnpm (now mandatory)
   installPnpm();
-  
+
   // Since we enforce pnpm, always return pnpm
   return 'pnpm';
 }
 
 function createEnvFile() {
   log('\n📄 Setting up environment variables...', 'bold');
-  
+
   const envFile = '.env';
   const envExampleFile = '.env.example';
-  
+
   if (!fs.existsSync(envFile)) {
     if (fs.existsSync(envExampleFile)) {
       fs.copyFileSync(envExampleFile, envFile);
@@ -136,14 +137,14 @@ UPLOADTHING_TOKEN="your-uploadthing-token"
 
 function ensureDirectories() {
   log('\n📁 Ensuring required directories exist...', 'bold');
-  
+
   const requiredDirs = [
     'docs',
     'prisma',
     'public',
     'uploads'
   ];
-  
+
   requiredDirs.forEach(dir => {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -152,22 +153,76 @@ function ensureDirectories() {
   });
 }
 
+function setupContentSubmodule() {
+  log('\n📚 Setting up content submodule...', 'bold');
+
+  const contentDir = 'content';
+  const submoduleUrl = 'https://github.com/CodeAcademyBerlin/content.git';
+
+  try {
+    // Check if content directory exists
+    if (fs.existsSync(contentDir)) {
+      // Check if it's already a git repository
+      if (fs.existsSync(path.join(contentDir, '.git'))) {
+        info('Content submodule already exists');
+
+        // Try to update the submodule
+        try {
+          executeCommand(
+            'git submodule update --init --recursive',
+            'Failed to update content submodule',
+            'Content submodule updated successfully'
+          );
+        } catch {
+          warning('Failed to update content submodule, but continuing...');
+        }
+      } else {
+        // Remove the directory if it's not a proper submodule
+        fs.rmSync(contentDir, { recursive: true, force: true });
+        success('Removed existing content directory to set up proper submodule');
+      }
+    }
+
+    // Add the submodule if it doesn't exist
+    if (!fs.existsSync(contentDir)) {
+      executeCommand(
+        `git submodule add ${submoduleUrl} ${contentDir}`,
+        'Failed to add content submodule',
+        'Content submodule added successfully'
+      );
+
+      executeCommand(
+        'git submodule update --init --recursive',
+        'Failed to initialize content submodule',
+        'Content submodule initialized successfully'
+      );
+    }
+
+    success('Content submodule setup completed');
+  } catch (err) {
+    warning('Content submodule setup failed, but this is not critical');
+    info('You can manually set up the content submodule later with:');
+    info('  git submodule add https://github.com/CodeAcademyBerlin/content.git content');
+    info('  git submodule update --init --recursive');
+  }
+}
+
 function setupDatabase(packageManager) {
   log('\n🗄️  Setting up database...', 'bold');
-  
+
   try {
     executeCommand(
       `${packageManager} db:generate`,
       'Failed to generate Prisma client',
       'Generated Prisma client'
     );
-    
+
     executeCommand(
       `${packageManager} db:push --force-reset`,
       'Failed to push database schema',
       'Database schema pushed successfully'
     );
-    
+
     // Try seeding, but don't fail if it doesn't work
     try {
       executeCommand(
@@ -179,7 +234,7 @@ function setupDatabase(packageManager) {
       warning('Database seeding failed, but this is not critical for development');
       info('You can manually run the seed later with: pnpm db:seed');
     }
-    
+
   } catch (dbError) {
     error('Database setup failed');
     log('\n🔧 Database troubleshooting:', 'yellow');
@@ -194,40 +249,41 @@ function setupDatabase(packageManager) {
 function main() {
   log('⚔️  CODAC Attack on Titan Setup Script', 'bold');
   log('=====================================\n', 'bold');
-  
+
   try {
     const packageManager = checkPrerequisites();
-    
+
     createEnvFile();
     ensureDirectories();
-    
+    setupContentSubmodule();
+
     log('\n📦 Installing dependencies...', 'bold');
     executeCommand(
       `${packageManager} install`,
       'Failed to install dependencies',
       'Dependencies installed successfully'
     );
-    
+
     setupDatabase(packageManager);
-    
+
     log('\n🎉 Setup completed successfully!', 'green');
     log('\nNext steps:', 'bold');
     log(`1. Start the development server: ${packageManager} dev`);
     log('2. Open http://localhost:3000 in your browser');
     log('3. Join the 104th Training Corps with one of the sample accounts above!');
-    
+
     log('\nSample accounts:', 'cyan');
     log('• Student: eren.yeager@104th.paradis.military');
     log('• Student: mikasa.ackerman@104th.paradis.military');
     log('• Student: armin.arlert@104th.paradis.military');
     log('• Mentor: levi.ackerman@mentor.paradis.military');
     log('• Mentor: erwin.smith@mentor.paradis.military');
-    
+
     log('\nFor help, check:', 'yellow');
     log('• README.md for detailed documentation');
     log('• CONTRIBUTING.md for development guidelines');
     log('• GitHub issues for known problems');
-    
+
   } catch (err) {
     error('\n❌ Setup failed!');
     log(`Error: ${err.message}`, 'red');

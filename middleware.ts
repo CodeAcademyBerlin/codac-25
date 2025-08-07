@@ -14,7 +14,8 @@ export async function middleware(request: NextRequest) {
   }
 
   const isAuthPage = request.nextUrl.pathname.startsWith("/auth");
-  const isApiAuthRoute = request.nextUrl.pathname.startsWith("/api/auth");
+  // const isApiAuthRoute = request.nextUrl.pathname.startsWith("/api/auth");
+  const isApiRoute = request.nextUrl.pathname.startsWith("/api/");
   const isPublicRoute = [
     "/",
     "/auth/signin",
@@ -23,8 +24,8 @@ export async function middleware(request: NextRequest) {
     "/auth/verify-request",
   ].includes(request.nextUrl.pathname);
 
-  // Allow API auth routes
-  if (isApiAuthRoute) {
+  // Allow all API routes to pass through - they handle their own authentication
+  if (isApiRoute) {
     return NextResponse.next();
   }
 

@@ -88,6 +88,11 @@ pnpm ts:check         # TypeScript type checking
 # Content Management
 pnpm import:lms       # Import LMS content from markdown
 pnpm export:docs      # Export documents to markdown
+
+# Content Submodule Management
+pnpm content:status   # Check content submodule status
+pnpm content:setup    # Set up content submodule
+pnpm content:update   # Update content submodule
 ```
 
 ## 🏗️ Project Structure
@@ -113,6 +118,49 @@ codac-25/
 ├── types/                 # TypeScript type definitions
 └── prisma/                # Database schema and migrations
 ```
+
+## 📚 Content Submodule
+
+The LMS content is managed through a Git submodule that contains all course materials, lessons, and projects. This allows for:
+
+- **Centralized Content Management**: All course content is stored in a separate repository
+- **Version Control**: Track changes to course content independently
+- **Collaboration**: Multiple authors can contribute to content without affecting the main application
+- **Easy Updates**: Pull latest content updates without redeploying the application
+
+### Content Submodule Setup
+
+```bash
+# Check submodule status
+pnpm content:status
+
+# Set up the content submodule (first time)
+pnpm content:setup
+
+# Update content to latest version
+pnpm content:update
+```
+
+### Content Structure
+
+The content submodule follows this structure:
+```
+content/
+├── web/                  # Web development courses
+├── data/                 # Data science courses  
+├── career/               # Career development content
+├── assets/               # Images and media files
+└── *.md                 # Course overview files
+```
+
+### Importing Content
+
+When you run `pnpm db:seed:lms`, the system automatically:
+1. Validates the content submodule is properly set up
+2. Reads all markdown files from the content directory
+3. Converts markdown to Plate.js format for the editor
+4. Creates courses, projects, and lessons in the database
+5. Maintains proper ordering and hierarchy
 
 ## 🔧 Architecture
 
@@ -161,6 +209,7 @@ The application uses a **unified editor architecture** with Plate.js:
 - [Authentication Setup](dev-docs/AUTHENTICATION_SETUP.md)
 - [Auto-Save Strategy](dev-docs/AUTO_SAVE_STRATEGY.md)
 - [Community Features](dev-docs/COMMUNITY_FEATURE.md)
+- [Content Submodule Setup](dev-docs/CONTENT_SUBMODULE_SETUP.md)
 
 ## 🔐 Environment Variables
 

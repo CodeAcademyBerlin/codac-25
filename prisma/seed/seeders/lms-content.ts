@@ -63,6 +63,37 @@ const extractOrder = (name: string, frontmatter?: FrontMatter): number => {
     return 999;
 };
 
+// Check if content directory is a valid submodule
+async function validateContentSubmodule(contentPath: string): Promise<boolean> {
+    try {
+        // Check if content directory exists
+        await fs.access(contentPath);
+
+        // Check if it's a git repository (submodule)
+        const gitPath = path.join(contentPath, '.git');
+        await fs.access(gitPath);
+
+        // Check if there are actual content files
+        const entries = await fs.readdir(contentPath);
+        const hasContent = entries.some(entry =>
+            entry.endsWith('.md') ||
+            (entry !== '.git' && entry !== 'assets' && !entry.startsWith('.'))
+        );
+
+        if (!hasContent) {
+            logger.warn('⚠️ Content submodule exists but appears to be empty or not properly initialized');
+            return false;
+        }
+
+        logger.info('✅ Content submodule validated successfully');
+        return true;
+    } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        logger.warn(`⚠️ Content submodule validation failed: ${errorMessage}`);
+        return false;
+    }
+}
+
 async function readDirectory(dirPath: string): Promise<FileNode[]> {
     try {
         const entries = await fs.readdir(dirPath, { withFileTypes: true });
@@ -321,15 +352,17 @@ async function processProject(projectNode: FileNode, courseId: string): Promise<
 
 export async function seedLMSContent() {
     try {
-        logger.info('🚀 Starting LMS content import...');
+        logger.info('🚀 Starting LMS content import from submodule...');
 
         const contentPath = path.join(process.cwd(), 'content');
 
-        // Check if content directory exists
-        try {
-            await fs.access(contentPath);
-        } catch {
-            logger.warn('⚠️ Content directory not found. Skipping LMS content import.');
+        // Validate that content submodule exists and is properly initialized
+        const isValidSubmodule = await validateContentSubmodule(contentPath);
+        if (!isValidSubmodule) {
+            logger.warn('⚠️ Content submodule not found or not properly initialized. Skipping LMS content import.');
+            logger.info('💡 To set up the content submodule, run:');
+            logger.info('   git submodule add https://github.com/CodeAcademyBerlin/content.git content');
+            logger.info('   git submodule update --init --recursive');
             return;
         }
 
@@ -342,7 +375,7 @@ export async function seedLMSContent() {
         }
 
         logger.info('✅ LMS content import completed successfully!');
-        logger.info('📖 Courses, projects, and lessons have been imported to the database');
+        logger.info('📖 Courses, projects, and lessons have been imported from the content submodule');
 
     } catch (error) {
         const errorMessage = error instanceof Error ? error : new Error(String(error));
@@ -353,29 +386,30 @@ export async function seedLMSContent() {
 
 export async function cleanLMSContent() {
     try {
-        logger.info('🧹 Cleaning LMS content...');
+        logger.info('🧹 Cleaning LMS content from submodule...');
 
         // This is a more conservative approach - we'll only clean lessons/projects/courses
-        // that were created from markdown content
-        await prisma.lesson.deleteMany({
+        // that were created from markdown content in the submodule
+        const lessonResult = await prisma.lesson.deleteMany({
             where: {
                 description: { contains: 'lesson content' }
             }
         });
 
-        await prisma.project.deleteMany({
+        const projectResult = await prisma.project.deleteMany({
             where: {
                 description: { contains: 'project content' }
             }
         });
 
-        await prisma.course.deleteMany({
+        const courseResult = await prisma.course.deleteMany({
             where: {
                 description: { contains: 'course content' }
             }
         });
 
-        logger.info('✅ LMS content cleaned successfully!');
+        logger.info(`✅ LMS content cleaned successfully!`);
+        logger.info(`📊 Deleted: ${lessonResult.count} lessons, ${projectResult.count} projects, ${courseResult.count} courses`);
     } catch (error) {
         const errorMessage = error instanceof Error ? error : new Error(String(error));
         logger.error('❌ Failed to clean LMS content:', errorMessage);

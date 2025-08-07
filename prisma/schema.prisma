@@ -104,6 +104,9 @@ model User {
   // Duck Relations
   ducks Duck[]
 
+  // RAG Chat Relations
+  chatSessions ChatSession[]
+
   @@map("users")
 }
 
@@ -792,4 +795,55 @@ model QuizResult {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+// RAG (Retrieval-Augmented Generation) Models
+model ContentEmbedding {
+  id          String @id @default(cuid())
+  contentType String @map("content_type") // 'lesson', 'assignment', 'resource', 'course', 'project'
+  contentId   String @map("content_id") // Reference to the actual content ID
+  chunkIndex  Int    @default(0) @map("chunk_index") // For multiple chunks per content
+  chunkText   String @map("chunk_text") // The actual text content that was embedded
+  embedding   Json? // Vector embedding as JSON array for now
+  metadata    Json? // Additional context (course_id, project_id, lesson_id, etc.)
+  tokenCount  Int?   @map("token_count")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([contentType, contentId])
+  @@map("content_embeddings")
+}
+
+model ChatSession {
+  id     String  @id @default(cuid())
+  userId String  @map("user_id")
+  title  String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages ChatMessage[]
+
+  @@index([userId])
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id         String @id @default(cuid())
+  sessionId  String @map("session_id")
+  role       String // 'user', 'assistant', 'system'
+  content    String
+  sources    Json? // Array of source content_embedding IDs used for this response
+  tokenCount Int?   @map("token_count")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  session ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("chat_messages")
 }

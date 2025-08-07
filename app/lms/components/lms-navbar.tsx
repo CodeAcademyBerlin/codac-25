@@ -1,6 +1,6 @@
 'use client';
 
-import { BookOpen, GraduationCap, Settings } from 'lucide-react';
+import { BookOpen, GraduationCap, Settings, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -29,6 +29,7 @@ interface LMSNavbarProps {
 const navigation = [
     { name: 'Dashboard', href: '/lms', icon: BookOpen },
     { name: 'My Courses', href: '/learning', icon: GraduationCap },
+    { name: 'AI Assistant', href: '/lms/chat', icon: MessageCircle },
 ];
 
 export function LMSNavbar({ user }: LMSNavbarProps) {
