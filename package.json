@@ -2,7 +2,7 @@
   "name": "codac",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.14.0",
   "engines": {
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
@@ -73,6 +73,7 @@
     "@platejs/toc": "^49.0.0",
     "@platejs/toggle": "^49.0.0",
     "@prisma/client": "^6.9.0",
+    "pg": "^8.12.0",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-aspect-ratio": "^1.1.7",
@@ -152,6 +153,7 @@
     "@tailwindcss/postcss": "^4",
     "@types/lodash": "^4.17.17",
     "@types/node": "^20",
+    "@types/pg": "^8.11.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
