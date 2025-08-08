@@ -1,148 +1,42 @@
 name: ✨ Feature Request
-description: Suggest a new feature or enhancement
+description: Suggest an idea for this project
 title: "[Feature]: "
-labels: ["type: feature", "needs-triage"]
-assignees: []
-
+labels: ["feature", "needs-triage"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for suggesting a new feature! ✨
+        Thanks for taking the time to suggest a new feature! 🚀
 
-        We love hearing ideas from our community. Please fill out this form to help us understand your suggestion.
+        **Before you start:** Please search existing issues to see if someone already suggested this feature.
 
   - type: textarea
     id: problem
     attributes:
-      label: 🎯 Problem Statement
-      description: What problem does this feature solve? What's currently difficult or impossible to do?
-      placeholder: |
-        Example: "As a student, I find it difficult to track my progress across multiple courses because..."
-        or "Currently there's no way to..."
+      label: What problem does this solve?
+      description: Describe the problem or need this feature would address
+      placeholder: I'm always frustrated when... / I need to be able to...
     validations:
       required: false
 
   - type: textarea
     id: solution
     attributes:
-      label: 💡 Proposed Solution
-      description: What would you like to see implemented? Be as specific as possible.
-      placeholder: |
-        Describe your ideal solution. What should it look like? How should it work?
-        Include specific details about the user interface, functionality, etc.
-    validations:
-      required: false
-
-  - type: dropdown
-    id: user-type
-    attributes:
-      label: 👤 Who would benefit?
-      description: Which type of users would benefit most from this feature?
-      multiple: true
-      options:
-        - Students
-        - Alumni
-        - Mentors
-        - Instructors
-        - Administrators
-        - All users
+      label: Describe the feature you'd like
+      description: A clear description of what you want to happen
+      placeholder: I would like to be able to...
     validations:
       required: true
 
   - type: dropdown
     id: priority
     attributes:
-      label: 📈 Priority Level
-      description: How important is this feature to you?
+      label: How important is this feature to you?
       options:
-        - "🔥 High - This would significantly improve my experience"
-        - "📊 Medium - This would be a nice improvement"
-        - "📝 Low - This would be a small enhancement"
+        - Nice to have
+        - Would be helpful
+        - Important
+        - Critical
     validations:
       required: true
 
-  - type: textarea
-    id: use-cases
-    attributes:
-      label: 📋 Use Cases
-      description: Describe specific scenarios where this feature would be used
-      placeholder: |
-        Example scenarios:
-        1. When a student wants to check their progress...
-        2. When a mentor needs to review student work...
-        3. When an instructor wants to create assignments...
-    validations:
-      required: false
-
-  - type: textarea
-    id: technical-considerations
-    attributes:
-      label: ⚙️ Technical Considerations
-      description: |
-        (Optional) Any technical thoughts or considerations?
-        Don't worry if you're not technical - this is completely optional!
-      placeholder: |
-        If you have technical background, feel free to share:
-        - Potential implementation approaches
-        - Technical challenges you foresee
-        - Related technologies or libraries
-        - Database changes that might be needed
-
-  - type: dropdown
-    id: complexity
-    attributes:
-      label: 🧩 Estimated Complexity
-      description: How complex do you think this feature would be to implement?
-      options:
-        - "🟢 Simple - Small UI change or minor functionality"
-        - "🟡 Medium - New component or moderate feature"
-        - "🔴 Complex - Major feature requiring significant development"
-        - "❓ I'm not sure"
-    validations:
-      required: true
-
-  - type: checkboxes
-    id: contribution
-    attributes:
-      label: 🤝 Contribution Interest
-      description: Would you be interested in helping implement this feature?
-      options:
-        - label: "Yes, I'd like to work on this feature myself"
-        - label: "Yes, I'd like to help but would need guidance"
-        - label: "Maybe, depending on the complexity"
-        - label: "No, I'm just suggesting the idea"
-
-  - type: checkboxes
-    id: terms
-    attributes:
-      label: 📋 Checklist
-      description: Please confirm the following
-      options:
-        - label: This feature aligns with CODAC's mission as a learning platform
-          required: true
-        - label: I understand this is a volunteer-maintained project and features are implemented based on community needs and available resources
-          required: true
-
-  - type: markdown
-    attributes:
-      value: |
-        ### 🌟 Thank you for your suggestion!
-
-        Feature requests help shape the future of CODAC and make it better for everyone.
-
-        **What happens next?**
-        1. The community and maintainers will review your request
-        2. We'll discuss feasibility and priority
-        3. The request will be labeled and potentially added to our roadmap
-        4. Community members may volunteer to implement it
-
-        **Want to implement this yourself?**
-        - Check out our [Contributing Guide](../../CONTRIBUTING.md)
-        - Join our community discussions to get help and feedback
-        - Start with smaller issues to get familiar with the codebase
-
-        **Help us prioritize:**
-        - 👍 Give this issue a thumbs up if you want this feature
-        - 💬 Comment with additional use cases or requirements
-        - 🔄 Share with other community members who might benefit
