@@ -71,6 +71,7 @@ const TIME_SLOTS = [
   "03:00 PM",
   "04:00 PM",
   "05:00 PM",
+  "06:00 PM",
 ];
 
 // Function to get the appropriate badge variant based on session status
@@ -435,8 +436,8 @@ export default function MyMentorsPage() {
                 {hasRecentCancelledSessions() && hasDeclinedSessions()
                   ? "Some of your sessions have been updated. Please check your session lists below for details."
                   : hasRecentCancelledSessions()
-                    ? "One or more of your sessions have been cancelled. Please check the 'Session History' tab for details."
-                    : "One or more of your session requests have been declined. Please check the 'Declined Sessions' tab for details."}
+                  ? "One or more of your sessions have been cancelled. Please check the 'Session History' tab for details."
+                  : "One or more of your session requests have been declined. Please check the 'Declined Sessions' tab for details."}
               </p>
             </div>
           )}
@@ -556,18 +557,18 @@ export default function MyMentorsPage() {
 
                             {session.status ===
                               MentorSessionStatus.DECLINED && (
-                                <div className="mt-2 p-2 bg-red-50 border border-red-100 rounded-md text-red-800">
-                                  <p className="text-sm">
-                                    <XCircle className="h-4 w-4 inline mr-1" />
-                                    This session request was declined by the
-                                    mentor
-                                  </p>
-                                  <p className="text-xs mt-1">
-                                    The mentor is unavailable at this time. Please
-                                    book at a different time.
-                                  </p>
-                                </div>
-                              )}
+                              <div className="mt-2 p-2 bg-red-50 border border-red-100 rounded-md text-red-800">
+                                <p className="text-sm">
+                                  <XCircle className="h-4 w-4 inline mr-1" />
+                                  This session request was declined by the
+                                  mentor
+                                </p>
+                                <p className="text-xs mt-1">
+                                  The mentor is unavailable at this time. Please
+                                  book at a different time.
+                                </p>
+                              </div>
+                            )}
                           </div>
                         </CardContent>
                         <CardFooter className="border-t pt-4 bg-muted/50 gap-4">
@@ -794,8 +795,8 @@ export default function MyMentorsPage() {
                                   ? "You cancelled this session"
                                   : session.mentorship?.mentorId ===
                                     currentUserId
-                                    ? "You cancelled this session"
-                                    : "This session was cancelled"}
+                                  ? "You cancelled this session"
+                                  : "This session was cancelled"}
                               </p>
                             </div>
                           )}
