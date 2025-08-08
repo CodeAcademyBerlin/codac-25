@@ -71,7 +71,6 @@ const TIME_SLOTS = [
   "03:00 PM",
   "04:00 PM",
   "05:00 PM",
-  "06:00 PM",
 ];
 
 // Function to get the appropriate badge variant based on session status
