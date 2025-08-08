@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { type LucideIcon } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import * as React from 'react';
+import { type LucideIcon } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import * as React from "react";
 
 import {
   SidebarGroup,
@@ -11,8 +11,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/sidebar";
+import { cn } from "@/lib/utils";
 
 export function NavTop({
   items,
@@ -39,7 +39,7 @@ export function NavTop({
                   <Link
                     href={item.url}
                     className={cn(
-                      isActive && 'bg-accent text-accent-foreground font-medium'
+                      isActive && "bg-accent text-accent-foreground font-medium"
                     )}
                   >
                     <item.icon />

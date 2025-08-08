@@ -9,7 +9,6 @@
   },
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "postinstall": "pnpm db:generate && pnpm db:push && pnpm db:seed:all",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
