@@ -95,43 +95,43 @@ export class RAGAnalytics {
     /**
      * Track a query for analytics
      */
-    async trackQuery(
-        _query: string,
-        responseTime: number,
-        _tokenCount: number,
-        sourcesFound: number,
-        averageSimilarity: number,
-        _userId: string,
-        sessionId: string
-    ): Promise<void> {
-        try {
-            // For now, we'll use the existing chat_messages table
-            // In production, you might want a separate analytics table
-            await prisma.chatMessage.updateMany({
-                where: {
-                    sessionId,
-                    role: 'assistant',
-                    createdAt: {
-                        gte: new Date(Date.now() - 60000) // Last minute
-                    }
-                },
-                data: {
-                    // Store analytics in sources JSON field temporarily
-                    sources: {
-                        analytics: {
-                            responseTime,
-                            sourcesFound,
-                            averageSimilarity,
-                            timestamp: new Date().toISOString()
-                        }
-                    }
-                }
-            });
-        } catch (error) {
-            logger.error('Failed to track query:', error instanceof Error ? error : undefined);
-            // Don't throw - analytics shouldn't break the main flow
-        }
-    }
+    // async trackQuery(
+    //     _query: string,
+    //     responseTime: number,
+    //     _tokenCount: number,
+    //     sourcesFound: number,
+    //     averageSimilarity: number,
+    //     _userId: string,
+    //     sessionId: string
+    // ): Promise<void> {
+    //     try {
+    //         // For now, we'll use the existing chat_messages table
+    //         // In production, you might want a separate analytics table
+    //         await prisma.chatMessage.updateMany({
+    //             where: {
+    //                 sessionId,
+    //                 role: 'assistant',
+    //                 createdAt: {
+    //                     gte: new Date(Date.now() - 60000) // Last minute
+    //                 }
+    //             },
+    //             data: {
+    //                 // Store analytics in sources JSON field temporarily
+    //                 sources: {
+    //                     analytics: {
+    //                         responseTime,
+    //                         sourcesFound,
+    //                         averageSimilarity,
+    //                         timestamp: new Date().toISOString()
+    //                     }
+    //                 }
+    //             }
+    //         });
+    //     } catch (error) {
+    //         logger.error('Failed to track query:', error instanceof Error ? error : undefined);
+    //         // Don't throw - analytics shouldn't break the main flow
+    //     }
+    // }
 
     /**
      * Get query statistics

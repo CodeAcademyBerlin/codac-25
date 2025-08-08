@@ -156,15 +156,15 @@ export class OptimizedRAGEngine {
             await this.conversationMemory.addMessage(sessionId, assistantMessage);
 
             // Step 7: Track enhanced analytics
-            await this.analytics.trackQuery(
-                userQuery,
-                responseTime,
-                tokenCount,
-                sources.length,
-                sources.length > 0 ? sources.reduce((sum, s) => sum + s.similarity, 0) / sources.length : 0,
-                userId,
-                sessionId
-            );
+            // await this.analytics.trackQuery(
+            //     userQuery,
+            //     responseTime,
+            //     tokenCount,
+            //     sources.length,
+            //     sources.length > 0 ? sources.reduce((sum, s) => sum + s.similarity, 0) / sources.length : 0,
+            //     userId,
+            //     sessionId
+            // );
 
             logger.info(`Enhanced RAG query completed in ${responseTime}ms. Intent: ${intent.type}, Sources: ${sources.length}, Tokens: ${tokenCount}`);
 
@@ -183,10 +183,10 @@ export class OptimizedRAGEngine {
             };
 
         } catch (error) {
-            const responseTime = Date.now() - startTime;
-            logger.error('Enhanced RAG query failed:', error instanceof Error ? error : new Error(String(error)));
+            // const responseTime = Date.now() - startTime;
+            // logger.error('Enhanced RAG query failed:', error instanceof Error ? error : new Error(String(error)));
 
-            await this.analytics.trackQuery(userQuery, responseTime, 0, 0, 0, userId, sessionId);
+            // await this.analytics.trackQuery(userQuery, responseTime, 0, 0, 0, userId, sessionId);
 
             const userMessage = await this.chatService.addMessage(sessionId, 'user', userQuery);
             const errorMessage = await this.chatService.addMessage(
@@ -344,15 +344,15 @@ export class OptimizedRAGEngine {
             await this.chatService.addMessage(sessionId, 'user', userQuery);
             await this.chatService.addMessage(sessionId, 'assistant', fullResponse, sources, tokenCount);
 
-            await this.analytics.trackQuery(
-                userQuery,
-                responseTime,
-                tokenCount,
-                sources.length,
-                sources.length > 0 ? sources.reduce((sum, s) => sum + s.similarity, 0) / sources.length : 0,
-                userId,
-                sessionId
-            );
+            // await this.analytics.trackQuery(
+            //     userQuery,
+            //     responseTime,
+            //     tokenCount,
+            //     sources.length,
+            //     sources.length > 0 ? sources.reduce((sum, s) => sum + s.similarity, 0) / sources.length : 0,
+            //     userId,
+            //     sessionId
+            // );
 
             // Yield completion signal
             yield { type: 'done', data: { tokenCount, sources: sources.length, responseTime } };
@@ -361,8 +361,8 @@ export class OptimizedRAGEngine {
             logger.error('Optimized RAG streaming query failed:', error instanceof Error ? error : new Error(String(error)));
             logger.error('Error details:', error instanceof Error ? error : new Error(String(error)));
 
-            const responseTime = Date.now() - startTime;
-            await this.analytics.trackQuery(userQuery, responseTime, 0, 0, 0, userId, sessionId);
+            // const responseTime = Date.now() - startTime;
+            // await this.analytics.trackQuery(userQuery, responseTime, 0, 0, 0, userId, sessionId);
 
             await this.chatService.addMessage(sessionId, 'user', userQuery);
             await this.chatService.addMessage(
