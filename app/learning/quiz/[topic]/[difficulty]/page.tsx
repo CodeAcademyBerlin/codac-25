@@ -3,6 +3,8 @@ import Link from "next/link";
 import { use } from "react";
 import { useEffect, useState } from 'react';
 
+import { QuizQuestion } from '@/types/server-action';
+
 type Question = {
   id: string;
   text: string;
@@ -46,13 +48,13 @@ export default function QuizPage({
         }
         const data = await response.json();
         // Parse options if needed
-        const questions = data.questions.map((q: any) => ({
+        const questions = data.questions.map((q: QuizQuestion) => ({
           ...q,
           options: Array.isArray(q.options) ? q.options : JSON.parse(q.options),
         }));
         setQuiz({ ...data, questions });
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        setError((err as Error).message);
       } finally {
         setLoading(false);
       }

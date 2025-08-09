@@ -4,7 +4,9 @@ import { useRouter } from 'next/navigation';
 import { useSession, signIn } from "next-auth/react";
 import { useState, useEffect } from 'react';
 
-interface Quiz {
+import { Quiz } from '@/types/server-action';
+
+interface QuizListItem {
   id: string;
   quizTitle: string;
 }
@@ -16,7 +18,7 @@ export default function QuizSelectorPage() {
   const [levels, setLevels] = useState<string[]>([]);
   const [category, setCategory] = useState<string>('');
   const [level, setLevel] = useState<string>('');
-  const [quizzes, setQuizzes] = useState<Quiz[] | null>(null);
+  const [quizzes, setQuizzes] = useState<QuizListItem[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [kpis, setKpis] = useState<{ totalQuizzesTaken: number; averageScore: number; quizzesCompleted: number } | null>(null);
@@ -87,7 +89,7 @@ export default function QuizSelectorPage() {
       // Si el endpoint devuelve un array de quizzes:
       const quizzesList = Array.isArray(data) ? data : (data.quizzes || [data]);
       if (!quizzesList.length) throw new Error('No hay quizzes disponibles.');
-      setQuizzes(quizzesList.map((q: any) => ({ id: q.id, quizTitle: q.quizTitle })));
+      setQuizzes(quizzesList.map((q: Quiz) => ({ id: q.id, quizTitle: q.title || 'Untitled Quiz' })));
     } catch (err) {
       setError((err as Error).message);
     } finally {

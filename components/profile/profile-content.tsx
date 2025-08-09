@@ -9,6 +9,7 @@ import {
     GraduationCap,
     ExternalLink
 } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { Badge } from '@/components/ui/badge';
@@ -137,9 +138,11 @@ export function ProfileContent({ user }: ProfileContentProps) {
                     <CardContent>
                         <div className="flex items-center gap-4">
                             {user.cohort.avatar && (
-                                <img
+                                <Image
                                     src={user.cohort.avatar}
                                     alt={user.cohort.name}
+                                    width={48}
+                                    height={48}
                                     className="w-12 h-12 rounded-lg object-cover"
                                 />
                             )}

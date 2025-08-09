@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { UserWithMentorCounts } from "@/actions/mentorship/get-mentors";
 import { getMyMentorships } from "@/actions/mentorship/get-my-mentorships";
 import { updateMentorSession } from "@/actions/mentorship/update-session";
+import { EmptyState, PageContainer, PageHeader, Section } from "@/components/layout";
 import { MentorBookingDialog } from "@/components/mentorship/mentor-booking-dialog";
 import {
   AlertDialog,
@@ -205,7 +206,7 @@ export default function MyMentorsPage() {
     } else {
       setShowStatusBanner(false);
     }
-  }, [pastSessions, upcomingSessions, lastViewedUpdate]);
+  }, [pastSessions, upcomingSessions, lastViewedUpdate, setLastViewedUpdate]);
 
   // Function to handle booking button click
   const handleBookSession = (mentor: UserWithMentorCounts) => {
@@ -405,15 +406,13 @@ export default function MyMentorsPage() {
   };
 
   return (
-    <div className="container py-6 max-w-6xl">
-      <div className="flex flex-col gap-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">My Mentors</h1>
-          <p className="text-muted-foreground mt-2">
-            View your mentors and upcoming sessions
-          </p>
-        </div>
+    <PageContainer size="xl">
+      <PageHeader 
+        title="My Mentors"
+        description="View your mentors and upcoming sessions"
+      />
 
+      <Section>
         {/* Cancelled or declined sessions notification - updated to be dismissible */}
         {!loading &&
           !error &&
@@ -466,15 +465,17 @@ export default function MyMentorsPage() {
                       mentorship.mentor && renderMentorCard(mentorship.mentor)
                   )
                 ) : (
-                  <div className="text-center py-8 text-muted-foreground">
-                    You don&apos;t have any active mentors yet.{" "}
+                  <EmptyState
+                    icon={GraduationCap}
+                    title="No active mentors yet"
+                  >
                     <a
                       href="/mentorship/find"
-                      className="text-primary underline"
+                      className="text-primary underline hover:no-underline"
                     >
                       Find a mentor
                     </a>
-                  </div>
+                  </EmptyState>
                 )}
               </div>
             </TabsContent>
@@ -812,7 +813,7 @@ export default function MyMentorsPage() {
             </TabsContent>
           </Tabs>
         )}
-      </div>
+      </Section>
 
       {/* Add the booking dialog */}
       {selectedMentor && (
@@ -915,6 +916,6 @@ export default function MyMentorsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </PageContainer>
   );
 }

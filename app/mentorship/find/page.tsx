@@ -7,6 +7,7 @@ import {
   getMentors,
   UserWithMentorCounts,
 } from "@/actions/mentorship/get-mentors";
+import { EmptyState, Grid, PageContainer, PageHeader } from "@/components/layout";
 import { MentorBookingDialog } from "@/components/mentorship/mentor-booking-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -58,29 +59,25 @@ export default function FindMentorPage() {
   };
 
   return (
-    <div className="container py-8 max-w-6xl">
-      <div className="flex flex-col gap-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Find a Mentor</h1>
-          <p className="text-muted-foreground mt-2">
-            Book a 1:1 session with one of our mentors to get personalized
-            guidance on your learning journey.
-          </p>
+    <PageContainer size="xl">
+      <PageHeader 
+        title="Find a Mentor"
+        description="Book a 1:1 session with one of our mentors to get personalized guidance on your learning journey."
+      />
+
+      {loading && (
+        <div className="flex justify-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
+      )}
 
-        {loading && (
-          <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-          </div>
-        )}
+      {error && (
+        <div className="bg-destructive/10 p-4 rounded-md text-destructive">
+          {error}
+        </div>
+      )}
 
-        {error && (
-          <div className="bg-destructive/10 p-4 rounded-md text-destructive">
-            {error}
-          </div>
-        )}
-
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <Grid cols="3">
           {mentors.map((mentor) => (
             <Card key={mentor.id} className="overflow-hidden">
               <CardHeader className="pb-4">
@@ -130,15 +127,15 @@ export default function FindMentorPage() {
           ))}
 
           {mentors.length === 0 && !loading && (
-            <div className="col-span-full text-center py-12">
-              <h3 className="text-lg font-medium">No mentors available</h3>
-              <p className="text-muted-foreground mt-1">
-                Please check back later or contact support.
-              </p>
+            <div className="col-span-full">
+              <EmptyState
+                icon={GraduationCap}
+                title="No mentors available"
+                description="Please check back later or contact support."
+              />
             </div>
           )}
-        </div>
-      </div>
+      </Grid>
 
       {selectedMentor && (
         <MentorBookingDialog
@@ -147,6 +144,6 @@ export default function FindMentorPage() {
           onOpenChange={setDialogOpen}
         />
       )}
-    </div>
+    </PageContainer>
   );
 }

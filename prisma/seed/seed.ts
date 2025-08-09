@@ -6,7 +6,6 @@ import { logger } from '../../lib/logger';
 
 // Import all seeder modules
 import { seedAttackOnTitan, cleanAttackOnTitan } from './seeders/attack-on-titan';
-import { seedBlackOwls, cleanBlackOwls } from './seeders/black-owls';
 import { seedLMSContent, cleanLMSContent } from './seeders/lms-content';
 import { seedQuizzes, seedQuizzesIncremental, cleanQuizzes } from './seeders/quizzes';
 import { seedJobs, cleanJobs } from './seeders/jobs';
@@ -28,13 +27,6 @@ const seedOptions: SeedOption[] = [
         description: 'Users and cohorts with Attack on Titan theme',
         action: seedAttackOnTitan,
         cleanAction: cleanAttackOnTitan,
-    },
-    {
-        id: 'black-owls',
-        name: 'Black Owls Cohort',
-        description: 'Black Owls cohort with users and course progressions',
-        action: seedBlackOwls,
-        cleanAction: cleanBlackOwls,
     },
     {
         id: 'lms-content',
@@ -90,7 +82,6 @@ async function seedAll() {
         // Seed in order: courses -> users -> content -> quizzes -> jobs
         await seedLMSContent();
         await seedAttackOnTitan();
-        await seedBlackOwls();
         await seedQuizzes();
         await seedJobs();
 
@@ -124,7 +115,6 @@ async function cleanAll() {
         await cleanJobs();
         await cleanQuizzes();
         await cleanLMSContent();
-        await cleanBlackOwls();
         await cleanAttackOnTitan();
 
         logger.info('✅ Complete cleanup finished successfully!');

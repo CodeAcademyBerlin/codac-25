@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { prisma } from '@/lib/db';
 import { auth } from '@/lib/auth/auth';
+import { prisma } from '@/lib/db';
+import { Prisma } from '@prisma/client';
 
 export async function GET(
   _request: NextRequest,
@@ -105,7 +106,7 @@ export async function PUT(
             await tx.documentVersion.create({
               data: {
                 documentId: id,
-                content: currentDocument.content as any, // InputJsonValue is removed, use 'any' or define a type if needed
+                content: currentDocument.content as Prisma.InputJsonValue,
                 title: currentDocument.title,
                 version: nextVersion,
               },
@@ -121,7 +122,7 @@ export async function PUT(
     // Prepare update data
     const updateData: {
       title?: string;
-      content?: any; // InputJsonValue is removed, use 'any' or define a type if needed
+      content?: Prisma.InputJsonValue;
       updatedAt?: Date;
     } = {
       updatedAt: new Date(),
@@ -132,7 +133,7 @@ export async function PUT(
     }
 
     if (content !== undefined) {
-      updateData.content = content as any; // InputJsonValue is removed, use 'any' or define a type if needed
+      updateData.content = content as Prisma.InputJsonValue;
     }
 
     // Update the document
@@ -147,11 +148,6 @@ export async function PUT(
             email: true,
           },
         },
-        favorites: {
-          where: {
-            userId: session.user.id,
-          },
-        },
       },
     });
 
@@ -161,7 +157,7 @@ export async function PUT(
       content: updatedDocument.content,
       createdAt: updatedDocument.createdAt,
       updatedAt: updatedDocument.updatedAt,
-      isStarred: updatedDocument.favorites.length > 0,
+      isStarred: false,
       author: updatedDocument.author,
     };
 

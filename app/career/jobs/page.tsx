@@ -8,6 +8,7 @@ import { DuckCard } from "@/components/career/duck-card";
 import { JobCard } from "@/components/career/job-card";
 import { JobFilters } from "@/components/career/job-filters";
 import { SecretDuckForm } from "@/components/career/secret-duck-form";
+import { PageContainer, PageHeader } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { auth } from "@/lib/auth/auth";
@@ -32,14 +33,11 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
   const canPostJob = user?.role === "ADMIN" || user?.role === "MENTOR";
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold">Job Board</h1>
-          <p className="text-muted-foreground mt-2">
-            Discover career opportunities from our community and partners
-          </p>
-        </div>
+    <PageContainer size="xl">
+      <PageHeader 
+        title="Job Board"
+        description="Discover career opportunities from our community and partners"
+      >
         {canPostJob && (
           <Button asChild>
             <Link href="/career/jobs/post">
@@ -48,7 +46,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
             </Link>
           </Button>
         )}
-      </div>
+      </PageHeader>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Filters Sidebar */}
@@ -64,7 +62,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
         </div>
       </div>
       <SecretDuckForm />
-    </div>
+    </PageContainer>
   );
 }
 

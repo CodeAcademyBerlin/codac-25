@@ -2,6 +2,7 @@ import { Users, GraduationCap, Calendar, TrendingUp } from 'lucide-react';
 
 import { CohortCard } from '@/components/community/cohort-card';
 import { StudentCard } from '@/components/community/student-card';
+import { Grid, PageContainer, PageHeader, Section, SectionHeader, StatsGrid } from '@/components/layout';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getCohorts } from '@/data/cohort/get-cohorts';
@@ -11,14 +12,14 @@ export default async function CommunityPage() {
 
     if (!result.success || !result.data) {
         return (
-            <div className="container mx-auto px-4 py-8">
+            <PageContainer>
                 <div className="text-center">
-                    <h1 className="text-3xl font-bold mb-4">Community</h1>
-                    <p className="text-muted-foreground">
-                        {'error' in result ? (typeof result.error === 'string' ? result.error : 'Invalid data format') : 'Failed to load community data'}
-                    </p>
+                    <PageHeader 
+                        title="Community" 
+                        description={'error' in result ? (typeof result.error === 'string' ? result.error : 'Invalid data format') : 'Failed to load community data'}
+                    />
                 </div>
-            </div>
+            </PageContainer>
         );
     }
 
@@ -46,17 +47,15 @@ export default async function CommunityPage() {
     const activeCohorts = cohorts.filter(cohort => cohort.startDate <= new Date()).length;
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            {/* Header */}
-            <div className="mb-8">
-                <h1 className="text-4xl font-bold mb-2">Community</h1>
-                <p className="text-xl text-muted-foreground">
-                    Connect with your peers, explore cohorts, and be part of our growing community
-                </p>
-            </div>
+        <PageContainer>
+            <PageHeader 
+                title="Community" 
+                description="Connect with your peers, explore cohorts, and be part of our growing community"
+                size="lg"
+            />
 
-            {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <Section>
+                <StatsGrid>
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Total Students</CardTitle>
@@ -108,45 +107,40 @@ export default async function CommunityPage() {
                         </p>
                     </CardContent>
                 </Card>
-            </div>
+                </StatsGrid>
+            </Section>
 
-            {/* Cohorts Section */}
-            <section className="mb-12">
-                <div className="flex items-center justify-between mb-6">
-                    <div>
-                        <h2 className="text-2xl font-bold mb-2">Cohorts</h2>
-                        <p className="text-muted-foreground">
-                            Explore our different cohorts and their specializations
-                        </p>
-                    </div>
-                    <Badge variant="secondary" className="text-sm">
-                        {cohorts.length} cohort{cohorts.length !== 1 ? 's' : ''}
-                    </Badge>
-                </div>
+            <Section>
+                <SectionHeader
+                    title="Cohorts"
+                    description="Explore our different cohorts and their specializations"
+                    badge={
+                        <Badge variant="secondary" className="text-sm">
+                            {cohorts.length} cohort{cohorts.length !== 1 ? 's' : ''}
+                        </Badge>
+                    }
+                />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <Grid cols="3">
                     {cohorts.map((cohort) => (
                         <CohortCard key={cohort.id} cohort={cohort} />
                     ))}
-                </div>
-            </section>
+                </Grid>
+            </Section>
 
-            {/* Featured Students Section */}
             {featuredStudents.length > 0 && (
-                <section>
-                    <div className="flex items-center justify-between mb-6">
-                        <div>
-                            <h2 className="text-2xl font-bold mb-2">Featured Students</h2>
-                            <p className="text-muted-foreground">
-                                Most active community members
-                            </p>
-                        </div>
-                        <Badge variant="secondary" className="text-sm">
-                            Top {featuredStudents.length}
-                        </Badge>
-                    </div>
+                <Section>
+                    <SectionHeader
+                        title="Featured Students"
+                        description="Most active community members"
+                        badge={
+                            <Badge variant="secondary" className="text-sm">
+                                Top {featuredStudents.length}
+                            </Badge>
+                        }
+                    />
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <Grid cols="4">
                         {featuredStudents.map((student) => (
                             <StudentCard
                                 key={student.id}
@@ -154,21 +148,22 @@ export default async function CommunityPage() {
                                 cohortName={student.cohortName}
                             />
                         ))}
-                    </div>
-                </section>
+                    </Grid>
+                </Section>
             )}
 
-            {/* Empty State */}
             {cohorts.length === 0 && (
-                <div className="text-center py-12">
-                    <Users className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No cohorts found</h3>
-                    <p className="text-muted-foreground">
-                        There are no active cohorts at the moment. Check back later!
-                    </p>
-                </div>
+                <Section>
+                    <div className="text-center py-12">
+                        <Users className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                        <h3 className="text-lg font-semibold mb-2">No cohorts found</h3>
+                        <p className="text-muted-foreground">
+                            There are no active cohorts at the moment. Check back later!
+                        </p>
+                    </div>
+                </Section>
             )}
-        </div>
+        </PageContainer>
     );
 }
 

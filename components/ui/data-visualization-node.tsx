@@ -8,9 +8,24 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
+type ChartDataPoint = {
+    x: number;
+    y: number;
+    label?: string;
+    value?: number;
+    category?: string;
+    [key: string]: unknown;
+};
+
+type BarDataPoint = {
+    category: string;
+    value: number;
+    description?: string;
+};
+
 interface DataVisualizationProps {
     type: 'line' | 'bar' | 'scatter' | 'heatmap' | 'pie';
-    data?: any[];
+    data?: ChartDataPoint[] | BarDataPoint[];
     title?: string;
     width?: number;
     height?: number;
@@ -60,7 +75,19 @@ const generateSampleData = (type: string) => {
 };
 
 // Interactive Tooltip Component
-const Tooltip = ({ show, x, y, content, className = '' }: any) => {
+type TooltipProps = {
+    show: boolean;
+    x: number;
+    y: number;
+    content: {
+        title: string;
+        subtitle: string;
+        details?: string;
+    };
+    className?: string;
+};
+
+const Tooltip = ({ show, x, y, content, className = '' }: TooltipProps) => {
     if (!show) return null;
 
     return (
@@ -91,7 +118,14 @@ const Tooltip = ({ show, x, y, content, className = '' }: any) => {
 };
 
 // Artistic Line Chart with dramatic visual effects
-const InteractiveLineChart = ({ data, width = 500, height = 300, title }: any) => {
+type LineChartProps = {
+    data: ChartDataPoint[];
+    width?: number;
+    height?: number;
+    title?: string;
+};
+
+const InteractiveLineChart = ({ data, width = 500, height = 300, title }: LineChartProps) => {
     const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0, content: {} });
     const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
     const [isAnimating, setIsAnimating] = useState(false);

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { getQuizzes } from '@/data/quiz/get-quiz';
+import { QuizQuestion } from '@/types/server-action';
 
 export async function GET(
     _request: Request,
@@ -23,7 +24,7 @@ export async function GET(
         // Parse options for each quiz/question
         const quizzesWithParsedOptions = quizzes.map((quiz) => ({
             ...quiz,
-            questions: quiz.questions.map((q: any) => ({
+            questions: quiz.questions.map((q: QuizQuestion) => ({
                 ...q,
                 options: Array.isArray(q.options) ? q.options : JSON.parse(q.options),
             })),

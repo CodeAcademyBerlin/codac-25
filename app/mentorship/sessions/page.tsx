@@ -8,6 +8,7 @@ import { toast } from "sonner";
 
 import { getMentorSessions } from "@/actions/mentorship/get-mentor-sessions";
 import { updateMentorSession } from "@/actions/mentorship/update-session";
+import { PageContainer, PageHeader, Section, StatsGrid } from "@/components/layout";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -168,17 +169,14 @@ export default function MentorSessionsPage() {
   };
 
   return (
-    <div className="container py-6 max-w-6xl">
-      <div className="flex flex-col gap-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">My Sessions</h1>
-          <p className="text-muted-foreground mt-2">
-            View and manage your upcoming and past mentorship sessions
-          </p>
-        </div>
+    <PageContainer size="xl">
+      <PageHeader 
+        title="My Sessions"
+        description="View and manage your upcoming and past mentorship sessions"
+      />
 
-        {/* Statistics cards */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <Section>
+        <StatsGrid>
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -227,8 +225,10 @@ export default function MentorSessionsPage() {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </StatsGrid>
+      </Section>
 
+      <Section>
         {loading ? (
           <div className="flex justify-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -568,7 +568,7 @@ export default function MentorSessionsPage() {
             </TabsContent>
           </Tabs>
         )}
-      </div>
+      </Section>
 
       {/* Status update confirmation dialog */}
       <AlertDialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
@@ -610,6 +610,6 @@ export default function MentorSessionsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </PageContainer>
   );
 }

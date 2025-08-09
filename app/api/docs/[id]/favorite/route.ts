@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { prisma } from '@/lib/db';
 import { auth } from '@/lib/auth/auth';
+import { prisma } from '@/lib/db';
 
 // POST /api/documents/[id]/favorite - Toggle favorite status
 export async function POST(

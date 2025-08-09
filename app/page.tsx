@@ -1,6 +1,7 @@
 import { BookOpen, Clock, Users } from "lucide-react";
 import Link from 'next/link';
 
+import { Grid, PageContainer, PageHeader, Section } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -37,17 +38,14 @@ export default async function LearningPage() {
   }, {} as Record<string, typeof enrolledCourses>);
 
   return (
-    <div className="flex flex-1 flex-col gap-6 p-6">
-      {/* Header */}
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">My Learning</h1>
-        <p className="text-muted-foreground">
-          Track your progress across different learning tracks and access structured courses.
-        </p>
-      </div>
+    <PageContainer>
+      <PageHeader 
+        title="My Learning"
+        description="Track your progress across different learning tracks and access structured courses."
+      />
 
-      {/* Learning Tracks Overview */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <Section>
+        <Grid cols="3">
         {tracks.map((track) => {
           if (!track) return null;
 
@@ -111,10 +109,11 @@ export default async function LearningPage() {
             </Card>
           );
         })}
-      </div>
+        </Grid>
+      </Section>
 
-      {/* Recent Learning Activity */}
-      <Card>
+      <Section>
+        <Card>
         <CardHeader>
           <CardTitle>Recent Activity</CardTitle>
           <CardDescription>
@@ -154,7 +153,8 @@ export default async function LearningPage() {
             </div>
           )}
         </CardContent>
-      </Card>
-    </div>
+        </Card>
+      </Section>
+    </PageContainer>
   );
 } 

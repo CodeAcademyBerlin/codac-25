@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { logger } from "@/lib/logger";
 
 interface MentorBookingDialogProps {
   mentor: UserWithMentorCounts;
@@ -86,13 +87,12 @@ export function MentorBookingDialog({
         return;
       }
 
-      console.log("Booking data:", {
-        mentorId: mentor.id,
-        scheduledFor: bookingDateTime,
-        scheduledForISO: bookingDateTime.toISOString(),
-        message: message.trim(),
-        currentTime: now,
-        minBookingTime,
+      logger.info("Creating mentorship booking", { 
+        metadata: {
+          mentorId: mentor.id,
+          scheduledFor: bookingDateTime.toISOString(),
+          messageLength: message.trim().length,
+        }
       });
 
       // Validate mentor ID
@@ -108,7 +108,12 @@ export function MentorBookingDialog({
         message: message.trim(),
       });
 
-      console.log("Booking result:", result);
+      logger.info("Mentorship booking completed", { 
+        metadata: {
+          success: result.success,
+          mentorId: mentor.id 
+        }
+      });
 
       if (result.success) {
         setSuccessMessage("Your booking has been submitted successfully!");

@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
+import { PageContainer } from "@/components/layout";
+
 export default function MentorshipIndexPage() {
   const router = useRouter();
   const [isRedirecting] = useState(true);
@@ -30,7 +32,7 @@ export default function MentorshipIndexPage() {
   }, [router, session, session.status]);
 
   return (
-    <div className="container flex items-center justify-center h-[50vh]">
+    <PageContainer className="flex items-center justify-center h-[50vh]">
       {isRedirecting && (
         <div className="flex flex-col items-center gap-4">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -39,6 +41,6 @@ export default function MentorshipIndexPage() {
           </p>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }
