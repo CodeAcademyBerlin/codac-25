@@ -17,8 +17,8 @@ interface DataVisualizationProps {
     className?: string;
 }
 
-// Enhanced mock data with more realistic values
-const generateMockData = (type: string) => {
+// Sample data for demonstration - replace with real data in production
+const generateSampleData = (type: string) => {
     switch (type) {
         case 'line':
             return Array.from({ length: 25 }, (_, i) => ({
@@ -39,16 +39,15 @@ const generateMockData = (type: string) => {
             ];
         case 'scatter':
             return Array.from({ length: 45 }, (_, i) => {
-                // Ensure better distribution across the chart area
-                const x = Math.random() * 90 + 5; // 5-95 range for better visibility
-                const y = Math.random() * 90 + 5; // 5-95 range for better visibility
+                const x = Math.random() * 90 + 5;
+                const y = Math.random() * 90 + 5;
                 const categories = ['High Performance', 'Medium Performance', 'Learning'];
-                const category = categories[i % 3]; // Better distribution of categories
+                const category = categories[i % 3];
 
                 return {
                     x,
                     y,
-                    size: Math.random() * 8 + 6, // 6-14 size range
+                    size: Math.random() * 8 + 6,
                     category,
                     value: Math.round(Math.random() * 100),
                     model: `Model ${String(i + 1).padStart(2, '0')}`,
@@ -806,7 +805,7 @@ export const DataVisualizationNode = ({
     height = 300,
     className
 }: DataVisualizationProps) => {
-    const chartData = data || generateMockData(type);
+    const chartData = data || generateSampleData(type);
 
     const renderChart = () => {
         switch (type) {

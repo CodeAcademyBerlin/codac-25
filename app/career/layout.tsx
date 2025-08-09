@@ -10,7 +10,7 @@ interface CareerLayoutProps {
 
 export default function CareerLayout({ children }: CareerLayoutProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex-1 flex flex-col">
       <HideHeader />
       <div className="border-b">
         <div className="container mx-auto py-4">

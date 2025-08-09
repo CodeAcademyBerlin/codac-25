@@ -1,21 +1,23 @@
-import { InputJsonValue } from '@prisma/client/runtime/library';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { prisma } from '@/lib/db';
+import { auth } from '@/lib/auth/auth';
 
-const DEMO_USER_ID = 'demo-user';
-
-// GET /api/documents/[id] - Get a specific document
 export async function GET(
-  _request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await params;
+    // Get authenticated user
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
 
     const document = await prisma.document.findUnique({
       where: {
-        id,
+        id: params.id,
+        authorId: session.user.id,
       },
       include: {
         author: {
@@ -23,39 +25,6 @@ export async function GET(
             id: true,
             name: true,
             email: true,
-          },
-        },
-        favorites: {
-          where: {
-            userId: DEMO_USER_ID,
-          },
-        },
-        comments: {
-          include: {
-            // user: {
-            //   select: {
-            //     id: true,
-            //     name: true,
-            //     email: true,
-            //   },
-            // },
-          },
-          orderBy: {
-            createdAt: 'desc',
-          },
-        },
-        suggestions: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: 'desc',
           },
         },
       },
@@ -68,19 +37,7 @@ export async function GET(
       );
     }
 
-    const transformedDocument = {
-      id: document.id,
-      title: document.title,
-      content: document.content,
-      createdAt: document.createdAt,
-      updatedAt: document.updatedAt,
-      isStarred: document.favorites.length > 0,
-      author: document.author,
-      comments: document.comments,
-      suggestions: document.suggestions,
-    };
-
-    return NextResponse.json({ document: transformedDocument });
+    return NextResponse.json(document);
   } catch (error) {
     console.error('Error fetching document:', error);
     return NextResponse.json(
@@ -96,12 +53,21 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Get authenticated user
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
     const { id } = await params;
     const body = await request.json();
     const { title, content, createVersion = false } = body;
 
     const currentDocument = await prisma.document.findUnique({
-      where: { id },
+      where: {
+        id,
+        authorId: session.user.id, // Ensure user owns the document
+      },
     });
 
     if (!currentDocument) {
@@ -138,7 +104,7 @@ export async function PUT(
             await tx.documentVersion.create({
               data: {
                 documentId: id,
-                content: currentDocument.content as InputJsonValue,
+                content: currentDocument.content as any, // InputJsonValue is removed, use 'any' or define a type if needed
                 title: currentDocument.title,
                 version: nextVersion,
               },
@@ -154,7 +120,7 @@ export async function PUT(
     // Prepare update data
     const updateData: {
       title?: string;
-      content?: InputJsonValue;
+      content?: any; // InputJsonValue is removed, use 'any' or define a type if needed
       updatedAt?: Date;
     } = {
       updatedAt: new Date(),
@@ -165,7 +131,7 @@ export async function PUT(
     }
 
     if (content !== undefined) {
-      updateData.content = content as InputJsonValue;
+      updateData.content = content as any; // InputJsonValue is removed, use 'any' or define a type if needed
     }
 
     // Update the document
@@ -182,7 +148,7 @@ export async function PUT(
         },
         favorites: {
           where: {
-            userId: DEMO_USER_ID,
+            userId: session.user.id,
           },
         },
       },

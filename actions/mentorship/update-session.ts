@@ -62,6 +62,26 @@ export async function updateMentorSession(
       },
     });
 
+    // Verify the current user exists in the database
+    const currentUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        status: true,
+      },
+    });
+
+    if (!currentUser) {
+      console.log("Current user not found in database:", user.id);
+      return {
+        success: false,
+        error: "User session is invalid. Please sign in again.",
+      };
+    }
+
     // Validate input data
     const validatedData = updateSessionSchema.parse(data);
 
@@ -99,8 +119,8 @@ export async function updateMentorSession(
 
     // Verify ownership (either mentor or mentee can update)
     if (
-      session.mentorship.menteeId !== user.id &&
-      session.mentorship.mentorId !== user.id
+      session.mentorship.menteeId !== currentUser.id &&
+      session.mentorship.mentorId !== currentUser.id
     ) {
       return {
         success: false,
@@ -119,8 +139,8 @@ export async function updateMentorSession(
       // If the session time is changed and the user is the mentee (not the mentor),
       // and the session was previously confirmed, reset status to PENDING
       if (
-        session.mentorship.menteeId === user.id &&
-        session.mentorship.mentorId !== user.id &&
+        session.mentorship.menteeId === currentUser.id &&
+        session.mentorship.mentorId !== currentUser.id &&
         session.status === "CONFIRMED" &&
         validatedData.scheduledFor.getTime() !== session.scheduledFor.getTime()
       ) {

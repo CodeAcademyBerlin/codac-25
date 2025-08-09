@@ -1,35 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { prisma } from '@/lib/db';
+import { auth } from '@/lib/auth/auth';
 
-// For now, we'll use a hardcoded user ID. In a real app, you'd get this from authentication
-const DEMO_USER_ID = 'demo-user';
-
-// Ensure demo user exists
-async function ensureDemoUser() {
-  const user = await prisma.user.findUnique({
-    where: { id: DEMO_USER_ID },
-  });
-
-  if (!user) {
-    await prisma.user.create({
-      data: {
-        id: DEMO_USER_ID,
-        email: 'demo@example.com',
-        name: 'Demo User',
-      },
-    });
-  }
-}
-
-// GET /api/documents - Fetch all documents for the user
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    await ensureDemoUser();
+    // Get authenticated user
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const parentId = searchParams.get('parentId');
 
     const documents = await prisma.document.findMany({
       where: {
-        authorId: DEMO_USER_ID,
+        parentId: parentId || null,
+        authorId: session.user.id,
         isArchived: false,
       },
       include: {
@@ -40,54 +28,13 @@ export async function GET() {
             email: true,
           },
         },
-        favorites: {
-          where: {
-            userId: DEMO_USER_ID,
-          },
-        },
-        children: {
-          include: {
-            favorites: {
-              where: {
-                userId: DEMO_USER_ID,
-              },
-            },
-          },
-        },
-        _count: {
-          select: {
-            comments: true,
-            suggestions: true,
-          },
-        },
       },
       orderBy: {
-        updatedAt: 'desc',
+        createdAt: 'desc',
       },
     });
 
-    // Transform the data to match our frontend interface
-    const transformedDocuments = documents.map((doc) => ({
-      id: doc.id,
-      title: doc.title,
-      content: doc.content,
-      createdAt: doc.createdAt,
-      updatedAt: doc.updatedAt,
-      isStarred: doc.favorites.length > 0,
-      author: doc.author,
-      commentCount: doc._count.comments,
-      suggestionCount: doc._count.suggestions,
-      children: doc.children.map((child) => ({
-        id: child.id,
-        title: child.title,
-        content: child.content,
-        createdAt: child.createdAt,
-        updatedAt: child.updatedAt,
-        isStarred: child.favorites.length > 0,
-      })),
-    }));
-
-    return NextResponse.json({ documents: transformedDocuments });
+    return NextResponse.json(documents);
   } catch (error) {
     console.error('Error fetching documents:', error);
     return NextResponse.json(
@@ -100,7 +47,11 @@ export async function GET() {
 // POST /api/documents - Create a new document
 export async function POST(request: NextRequest) {
   try {
-    await ensureDemoUser();
+    // Get authenticated user
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
 
     const body = await request.json();
     const { title, content, parentId } = body;
@@ -109,7 +60,7 @@ export async function POST(request: NextRequest) {
       data: {
         title: title || 'Untitled',
         content: content || [{ type: 'p', children: [{ text: '' }] }],
-        authorId: DEMO_USER_ID,
+        authorId: session.user.id,
         parentId: parentId || null,
       },
       include: {
@@ -122,7 +73,7 @@ export async function POST(request: NextRequest) {
         },
         favorites: {
           where: {
-            userId: DEMO_USER_ID,
+            userId: session.user.id,
           },
         },
       },

@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { prisma } from '@/lib/db';
-
-const DEMO_USER_ID = 'demo-user';
+import { auth } from '@/lib/auth/auth';
 
 // POST /api/documents/[id]/favorite - Toggle favorite status
 export async function POST(
@@ -10,6 +9,12 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Get authenticated user
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
     const { id } = await params;
 
     // Check if document exists
@@ -28,7 +33,7 @@ export async function POST(
     const existingFavorite = await prisma.favorite.findUnique({
       where: {
         userId_documentId: {
-          userId: DEMO_USER_ID,
+          userId: session.user.id,
           documentId: id,
         },
       },
@@ -48,7 +53,7 @@ export async function POST(
       // Add to favorites
       await prisma.favorite.create({
         data: {
-          userId: DEMO_USER_ID,
+          userId: session.user.id,
           documentId: id,
         },
       });

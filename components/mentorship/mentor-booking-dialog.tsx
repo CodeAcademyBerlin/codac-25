@@ -74,13 +74,41 @@ export function MentorBookingDialog({
       let hour = parseInt(hours);
       if (period === "PM" && hour !== 12) hour += 12;
       if (period === "AM" && hour === 12) hour = 0;
-      bookingDateTime.setHours(hour, parseInt(minutes));
+      bookingDateTime.setHours(hour, parseInt(minutes), 0, 0); // Set seconds and milliseconds to 0
+
+      // Validate that the booking is at least 5 minutes in the future
+      const now = new Date();
+      const minBookingTime = new Date(now.getTime() + 5 * 60 * 1000); // 5 minutes from now
+
+      if (bookingDateTime <= minBookingTime) {
+        setError("Please select a time at least 5 minutes in the future");
+        setIsSubmitting(false);
+        return;
+      }
+
+      console.log("Booking data:", {
+        mentorId: mentor.id,
+        scheduledFor: bookingDateTime,
+        scheduledForISO: bookingDateTime.toISOString(),
+        message: message.trim(),
+        currentTime: now,
+        minBookingTime,
+      });
+
+      // Validate mentor ID
+      if (!mentor.id) {
+        setError("Invalid mentor selected. Please try again.");
+        setIsSubmitting(false);
+        return;
+      }
 
       const result = await createMentorshipBooking({
         mentorId: mentor.id,
         scheduledFor: bookingDateTime,
         message: message.trim(),
       });
+
+      console.log("Booking result:", result);
 
       if (result.success) {
         setSuccessMessage("Your booking has been submitted successfully!");
@@ -101,8 +129,12 @@ export function MentorBookingDialog({
         setError(result.error || "Failed to book session. Please try again.");
       }
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
-      console.error(err);
+      console.error("Booking error:", err);
+      if (err instanceof Error) {
+        setError(err.message || "An unexpected error occurred. Please try again.");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     } finally {
       setIsSubmitting(false);
     }

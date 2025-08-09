@@ -28,10 +28,30 @@ export async function getMyMentorships(): Promise<GetMyMentorshipsResult> {
       },
     });
 
+    // Verify the current user exists in the database
+    const currentUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        status: true,
+      },
+    });
+
+    if (!currentUser) {
+      console.log("Current user not found in database:", user.id);
+      return {
+        success: false,
+        error: "User session is invalid. Please sign in again.",
+      };
+    }
+
     // Get all active mentorships for the user
     const mentorships = await prisma.mentorship.findMany({
       where: {
-        menteeId: user.id,
+        menteeId: currentUser.id,
         status: {
           in: ["PENDING", "ACTIVE"],
         },
@@ -73,7 +93,7 @@ export async function getMyMentorships(): Promise<GetMyMentorshipsResult> {
       SELECT ms.*, m.mentorId, m.menteeId
       FROM mentor_sessions ms
       JOIN mentorships m ON ms.mentorshipId = m.id
-      WHERE m.menteeId = ${user.id}
+      WHERE m.menteeId = ${currentUser.id}
         AND (
           (ms.scheduledFor >= ${now} AND ms.status IN ('PENDING', 'CONFIRMED'))
           OR ms.status = 'DECLINED'
@@ -86,7 +106,7 @@ export async function getMyMentorships(): Promise<GetMyMentorshipsResult> {
       SELECT ms.*, m.mentorId, m.menteeId
       FROM mentor_sessions ms
       JOIN mentorships m ON ms.mentorshipId = m.id
-      WHERE m.menteeId = ${user.id}
+      WHERE m.menteeId = ${currentUser.id}
         AND (ms.scheduledFor < ${now} OR ms.status IN ('COMPLETED', 'CANCELLED'))
         AND ms.status != 'DECLINED'
       ORDER BY ms.scheduledFor DESC
