@@ -1,13 +1,13 @@
 "use client";
 
 import {
-  Book,
-  BarChart3,
+  Home,
+  GraduationCap,
   Users,
   Briefcase,
   FileText,
   Pyramid,
-  MessageSquare,
+  UserCheck,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,7 +25,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-import { NavSecondary } from "./nav-secondary";
 import { NavTop } from "./nav-top";
 import { NavUser } from "./nav-user";
 
@@ -37,7 +36,7 @@ const buildNavigationData = (role?: string) => {
     mentorshipItems.push({
       title: "My Sessions",
       url: "/mentorship/sessions",
-      icon: MessageSquare,
+      icon: UserCheck,
     });
   } else {
     // Students see find mentors and their sessions
@@ -45,12 +44,12 @@ const buildNavigationData = (role?: string) => {
       {
         title: "Find Mentors",
         url: "/mentorship/find",
-        icon: MessageSquare,
+        icon: UserCheck,
       },
       {
         title: "My Sessions",
         url: "/mentorship/my-mentors",
-        icon: MessageSquare,
+        icon: UserCheck,
       }
     );
   }
@@ -60,13 +59,13 @@ const buildNavigationData = (role?: string) => {
       {
         title: "Dashboard",
         url: "/",
-        icon: BarChart3,
+        icon: Home,
         isActive: false,
       },
       {
         title: "Learning",
         url: "/lms",
-        icon: Book,
+        icon: GraduationCap,
       },
       {
         title: "Quizzes",
@@ -79,7 +78,7 @@ const buildNavigationData = (role?: string) => {
         icon: Users,
       },
       {
-        title: "Career Center",
+        title: "Career",
         url: "/career/jobs",
         icon: Briefcase,
       },
@@ -117,23 +116,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              className="data-[slot=sidebar-menu-button]:!p-2"
             >
               <Link href="/">
-                {/* <div className="sm:flex-nowrap flex h-8 w-8 items-center justify-center group-data-[collapsible=icon]:group-data-[state=collapsed]:block group-data-[collapsible=icon]:group-data-[state=expanded]:hidden">
-                                </div> */}
                 <Image
                   src={"/codac_logo.svg"}
                   alt="codac logo"
-                  width={32}
-                  height={32}
+                  width={24}
+                  height={24}
+                  className="shrink-0"
                 />
-
-                <div className="flex-1 text-center leading-tight group-data-[collapsible=icon]:group-data-[state=collapsed]:hidden">
-                  {/*      <span className="font-codac-brand text-3xl uppercase tracking-wider text-primary">
-                                        codac
-                                    </span>*/}
-                  <span className="font-codac-brand text-3xl uppercase tracking-wider text-primary">
+                <div className="flex-1 text-left leading-tight group-data-[collapsible=icon]:group-data-[state=collapsed]:hidden">
+                  <span className="font-codac-brand text-2xl uppercase tracking-wider text-primary">
                     codac
                   </span>
                 </div>
@@ -142,12 +136,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
-        <NavTop items={navData.navTop} />
-        <NavSecondary items={navData.navSecondary} className="mt-auto" />
+      <SidebarContent className="px-0">
+        <NavTop items={[...navData.navTop, ...navData.navSecondary]} />
       </SidebarContent>
       <SidebarFooter>
-        <NavSecondary items={navData.footer} />
         <NavUser />
       </SidebarFooter>
     </Sidebar>

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 
 import { DndWrapper } from '@/app/docs/components/dnd-wrapper';
 import { HideHeader } from '@/components/hide-header';
+import { ResizableSidebar } from '@/components/ui/resizable-sidebar';
 import { getEnrolledCourses, getCourses } from '@/data/lms/courses';
 import { getLMSHierarchy } from '@/data/lms/lms-hierarchy';
 import { getCurrentUser } from '@/lib/auth/auth-utils';
@@ -33,12 +34,20 @@ export default async function LMSLayout({
             <div className="flex h-full flex-col">
                 <LMSNavbar user={user} />
                 <div className="flex flex-1 overflow-hidden">
-                    <LMSSidebar
-                        enrolledCourses={enrolledCourses}
-                        allCourses={allCourses}
-                        userRole={user.role}
-                        lmsHierarchy={lmsHierarchy}
-                    />
+                    <ResizableSidebar
+                        defaultWidth={320}
+                        minWidth={240}
+                        maxWidth={600}
+                        storageKey="lms-sidebar-width"
+                        className="border-r bg-muted/30"
+                    >
+                        <LMSSidebar
+                            enrolledCourses={enrolledCourses}
+                            allCourses={allCourses}
+                            userRole={user.role}
+                            lmsHierarchy={lmsHierarchy}
+                        />
+                    </ResizableSidebar>
                     <main className="flex-1 overflow-y-auto">
                         {children}
                     </main>

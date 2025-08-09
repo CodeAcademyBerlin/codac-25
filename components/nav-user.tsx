@@ -5,10 +5,12 @@ import {
   IconLogout,
   IconNotification,
   IconUserCircle,
+  IconPalette,
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useSession, signOut } from 'next-auth/react';
 
+import { ThemePicker } from '@/components/theme-picker';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -136,6 +138,13 @@ export function NavUser() {
               <DropdownMenuItem>
                 <IconNotification />
                 Notifications
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <div className="flex items-center cursor-pointer">
+                  <IconPalette />
+                  <span className="flex-1">Theme</span>
+                  <ThemePicker variant="dropdown" align="start" />
+                </div>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

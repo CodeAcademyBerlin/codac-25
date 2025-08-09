@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 
 import { AppHeaderClient } from '@/components/app-header-client'
 import { AppSidebar } from '@/components/app-sidebar'
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
 
 interface ConditionalLayoutProps {
   children: React.ReactNode
@@ -27,12 +28,14 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
 
   // For dashboard pages, render with sidebar and header
   return (
-    <>
+    <SidebarProvider defaultOpen={false}>
       <AppSidebar />
-      <main className="w-full h-full">
+      <SidebarInset>
         <AppHeaderClient />
-        {children}
-      </main>
-    </>
+        <main className="flex-1 overflow-auto">
+          {children}
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }

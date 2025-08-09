@@ -35,14 +35,14 @@ export function NavTop({
             const isActive = pathname === item.url;
             return (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild tooltip={item.title} isActive={isActive}>
                   <Link
                     href={item.url}
                     className={cn(
                       isActive && "bg-accent text-accent-foreground font-medium"
                     )}
                   >
-                    <item.icon />
+                    <item.icon className="shrink-0" />
                     <span>{item.title}</span>
                     {item.badge && (
                       <span className="ml-auto rounded-full bg-blue-600 px-2 py-0.5 text-xs font-medium text-white">

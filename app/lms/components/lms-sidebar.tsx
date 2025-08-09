@@ -134,7 +134,7 @@ export function LMSSidebar({ enrolledCourses, allCourses, userRole, lmsHierarchy
     );
 
     return (
-        <aside className="w-80 border-r bg-muted/30">
+        <aside className="h-full flex flex-col">
             <div className="p-4">
                 {/* View Toggle (only for admins/mentors) */}
                 {canEdit && (
@@ -180,7 +180,7 @@ export function LMSSidebar({ enrolledCourses, allCourses, userRole, lmsHierarchy
                 </div>
             </div>
 
-            <ScrollArea className="flex-1">
+            <ScrollArea className="flex-1 h-0">
                 <div className="p-4 pt-0">
                     {/* Tree View for Editing */}
                     {isTreeView && canEdit ? (
