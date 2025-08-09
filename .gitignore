@@ -47,3 +47,4 @@ next-env.d.ts
 /dist
 
 prisma/dev.db
+.claude/settings.local.json
