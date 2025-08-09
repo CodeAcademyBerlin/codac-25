@@ -1,17 +1,32 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { Prisma } from '@prisma/client';
 
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
-import { createDocSchema, type CreateDocInput } from '@/lib/validation/doc';
+import { 
+    createDocSchema, 
+    type CreateDocInput 
+} from '@/lib/validation/doc';
+import { type ServerActionResult } from '@/lib/server-action-utils';
 import { auth } from '@/lib/auth/auth';
+import { handlePrismaError } from '@/lib/server-action-utils';
 
-export type CreateDocResult = {
-    success: boolean;
-    data?: any;
-    error?: string;
-};
+// Define proper return type with Prisma's generated types
+type DocumentWithAuthor = Prisma.DocumentGetPayload<{
+    include: {
+        author: {
+            select: {
+                id: true;
+                name: true;
+                email: true;
+            };
+        };
+    };
+}>;
+
+type CreateDocResult = ServerActionResult<DocumentWithAuthor>;
 
 export async function createDoc(data: CreateDocInput): Promise<CreateDocResult> {
     const startTime = Date.now();
@@ -80,10 +95,35 @@ export async function createDoc(data: CreateDocInput): Promise<CreateDocResult> 
         };
 
     } catch (error) {
-        logger.error('Failed to create document', error instanceof Error ? error : new Error(String(error)));
+        logger.logServerActionError('create', 'document', error instanceof Error ? error : new Error(String(error)), {
+            metadata: {
+                duration: Date.now() - startTime,
+                title: data.title,
+                parentId: data.parentId
+            }
+        });
+
+        // Handle Zod validation errors
+        if (error instanceof Error && error.name === 'ZodError') {
+            logger.logValidationError('document', (error as any).errors);
+            return {
+                success: false,
+                error: (error as any).errors
+            };
+        }
+
+        // Handle Prisma errors
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            const errorMessage = handlePrismaError(error);
+            return {
+                success: false,
+                error: errorMessage
+            };
+        }
+
         return {
             success: false,
-            error: error instanceof Error ? error.message : 'Failed to create document'
+            error: 'Failed to create document'
         };
     }
 }

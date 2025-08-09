@@ -126,7 +126,7 @@ type LineChartProps = {
 };
 
 const InteractiveLineChart = ({ data, width = 500, height = 300, title }: LineChartProps) => {
-    const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0, content: {} });
+    const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0, content: { title: '', subtitle: '', details: '' } });
     const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
     const [isAnimating, setIsAnimating] = useState(false);
     const [zoom, setZoom] = useState(1);
@@ -161,7 +161,7 @@ const InteractiveLineChart = ({ data, width = 500, height = 300, title }: LineCh
     };
 
     const handlePointLeave = () => {
-        setTooltip({ show: false, x: 0, y: 0, content: {} });
+        setTooltip({ show: false, x: 0, y: 0, content: { title: '', subtitle: '', details: '' } });
         setHoveredPoint(null);
     };
 
@@ -400,7 +400,7 @@ const InteractiveLineChart = ({ data, width = 500, height = 300, title }: LineCh
 
 // Artistic Bar Chart with dramatic color effects
 const InteractiveBarChart = ({ data, width = 450, height = 300, title }: any) => {
-    const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0, content: {} });
+    const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0, content: { title: '', subtitle: '', details: '' } });
     const [hoveredBar, setHoveredBar] = useState<number | null>(null);
     const [sortBy, setSortBy] = useState<'alphabetical' | 'value'>('value');
     const svgRef = useRef<SVGSVGElement>(null);
@@ -435,7 +435,7 @@ const InteractiveBarChart = ({ data, width = 450, height = 300, title }: any) =>
     };
 
     const handleBarLeave = () => {
-        setTooltip({ show: false, x: 0, y: 0, content: {} });
+        setTooltip({ show: false, x: 0, y: 0, content: { title: '', subtitle: '', details: '' } });
         setHoveredBar(null);
     };
 
@@ -609,7 +609,7 @@ const InteractiveBarChart = ({ data, width = 450, height = 300, title }: any) =>
 
 // Artistic Scatter Plot with dramatic visual effects
 const InteractiveScatterPlot = ({ data, width = 450, height = 300, title }: any) => {
-    const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0, content: {} });
+    const [tooltip, setTooltip] = useState({ show: false, x: 0, y: 0, content: { title: '', subtitle: '', details: '' } });
     const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const svgRef = useRef<SVGSVGElement>(null);
@@ -647,7 +647,7 @@ const InteractiveScatterPlot = ({ data, width = 450, height = 300, title }: any)
     };
 
     const handlePointLeave = () => {
-        setTooltip({ show: false, x: 0, y: 0, content: {} });
+        setTooltip({ show: false, x: 0, y: 0, content: { title: '', subtitle: '', details: '' } });
         setHoveredPoint(null);
     };
 
@@ -844,11 +844,11 @@ export const DataVisualizationNode = ({
     const renderChart = () => {
         switch (type) {
             case 'line':
-                return <InteractiveLineChart data={chartData} width={width} height={height} title={title} />;
+                return <InteractiveLineChart data={chartData as ChartDataPoint[]} width={width} height={height} title={title} />;
             case 'bar':
-                return <InteractiveBarChart data={chartData} width={width} height={height} title={title} />;
+                return <InteractiveBarChart data={chartData as BarDataPoint[]} width={width} height={height} title={title} />;
             case 'scatter':
-                return <InteractiveScatterPlot data={chartData} width={width} height={height} title={title} />;
+                return <InteractiveScatterPlot data={chartData as ChartDataPoint[]} width={width} height={height} title={title} />;
             default:
                 return (
                     <Card>

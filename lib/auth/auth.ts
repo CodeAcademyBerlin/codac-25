@@ -7,6 +7,8 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { prisma } from "@/lib/db/prisma"
 import { logger } from "@/lib/logger"
 
+// Module augmentations are handled in types/next-auth.d.ts
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   trustHost: true,
@@ -95,11 +97,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true
     },
     async session({ session, token }) {
-      // Add user data from token to session
-      if (token) {
+      // Add user data from token to session with proper typing
+      if (token && session.user) {
         session.user.id = token.sub as string
-        session.user.role = (token.role || 'STUDENT') as UserRole
-        session.user.status = (token.status || 'ACTIVE') as UserStatus
+        session.user.role = token.role as UserRole
+        session.user.status = token.status as UserStatus
         session.user.cohortId = token.cohortId as string | null
       }
 
@@ -123,20 +125,20 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           })
 
           if (dbUser) {
-            token.role = dbUser.role
-            token.status = dbUser.status
+            token.role = dbUser.role as UserRole
+            token.status = dbUser.status as UserStatus
             token.cohortId = dbUser.cohortId
           } else {
             // Set defaults
-            token.role = "STUDENT"
-            token.status = "ACTIVE"
+            token.role = "STUDENT" as UserRole
+            token.status = "ACTIVE" as UserStatus
             token.cohortId = null
           }
         } catch (error) {
           logger.error("Error fetching user data in JWT callback", error instanceof Error ? error : new Error(String(error)))
           // Set defaults on error
-          token.role = "STUDENT"
-          token.status = "ACTIVE"
+          token.role = "STUDENT" as UserRole
+          token.status = "ACTIVE" as UserStatus
           token.cohortId = null
         }
       }

@@ -76,8 +76,9 @@ export async function getUsers(data: GetUsersInput): Promise<GetUsersResult> {
             metadata: { total, filters: where }
         });
 
-        // Get users with pagination
+        // Get users with pagination and optimized relation loading
         const users = await prisma.user.findMany({
+            // Note: relationLoadStrategy is a Prisma extension feature - remove if not using extensions
             where,
             include: {
                 _count: {
