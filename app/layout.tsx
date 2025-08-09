@@ -4,11 +4,11 @@ import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 
 import "./globals.css";
-import { AppHeaderClient } from "@/components/app-header-client";
-import { AppSidebar } from "@/components/app-sidebar";
+
+import { ConditionalLayout } from "@/components/conditional-layout";
 import { HeaderProvider } from "@/components/header-provider";
 import { Providers } from "@/components/providers";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -74,11 +74,9 @@ export default function RootLayout({
       >
         <Providers>
           <HeaderProvider>
-            <AppSidebar />
-            <main className="w-full h-full">
-              <AppHeaderClient />
+            <ConditionalLayout>
               {children}
-            </main>
+            </ConditionalLayout>
           </HeaderProvider>
         </Providers>
         <Toaster />

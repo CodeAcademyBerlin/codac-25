@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 
+import { PageContainer } from "@/components/layout";
 import { getEnrolledCourses, getCourses } from '@/data/lms/courses';
 import { getCurrentUser } from '@/lib/auth/auth-utils';
 
@@ -18,12 +19,12 @@ export default async function LMSPage() {
     ]);
 
     return (
-        <div className="p-6">
+        <PageContainer>
             <LMSDashboard
                 user={user}
                 enrolledCourses={enrolledCourses}
                 allCourses={allCourses}
             />
-        </div>
+        </PageContainer>
     );
 } 

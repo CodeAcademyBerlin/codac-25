@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 
+import { PageContainer } from "@/components/layout";
 import { ProfileContent } from '@/components/profile/profile-content';
 import { ProfileHeader } from '@/components/profile/profile-header';
 import { ProfileStats } from '@/components/profile/profile-stats';
@@ -27,7 +28,7 @@ export default async function ProfilePage() {
     const user = result.data;
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <PageContainer size="lg">
             <div className="space-y-8">
                 {/* Profile Header */}
                 <ProfileHeader user={user} />
@@ -44,6 +45,6 @@ export default async function ProfilePage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </PageContainer>
     );
 } 
