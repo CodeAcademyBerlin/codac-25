@@ -297,10 +297,7 @@ export async function createMentorshipBooking(
     // Handle Zod validation errors
     if (error instanceof z.ZodError) {
       const errorMessage = error.errors.map((e) => e.message).join(", ");
-      logger.error("Booking validation failed", {
-        errors: error.errors,
-        input: data,
-      });
+      logger.error("Booking validation failed", error);
       return {
         success: false,
         error: errorMessage,
@@ -309,10 +306,7 @@ export async function createMentorshipBooking(
 
     // Handle Prisma errors
     if (error instanceof Error && error.message.includes("prisma")) {
-      logger.error("Database error during booking creation", {
-        errorMessage: error.message,
-        input: data,
-      });
+      logger.error("Database error during booking creation", error);
       return {
         success: false,
         error: "Database error occurred. Please try again.",
@@ -321,10 +315,7 @@ export async function createMentorshipBooking(
 
     // Handle specific Prisma constraint errors
     if (error instanceof Error && error.message.includes("Unique constraint")) {
-      logger.error("Unique constraint violation during booking creation", {
-        errorMessage: error.message,
-        input: data,
-      });
+      logger.error("Unique constraint violation during booking creation", error);
       return {
         success: false,
         error: "A booking already exists for this time slot. Please choose a different time.",
@@ -333,10 +324,7 @@ export async function createMentorshipBooking(
 
     // Handle foreign key constraint errors
     if (error instanceof Error && error.message.includes("Foreign key constraint")) {
-      logger.error("Foreign key constraint violation during booking creation", {
-        errorMessage: error.message,
-        input: data,
-      });
+      logger.error("Foreign key constraint violation during booking creation", error);
       return {
         success: false,
         error: "Invalid mentor or user. Please try again.",
@@ -345,10 +333,7 @@ export async function createMentorshipBooking(
 
     // Handle date parsing errors
     if (error instanceof Error && error.message.includes("Invalid date format")) {
-      logger.error("Date parsing error", {
-        errorMessage: error.message,
-        input: data,
-      });
+      logger.error("Date parsing error", error);
       return {
         success: false,
         error: "Invalid date format. Please try again.",

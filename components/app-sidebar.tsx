@@ -65,7 +65,7 @@ const buildNavigationData = (role?: string) => {
       },
       {
         title: "Learning",
-        url: "/learning",
+        url: "/lms",
         icon: Book,
       },
       {

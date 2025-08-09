@@ -1,12 +1,11 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { getServerSession } from 'next-auth';
 
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import { createDocSchema, type CreateDocInput } from '@/lib/validation/doc';
-import { authOptions } from '@/lib/auth/auth';
+import { auth } from '@/lib/auth/auth';
 
 export type CreateDocResult = {
     success: boolean;
@@ -26,7 +25,7 @@ export async function createDoc(data: CreateDocInput): Promise<CreateDocResult> 
         const validatedData = createDocSchema.parse(data);
 
         // Get authenticated user
-        const session = await getServerSession(authOptions);
+        const session = await auth();
         if (!session?.user?.id) {
             return {
                 success: false,
@@ -81,7 +80,7 @@ export async function createDoc(data: CreateDocInput): Promise<CreateDocResult> 
         };
 
     } catch (error) {
-        logger.logError('create', 'document', error);
+        logger.error('Failed to create document', error instanceof Error ? error : new Error(String(error)));
         return {
             success: false,
             error: error instanceof Error ? error.message : 'Failed to create document'

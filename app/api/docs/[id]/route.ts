@@ -4,8 +4,8 @@ import { prisma } from '@/lib/db';
 import { auth } from '@/lib/auth/auth';
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Get authenticated user
@@ -14,9 +14,10 @@ export async function GET(
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
+    const { id } = await params;
     const document = await prisma.document.findUnique({
       where: {
-        id: params.id,
+        id,
         authorId: session.user.id,
       },
       include: {

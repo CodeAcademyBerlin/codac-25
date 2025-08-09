@@ -10,10 +10,23 @@ import { getCurrentUser } from '@/lib/auth/auth-utils';
 
 
 
+export const dynamic = 'force-dynamic';
+
 export default async function LearningPage() {
-  const user = await getCurrentUser();
-  const tracks = await getAllTracks();
-  const enrolledCourses = user ? await getEnrolledCourses() : [];
+  let user;
+  let tracks: Awaited<ReturnType<typeof getAllTracks>> = [];
+  let enrolledCourses: Awaited<ReturnType<typeof getEnrolledCourses>> = [];
+
+  try {
+    user = await getCurrentUser();
+    tracks = await getAllTracks();
+    enrolledCourses = user ? await getEnrolledCourses() : [];
+  } catch (error) {
+    console.error('Error loading dashboard data:', error);
+    // Fallback data
+    tracks = [];
+    enrolledCourses = [];
+  }
 
   // Group enrolled courses by track
   const coursesByTrack = enrolledCourses.reduce((acc, course) => {
