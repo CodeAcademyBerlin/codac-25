@@ -218,7 +218,9 @@
 - Use `npm run lint:fix` for auto-fixable issues
 
 ### Build and Test
-- Run `npm run build` to ensure production builds work
+- Run `pnpm build` to ensure production builds work
+- Run `pnpm test` to execute all Playwright tests
+- Use `pnpm test:ui` for interactive test debugging
 - Test critical user flows after major changes
 - Verify responsive design on different screen sizes
 
