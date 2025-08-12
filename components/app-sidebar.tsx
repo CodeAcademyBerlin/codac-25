@@ -26,11 +26,19 @@ import {
 } from "@/components/ui/sidebar";
 
 import { NavSecondary } from "./nav-secondary";
-import { NavTop } from "./nav-top";
 import { NavUser } from "./nav-user";
+import { MentorshipDropdown } from "./mentorship/mentorship-dropdown";
+
+interface NavigationItem {
+  title: string;
+  url: string;
+  icon: any;
+  isDropdown?: boolean;
+  isActive?: boolean;
+}
 
 const buildNavigationData = (role?: string) => {
-  const mentorshipItems = [];
+  const mentorshipItems: NavigationItem[] = [];
 
   if (role === "MENTOR" || role === "ADMIN") {
     // Mentors and admins see sessions management
@@ -38,21 +46,16 @@ const buildNavigationData = (role?: string) => {
       title: "My Sessions",
       url: "/mentorship/sessions",
       icon: MessageSquare,
+      isDropdown: false,
     });
   } else {
-    // Students see find mentors and their sessions
-    mentorshipItems.push(
-      {
-        title: "Find Mentors",
-        url: "/mentorship/find",
-        icon: MessageSquare,
-      },
-      {
-        title: "My Sessions",
-        url: "/mentorship/my-mentors",
-        icon: MessageSquare,
-      }
-    );
+    // Students see mentorship dropdown
+    mentorshipItems.push({
+      title: "Mentorship",
+      url: "/mentorship",
+      icon: MessageSquare,
+      isDropdown: true,
+    });
   }
 
   return {
@@ -62,37 +65,43 @@ const buildNavigationData = (role?: string) => {
         url: "/",
         icon: BarChart3,
         isActive: false,
+        isDropdown: false,
       },
       {
         title: "Learning",
         url: "/learning",
         icon: Book,
+        isDropdown: false,
       },
       {
         title: "Quizzes",
         url: "/learning/quiz",
         icon: Pyramid,
+        isDropdown: false,
       },
       {
         title: "Community",
         url: "/community",
         icon: Users,
+        isDropdown: false,
       },
       {
         title: "Career Center",
         url: "/career/jobs",
         icon: Briefcase,
+        isDropdown: false,
       },
       ...mentorshipItems,
-    ],
+    ] as NavigationItem[],
     navSecondary: [
       {
         title: "Documents",
         url: "/docs",
         icon: FileText,
+        isDropdown: false,
       },
-    ],
-    footer: [],
+    ] as NavigationItem[],
+    footer: [] as NavigationItem[],
   };
 };
 
@@ -101,6 +110,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [navData, setNavData] = React.useState(() =>
     buildNavigationData(undefined)
   );
+  const [mentorshipOpen, setMentorshipOpen] = React.useState(false);
 
   // Update navigation when user role is available
   React.useEffect(() => {
@@ -143,7 +153,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavTop items={navData.navTop} />
+        <SidebarMenu>
+          {navData.navTop.map((item) => {
+            if (item.isDropdown && item.title === "Mentorship") {
+              return (
+                <MentorshipDropdown
+                  key={item.title}
+                  isOpen={mentorshipOpen}
+                  onToggle={() => setMentorshipOpen(!mentorshipOpen)}
+                />
+              );
+            }
+
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild>
+                  <Link href={item.url}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
+        </SidebarMenu>
         <NavSecondary items={navData.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
