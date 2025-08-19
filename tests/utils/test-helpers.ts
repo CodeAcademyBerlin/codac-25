@@ -11,12 +11,12 @@ import { Page } from '@playwright/test';
  * Authentication helpers for CODAC app
  */
 export class AuthHelpers {
-  constructor(private page: Page) {}
+  constructor(private page: Page) { }
 
   async signIn(email: string, password: string) {
     await this.page.goto('/auth/signin');
-    await this.page.getByLabelText('Email').fill(email);
-    await this.page.getByLabelText('Password').fill(password);
+    await this.page.getByText('Email').fill(email);
+    await this.page.getByText('Password').fill(password);
     await this.page.getByRole('button', { name: 'Sign In' }).click();
   }
 
@@ -27,7 +27,7 @@ export class AuthHelpers {
 
   async requestMagicLink(email: string) {
     await this.page.goto('/auth/signin');
-    await this.page.getByLabelText('Email').fill(email);
+    await this.page.getByText('Email').fill(email);
     await this.page.getByRole('button', { name: /Send Magic Link/i }).click();
   }
 
@@ -67,7 +67,7 @@ export class AuthHelpers {
  * Document helpers for CODAC docs system
  */
 export class DocumentHelpers {
-  constructor(private page: Page) {}
+  constructor(private page: Page) { }
 
   async goToDocuments() {
     await this.page.goto('/docs');
@@ -75,7 +75,7 @@ export class DocumentHelpers {
 
   async createDocumentFromEmptyState(title = 'Test Document') {
     await this.page.goto('/docs');
-    
+
     // If empty state is shown, click create document
     const createButton = this.page.getByRole('link', { name: 'Create Document' });
     if (await createButton.isVisible()) {
@@ -134,7 +134,7 @@ export class DocumentHelpers {
  * Form helpers
  */
 export class FormHelpers {
-  constructor(private page: Page) {}
+  constructor(private page: Page) { }
 
   async fillForm(fields: Record<string, string>) {
     for (const [fieldName, value] of Object.entries(fields)) {
@@ -159,7 +159,7 @@ export class FormHelpers {
  * Navigation helpers
  */
 export class NavigationHelpers {
-  constructor(private page: Page) {}
+  constructor(private page: Page) { }
 
   async navigateToSection(sectionName: string) {
     await this.page.getByRole('link', { name: new RegExp(sectionName, 'i') }).click();
@@ -182,7 +182,7 @@ export class NavigationHelpers {
  * API mocking helpers
  */
 export class MockHelpers {
-  constructor(private page: Page) {}
+  constructor(private page: Page) { }
 
   async mockAPIResponse(endpoint: string, response: any, status = 200) {
     await this.page.route(endpoint, route => {
@@ -254,7 +254,7 @@ export class TestDataFactory {
  * Assertion helpers
  */
 export class AssertionHelpers {
-  constructor(private page: Page) {}
+  constructor(private page: Page) { }
 
   async expectToastMessage(message: string, type: 'success' | 'error' | 'info' = 'success') {
     // Adjust selector based on your toast implementation (e.g., Sonner)
