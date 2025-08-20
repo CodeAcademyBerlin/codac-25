@@ -1,6 +1,5 @@
 {
-  "installCommand": "npm install -g pnpm@9.15.0 && pnpm install",
-  "buildCommand": "pnpm build",
-  "devCommand": "pnpm dev",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
   "outputDirectory": ".next"
 }
