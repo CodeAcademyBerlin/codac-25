@@ -1,5 +1,5 @@
 {
-  "installCommand": "corepack enable && pnpm install",
+  "installCommand": "npm install -g pnpm@9.15.0 && pnpm install",
   "buildCommand": "pnpm build",
   "devCommand": "pnpm dev",
   "outputDirectory": ".next"
