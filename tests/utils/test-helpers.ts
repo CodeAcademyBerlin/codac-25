@@ -29,6 +29,7 @@ export class AuthHelpers {
 
   async signInWithGoogle() {
     await this.page.goto('/auth/signin');
+
     await this.page.waitForLoadState('networkidle');
     await this.page.getByRole('button', { name: /Google/i }).click();
   }
