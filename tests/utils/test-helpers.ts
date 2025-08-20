@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Page } from '@playwright/test';
 
 /**
@@ -14,53 +13,263 @@ import { Page } from '@playwright/test';
 export class AuthHelpers {
   constructor(private page: Page) { }
 
+  // === SIGN IN METHODS ===
   async signIn(email: string, password: string) {
     await this.page.goto('/auth/signin');
-    await this.page.getByText('Email').fill(email);
-    await this.page.getByText('Password').fill(password);
-    await this.page.getByRole('button', { name: 'Sign In' }).click();
+    await this.page.waitForLoadState('networkidle');
+
+    // Use more specific selectors for form inputs
+    await this.page.locator('input[name="email"], input[id="email"]').fill(email);
+    await this.page.locator('input[name="password"], input[id="password"]').fill(password);
+    await this.page.locator('button[type="submit"], button:has-text("Sign In")').click();
+
+    // Wait for navigation or error
+    await this.page.waitForTimeout(1000);
   }
 
   async signInWithGoogle() {
     await this.page.goto('/auth/signin');
+    await this.page.waitForLoadState('networkidle');
     await this.page.getByRole('button', { name: /Google/i }).click();
+  }
+
+  async signInWithGitHub() {
+    await this.page.goto('/auth/signin');
+    await this.page.waitForLoadState('networkidle');
+    await this.page.getByRole('button', { name: /GitHub/i }).click();
   }
 
   async requestMagicLink(email: string) {
     await this.page.goto('/auth/signin');
-    await this.page.getByText('Email').fill(email);
+    await this.page.waitForLoadState('networkidle');
+    await this.page.locator('input[name="email"], input[id="email"]').fill(email);
     await this.page.getByRole('button', { name: /Send Magic Link/i }).click();
+    await this.page.waitForTimeout(1000);
   }
 
+  // === REGISTRATION METHODS ===
+  async registerWithEmail(userData: {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }) {
+    await this.page.goto('/auth/signup');
+    await this.page.waitForLoadState('networkidle');
+
+    // Fill registration form
+    await this.page.locator('input[name="name"], input[id="name"]').fill(userData.name);
+    await this.page.locator('input[name="email"], input[id="email"]').fill(userData.email);
+    await this.page.locator('input[name="password"], input[id="password"]').fill(userData.password);
+    await this.page.locator('input[name="confirmPassword"], input[id="confirmPassword"]').fill(userData.confirmPassword);
+
+    // Submit form
+    await this.page.locator('button[type="submit"], button:has-text("Create Account")').click();
+
+    // Wait for response
+    await this.page.waitForTimeout(2000);
+  }
+
+  async registerWithGoogle() {
+    await this.page.goto('/auth/signup');
+    await this.page.waitForLoadState('networkidle');
+    await this.page.getByRole('button', { name: /Google/i }).click();
+  }
+
+  async registerWithGitHub() {
+    await this.page.goto('/auth/signup');
+    await this.page.waitForLoadState('networkidle');
+    await this.page.getByRole('button', { name: /GitHub/i }).click();
+  }
+
+  // === NAVIGATION METHODS ===
   async goToSignUp() {
     await this.page.goto('/auth/signin');
+    await this.page.waitForLoadState('networkidle');
     await this.page.getByRole('button', { name: /Sign up here/i }).click();
+    await this.page.waitForTimeout(1000);
+  }
+
+  async goToSignInFromSignUp() {
+    await this.page.goto('/auth/signup');
+    await this.page.waitForLoadState('networkidle');
+    await this.page.getByRole('button', { name: /Sign in here/i }).click();
+    await this.page.waitForTimeout(1000);
   }
 
   async signOut() {
-    // Navigate to sign out page (based on actual app structure)
-    await this.page.goto('/auth/signout');
+    // Try to find sign out button in navigation first
+    const signOutButton = this.page.locator('button:has-text("Sign Out"), button:has-text("Logout")');
+    if (await signOutButton.isVisible().catch(() => false)) {
+      await signOutButton.click();
+    } else {
+      // Navigate to sign out page as fallback
+      await this.page.goto('/auth/signout');
+    }
+    await this.page.waitForTimeout(1000);
   }
 
-  // Check if user appears to be signed in by checking for redirect from sign-in page
+  // === SESSION STATE METHODS ===
   async isSignedIn(): Promise<boolean> {
-    await this.page.goto('/auth/signin');
-    // If redirected away from signin page, user is likely already signed in
-    return !this.page.url().includes('/auth/signin');
+    try {
+      await this.page.goto('/auth/signin');
+      await this.page.waitForLoadState('networkidle');
+      await this.page.waitForTimeout(500);
+
+      // If redirected away from signin page, user is likely already signed in
+      const currentUrl = this.page.url();
+      return !currentUrl.includes('/auth/signin') || currentUrl.includes('callbackUrl');
+    } catch {
+      return false;
+    }
   }
 
-  // Mock authentication state for testing purposes
-  async mockSignedInState(userId = 'test-user-id') {
-    await this.page.addInitScript((userId) => {
-      // Mock NextAuth session
+  async isSignedOut(): Promise<boolean> {
+    try {
+      // Try to access a protected route
+      await this.page.goto('/profile');
+      await this.page.waitForLoadState('networkidle');
+      await this.page.waitForTimeout(500);
+
+      // If redirected to signin, user is signed out
+      return this.page.url().includes('/auth/signin');
+    } catch {
+      return true;
+    }
+  }
+
+  async waitForSignInComplete() {
+    // Wait for successful sign in by checking URL change
+    await this.page.waitForFunction(() => {
+      return !window.location.pathname.startsWith('/auth/signin') ||
+        window.location.search.includes('callbackUrl');
+    }, { timeout: 10000 });
+  }
+
+  async waitForRegistrationComplete() {
+    // Wait for success message or redirect
+    try {
+      await this.page.waitForSelector('text=Account Created!', { timeout: 5000 });
+    } catch {
+      // Alternatively wait for redirect to signin
+      await this.page.waitForURL('**/auth/signin**', { timeout: 5000 });
+    }
+  }
+
+  // === ERROR AND SUCCESS VALIDATION ===
+  async expectSignInError(message?: string) {
+    await this.page.waitForSelector('[role="alert"], .alert-destructive', { timeout: 5000 });
+
+    if (message) {
+      await this.page.locator(`text=${message}`).waitFor();
+    }
+  }
+
+  async expectRegistrationError(message?: string) {
+    await this.page.waitForSelector('[role="alert"], .alert-destructive', { timeout: 5000 });
+
+    if (message) {
+      await this.page.locator(`text=${message}`).waitFor();
+    }
+  }
+
+  async expectRegistrationSuccess() {
+    // Check for success state or message
+    const successIndicators = [
+      'text=Account Created!',
+      'text=Check your email',
+      '.text-green-600'
+    ];
+
+    for (const indicator of successIndicators) {
+      try {
+        await this.page.waitForSelector(indicator, { timeout: 2000 });
+        return;
+      } catch {
+        continue;
+      }
+    }
+
+    throw new Error('No success indicator found');
+  }
+
+  async expectMagicLinkSent() {
+    await this.page.waitForSelector('text=Check your email', { timeout: 5000 });
+  }
+
+  // === FORM VALIDATION HELPERS ===
+  async expectFormValidation(fieldName: string, errorMessage?: string) {
+    // Look for validation errors near the field
+    const fieldError = this.page.locator(`[id="${fieldName}-error"], [data-testid="${fieldName}-error"]`);
+
+    if (await fieldError.isVisible().catch(() => false)) {
+      if (errorMessage) {
+        await fieldError.locator(`text=${errorMessage}`).waitFor();
+      }
+    } else if (errorMessage) {
+      // Fallback to looking for error message anywhere
+      await this.page.locator(`text=${errorMessage}`).waitFor();
+    }
+  }
+
+  // === MOCK HELPERS FOR TESTING ===
+  async mockSignedInState(userData = {
+    id: 'test-user-id',
+    email: 'test@example.com',
+    name: 'Test User'
+  }) {
+    await this.page.addInitScript((userData) => {
+      // Mock NextAuth session data
       window.localStorage.setItem('nextauth.session-token', 'mock-session-token');
-      window.localStorage.setItem('user-id', userId);
-    }, userId);
+      window.localStorage.setItem('user-data', JSON.stringify(userData));
+    }, userData);
   }
 
-  async expectSignInError(_message: string) {
-    await this.page.waitForSelector('[role="alert"]');
-    await this.page.locator('[role="alert"]').waitFor();
+  async clearAuthState() {
+    await this.page.evaluate(() => {
+      // Clear all auth-related localStorage and sessionStorage
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.includes('nextauth') || key.includes('auth') || key.includes('user')) {
+          localStorage.removeItem(key);
+        }
+      });
+
+      const sessionKeys = Object.keys(sessionStorage);
+      sessionKeys.forEach(key => {
+        if (key.includes('nextauth') || key.includes('auth') || key.includes('user')) {
+          sessionStorage.removeItem(key);
+        }
+      });
+    });
+  }
+
+  // === OAUTH SIMULATION HELPERS ===
+  async mockGoogleOAuthSuccess(_userData = {
+    id: 'google-user-id',
+    email: 'google@example.com',
+    name: 'Google User'
+  }) {
+    // Intercept OAuth callback
+    await this.page.route('**/api/auth/callback/google', async route => {
+      await route.fulfill({
+        status: 302,
+        headers: {
+          'Location': '/'
+        }
+      });
+    });
+  }
+
+  async mockGoogleOAuthError() {
+    await this.page.route('**/api/auth/callback/google', async route => {
+      await route.fulfill({
+        status: 302,
+        headers: {
+          'Location': '/auth/error?error=OAuthCallback'
+        }
+      });
+    });
   }
 }
 

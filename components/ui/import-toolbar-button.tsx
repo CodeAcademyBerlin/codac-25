@@ -7,7 +7,6 @@ import { ArrowUpToLineIcon } from 'lucide-react';
 import { getEditorDOMFromHtmlString } from 'platejs';
 import { useEditorRef } from 'platejs/react';
 import * as React from 'react';
-import { useFilePicker } from 'use-file-picker';
 
 import {
   DropdownMenu,
@@ -42,29 +41,33 @@ export function ImportToolbarButton(props: DropdownMenuProps) {
     return [];
   };
 
-  const { openFilePicker: openMdFilePicker } = useFilePicker({
-    accept: ['.md', '.mdx'],
-    multiple: false,
-    onFilesSelected: async ({ plainFiles }) => {
-      const text = await plainFiles[0].text();
+  const handleFileImport = async (file: File, type: ImportType) => {
+    const text = await file.text();
+    const nodes = getFileNodes(text, type);
+    editor.tf.insertNodes(nodes);
+  };
 
-      const nodes = getFileNodes(text, 'markdown');
+  const openMdFilePicker = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.md,.mdx';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) await handleFileImport(file, 'markdown');
+    };
+    input.click();
+  };
 
-      editor.tf.insertNodes(nodes);
-    },
-  });
-
-  const { openFilePicker: openHtmlFilePicker } = useFilePicker({
-    accept: ['text/html'],
-    multiple: false,
-    onFilesSelected: async ({ plainFiles }) => {
-      const text = await plainFiles[0].text();
-
-      const nodes = getFileNodes(text, 'html');
-
-      editor.tf.insertNodes(nodes);
-    },
-  });
+  const openHtmlFilePicker = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.html,.htm';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) await handleFileImport(file, 'html');
+    };
+    input.click();
+  };
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen} modal={false} {...props}>

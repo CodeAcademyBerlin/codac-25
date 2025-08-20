@@ -2,7 +2,6 @@
 
 import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
-import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { ReactNode } from 'react';
 
 import { SidebarProvider } from './ui/sidebar';
@@ -20,11 +19,9 @@ export function Providers({ children }: ProvidersProps) {
         enableSystem
         disableTransitionOnChange
       >
-        <NuqsAdapter>
-          <SidebarProvider defaultOpen={true}>
-            {children}
-          </SidebarProvider>
-        </NuqsAdapter>
+        <SidebarProvider defaultOpen={true}>
+          {children}
+        </SidebarProvider>
       </ThemeProvider>
     </SessionProvider>
   );

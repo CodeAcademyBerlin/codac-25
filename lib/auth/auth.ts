@@ -3,6 +3,8 @@ import { UserRole, UserStatus } from "@prisma/client"
 import bcrypt from "bcryptjs"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+import Google from "next-auth/providers/google"
+import Resend from "next-auth/providers/resend"
 
 import { prisma } from "@/lib/db/prisma"
 import { logger } from "@/lib/logger"
@@ -13,6 +15,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   trustHost: true,
   providers: [
+    Google,
+    // Use Resend instead of Nodemailer for Edge Runtime compatibility
+    Resend({
+      from: process.env.EMAIL_FROM || "auth@example.com",
+    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -75,7 +82,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             emailVerified: user.emailVerified,
           };
         } catch (error) {
-          console.error("Error during authentication:", error);
+          logger.error("Error during authentication", error instanceof Error ? error : new Error(String(error)));
           return null;
         }
       }

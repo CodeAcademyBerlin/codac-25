@@ -1,64 +1,61 @@
-import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth/auth"
 
-export async function middleware(request: NextRequest) {
-  // Monitor header sizes to debug 431 errors
-  const headerSize = JSON.stringify(Object.fromEntries(request.headers)).length;
-  const cookieSize = request.headers.get('cookie')?.length || 0;
+export default auth((req) => {
+  // Monitor header sizes to debug 431 errors in development
+  if (process.env.NODE_ENV === 'development') {
+    const headerSize = JSON.stringify(Object.fromEntries(req.headers)).length;
+    const cookieSize = req.headers.get('cookie')?.length || 0;
 
-  if (headerSize > 16000 || cookieSize > 8000) {
-    console.warn(`⚠️  Large request headers detected:
-      - Total header size: ${headerSize} bytes
-      - Cookie size: ${cookieSize} bytes
-      - URL: ${request.nextUrl.pathname}
-      - User-Agent: ${request.headers.get('user-agent')?.substring(0, 100)}...`);
+    if (headerSize > 16000 || cookieSize > 8000) {
+      console.warn(`⚠️  Large request headers detected:
+        - Total header size: ${headerSize} bytes
+        - Cookie size: ${cookieSize} bytes
+        - URL: ${req.nextUrl.pathname}
+        - User-Agent: ${req.headers.get('user-agent')?.substring(0, 100)}...`);
+    }
   }
 
-  const isAuthPage = request.nextUrl.pathname.startsWith("/auth");
-  const isApiAuthRoute = request.nextUrl.pathname.startsWith("/api/auth");
+  const isAuthPage = req.nextUrl.pathname.startsWith("/auth");
+  const isApiAuthRoute = req.nextUrl.pathname.startsWith("/api/auth");
   const isPublicRoute = [
     "/",
     "/auth/signin",
     "/auth/signout",
     "/auth/error",
     "/auth/verify-request",
-  ].includes(request.nextUrl.pathname);
+  ].includes(req.nextUrl.pathname);
 
   // Allow API auth routes
   if (isApiAuthRoute) {
-    return NextResponse.next();
+    return undefined;
   }
 
   // Allow public routes
   if (isPublicRoute) {
-    return NextResponse.next();
+    return undefined;
   }
 
-  // Check if user has session cookie (simple check)
-  const sessionToken =
-    request.cookies.get("next-auth.session-token") ||
-    request.cookies.get("__Secure-next-auth.session-token") ||
-    request.cookies.get("authjs.session-token");
-
-  const isLoggedIn = !!sessionToken;
+  const isLoggedIn = !!req.auth;
 
   // Redirect authenticated users away from auth pages
   if (isAuthPage && isLoggedIn) {
-    return NextResponse.redirect(new URL("/", request.nextUrl.origin));
+    return Response.redirect(new URL("/", req.nextUrl.origin));
   }
 
   // Redirect unauthenticated users to signin for protected routes
   if (!isLoggedIn && !isAuthPage) {
-    const callbackUrl = request.nextUrl.pathname + request.nextUrl.search;
-    return NextResponse.redirect(
+    const callbackUrl = req.nextUrl.pathname + req.nextUrl.search;
+    return Response.redirect(
       new URL(
         `/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`,
-        request.nextUrl.origin
+        req.nextUrl.origin
       )
     );
   }
-
-  return NextResponse.next();
-}
+  
+  // Allow the request to proceed
+  return undefined;
+})
 
 export const config = {
   matcher: [
