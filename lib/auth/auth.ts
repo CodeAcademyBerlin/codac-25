@@ -2,6 +2,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import { UserRole, UserStatus } from "@prisma/client"
 import bcrypt from "bcryptjs"
 import NextAuth from "next-auth"
+import type { Adapter } from "next-auth/adapters"
 import CredentialsProvider from "next-auth/providers/credentials"
 import Google from "next-auth/providers/google"
 import Resend from "next-auth/providers/resend"
@@ -11,8 +12,37 @@ import { logger } from "@/lib/logger"
 
 // Module augmentations are handled in types/next-auth.d.ts
 
+// Create a custom adapter that extends PrismaAdapter with proper typing
+const customPrismaAdapter: Adapter = {
+  ...PrismaAdapter(prisma),
+  async createUser(user) {
+    const baseAdapter = PrismaAdapter(prisma)
+    if (baseAdapter.createUser) {
+      // Create the user with the base adapter
+      const createdUser = await baseAdapter.createUser(user)
+      
+      // Update with our custom fields
+      await prisma.user.update({
+        where: { id: createdUser.id },
+        data: {
+          role: "STUDENT" as UserRole,
+          status: "ACTIVE" as UserStatus,
+        },
+      })
+      
+      return {
+        ...createdUser,
+        role: "STUDENT" as UserRole,
+        status: "ACTIVE" as UserStatus,
+        cohortId: null,
+      }
+    }
+    throw new Error("Base adapter createUser method not found")
+  },
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: PrismaAdapter(prisma),
+  adapter: customPrismaAdapter,
   trustHost: true,
   providers: [
     Google,
@@ -151,22 +181,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
 
       return token
-    },
-  },
-  events: {
-    async createUser({ user }) {
-      try {
-        // Set default role and status for new users
-        await prisma.user.update({
-          where: { id: user.id },
-          data: {
-            role: "STUDENT",
-            status: "ACTIVE",
-          },
-        })
-      } catch (error) {
-        logger.error("Error updating user in createUser event", error instanceof Error ? error : new Error(String(error)))
-      }
     },
   },
 });
