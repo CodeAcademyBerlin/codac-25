@@ -16,6 +16,19 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { getUsersForEnrollment } from '@/data/user/get-users-for-enrollment';
 
+interface User {
+    id: string;
+    name: string | null;
+    email: string | null;
+    avatar: string | null;
+    role: string;
+    cohort: {
+        id: string;
+        name: string;
+        slug: string;
+    } | null;
+}
+
 interface Course {
     id: string;
     title: string;
@@ -34,7 +47,7 @@ export function GlobalEnrollmentManager({ courses }: GlobalEnrollmentManagerProp
     const [isLoading, setIsLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCourse, setSelectedCourse] = useState('');
-    const [availableUsers, setAvailableUsers] = useState<any[]>([]);
+    const [availableUsers, setAvailableUsers] = useState<User[]>([]);
     const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
     const [showBulkEnrollDialog, setShowBulkEnrollDialog] = useState(false);
 

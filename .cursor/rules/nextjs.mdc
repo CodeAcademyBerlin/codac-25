@@ -3,7 +3,6 @@ description: Applies optimal Next.js rules and best practices.
 globs: **/*.{js,jsx,ts,tsx}
 ---
 - Favor React Server Components (RSC) where possible.
-- Favor React Server Components (RSC) where possible.
 - Minimize `'use client'` directives - only use for interactivity.
 - Optimize for performance and Web Vitals.
 - Use server actions for mutations instead of API route handlers.

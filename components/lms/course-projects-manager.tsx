@@ -17,27 +17,33 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 
+type LessonType = 'TEXT' | 'VIDEO' | 'INTERACTIVE' | 'QUIZ' | 'EXERCISE';
+
+interface Project {
+    id: string;
+    title: string;
+    description?: string | null;
+    duration?: number | null;
+    isPublished: boolean;
+    lessons: Lesson[];
+    _count: {
+        lessons: number;
+    };
+}
+
+interface Lesson {
+    id: string;
+    title: string;
+    description?: string | null;
+    type: LessonType;
+    duration?: number | null;
+    isPublished: boolean;
+}
+
 interface Course {
     id: string;
     title: string;
-    projects: Array<{
-        id: string;
-        title: string;
-        description?: string | null;
-        duration?: number | null;
-        isPublished: boolean;
-        lessons: Array<{
-            id: string;
-            title: string;
-            description?: string | null;
-            type: string;
-            duration?: number | null;
-            isPublished: boolean;
-        }>;
-        _count: {
-            lessons: number;
-        };
-    }>;
+    projects: Project[];
 }
 
 interface CourseProjectsManagerProps {
@@ -47,8 +53,8 @@ interface CourseProjectsManagerProps {
 export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [editingProject, setEditingProject] = useState<any>(null);
-    const [editingLesson, setEditingLesson] = useState<any>(null);
+    const [editingProject, setEditingProject] = useState<Project | null>(null);
+    const [editingLesson, setEditingLesson] = useState<Lesson | null>(null);
 
     const [projectForm, setProjectForm] = useState({
         title: '',
@@ -154,7 +160,7 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
             const result = await createLesson({
                 title: lessonForm.title,
                 description: lessonForm.description || undefined,
-                type: lessonForm.type as any,
+                type: lessonForm.type as LessonType,
                 duration: lessonForm.duration ? parseInt(lessonForm.duration) : undefined,
                 isPublished: lessonForm.isPublished,
                 projectId: lessonForm.projectId,
@@ -185,7 +191,7 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
             const result = await updateLessonDetails(editingLesson.id, {
                 title: editingLesson.title,
                 description: editingLesson.description || undefined,
-                type: editingLesson.type as any,
+                type: editingLesson.type as LessonType,
                 duration: editingLesson.duration ? parseInt(editingLesson.duration.toString()) : undefined,
                 isPublished: editingLesson.isPublished,
             });
@@ -384,7 +390,7 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
 
                                     <Button size="sm" variant="outline" onClick={() => setEditingProject({
                                         ...project,
-                                        duration: project.duration?.toString() || ''
+                                        duration: project.duration
                                     })}>
                                         <Edit className="h-4 w-4" />
                                     </Button>
@@ -445,7 +451,7 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
                                                 </Button>
                                                 <Button size="sm" variant="ghost" onClick={() => setEditingLesson({
                                                     ...lesson,
-                                                    duration: lesson.duration?.toString() || ''
+                                                    duration: lesson.duration
                                                 })}>
                                                     <Edit className="h-4 w-4" />
                                                 </Button>
@@ -523,8 +529,8 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
                                     <Input
                                         id="edit-project-duration"
                                         type="number"
-                                        value={editingProject.duration}
-                                        onChange={(e) => setEditingProject({ ...editingProject, duration: e.target.value })}
+                                        value={editingProject.duration?.toString() || ''}
+                                        onChange={(e) => setEditingProject({ ...editingProject, duration: Number(e.target.value) })}
                                         placeholder="0"
                                         min="0"
                                     />
@@ -587,8 +593,8 @@ export function CourseProjectsManager({ course }: CourseProjectsManagerProps) {
                                     <Input
                                         id="edit-lesson-duration"
                                         type="number"
-                                        value={editingLesson.duration}
-                                        onChange={(e) => setEditingLesson({ ...editingLesson, duration: e.target.value })}
+                                        value={editingLesson.duration?.toString() || ''}
+                                        onChange={(e) => setEditingLesson({ ...editingLesson, duration: Number(e.target.value) })}
                                         placeholder="0"
                                         min="0"
                                     />

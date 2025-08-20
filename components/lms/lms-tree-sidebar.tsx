@@ -389,6 +389,18 @@ export function LMSTreeSidebar({ nodes, onNodesChange: _onNodesChange, canEdit =
         });
     }, []);
 
+    // Helper function to find node by ID
+    const findNodeById = useCallback((nodes: LMSTreeNode[], id: string): LMSTreeNode | null => {
+        for (const node of nodes) {
+            if (node.id === id) return node;
+            if (node.children) {
+                const found = findNodeById(node.children, id);
+                if (found) return found;
+            }
+        }
+        return null;
+    }, []);
+
     // Optimistic move function for immediate UI updates
     const performOptimisticMove = useCallback((
         nodes: LMSTreeNode[],
@@ -544,19 +556,7 @@ export function LMSTreeSidebar({ nodes, onNodesChange: _onNodesChange, canEdit =
             toast.error('Failed to move item');
             console.error('Failed to move:', error);
         }
-    }, [nodes, router, _onNodesChange]);
-
-    // Helper function to find node by ID
-    const findNodeById = (nodes: LMSTreeNode[], id: string): LMSTreeNode | null => {
-        for (const node of nodes) {
-            if (node.id === id) return node;
-            if (node.children) {
-                const found = findNodeById(node.children, id);
-                if (found) return found;
-            }
-        }
-        return null;
-    };
+    }, [nodes, router, _onNodesChange, findNodeById, performOptimisticMove]);
 
     // Add expanded state to nodes
     const addExpandedState = (nodes: LMSTreeNode[]): LMSTreeNode[] => {

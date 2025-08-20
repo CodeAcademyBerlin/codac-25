@@ -7,8 +7,33 @@ import { getCurrentUser } from '@/lib/auth/auth-utils';
 
 import { LessonContent } from '../components/lesson-content';
 
+// Content type interfaces
+interface Exercise {
+    question: string;
+    answer: string;
+}
+
+interface InteractiveContent {
+    type: 'interactive';
+    exercises?: Exercise[];
+}
+
+interface VideoContent {
+    type: 'video';
+    videoUrl?: string;
+    transcript?: string;
+}
+
+interface TextContent {
+    type: 'text';
+    markdown?: string;
+    text?: string;
+}
+
+type LessonContentType = InteractiveContent | VideoContent | TextContent | { type: string };
+
 // Utility function to transform lesson content to Plate editor format
-function transformLessonContent(content: any): Value {
+function transformLessonContent(content: unknown): Value {
     // If content is a JSON string, parse it first
     if (typeof content === 'string') {
         try {
@@ -18,7 +43,7 @@ function transformLessonContent(content: any): Value {
             return [
                 {
                     type: 'p',
-                    children: [{ text: content }]
+                    children: [{ text: content as string }]
                 }
             ];
         }
@@ -40,9 +65,11 @@ function transformLessonContent(content: any): Value {
     }
 
     // Handle different content types from seed data
-    if (typeof content === 'object' && content.type) {
-        switch (content.type) {
+    if (typeof content === 'object' && content !== null && 'type' in content) {
+        const typedContent = content as LessonContentType;
+        switch (typedContent.type) {
             case 'interactive':
+                const interactiveContent = typedContent as InteractiveContent;
                 return [
                     {
                         type: 'h2',
@@ -52,7 +79,7 @@ function transformLessonContent(content: any): Value {
                         type: 'p',
                         children: [{ text: 'This lesson contains interactive exercises:' }]
                     },
-                    ...content.exercises?.map((exercise: any, index: number) => [
+                    ...interactiveContent.exercises?.map((exercise: Exercise, index: number) => [
                         {
                             type: 'h3',
                             children: [{ text: `Question ${index + 1}` }]
@@ -69,6 +96,7 @@ function transformLessonContent(content: any): Value {
                 ];
 
             case 'video':
+                const videoContent = typedContent as VideoContent;
                 return [
                     {
                         type: 'h2',
@@ -76,25 +104,26 @@ function transformLessonContent(content: any): Value {
                     },
                     {
                         type: 'p',
-                        children: [{ text: content.videoUrl ? `Video: ${content.videoUrl}` : 'Video content will be available here.' }]
+                        children: [{ text: videoContent.videoUrl ? `Video: ${videoContent.videoUrl}` : 'Video content will be available here.' }]
                     },
-                    ...(content.transcript ? [
+                    ...(videoContent.transcript ? [
                         {
                             type: 'h3',
                             children: [{ text: 'Transcript' }]
                         },
                         {
                             type: 'p',
-                            children: [{ text: content.transcript }]
+                            children: [{ text: videoContent.transcript }]
                         }
                     ] : [])
                 ];
 
             case 'text':
+                const textContent = typedContent as TextContent;
                 return [
                     {
                         type: 'p',
-                        children: [{ text: content.markdown || content.text || 'No content available.' }]
+                        children: [{ text: textContent.markdown || textContent.text || 'No content available.' }]
                     }
                 ];
 

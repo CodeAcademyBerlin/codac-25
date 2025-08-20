@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Page } from '@playwright/test';
 
 /**
@@ -57,7 +58,7 @@ export class AuthHelpers {
     }, userId);
   }
 
-  async expectSignInError(message: string) {
+  async expectSignInError(_message: string) {
     await this.page.waitForSelector('[role="alert"]');
     await this.page.locator('[role="alert"]').waitFor();
   }
@@ -73,7 +74,7 @@ export class DocumentHelpers {
     await this.page.goto('/docs');
   }
 
-  async createDocumentFromEmptyState(title = 'Test Document') {
+  async createDocumentFromEmptyState(_title = 'Test Document') {
     await this.page.goto('/docs');
 
     // If empty state is shown, click create document
@@ -146,9 +147,8 @@ export class FormHelpers {
     await this.page.getByRole('button', { name: new RegExp(buttonText, 'i') }).click();
   }
 
-  async expectValidationError(fieldName: string, errorMessage: string) {
+  async expectValidationError(fieldName: string, _errorMessage: string) {
     // This would need to be adapted based on how validation errors are displayed
-    const errorElement = this.page.locator(`[data-testid="${fieldName}-error"]`);
     await this.page.waitForSelector(`[data-testid="${fieldName}-error"]`);
     // Or use a more general approach:
     // await expect(this.page.getByText(new RegExp(errorMessage, 'i'))).toBeVisible();
@@ -184,7 +184,7 @@ export class NavigationHelpers {
 export class MockHelpers {
   constructor(private page: Page) { }
 
-  async mockAPIResponse(endpoint: string, response: any, status = 200) {
+  async mockAPIResponse(endpoint: string, response: unknown, status = 200) {
     await this.page.route(endpoint, route => {
       route.fulfill({
         status,
@@ -204,7 +204,7 @@ export class MockHelpers {
     });
   }
 
-  async mockSlowAPI(endpoint: string, response: any, delayMs = 2000) {
+  async mockSlowAPI(endpoint: string, response: unknown, delayMs = 2000) {
     await this.page.route(endpoint, async route => {
       await new Promise(resolve => setTimeout(resolve, delayMs));
       route.fulfill({
@@ -256,7 +256,7 @@ export class TestDataFactory {
 export class AssertionHelpers {
   constructor(private page: Page) { }
 
-  async expectToastMessage(message: string, type: 'success' | 'error' | 'info' = 'success') {
+  async expectToastMessage(_message: string, _type: 'success' | 'error' | 'info' = 'success') {
     // Adjust selector based on your toast implementation (e.g., Sonner)
     await this.page.waitForSelector('[data-sonner-toast]');
     // You might need to adjust this based on your actual toast implementation

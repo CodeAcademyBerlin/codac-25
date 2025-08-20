@@ -16,6 +16,19 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Input } from '@/components/ui/input';
 import { getUsersForEnrollment } from '@/data/user/get-users-for-enrollment';
 
+interface User {
+    id: string;
+    name: string | null;
+    email: string | null;
+    avatar: string | null;
+    role: string;
+    cohort: {
+        id: string;
+        name: string;
+        slug: string;
+    } | null;
+}
+
 interface Course {
     id: string;
     title: string;
@@ -37,7 +50,7 @@ export function CourseEnrollmentsManager({ course }: CourseEnrollmentsManagerPro
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [availableUsers, setAvailableUsers] = useState<any[]>([]);
+    const [availableUsers, setAvailableUsers] = useState<User[]>([]);
     const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
     const [showAddDialog, setShowAddDialog] = useState(false);
 

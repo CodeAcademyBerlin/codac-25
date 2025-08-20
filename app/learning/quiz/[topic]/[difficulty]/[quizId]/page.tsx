@@ -22,6 +22,22 @@ interface Quiz {
   questions: Question[];
 }
 
+interface QuestionResponse {
+  id: string;
+  text: string;
+  options: string[] | string;
+  correctAnswer: string;
+  explanation?: string;
+}
+
+interface QuizApiResponse {
+  id: string;
+  topic: string;
+  difficulty: string;
+  quizTitle: string;
+  questions: QuestionResponse[];
+}
+
 export default function QuizByIdPage({
   params,
 }: {
@@ -49,14 +65,14 @@ export default function QuizByIdPage({
         if (!response.ok) {
           throw new Error("Quiz not found");
         }
-        const data = await response.json();
-        const questions = data.questions.map((q: any) => ({
+        const data: QuizApiResponse = await response.json();
+        const questions = data.questions.map((q: QuestionResponse) => ({
           ...q,
           options: Array.isArray(q.options) ? q.options : JSON.parse(q.options),
         }));
         setQuiz({ ...data, questions });
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : 'An unknown error occurred');
       } finally {
         setLoading(false);
       }
