@@ -28,11 +28,11 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
 
   // For dashboard pages, render with sidebar and header
   return (
-    <SidebarProvider defaultOpen={false}>
+    <SidebarProvider defaultOpen={true}>
       <AppSidebar />
       <SidebarInset>
         <AppHeaderClient />
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto p-6">
           {children}
         </main>
       </SidebarInset>

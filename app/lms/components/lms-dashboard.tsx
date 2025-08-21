@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
+import { PageHeader, Section, StatsGrid } from '@/components/layout';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -102,25 +103,22 @@ export function LMSDashboard({ user: _user, enrolledCourses, allCourses }: LMSDa
     }, {} as Record<string, { info: typeof categoryToTrack[keyof typeof categoryToTrack], courses: Course[] }>);
 
     return (
-        <div className="space-y-6">
+        <Section>
             {/* Header with Navigation */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <div className="flex items-center gap-2 mb-2">
-                        <Link href="/learning" className="text-muted-foreground hover:text-foreground">
-                            <ArrowLeft className="h-4 w-4" />
-                        </Link>
-                        <span className="text-sm text-muted-foreground">Learning / Course Management</span>
-                    </div>
-                    <h1 className="text-3xl font-bold">Course Management</h1>
-                    <p className="text-muted-foreground">
-                        Manage your enrolled courses, track progress, and explore new learning opportunities.
-                    </p>
-                </div>
+            <div className="flex items-center gap-2 mb-2">
+                <Link href="/learning" className="text-muted-foreground hover:text-foreground">
+                    <ArrowLeft className="h-4 w-4" />
+                </Link>
+                <span className="text-sm text-muted-foreground">Learning / Course Management</span>
             </div>
+            
+            <PageHeader 
+                title="Course Management"
+                description="Manage your enrolled courses, track progress, and explore new learning opportunities."
+            />
 
             {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatsGrid>
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Enrolled Courses</CardTitle>
@@ -170,7 +168,7 @@ export function LMSDashboard({ user: _user, enrolledCourses, allCourses }: LMSDa
                         <Progress value={overallProgress} className="mt-2" />
                     </CardContent>
                 </Card>
-            </div>
+            </StatsGrid>
 
             {/* Learning Tracks Organization */}
             {Object.entries(coursesByTrack).map(([trackSlug, { info, courses }]) => {
@@ -371,6 +369,6 @@ export function LMSDashboard({ user: _user, enrolledCourses, allCourses }: LMSDa
                     </CardContent>
                 </Card>
             )}
-        </div>
+        </Section>
     );
 } 

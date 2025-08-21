@@ -1,8 +1,10 @@
 import { BookOpen, Clock, Users } from "lucide-react";
 import Link from 'next/link';
 
+import { PageErrorBoundary, SectionErrorBoundary } from "@/components/error";
 import { Grid, PageContainer, PageHeader, Section } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { getEnrolledCourses } from '@/data/lms/courses';
@@ -38,14 +40,16 @@ export default async function LearningPage() {
   }, {} as Record<string, typeof enrolledCourses>);
 
   return (
-    <PageContainer>
+    <PageErrorBoundary pageName="Learning Dashboard">
+      <PageContainer>
       <PageHeader 
         title="My Learning"
         description="Track your progress across different learning tracks and access structured courses."
       />
 
       <Section>
-        <Grid cols="3">
+        <SectionErrorBoundary sectionName="learning tracks">
+          <Grid cols="3">
         {tracks.map((track) => {
           if (!track) return null;
 
@@ -90,30 +94,30 @@ export default async function LearningPage() {
 
                 {/* Action Buttons */}
                 <div className="space-y-2">
-                  <Link
-                    href={`/learning/${trackSlug}`}
-                    className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-3 w-full"
-                  >
-                    {track.isEnrolled ? 'Continue Learning' : 'Start Track'}
-                  </Link>
-                  {enrolledInTrack.length > 0 && (
-                    <Link
-                      href="/lms"
-                      className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3 w-full"
-                    >
-                      View in LMS
+                  <Button asChild className="w-full">
+                    <Link href={`/learning/${trackSlug}`}>
+                      {track.isEnrolled ? 'Continue Learning' : 'Start Track'}
                     </Link>
+                  </Button>
+                  {enrolledInTrack.length > 0 && (
+                    <Button variant="outline" asChild className="w-full">
+                      <Link href="/lms">
+                        View in LMS
+                      </Link>
+                    </Button>
                   )}
                 </div>
               </CardContent>
             </Card>
           );
         })}
-        </Grid>
+          </Grid>
+        </SectionErrorBoundary>
       </Section>
 
       <Section>
-        <Card>
+        <SectionErrorBoundary sectionName="recent activity">
+          <Card>
         <CardHeader>
           <CardTitle>Recent Activity</CardTitle>
           <CardDescription>
@@ -153,8 +157,10 @@ export default async function LearningPage() {
             </div>
           )}
         </CardContent>
-        </Card>
+          </Card>
+        </SectionErrorBoundary>
       </Section>
-    </PageContainer>
+      </PageContainer>
+    </PageErrorBoundary>
   );
 } 

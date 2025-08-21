@@ -30,6 +30,8 @@
     "test:debug": "playwright test --debug",
     "test:report": "playwright show-report",
     "test:codegen": "playwright codegen http://localhost:3000",
+    "test:a11y": "playwright test --grep='accessibility'",
+    "test:a11y-report": "playwright test --grep='accessibility' --reporter=html",
     "setup": "node setup.js",
     "setup:manual": "pnpm install && pnpm db:generate && pnpm db:push && pnpm db:seed:all"
   },
@@ -137,6 +139,7 @@
     "zod": "^3.25.64"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
     "@eslint/eslintrc": "^3",
     "@playwright/test": "1.54.2",
     "@tailwindcss/postcss": "^4",
@@ -145,6 +148,7 @@
     "@types/pg": "^8.11.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "axe-core": "4.10.3",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "tailwindcss": "^4",
