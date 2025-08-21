@@ -17,9 +17,9 @@ const colsClasses = {
 };
 
 const gapClasses = {
-  sm: "gap-4",
-  md: "gap-6",
-  lg: "gap-8"
+  sm: "gap-3 md:gap-4",
+  md: "gap-4 md:gap-6",
+  lg: "gap-6 md:gap-8"
 };
 
 export function Grid({ 

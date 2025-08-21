@@ -28,7 +28,7 @@ export function PageHeader({
   size = "md"
 }: PageHeaderProps) {
   return (
-    <div className={cn("mb-8", className)}>
+    <div className={cn("mb-4 md:mb-8", className)}>
       <div className="flex items-start justify-between">
         <div className="space-y-2">
           <h1 className={cn(

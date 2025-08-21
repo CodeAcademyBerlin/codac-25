@@ -57,12 +57,6 @@ const buildNavigationData = (role?: string) => {
   return {
     navTop: [
       {
-        title: "Dashboard",
-        url: "/",
-        icon: Home,
-        isActive: false,
-      },
-      {
         title: "Learning",
         url: "/lms",
         icon: GraduationCap,

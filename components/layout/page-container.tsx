@@ -17,9 +17,9 @@ const sizeClasses = {
 
 const paddingClasses = {
   none: "",
-  sm: "p-4",
-  md: "p-6", 
-  lg: "p-8"
+  sm: "p-2 md:p-4",
+  md: "p-3 md:p-6", 
+  lg: "p-4 md:p-8"
 };
 
 export function PageContainer({ 

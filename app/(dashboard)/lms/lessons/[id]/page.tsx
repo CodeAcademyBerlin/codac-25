@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Value } from 'platejs';
 
-import { DndWrapper } from '@/app/docs/components/dnd-wrapper';
+import { DndWrapper } from '@/app/(dashboard)/docs/components/dnd-wrapper';
 import { getLesson } from '@/data/lms/courses';
 import { getCurrentUser } from '@/lib/auth/auth-utils';
 

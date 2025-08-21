@@ -7,9 +7,9 @@ interface SectionProps {
 }
 
 const spacingClasses = {
-  sm: "space-y-4",
-  md: "space-y-6",
-  lg: "space-y-8"
+  sm: "space-y-3 md:space-y-4",
+  md: "space-y-4 md:space-y-6",
+  lg: "space-y-6 md:space-y-8"
 };
 
 export function Section({ 
@@ -43,7 +43,7 @@ export function SectionHeader({
   className 
 }: SectionHeaderProps) {
   return (
-    <div className={cn("flex items-center justify-between mb-6", className)}>
+    <div className={cn("flex items-center justify-between mb-3 md:mb-6", className)}>
       <div className="space-y-2">
         <div className="flex items-center gap-3">
           <h2 className="text-2xl font-bold">{title}</h2>

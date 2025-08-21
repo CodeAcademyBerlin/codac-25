@@ -5,7 +5,6 @@ import localFont from "next/font/local";
 
 import "./globals.css";
 
-import { ConditionalLayout } from "@/components/conditional-layout";
 import { HeaderProvider } from "@/components/header-provider";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
@@ -74,9 +73,7 @@ export default function RootLayout({
       >
         <Providers>
           <HeaderProvider>
-            <ConditionalLayout>
-              {children}
-            </ConditionalLayout>
+            {children}
           </HeaderProvider>
         </Providers>
         <Toaster />
