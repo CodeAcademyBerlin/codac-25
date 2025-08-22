@@ -1,12 +1,12 @@
+import type { ProjectStatus } from '@prisma/client'
 import { Search, Grid, List } from 'lucide-react'
 
 import { Grid as LayoutGrid, PageContainer, PageHeader, Section } from '@/components/layout'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { ProjectCard } from '@/components/projects/project-card'
 import { ProjectsFilter } from '@/components/projects/projects-filter'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { getAllProjects } from '@/data/projects/get-projects'
-import type { ProjectStatus } from '@prisma/client'
 
 interface ProjectsPageProps {
   searchParams?: Promise<{

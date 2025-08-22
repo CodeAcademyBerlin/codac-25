@@ -1,9 +1,9 @@
 import { Trophy, Star, TrendingUp, Users } from 'lucide-react'
 
 import { Grid, PageContainer, PageHeader, Section, SectionHeader, StatsGrid } from '@/components/layout'
+import { ProjectCard } from '@/components/projects/project-card'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ProjectCard } from '@/components/projects/project-card'
 import { getProjectStats } from '@/data/projects/get-project-stats'
 import { getFeaturedProjects, getAllProjects } from '@/data/projects/get-projects'
 

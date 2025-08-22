@@ -2,14 +2,14 @@ import { Plus } from 'lucide-react'
 import Link from 'next/link'
 
 import { Grid, PageContainer, PageHeader, Section } from '@/components/layout'
-import { Button } from '@/components/ui/button'
 import { ProjectCard } from '@/components/projects/project-card'
+import { Button } from '@/components/ui/button'
 import { getUserProjects } from '@/data/projects/get-user-projects'
 import { getCurrentUser } from '@/lib/auth/auth-utils'
 
 export default async function MyProjectsPage() {
   const user = await getCurrentUser()
-  
+
   if (!user) {
     return (
       <PageContainer>
@@ -55,9 +55,9 @@ export default async function MyProjectsPage() {
         ) : (
           <Grid cols="3">
             {projects.map((project) => (
-              <ProjectCard 
-                key={project.id} 
-                project={project} 
+              <ProjectCard
+                key={project.id}
+                project={project}
                 showEditActions={true}
               />
             ))}

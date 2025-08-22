@@ -1,6 +1,7 @@
 'use client'
 
 import { ExternalLink, Github, Heart, MessageSquare, MoreHorizontal, Edit, User } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
@@ -27,7 +28,7 @@ export function ProjectCard({ project, showEditActions = false }: ProjectCardPro
       {/* Project Image */}
       {primaryImage && (
         <div className="aspect-video overflow-hidden bg-muted">
-          <img
+          <Image
             src={primaryImage}
             alt={project.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"

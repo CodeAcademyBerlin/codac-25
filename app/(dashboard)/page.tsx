@@ -4,9 +4,9 @@ import { redirect } from "next/navigation";
 
 import { PageErrorBoundary, SectionErrorBoundary } from "@/components/error";
 import { Grid, PageContainer, PageHeader, Section } from "@/components/layout";
+import { ProjectCard } from "@/components/projects/project-card";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ProjectCard } from "@/components/projects/project-card";
 import { getProjectStats } from '@/data/projects/get-project-stats';
 import { getFeaturedProjects } from '@/data/projects/get-projects';
 import { getUserProjects } from '@/data/projects/get-user-projects';
