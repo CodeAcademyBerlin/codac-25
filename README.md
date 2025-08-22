@@ -148,7 +148,7 @@ pnpm export:docs      # Export documents to markdown
 
 ```
 codac-25/
-├── app/                    # Next.js app router pages
+├── app/                   # Next.js app router pages
 │   ├── auth/              # Authentication pages
 │   ├── docs/              # Document management
 │   ├── lms/               # Learning management system
@@ -214,15 +214,6 @@ pnpm test:report
 3. **Testing**: Run relevant tests for your changes
 4. **Build Verification**: Use `pnpm build` to ensure production compatibility
 
-## 📖 Documentation
-
-
-### **Technical Documentation**
-- [Authentication Setup](dev-docs/AUTHENTICATION_SETUP.md) - NextAuth.js configuration
-- [Auto-Save Strategy](dev-docs/AUTO_SAVE_STRATEGY.md) - Editor auto-save implementation
-- [Community Features](dev-docs/COMMUNITY_FEATURE.md) - Community system architecture
-- [Avatar Upload](dev-docs/AVATAR_UPLOAD.md) - File upload system guide
-- [User Profile Feature](dev-docs/USER_PROFILE_FEATURE.md) - Profile management system
 
 ## 🔧 Environment Configuration
 

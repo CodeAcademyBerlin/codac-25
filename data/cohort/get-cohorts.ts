@@ -57,6 +57,8 @@ export async function getCohorts(): Promise<GetCohortsResult> {
             resource: 'cohorts',
         });
 
+
+
         // Get all cohorts with their students
         const cohorts = await prisma.cohort.findMany({
             include: {
