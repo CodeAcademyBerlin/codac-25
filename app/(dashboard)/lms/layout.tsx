@@ -29,7 +29,6 @@ export default async function LMSLayout({
 
     return (
         <DndWrapper>
-            {/* <HideHeader /> */}
             <div className="flex h-full flex-col">
                 <LMSNavbar user={user} />
                 <div className="flex flex-1 overflow-hidden">
