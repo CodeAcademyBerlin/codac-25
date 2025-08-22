@@ -6,6 +6,7 @@ import React, { createContext, useContext, useCallback, useEffect, useMemo, useR
 
 import { updateDoc } from "@/actions/doc/update-doc";
 import { updateLessonContent } from "@/actions/lms/update-lesson";
+import { updateProjectSummary } from "@/actions/projects/update-project-summary";
 import { Button } from "@/components/ui/button";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useHasActiveUploads } from "@/hooks/use-upload-file";
@@ -110,7 +111,7 @@ const SaveStatusIndicator = React.memo(function SaveStatusIndicator({
 interface UnifiedEditorProps {
     initialValue: Value;
     contentId: string;
-    contentType: 'document' | 'lesson';
+    contentType: 'document' | 'lesson' | 'project';
     showStatusBar?: boolean;
     canEdit?: boolean;
     readOnly?: boolean;
@@ -154,7 +155,7 @@ const UnifiedStateUpdater = React.memo(function UnifiedStateUpdater({
     canEdit = false
 }: {
     contentId: string;
-    contentType: 'document' | 'lesson';
+    contentType: 'document' | 'lesson' | 'project';
     showStatusBar?: boolean;
     initialValue?: Value;
     canEdit?: boolean;
@@ -201,6 +202,8 @@ const UnifiedStateUpdater = React.memo(function UnifiedStateUpdater({
             let result;
             if (contentType === 'lesson') {
                 result = await updateLessonContent(contentId, content);
+            } else if (contentType === 'project') {
+                result = await updateProjectSummary(contentId, content);
             } else {
                 result = await updateDoc({ id: contentId, content: content });
             }

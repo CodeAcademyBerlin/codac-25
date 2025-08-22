@@ -106,7 +106,7 @@ export async function UpcomingEvents() {
                     const IconComponent = event.icon
                     return (
                         <div key={event.title} className="flex items-center space-x-4">
-                            <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${event.iconColor}`}>
+                            <div className={`flex h-9 w-9 items-center justify-center rounded ${event.iconColor}`}>
                                 <IconComponent className="h-4 w-4" />
                             </div>
                             <div className="space-y-1">
@@ -122,7 +122,7 @@ export async function UpcomingEvents() {
                 })}
 
                 {isBlackOwlsStudent && isGraduationDay && (
-                    <div className="mt-4 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
+                    <div className="mt-4 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded border border-purple-200">
                         <p className="text-sm font-medium text-purple-800">
                             Congratulations on completing your coding journey! 🎉
                         </p>

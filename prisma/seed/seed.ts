@@ -9,6 +9,7 @@ import { seedAttackOnTitan, cleanAttackOnTitan } from './seeders/attack-on-titan
 import { seedLMSContent, cleanLMSContent } from './seeders/lms-content';
 import { seedQuizzes, seedQuizzesIncremental, cleanQuizzes } from './seeders/quizzes';
 import { seedJobs, cleanJobs } from './seeders/jobs';
+import { seedProjects, cleanProjects } from './seeders/projects';
 
 const prisma = new PrismaClient();
 
@@ -56,6 +57,13 @@ const seedOptions: SeedOption[] = [
         action: seedJobs,
         cleanAction: cleanJobs,
     },
+    {
+        id: 'projects',
+        name: 'Demo Projects',
+        description: 'Create demo project showcases with various tech stacks and features',
+        action: seedProjects,
+        cleanAction: cleanProjects,
+    },
 ];
 
 function displayMenu() {
@@ -79,11 +87,12 @@ async function seedAll() {
     logger.info('🌱 Starting complete database seeding...');
 
     try {
-        // Seed in order: courses -> users -> content -> quizzes -> jobs
+        // Seed in order: courses -> users -> content -> quizzes -> jobs -> projects
         await seedLMSContent();
         await seedAttackOnTitan();
         await seedQuizzes();
         await seedJobs();
+        await seedProjects();
 
         logger.info('✅ Complete seeding finished successfully!');
 
@@ -95,6 +104,7 @@ async function seedAll() {
         console.log('  • LMS content from markdown files');
         console.log('  • Quiz questions and answers');
         console.log('  • Job postings');
+        console.log('  • Demo project showcases');
         console.log('\n🔐 Default login credentials:');
         console.log('  • Email: admin@codac.academy');
         console.log('  • Password: password123');
@@ -112,6 +122,7 @@ async function cleanAll() {
 
     try {
         // Clean in reverse order
+        await cleanProjects();
         await cleanJobs();
         await cleanQuizzes();
         await cleanLMSContent();

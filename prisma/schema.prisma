@@ -57,7 +57,7 @@ model User {
   image         String?
   password      String? // For credentials authentication
 
-  // Code Academy Berlin specific fields
+  // Student Profile fields
   bio            String? // User bio
   avatar         String? // User avatar URL or base64 data
   role           UserRole   @default(STUDENT)
@@ -70,6 +70,9 @@ model User {
   portfolioUrl   String?
   currentJob     String?
   currentCompany String?
+  location       String?
+  expertise      Json? // Array of expertise areas
+  yearsExp       Int? // Years of professional experience
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -104,6 +107,12 @@ model User {
 
   // Duck Relations
   ducks Duck[]
+
+  // Project Relations
+  projectProfile    ProjectProfile?
+  projectComments   ProjectComment[]
+  projectLikes      ProjectLike[]
+  projectCollaborations ProjectCollaborator[]
 
   @@map("users")
 }
@@ -555,6 +564,165 @@ model DocumentVersion {
   @@map("document_versions")
 }
 
+// Project Showcase Models
+model ProjectProfile {
+  id          String  @id @default(cuid())
+  bio         String?
+  headline    String? // Professional headline/tagline
+  location    String?
+  website     String?
+  resume      String? // URL to resume/CV
+  theme       String  @default("default") // Project profile theme/template
+  isPublic    Boolean @default(true)
+  isActive    Boolean @default(true)
+  viewCount   Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  userId   String @unique
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projects ProjectShowcase[]
+  skills   ProjectSkill[]
+  experiences Experience[]
+
+  @@map("project_profiles")
+}
+
+model ProjectShowcase {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  summary       Json? // Rich Plate.js content for detailed project summary
+  shortDesc     String? // Brief description for cards
+  images        Json? // Array of image URLs
+  demoUrl       String? // Live demo URL
+  githubUrl     String? // Repository URL
+  techStack     Json // Array of technologies used
+  features      Json? // Array of key features
+  challenges    String? // Challenges faced during development
+  solutions     String? // Solutions implemented
+  status        ProjectStatus @default(COMPLETED)
+  startDate     DateTime?
+  endDate       DateTime?
+  isFeatured    Boolean @default(false)
+  isPublic      Boolean @default(true)
+  likes         Int     @default(0)
+  views         Int     @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  projectProfileId String
+  projectProfile   ProjectProfile @relation(fields: [projectProfileId], references: [id], onDelete: Cascade)
+  comments    ProjectComment[]
+  projectLikes ProjectLike[]
+  collaborators ProjectCollaborator[]
+
+  @@map("project_showcases")
+}
+
+model Skill {
+  id          String @id @default(cuid())
+  name        String @unique
+  category    String // e.g., "Frontend", "Backend", "Database", "DevOps"
+  icon        String? // Icon name or URL
+  color       String @default("#3B82F6") // Display color
+
+  createdAt DateTime @default(now())
+
+  // Relations
+  projectSkills ProjectSkill[]
+
+  @@map("skills")
+}
+
+model ProjectSkill {
+  id          String     @id @default(cuid())
+  proficiency SkillLevel @default(INTERMEDIATE)
+  yearsExp    Int? // Years of experience
+  isHighlight Boolean    @default(false) // Featured skill
+
+  projectProfileId String
+  skillId          String
+  projectProfile   ProjectProfile @relation(fields: [projectProfileId], references: [id], onDelete: Cascade)
+  skill            Skill          @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([projectProfileId, skillId])
+  @@map("project_skills")
+}
+
+model Experience {
+  id          String         @id @default(cuid())
+  type        ExperienceType
+  title       String // Job title or degree
+  company     String // Company name or institution
+  location    String?
+  description String?
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean        @default(false)
+
+  projectProfileId String
+  projectProfile   ProjectProfile @relation(fields: [projectProfileId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("experiences")
+}
+
+model ProjectComment {
+  id      String @id @default(cuid())
+  content String
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  projectId String
+  project   ProjectShowcase @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  parentId String?
+  parent   ProjectComment?  @relation("ProjectCommentThread", fields: [parentId], references: [id])
+  replies  ProjectComment[] @relation("ProjectCommentThread")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("project_comments")
+}
+
+model ProjectLike {
+  id String @id @default(cuid())
+
+  userId    String
+  projectId String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   ProjectShowcase @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, projectId])
+  @@map("project_likes")
+}
+
+model ProjectCollaborator {
+  id   String @id @default(cuid())
+  role String @default("Contributor") // Role in the project
+
+  userId    String
+  projectId String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   ProjectShowcase @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, projectId])
+  @@map("project_collaborators")
+}
+
 // Enums
 enum UserRole {
   STUDENT
@@ -793,4 +961,28 @@ model QuizResult {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+// New Portfolio-related Enums
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  COMPLETED
+  PAUSED
+  ARCHIVED
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+enum ExperienceType {
+  WORK
+  EDUCATION
+  VOLUNTEER
+  PROJECT
+  INTERNSHIP
 }

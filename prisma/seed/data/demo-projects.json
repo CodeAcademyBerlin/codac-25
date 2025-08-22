@@ -1,0 +1,668 @@
+[
+  {
+    "title": "E-Commerce Platform",
+    "description": "A full-stack e-commerce platform built with modern web technologies, featuring user authentication, product management, shopping cart functionality, and payment processing.",
+    "shortDesc": "Modern e-commerce platform with React, Node.js, and Stripe integration",
+    "summary": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "This e-commerce platform was built to provide a seamless online shopping experience. The project features a responsive design that works across all devices, secure user authentication, and a robust product management system."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "Key highlights include:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "children": [
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Real-time inventory management"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Secure payment processing with Stripe"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Advanced search and filtering capabilities"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "techStack": ["React", "Node.js", "Express", "MongoDB", "Stripe", "Redux", "Tailwind CSS"],
+    "features": [
+      "User authentication and authorization",
+      "Product catalog with search and filters",
+      "Shopping cart and wishlist",
+      "Secure payment processing",
+      "Order management system",
+      "Admin dashboard",
+      "Real-time inventory tracking"
+    ],
+    "challenges": "Implementing real-time inventory updates across multiple concurrent users while maintaining data consistency and preventing overselling.",
+    "solutions": "Used WebSocket connections for real-time updates and implemented optimistic locking with database transactions to ensure data integrity.",
+    "status": "COMPLETED",
+    "demoUrl": "https://ecommerce-demo.vercel.app",
+    "githubUrl": "https://github.com/demo/ecommerce-platform",
+    "isPublic": true,
+    "isFeatured": true,
+    "startDate": "2024-01-15",
+    "endDate": "2024-03-20",
+    "likes": 45,
+    "views": 1200,
+    "authorEmail": "eren.yeager@codac.academy"
+  },
+  {
+    "title": "Task Management App",
+    "description": "A collaborative task management application with real-time updates, team collaboration features, and project tracking capabilities.",
+    "shortDesc": "Real-time collaborative task management with drag-and-drop interface",
+    "summary": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "This task management application was designed to improve team productivity and project coordination. The app features an intuitive drag-and-drop interface that makes task organization effortless."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "The project demonstrates advanced frontend development techniques including:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "children": [
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Real-time collaboration using Socket.io"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Drag-and-drop functionality with React DnD"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Responsive design with mobile-first approach"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "techStack": ["Next.js", "TypeScript", "Prisma", "PostgreSQL", "Socket.io", "Framer Motion"],
+    "features": [
+      "Real-time task updates",
+      "Drag-and-drop task management",
+      "Team collaboration",
+      "Project templates",
+      "Time tracking",
+      "Progress analytics",
+      "Mobile responsive design"
+    ],
+    "challenges": "Implementing real-time synchronization across multiple users while maintaining performance and handling offline scenarios gracefully.",
+    "solutions": "Used WebSocket connections for real-time updates, implemented optimistic UI updates, and added offline support with service workers for better user experience.",
+    "status": "COMPLETED",
+    "demoUrl": "https://task-app-demo.vercel.app",
+    "githubUrl": "https://github.com/demo/task-management-app",
+    "isPublic": true,
+    "isFeatured": false,
+    "startDate": "2024-02-01",
+    "endDate": "2024-04-15",
+    "likes": 32,
+    "views": 850,
+    "authorEmail": "mikasa.ackerman@codac.academy"
+  },
+  {
+    "title": "Weather Dashboard",
+    "description": "A beautiful weather dashboard that displays current weather conditions, forecasts, and historical data with interactive charts and maps.",
+    "shortDesc": "Interactive weather dashboard with real-time data and beautiful visualizations",
+    "summary": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "This weather dashboard project showcases modern web development practices and API integration. The app provides users with comprehensive weather information in an intuitive and visually appealing interface."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "Technical achievements include:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "children": [
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Integration with multiple weather APIs"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Interactive charts using Chart.js"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Geolocation services and map integration"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "techStack": ["Vue.js", "Vuex", "Chart.js", "Leaflet", "OpenWeather API", "Vuetify"],
+    "features": [
+      "Current weather conditions",
+      "7-day forecast",
+      "Interactive weather maps",
+      "Historical weather data",
+      "Location-based weather",
+      "Weather alerts",
+      "Responsive design"
+    ],
+    "challenges": "Optimizing API calls and managing rate limits while providing real-time weather updates across multiple locations.",
+    "solutions": "Implemented intelligent caching strategies, used service workers for offline functionality, and optimized API usage with request batching and debouncing.",
+    "status": "COMPLETED",
+    "demoUrl": "https://weather-dashboard-demo.vercel.app",
+    "githubUrl": "https://github.com/demo/weather-dashboard",
+    "isPublic": true,
+    "isFeatured": true,
+    "startDate": "2024-01-20",
+    "endDate": "2024-02-28",
+    "likes": 28,
+    "views": 650,
+    "authorEmail": "armin.arlert@codac.academy"
+  },
+  {
+    "title": "Social Media Analytics",
+    "description": "A comprehensive social media analytics platform that tracks engagement, growth metrics, and provides insights for social media management.",
+    "shortDesc": "Advanced social media analytics with data visualization and insights",
+    "summary": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "This social media analytics platform was built to help businesses and content creators understand their social media performance. The application provides detailed insights and actionable recommendations."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "The platform features:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "children": [
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Real-time data processing and analysis"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Advanced data visualization with D3.js"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Machine learning-powered insights"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "techStack": ["React", "Python", "Django", "PostgreSQL", "Redis", "D3.js", "TensorFlow"],
+    "features": [
+      "Multi-platform social media tracking",
+      "Real-time analytics dashboard",
+      "Engagement rate calculations",
+      "Growth trend analysis",
+      "Content performance insights",
+      "Automated reporting",
+      "Custom metric tracking"
+    ],
+    "challenges": "Processing large volumes of social media data in real-time while maintaining application performance and providing accurate analytics.",
+    "solutions": "Implemented a microservices architecture with Redis for caching, used Apache Kafka for real-time data streaming, and optimized database queries with proper indexing.",
+    "status": "IN_PROGRESS",
+    "demoUrl": "https://analytics-demo.vercel.app",
+    "githubUrl": "https://github.com/demo/social-analytics",
+    "isPublic": true,
+    "isFeatured": false,
+    "startDate": "2024-03-01",
+    "endDate": null,
+    "likes": 15,
+    "views": 420,
+    "authorEmail": "levi.ackerman@codac.academy"
+  },
+  {
+    "title": "Recipe Sharing Platform",
+    "description": "A community-driven recipe sharing platform where users can discover, create, and share their favorite recipes with detailed instructions and photos.",
+    "shortDesc": "Community recipe sharing with search, ratings, and meal planning",
+    "summary": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "This recipe sharing platform was created to bring food enthusiasts together and make cooking more accessible. The platform features a user-friendly interface for discovering and sharing culinary creations."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "Key features include:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "children": [
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Advanced search with dietary filters"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Step-by-step cooking instructions"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Community ratings and reviews"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "techStack": ["Angular", "Firebase", "Cloudinary", "Material Design", "RxJS"],
+    "features": [
+      "Recipe creation and editing",
+      "Advanced search and filtering",
+      "User ratings and reviews",
+      "Meal planning calendar",
+      "Shopping list generation",
+      "Photo upload and management",
+      "Social sharing features"
+    ],
+    "challenges": "Implementing efficient image upload and storage while maintaining fast page load times and providing a smooth user experience.",
+    "solutions": "Used Cloudinary for image optimization and CDN delivery, implemented lazy loading for images, and added progressive web app features for offline access.",
+    "status": "COMPLETED",
+    "demoUrl": "https://recipe-app-demo.vercel.app",
+    "githubUrl": "https://github.com/demo/recipe-platform",
+    "isPublic": true,
+    "isFeatured": false,
+    "startDate": "2024-02-15",
+    "endDate": "2024-05-10",
+    "likes": 38,
+    "views": 920,
+    "authorEmail": "historia.reiss@codac.academy"
+  },
+  {
+    "title": "AI Chat Assistant",
+    "description": "An intelligent chatbot powered by machine learning that provides customer support, answers questions, and assists users with various tasks.",
+    "shortDesc": "AI-powered chatbot with natural language processing and learning capabilities",
+    "summary": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "This AI chat assistant demonstrates the power of modern natural language processing and machine learning. The chatbot can understand context, learn from conversations, and provide helpful responses."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "Technical implementation includes:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "children": [
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Natural language processing with spaCy"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Machine learning model training"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Real-time conversation handling"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "techStack": ["Python", "FastAPI", "spaCy", "TensorFlow", "WebSocket", "React", "Docker"],
+    "features": [
+      "Natural language understanding",
+      "Context-aware conversations",
+      "Multi-language support",
+      "Learning from interactions",
+      "Integration with external APIs",
+      "Conversation history",
+      "Analytics dashboard"
+    ],
+    "challenges": "Training the AI model to understand context and provide accurate responses while handling edge cases and maintaining conversation flow.",
+    "solutions": "Used transfer learning with pre-trained models, implemented conversation state management, and added fallback mechanisms for unknown queries.",
+    "status": "IN_PROGRESS",
+    "demoUrl": "https://ai-chat-demo.vercel.app",
+    "githubUrl": "https://github.com/demo/ai-chat-assistant",
+    "isPublic": true,
+    "isFeatured": true,
+    "startDate": "2024-03-15",
+    "endDate": null,
+    "likes": 52,
+    "views": 1100,
+    "authorEmail": "hange.zoë@codac.academy"
+  },
+  {
+    "title": "Fitness Tracking App",
+    "description": "A comprehensive fitness tracking application that monitors workouts, nutrition, and progress with detailed analytics and goal setting.",
+    "shortDesc": "Complete fitness tracking with workout plans, nutrition logging, and progress analytics",
+    "summary": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "This fitness tracking app was designed to help users achieve their health and fitness goals. The application provides comprehensive tracking of workouts, nutrition, and progress over time."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "The app includes:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "children": [
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Workout planning and tracking"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Nutrition and calorie tracking"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Progress visualization and analytics"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "techStack": ["React Native", "Expo", "Firebase", "Redux", "Chart.js", "AsyncStorage"],
+    "features": [
+      "Workout tracking and planning",
+      "Nutrition and calorie logging",
+      "Progress photos and measurements",
+      "Goal setting and tracking",
+      "Social features and challenges",
+      "Integration with fitness devices",
+      "Offline functionality"
+    ],
+    "challenges": "Creating a smooth mobile experience with offline functionality while syncing data across devices and maintaining performance.",
+    "solutions": "Used React Native with Expo for cross-platform development, implemented local storage with AsyncStorage, and used Firebase for cloud synchronization.",
+    "status": "COMPLETED",
+    "demoUrl": "https://fitness-app-demo.vercel.app",
+    "githubUrl": "https://github.com/demo/fitness-tracker",
+    "isPublic": true,
+    "isFeatured": false,
+    "startDate": "2024-01-10",
+    "endDate": "2024-04-05",
+    "likes": 41,
+    "views": 780,
+    "authorEmail": "jean.kirstein@codac.academy"
+  },
+  {
+    "title": "Portfolio Website",
+    "description": "A modern, responsive portfolio website showcasing my skills, projects, and professional experience with smooth animations and interactive elements.",
+    "shortDesc": "Modern portfolio website with animations and interactive elements",
+    "summary": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "This portfolio website was built to showcase my development skills and professional experience. The site features modern design principles, smooth animations, and responsive layout."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "Design highlights:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "children": [
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Smooth scroll animations and transitions"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Interactive project showcase"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Dark/light theme toggle"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "techStack": ["Next.js", "TypeScript", "Framer Motion", "Tailwind CSS", "Vercel"],
+    "features": [
+      "Responsive design",
+      "Dark/light theme",
+      "Smooth animations",
+      "Project showcase",
+      "Contact form",
+      "Blog section",
+      "SEO optimized"
+    ],
+    "challenges": "Creating smooth animations and transitions while maintaining excellent performance and accessibility across all devices.",
+    "solutions": "Used Framer Motion for optimized animations, implemented lazy loading for images, and ensured proper accessibility with ARIA labels and keyboard navigation.",
+    "status": "COMPLETED",
+    "demoUrl": "https://portfolio-demo.vercel.app",
+    "githubUrl": "https://github.com/demo/portfolio-website",
+    "isPublic": true,
+    "isFeatured": false,
+    "startDate": "2024-02-20",
+    "endDate": "2024-03-15",
+    "likes": 25,
+    "views": 450,
+    "authorEmail": "sasha.braus@codac.academy"
+  },
+  {
+    "title": "Learning Management System",
+    "description": "A comprehensive learning management system for educational institutions with course management, student tracking, and assessment tools.",
+    "shortDesc": "Educational LMS with course management, student tracking, and assessments",
+    "summary": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "This learning management system was developed to provide educational institutions with a comprehensive platform for managing courses, tracking student progress, and facilitating online learning."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "text": "System capabilities include:"
+          }
+        ]
+      },
+      {
+        "type": "ul",
+        "children": [
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Course creation and management"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Student progress tracking"
+              }
+            ]
+          },
+          {
+            "type": "li",
+            "children": [
+              {
+                "text": "Assessment and grading tools"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "techStack": ["Laravel", "Vue.js", "MySQL", "Redis", "Docker", "AWS S3"],
+    "features": [
+      "Course management",
+      "Student enrollment",
+      "Assignment submission",
+      "Grade tracking",
+      "Discussion forums",
+      "Video conferencing",
+      "Analytics dashboard"
+    ],
+    "challenges": "Scaling the system to handle thousands of concurrent users while maintaining performance and ensuring data security for educational records.",
+    "solutions": "Implemented microservices architecture, used Redis for caching and session management, and added comprehensive security measures including data encryption.",
+    "status": "IN_PROGRESS",
+    "demoUrl": "https://lms-demo.vercel.app",
+    "githubUrl": "https://github.com/demo/learning-management-system",
+    "isPublic": true,
+    "isFeatured": true,
+    "startDate": "2024-01-05",
+    "endDate": null,
+    "likes": 67,
+    "views": 1500,
+    "authorEmail": "erwin.smith@codac.academy"
+  }
+]

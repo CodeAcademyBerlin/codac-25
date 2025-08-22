@@ -1,13 +1,15 @@
 "use client";
 
 import {
-  Home,
-  GraduationCap,
+  FolderOpen,
   Users,
   Briefcase,
   FileText,
   Pyramid,
   UserCheck,
+  Code2,
+  Trophy,
+  BookOpen,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -57,14 +59,19 @@ const buildNavigationData = (role?: string) => {
   return {
     navTop: [
       {
-        title: "Learning",
-        url: "/lms",
-        icon: GraduationCap,
+        title: "My Projects",
+        url: "/projects/my",
+        icon: FolderOpen,
       },
       {
-        title: "Quizzes",
-        url: "/learning/quiz",
-        icon: Pyramid,
+        title: "Projects",
+        url: "/projects",
+        icon: Code2,
+      },
+      {
+        title: "Showcase",
+        url: "/showcase",
+        icon: Trophy,
       },
       {
         title: "Community",
@@ -80,9 +87,19 @@ const buildNavigationData = (role?: string) => {
     ],
     navSecondary: [
       {
+        title: "Learning",
+        url: "/lms",
+        icon: BookOpen,
+      },
+      {
         title: "Documents",
         url: "/docs",
         icon: FileText,
+      },
+      {
+        title: "Quizzes",
+        url: "/learning/quiz",
+        icon: Pyramid,
       },
     ],
     footer: [],

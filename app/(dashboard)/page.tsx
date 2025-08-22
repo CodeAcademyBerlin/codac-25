@@ -1,24 +1,23 @@
-import { BookOpen, Clock, Users } from "lucide-react";
+import { Users, Trophy, Plus, Code, Star } from "lucide-react";
 import Link from 'next/link';
 import { redirect } from "next/navigation";
 
 import { PageErrorBoundary, SectionErrorBoundary } from "@/components/error";
 import { Grid, PageContainer, PageHeader, Section } from "@/components/layout";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { getEnrolledCourses } from '@/data/lms/courses';
-import { getAllTracks } from '@/data/tracks';
+import { ProjectCard } from "@/components/projects/project-card";
+import { getProjectStats } from '@/data/projects/get-project-stats';
+import { getFeaturedProjects } from '@/data/projects/get-projects';
+import { getUserProjects } from '@/data/projects/get-user-projects';
 import { getUser } from "@/data/user/get-user";
 import { auth } from "@/lib/auth/auth";
-import { getCurrentUser } from '@/lib/auth/auth-utils';
 
 
 
 export const dynamic = 'force-dynamic';
 
-export default async function LearningPage() {
+export default async function DashboardPage() {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -32,144 +31,205 @@ export default async function LearningPage() {
   }
 
   const user = result.data;
-  let tracks: Awaited<ReturnType<typeof getAllTracks>> = [];
-  let enrolledCourses: Awaited<ReturnType<typeof getEnrolledCourses>> = [];
+  let userProjects: Awaited<ReturnType<typeof getUserProjects>> = [];
+  let featuredProjects: Awaited<ReturnType<typeof getFeaturedProjects>> = [];
+  let stats: Awaited<ReturnType<typeof getProjectStats>> = {
+    totalStudents: 0,
+    totalProjects: 0,
+    totalSkills: 0,
+    featuredProjects: 0,
+    activeStudents: 0,
+    newThisMonth: 0,
+  };
 
   try {
-    tracks = await getAllTracks();
-    enrolledCourses = user ? await getEnrolledCourses() : [];
+    [userProjects, featuredProjects, stats] = await Promise.all([
+      getUserProjects(user.id),
+      getFeaturedProjects(3),
+      getProjectStats(),
+    ]);
   } catch (error) {
     console.error('Error loading dashboard data:', error);
-    // Fallback data
-    tracks = [];
-    enrolledCourses = [];
+    // Fallback data already set above
   }
 
-  // Group enrolled courses by track
-  const coursesByTrack = enrolledCourses.reduce((acc, course) => {
-    const track = course.category.toLowerCase().replace('_development', '').replace('_science', '').replace('_services', '');
-    if (!acc[track]) acc[track] = [];
-    acc[track].push(course);
-    return acc;
-  }, {} as Record<string, typeof enrolledCourses>);
-
   return (
-    <PageErrorBoundary pageName="Learning Dashboard">
+    <PageErrorBoundary pageName="Dashboard">
       <PageContainer>
-        <PageHeader
-          title="My Learning"
-          description="Track your progress across different learning tracks and access structured courses."
-        />
+        <div className="flex items-center justify-between">
+          <PageHeader
+            title={`Welcome back, ${user.name}!`}
+            description="Manage your projects and explore the community showcase"
+          />
+          <Link href="/projects/create">
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              New Project
+            </Button>
+          </Link>
+        </div>
 
+        {/* Quick Stats */}
         <Section>
-          <SectionErrorBoundary sectionName="learning tracks">
-            <Grid cols="3">
-              {tracks.map((track) => {
-                if (!track) return null;
+          <Grid cols="4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">My Projects</CardTitle>
+                <Code className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{userProjects.length}</div>
+                <p className="text-xs text-muted-foreground">
+                  {userProjects.filter(p => p.isPublic).length} public
+                </p>
+              </CardContent>
+            </Card>
 
-                const trackSlug = track.title.toLowerCase().includes('web') ? 'web' :
-                  track.title.toLowerCase().includes('data') ? 'data' : 'career';
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Community Projects</CardTitle>
+                <Trophy className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.totalProjects}</div>
+                <p className="text-xs text-muted-foreground">
+                  {stats.featuredProjects} featured
+                </p>
+              </CardContent>
+            </Card>
 
-                const enrolledInTrack = coursesByTrack[trackSlug] || [];
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Active Students</CardTitle>
+                <Users className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.activeStudents}</div>
+                <p className="text-xs text-muted-foreground">
+                  Building projects
+                </p>
+              </CardContent>
+            </Card>
 
-                return (
-                  <Card key={trackSlug} className="hover:shadow-lg transition-shadow">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="flex items-center gap-2">
-                          <BookOpen className="h-5 w-5" />
-                          {track.title}
-                        </CardTitle>
-                        <Badge variant={track.isEnrolled ? 'default' : 'secondary'}>
-                          {track.isEnrolled ? 'Enrolled' : 'Available'}
-                        </Badge>
-                      </div>
-                      <CardDescription>
-                        {enrolledInTrack.length} course{enrolledInTrack.length !== 1 ? 's' : ''} enrolled
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {/* Progress */}
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span>Progress</span>
-                          <span>{track.progress}%</span>
-                        </div>
-                        <Progress value={track.progress} className="h-2" />
-                      </div>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">This Month</CardTitle>
+                <Star className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.newThisMonth}</div>
+                <p className="text-xs text-muted-foreground">
+                  New projects
+                </p>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Section>
 
-                      {/* Current Module */}
-                      {track.currentLesson && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <Clock className="h-4 w-4" />
-                          <span>Current: {track.currentLesson}</span>
-                        </div>
-                      )}
+        {/* My Projects */}
+        <Section>
+          <SectionErrorBoundary sectionName="my projects">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-bold tracking-tight">My Projects</h2>
+                <p className="text-muted-foreground">Your latest project work</p>
+              </div>
+              <Link href="/projects/my">
+                <Button variant="outline">View All</Button>
+              </Link>
+            </div>
 
-                      {/* Action Buttons */}
-                      <div className="space-y-2">
-                        <Button asChild className="w-full">
-                          <Link href={`/learning/${trackSlug}`}>
-                            {track.isEnrolled ? 'Continue Learning' : 'Start Track'}
-                          </Link>
-                        </Button>
-                        {enrolledInTrack.length > 0 && (
-                          <Button variant="outline" asChild className="w-full">
-                            <Link href="/lms">
-                              View in LMS
-                            </Link>
-                          </Button>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </Grid>
+            {userProjects.length > 0 ? (
+              <Grid cols="3">
+                {userProjects.slice(0, 3).map((project) => (
+                  <ProjectCard key={project.id} project={project} showEditActions={true} />
+                ))}
+              </Grid>
+            ) : (
+              <Card>
+                <CardContent className="flex flex-col items-center justify-center p-12">
+                  <Code className="h-16 w-16 text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No projects yet</h3>
+                  <p className="text-muted-foreground text-center mb-6">
+                    Start building your portfolio by creating your first project
+                  </p>
+                  <Link href="/projects/create">
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create Your First Project
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            )}
           </SectionErrorBoundary>
         </Section>
 
+        {/* Featured Community Projects */}
+        {featuredProjects.length > 0 && (
+          <Section>
+            <SectionErrorBoundary sectionName="featured projects">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold tracking-tight">Featured Projects</h2>
+                  <p className="text-muted-foreground">Discover amazing work from the community</p>
+                </div>
+                <Link href="/showcase">
+                  <Button variant="outline">View Showcase</Button>
+                </Link>
+              </div>
+
+              <Grid cols="3">
+                {featuredProjects.map((project) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
+              </Grid>
+            </SectionErrorBoundary>
+          </Section>
+        )}
+
+        {/* Quick Actions */}
         <Section>
-          <SectionErrorBoundary sectionName="recent activity">
+          <SectionErrorBoundary sectionName="quick actions">
             <Card>
               <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
+                <CardTitle>Quick Actions</CardTitle>
                 <CardDescription>
-                  Your latest learning sessions and completed materials
+                  Get started with common tasks
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {enrolledCourses.length > 0 ? (
-                  enrolledCourses.slice(0, 3).map((course) => (
-                    <div key={course.id} className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
-                      <div className="flex-shrink-0">
-                        <BookOpen className="h-8 w-8 text-blue-500" />
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Button asChild variant="outline" className="h-auto flex-col gap-2 p-6">
+                    <Link href="/projects/create">
+                      <Plus className="h-8 w-8" />
+                      <div className="text-center">
+                        <div className="font-medium">Create Project</div>
+                        <div className="text-xs text-muted-foreground">Start a new project</div>
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium">{course.title}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {course.category.replace('_', ' ')} • {course._count.projects} project{course._count.projects !== 1 ? 's' : ''}
-                        </p>
+                    </Link>
+                  </Button>
+
+                  <Button asChild variant="outline" className="h-auto flex-col gap-2 p-6">
+                    <Link href="/projects">
+                      <Trophy className="h-8 w-8" />
+                      <div className="text-center">
+                        <div className="font-medium">Browse Projects</div>
+                        <div className="text-xs text-muted-foreground">Explore community work</div>
                       </div>
-                      <Link
-                        href={`/lms/courses/${course.id}`}
-                        className="text-sm text-primary hover:underline"
-                      >
-                        Continue
-                      </Link>
-                    </div>
-                  ))
-                ) : (
-                  <div className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
-                    <div className="flex-shrink-0">
-                      <Users className="h-8 w-8 text-green-500" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium">Welcome to Your Learning Journey!</p>
-                      <p className="text-sm text-muted-foreground">Choose a track above to get started</p>
-                    </div>
-                  </div>
-                )}
+                    </Link>
+                  </Button>
+
+                  <Button asChild variant="outline" className="h-auto flex-col gap-2 p-6">
+                    <Link href="/community">
+                      <Users className="h-8 w-8" />
+                      <div className="text-center">
+                        <div className="font-medium">Connect</div>
+                        <div className="text-xs text-muted-foreground">Network with community</div>
+                      </div>
+                    </Link>
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </SectionErrorBoundary>

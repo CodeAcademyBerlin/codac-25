@@ -40,7 +40,7 @@ export function NavUser() {
       <SidebarMenu>
         <SidebarMenuItem>
           <div className="flex items-center gap-2 px-1 py-1.5">
-            <div className="h-8 w-8 rounded-lg bg-muted animate-pulse" />
+            <div className="h-8 w-8 rounded bg-muted animate-pulse" />
             <div className="flex-1 space-y-1">
               <div className="h-4 bg-muted rounded animate-pulse" />
               <div className="h-3 bg-muted rounded w-3/4 animate-pulse" />
@@ -76,12 +76,12 @@ export function NavUser() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
+              <Avatar className="h-8 w-8 rounded">
                 <AvatarImage
                   src={avatar || ""}
                   alt={user.name || user.email || "User"}
                 />
-                <AvatarFallback className="rounded-lg">
+                <AvatarFallback className="rounded">
                   {(user.name?.charAt(0) || user.email?.charAt(0) || "U").toUpperCase()}
                 </AvatarFallback>
               </Avatar>
@@ -100,16 +100,16 @@ export function NavUser() {
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded"
             side={isMobile ? 'bottom' : 'right'}
             align="end"
             sideOffset={4}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
+                <Avatar className="h-8 w-8 rounded">
                   <AvatarImage src={avatar || ""} alt={user.name || user.email || "User"} />
-                  <AvatarFallback className="rounded-lg">
+                  <AvatarFallback className="rounded">
                     {(user.name?.charAt(0) || user.email?.charAt(0) || "U").toUpperCase()}
                   </AvatarFallback>
                 </Avatar>

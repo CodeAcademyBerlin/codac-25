@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation';
 
 import { DndWrapper } from '@/app/(dashboard)/docs/components/dnd-wrapper';
-import { HideHeader } from '@/components/hide-header';
 import { ResizableSidebar } from '@/components/ui/resizable-sidebar';
 import { getEnrolledCourses, getCourses } from '@/data/lms/courses';
 import { getLMSHierarchy } from '@/data/lms/lms-hierarchy';
@@ -30,7 +29,7 @@ export default async function LMSLayout({
 
     return (
         <DndWrapper>
-            <HideHeader />
+            {/* <HideHeader /> */}
             <div className="flex h-full flex-col">
                 <LMSNavbar user={user} />
                 <div className="flex flex-1 overflow-hidden">

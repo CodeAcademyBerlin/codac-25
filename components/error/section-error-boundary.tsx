@@ -41,7 +41,7 @@ export function SectionErrorBoundary({
   return (
     <ErrorBoundary
       fallback={
-        <div className="p-6 border border-destructive/20 rounded-lg bg-destructive/5">
+        <div className="p-6 border border-destructive/20 rounded bg-destructive/5">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0">
               <AlertCircle className="h-5 w-5 text-destructive mt-0.5" />
