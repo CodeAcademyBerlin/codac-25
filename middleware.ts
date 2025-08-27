@@ -37,7 +37,7 @@ export default auth((req) => {
 
   const isLoggedIn = !!req.auth;
 
-  // Redirect authenticated users away from auth pages
+  // Redirect authenticated users away from auth pages to dashboard
   if (isAuthPage && isLoggedIn) {
     return Response.redirect(new URL("/", req.nextUrl.origin));
   }
