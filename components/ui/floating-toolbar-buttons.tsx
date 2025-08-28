@@ -1,20 +1,23 @@
 'use client';
 
+import * as React from 'react';
+
 import {
   BoldIcon,
   Code2Icon,
   ItalicIcon,
   StrikethroughIcon,
   UnderlineIcon,
+  WandSparklesIcon,
 } from 'lucide-react';
 import { KEYS } from 'platejs';
 import { useEditorReadOnly } from 'platejs/react';
-import * as React from 'react';
 
+import { AIToolbarButton } from './ai-toolbar-button';
+import { CommentToolbarButton } from './comment-toolbar-button';
 import { InlineEquationToolbarButton } from './equation-toolbar-button';
 import { LinkToolbarButton } from './link-toolbar-button';
 import { MarkToolbarButton } from './mark-toolbar-button';
-import { ModeToolbarButton } from './mode-toolbar-button';
 import { MoreToolbarButton } from './more-toolbar-button';
 import { SuggestionToolbarButton } from './suggestion-toolbar-button';
 import { ToolbarGroup } from './toolbar';
@@ -27,6 +30,13 @@ export function FloatingToolbarButtons() {
     <>
       {!readOnly && (
         <>
+          <ToolbarGroup>
+            <AIToolbarButton tooltip="AI commands">
+              <WandSparklesIcon />
+              Ask AI
+            </AIToolbarButton>
+          </ToolbarGroup>
+
           <ToolbarGroup>
             <TurnIntoToolbarButton />
 
@@ -60,17 +70,14 @@ export function FloatingToolbarButtons() {
 
             <LinkToolbarButton />
           </ToolbarGroup>
-
-          <ToolbarGroup>
-            <MoreToolbarButton />
-          </ToolbarGroup>
         </>
       )}
 
-      {/* Always show mode switcher and suggestions - even in read-only mode */}
       <ToolbarGroup>
+        <CommentToolbarButton />
         <SuggestionToolbarButton />
-        <ModeToolbarButton />
+
+        {!readOnly && <MoreToolbarButton />}
       </ToolbarGroup>
     </>
   );

@@ -1,8 +1,10 @@
 'use client';
 
+import * as React from 'react';
+
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 
 import { TablePlugin, useTableMergeState } from '@platejs/table/react';
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 import {
   ArrowDown,
   ArrowLeft,
@@ -17,7 +19,6 @@ import {
 } from 'lucide-react';
 import { KEYS } from 'platejs';
 import { useEditorPlugin, useEditorSelector } from 'platejs/react';
-import * as React from 'react';
 
 import {
   DropdownMenu,

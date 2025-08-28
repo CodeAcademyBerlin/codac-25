@@ -1,7 +1,9 @@
 'use client';
 
+import * as React from 'react';
 
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+
 import {
   KeyboardIcon,
   MoreHorizontalIcon,
@@ -10,7 +12,6 @@ import {
 } from 'lucide-react';
 import { KEYS } from 'platejs';
 import { useEditorRef } from 'platejs/react';
-import * as React from 'react';
 
 import {
   DropdownMenu,

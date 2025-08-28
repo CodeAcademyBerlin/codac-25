@@ -17,19 +17,22 @@ export default async function CreateProjectPage() {
   const handleCreateProject = async (data: CreateProjectData) => {
     'use server'
 
-    try {
-      const result = await createProject(data)
+    let result;
 
-      if (result.success) {
-        redirect(`/projects/${result.data.id}/edit`)
-      } else {
-        // Handle error - properly return error to be displayed
-        console.error('Failed to create project:', result.error)
-        return { error: result.error as string }
-      }
+    try {
+      result = await createProject(data)
     } catch (error) {
       console.error('Exception when creating project:', error)
       return { error: 'An unexpected error occurred. Please try again.' }
+    }
+
+    if (result.success) {
+      // Redirect is now outside try-catch to avoid catching NEXT_REDIRECT
+      redirect(`/projects/${result.data.id}`)
+    } else {
+      // Handle error - properly return error to be displayed
+      console.error('Failed to create project:', result.error)
+      return { error: result.error as string }
     }
   }
 

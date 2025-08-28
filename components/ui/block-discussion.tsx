@@ -1,6 +1,8 @@
 'use client';
 
+import * as React from 'react';
 
+import type { PlateElementProps, RenderNodeWrapper } from 'platejs/react';
 
 import { getDraftCommentKey } from '@platejs/comment';
 import { CommentPlugin } from '@platejs/comment/react';
@@ -20,16 +22,8 @@ import {
   PathApi,
   TextApi,
 } from 'platejs';
-import type { PlateElementProps, RenderNodeWrapper } from 'platejs/react';
 import { useEditorPlugin, useEditorRef, usePluginOption } from 'platejs/react';
-import * as React from 'react';
 
-import { commentPlugin } from '@/components/editor/plugins/comment-kit';
-import {
-  type TDiscussion,
-  discussionPlugin,
-} from '@/components/editor/plugins/discussion-kit';
-import { suggestionPlugin } from '@/components/editor/plugins/suggestion-kit';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -37,13 +31,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { commentPlugin } from '@/components/editor/plugins/comment-kit';
+import {
+  type TDiscussion,
+  discussionPlugin,
+} from '@/components/editor/plugins/discussion-kit';
+import { suggestionPlugin } from '@/components/editor/plugins/suggestion-kit';
 
 import {
   BlockSuggestionCard,
   isResolvedSuggestion,
   useResolveSuggestion,
-} from '../editor/plugins/block-suggestion';
-
+} from './block-suggestion';
 import { Comment, CommentCreateForm } from './comment';
 
 export const BlockDiscussion: RenderNodeWrapper<AnyPluginConfig> = (props) => {
@@ -71,7 +70,7 @@ export const BlockDiscussion: RenderNodeWrapper<AnyPluginConfig> = (props) => {
     return;
   }
 
-  const BlockDiscussionWrapper = (props: PlateElementProps) => (
+  return (props) => (
     <BlockCommentContent
       blockPath={blockPath}
       commentNodes={commentNodes}
@@ -80,8 +79,6 @@ export const BlockDiscussion: RenderNodeWrapper<AnyPluginConfig> = (props) => {
       {...props}
     />
   );
-  BlockDiscussionWrapper.displayName = 'BlockDiscussionWrapper';
-  return BlockDiscussionWrapper;
 };
 
 const BlockCommentContent = ({
@@ -97,7 +94,6 @@ const BlockCommentContent = ({
   suggestionNodes: NodeEntry<TElement | TSuggestionText>[];
 }) => {
   const editor = useEditorRef();
-
   const resolvedSuggestions = useResolveSuggestion(suggestionNodes, blockPath);
   const resolvedDiscussions = useResolvedDiscussion(commentNodes, blockPath);
 
@@ -147,7 +143,7 @@ const BlockCommentContent = ({
         ([node]) =>
           TextApi.isText(node) &&
           editor.getApi(SuggestionPlugin).suggestion.nodeId(node) ===
-          activeSuggestion.suggestionId
+            activeSuggestion.suggestionId
       );
     }
 
@@ -342,7 +338,7 @@ const useResolvedDiscussion = (
 
       return;
     }
-    // Initialize new path mapping for comment ID
+    // TODO: fix throw error
     setOption('uniquePathMap', new Map(map).set(id, blockPath));
   });
 

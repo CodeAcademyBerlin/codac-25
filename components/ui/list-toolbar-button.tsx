@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 
 import { ListStyleType, someList, toggleList } from '@platejs/list';
 import {
@@ -8,7 +9,6 @@ import {
 } from '@platejs/list/react';
 import { List, ListOrdered, ListTodoIcon } from 'lucide-react';
 import { useEditorRef, useEditorSelector } from 'platejs/react';
-import * as React from 'react';
 
 import {
   DropdownMenu,

@@ -1,6 +1,8 @@
 'use client';
 
+import * as React from 'react';
 
+import type { CreatePlateEditorOptions } from 'platejs/react';
 
 import { getCommentKey, getDraftCommentKey } from '@platejs/comment';
 import { CommentPlugin, useCommentId } from '@platejs/comment/react';
@@ -19,7 +21,6 @@ import {
   XIcon,
 } from 'lucide-react';
 import { type Value, KEYS, nanoid, NodeApi } from 'platejs';
-import type { CreatePlateEditorOptions } from 'platejs/react';
 import {
   Plate,
   useEditorPlugin,
@@ -27,13 +28,7 @@ import {
   usePlateEditor,
   usePluginOption,
 } from 'platejs/react';
-import * as React from 'react';
 
-import { BasicMarksKit } from '@/components/editor/plugins/basic-marks-kit';
-import {
-  type TDiscussion,
-  discussionPlugin
-} from '@/components/editor/plugins/discussion-kit';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -44,6 +39,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { BasicMarksKit } from '@/components/editor/plugins/basic-marks-kit';
+import {
+  type TDiscussion,
+  discussionPlugin,
+} from '@/components/editor/plugins/discussion-kit';
 
 import { Editor, EditorContainer } from './editor';
 
@@ -84,7 +84,7 @@ export function Comment(props: {
   const resolveDiscussion = async (id: string) => {
     const updatedDiscussions = editor
       .getOption(discussionPlugin, 'discussions')
-      .map((discussion: TDiscussion) => {
+      .map((discussion) => {
         if (discussion.id === id) {
           return { ...discussion, isResolved: true };
         }
@@ -96,7 +96,7 @@ export function Comment(props: {
   const removeDiscussion = async (id: string) => {
     const updatedDiscussions = editor
       .getOption(discussionPlugin, 'discussions')
-      .filter((discussion: TDiscussion) => discussion.id !== id);
+      .filter((discussion) => discussion.id !== id);
     editor.setOption(discussionPlugin, 'discussions', updatedDiscussions);
   };
 
@@ -108,9 +108,9 @@ export function Comment(props: {
   }) => {
     const updatedDiscussions = editor
       .getOption(discussionPlugin, 'discussions')
-      .map((discussion: TDiscussion) => {
+      .map((discussion) => {
         if (discussion.id === input.discussionId) {
-          const updatedComments = discussion.comments.map((comment: TComment) => {
+          const updatedComments = discussion.comments.map((comment) => {
             if (comment.id === input.id) {
               return {
                 ...comment,
@@ -316,13 +316,13 @@ function CommentMoreDropdown(props: {
     // Find and update the discussion
     const updatedDiscussions = editor
       .getOption(discussionPlugin, 'discussions')
-      .map((discussion: TDiscussion) => {
+      .map((discussion) => {
         if (discussion.id !== comment.discussionId) {
           return discussion;
         }
 
         const commentIndex = discussion.comments.findIndex(
-          (c: TComment) => c.id === comment.id
+          (c) => c.id === comment.id
         );
         if (commentIndex === -1) {
           return discussion;
@@ -390,7 +390,7 @@ function CommentMoreDropdown(props: {
 
 const useCommentEditor = (
   options: Omit<CreatePlateEditorOptions, 'plugins'> = {},
-  deps: unknown[] = []
+  deps: any[] = []
 ) => {
   const commentEditor = usePlateEditor(
     {
@@ -431,7 +431,7 @@ export function CommentCreateForm({
         : '',
     [commentValue]
   );
-  const commentEditor = useCommentEditor({}, []);
+  const commentEditor = useCommentEditor();
 
   React.useEffect(() => {
     if (commentEditor && focusOnMount) {
@@ -446,7 +446,7 @@ export function CommentCreateForm({
 
     if (discussionId) {
       // Get existing discussion
-      const discussion = discussions.find((d: TDiscussion) => d.id === discussionId);
+      const discussion = discussions.find((d) => d.id === discussionId);
       if (!discussion) {
         // Mock creating suggestion
         const newDiscussion: TDiscussion = {
@@ -491,7 +491,7 @@ export function CommentCreateForm({
 
       // Filter out old discussion and add updated one
       const updatedDiscussions = discussions
-        .filter((d: TDiscussion) => d.id !== discussionId)
+        .filter((d) => d.id !== discussionId)
         .concat(updatedDiscussion);
 
       editor.setOption(discussionPlugin, 'discussions', updatedDiscussions);

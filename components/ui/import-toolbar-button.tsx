@@ -1,12 +1,14 @@
 'use client';
 
+import * as React from 'react';
+
+import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 
 import { MarkdownPlugin } from '@platejs/markdown';
-import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
 import { ArrowUpToLineIcon } from 'lucide-react';
 import { getEditorDOMFromHtmlString } from 'platejs';
 import { useEditorRef } from 'platejs/react';
-import * as React from 'react';
+import { useFilePicker } from 'use-file-picker';
 
 import {
   DropdownMenu,
@@ -41,33 +43,29 @@ export function ImportToolbarButton(props: DropdownMenuProps) {
     return [];
   };
 
-  const handleFileImport = async (file: File, type: ImportType) => {
-    const text = await file.text();
-    const nodes = getFileNodes(text, type);
-    editor.tf.insertNodes(nodes);
-  };
+  const { openFilePicker: openMdFilePicker } = useFilePicker({
+    accept: ['.md', '.mdx'],
+    multiple: false,
+    onFilesSelected: async ({ plainFiles }) => {
+      const text = await plainFiles[0].text();
 
-  const openMdFilePicker = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.md,.mdx';
-    input.onchange = async (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) await handleFileImport(file, 'markdown');
-    };
-    input.click();
-  };
+      const nodes = getFileNodes(text, 'markdown');
 
-  const openHtmlFilePicker = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.html,.htm';
-    input.onchange = async (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) await handleFileImport(file, 'html');
-    };
-    input.click();
-  };
+      editor.tf.insertNodes(nodes);
+    },
+  });
+
+  const { openFilePicker: openHtmlFilePicker } = useFilePicker({
+    accept: ['text/html'],
+    multiple: false,
+    onFilesSelected: async ({ plainFiles }) => {
+      const text = await plainFiles[0].text();
+
+      const nodes = getFileNodes(text, 'html');
+
+      editor.tf.insertNodes(nodes);
+    },
+  });
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen} modal={false} {...props}>

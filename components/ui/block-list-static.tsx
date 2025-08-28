@@ -1,13 +1,13 @@
+import * as React from 'react';
 
-
-import { isOrderedList } from '@platejs/list';
-import { CheckIcon } from 'lucide-react';
 import type {
   RenderStaticNodeWrapper,
   SlateRenderElementProps,
   TListElement,
 } from 'platejs';
-import * as React from 'react';
+
+import { isOrderedList } from '@platejs/list';
+import { CheckIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
@@ -27,9 +27,7 @@ const config: Record<
 export const BlockListStatic: RenderStaticNodeWrapper = (props) => {
   if (!props.element.listStyleType) return;
 
-  const BlockListWrapper = (props: SlateRenderElementProps) => <List {...props} />;
-  BlockListWrapper.displayName = 'BlockListWrapper';
-  return BlockListWrapper;
+  return (props) => <List {...props} />;
 };
 
 function List(props: SlateRenderElementProps) {
@@ -76,7 +74,7 @@ function TodoLiStatic(props: SlateRenderElementProps) {
       className={cn(
         'list-none',
         (props.element.checked as boolean) &&
-        'text-muted-foreground line-through'
+          'text-muted-foreground line-through'
       )}
     >
       {props.children}

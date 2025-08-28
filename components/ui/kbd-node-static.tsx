@@ -1,7 +1,8 @@
+import * as React from 'react';
 
 import type { SlateLeafProps } from 'platejs';
+
 import { SlateLeaf } from 'platejs';
-import * as React from 'react';
 
 export function KbdLeafStatic(props: SlateLeafProps) {
   return (

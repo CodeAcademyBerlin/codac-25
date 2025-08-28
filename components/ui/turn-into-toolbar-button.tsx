@@ -1,6 +1,10 @@
 'use client';
 
+import * as React from 'react';
+
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
+import type { TElement } from 'platejs';
+
 import { DropdownMenuItemIndicator } from '@radix-ui/react-dropdown-menu';
 import {
   CheckIcon,
@@ -10,6 +14,9 @@ import {
   Heading1Icon,
   Heading2Icon,
   Heading3Icon,
+  Heading4Icon,
+  Heading5Icon,
+  Heading6Icon,
   ListIcon,
   ListOrderedIcon,
   PilcrowIcon,
@@ -18,19 +25,21 @@ import {
 } from 'lucide-react';
 import { KEYS } from 'platejs';
 import { useEditorRef, useSelectionFragmentProp } from 'platejs/react';
-import * as React from 'react';
 
-import { setBlockType, insertBlock } from '@/components/editor/transforms';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  getBlockType,
+  setBlockType,
+} from '@/components/editor/transforms';
 
 import { ToolbarButton, ToolbarMenuGroup } from './toolbar';
 
-const turnIntoItems = [
+export const turnIntoItems = [
   {
     icon: <PilcrowIcon />,
     keywords: ['paragraph'],
@@ -54,6 +63,24 @@ const turnIntoItems = [
     keywords: ['subtitle', 'h3'],
     label: 'Heading 3',
     value: 'h3',
+  },
+  {
+    icon: <Heading4Icon />,
+    keywords: ['subtitle', 'h4'],
+    label: 'Heading 4',
+    value: 'h4',
+  },
+  {
+    icon: <Heading5Icon />,
+    keywords: ['subtitle', 'h5'],
+    label: 'Heading 5',
+    value: 'h5',
+  },
+  {
+    icon: <Heading6Icon />,
+    keywords: ['subtitle', 'h6'],
+    label: 'Heading 6',
+    value: 'h6',
   },
   {
     icon: <ListIcon />,
@@ -104,7 +131,7 @@ export function TurnIntoToolbarButton(props: DropdownMenuProps) {
 
   const value = useSelectionFragmentProp({
     defaultValue: KEYS.p,
-    getProp: (node) => node.type,
+    getProp: (node) => getBlockType(node as TElement),
   });
   const selectedItem = React.useMemo(
     () =>
@@ -112,23 +139,6 @@ export function TurnIntoToolbarButton(props: DropdownMenuProps) {
       turnIntoItems[0],
     [value]
   );
-
-  const handleValueChange = React.useCallback((newValue: string) => {
-    if (!newValue || newValue === value) return;
-
-    // Handle special cases that require insertBlock
-    if (newValue === 'action_three_columns' ||
-      newValue === KEYS.codeBlock ||
-      newValue === KEYS.table ||
-      newValue === KEYS.toc) {
-      insertBlock(editor, newValue);
-    } else {
-      // Use setBlockType for standard block type changes
-      setBlockType(editor, newValue);
-    }
-
-    setOpen(false);
-  }, [editor, value]);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen} modal={false} {...props}>
@@ -153,7 +163,9 @@ export function TurnIntoToolbarButton(props: DropdownMenuProps) {
       >
         <ToolbarMenuGroup
           value={value}
-          onValueChange={handleValueChange}
+          onValueChange={(type) => {
+            setBlockType(editor, type);
+          }}
           label="Turn into"
         >
           {turnIntoItems.map(({ icon, label, value: itemValue }) => (

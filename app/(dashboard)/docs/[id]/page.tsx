@@ -1,6 +1,6 @@
 import { Value } from "platejs";
 
-import { UnifiedEditor } from "@/components/editor/unified-editor";
+import { SimplifiedUnifiedEditor } from "@/components/editor/simplified-unified-editor";
 import { getDoc } from "@/data/docs/docs";
 
 export default async function DocPage({ params }: { params: Promise<{ id: string }> }) {
@@ -9,7 +9,7 @@ export default async function DocPage({ params }: { params: Promise<{ id: string
 
   return (
     <div className="h-full w-full">
-      <UnifiedEditor
+      <SimplifiedUnifiedEditor
         contentId={id}
         contentType="document"
         initialValue={doc?.content as Value}

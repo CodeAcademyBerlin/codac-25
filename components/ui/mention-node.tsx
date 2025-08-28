@@ -1,20 +1,21 @@
 'use client';
 
+import * as React from 'react';
+
+import type { TComboboxInputElement, TMentionElement } from 'platejs';
+import type { PlateElementProps } from 'platejs/react';
 
 import { getMentionOnSelectItem } from '@platejs/mention';
-import type { TComboboxInputElement, TMentionElement } from 'platejs';
 import { IS_APPLE, KEYS } from 'platejs';
-import type { PlateElementProps } from 'platejs/react';
 import {
   PlateElement,
   useFocused,
   useReadOnly,
   useSelected,
 } from 'platejs/react';
-import * as React from 'react';
 
-import { useMounted } from '@/hooks/use-mounted';
 import { cn } from '@/lib/utils';
+import { useMounted } from '@/hooks/use-mounted';
 
 import {
   InlineCombobox,
@@ -31,6 +32,7 @@ export function MentionElement(
   }
 ) {
   const element = props.element;
+
   const selected = useSelected();
   const focused = useFocused();
   const mounted = useMounted();
@@ -82,7 +84,7 @@ export function MentionInputElement(
   const [search, setSearch] = React.useState('');
 
   return (
-    <PlateElement {...props} as="span" data-slate-value={element.value}>
+    <PlateElement {...props} as="span">
       <InlineCombobox
         value={search}
         element={element}

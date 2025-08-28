@@ -1,17 +1,18 @@
 'use client';
 
-
-import { CornerDownLeftIcon } from 'lucide-react';
-import type { TSuggestionData, TSuggestionText } from 'platejs';
-import type { PlateLeafProps, RenderNodeWrapper } from 'platejs/react';
-import { PlateLeaf, useEditorPlugin, usePluginOption } from 'platejs/react';
 import * as React from 'react';
 
+import type { TSuggestionData, TSuggestionText } from 'platejs';
+import type { PlateLeafProps, RenderNodeWrapper } from 'platejs/react';
+
+import { CornerDownLeftIcon } from 'lucide-react';
+import { PlateLeaf, useEditorPlugin, usePluginOption } from 'platejs/react';
+
+import { cn } from '@/lib/utils';
 import {
   type SuggestionConfig,
   suggestionPlugin,
 } from '@/components/editor/plugins/suggestion-kit';
-import { cn } from '@/lib/utils';
 
 export function SuggestionLeaf(props: PlateLeafProps<TSuggestionText>) {
   const { api, setOption } = useEditorPlugin(suggestionPlugin);
@@ -96,13 +97,13 @@ function SuggestionLineBreakContent({
       className={cn(
         'absolute border-b-2 border-b-brand/[.24] bg-brand/[.08] text-justify text-brand/80 no-underline transition-colors duration-200',
         isInsert &&
-        (isActive || isHover) &&
-        'border-b-brand/[.60] bg-brand/[.13]',
+          (isActive || isHover) &&
+          'border-b-brand/[.60] bg-brand/[.13]',
         isRemove &&
-        'border-b-gray-300 bg-gray-300/25 text-gray-400 line-through',
+          'border-b-gray-300 bg-gray-300/25 text-gray-400 line-through',
         isRemove &&
-        (isActive || isHover) &&
-        'border-b-gray-500 bg-gray-400/25 text-gray-500 no-underline'
+          (isActive || isHover) &&
+          'border-b-gray-500 bg-gray-400/25 text-gray-500 no-underline'
       )}
       style={{
         bottom: 4.5,

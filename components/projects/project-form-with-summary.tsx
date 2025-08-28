@@ -1,10 +1,11 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CalendarIcon, PlusIcon, X } from 'lucide-react'
+import { CalendarIcon, PlusIcon, X, FileText, Github } from 'lucide-react'
 import { type Value } from 'platejs'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { Badge } from '@/components/ui/badge'
@@ -15,10 +16,12 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
-import { PROJECT_STATUSES, type CreateProjectData } from '@/types/portfolio'
+import { PROJECT_STATUSES, type CreateProjectData, type ProjectCreationMode } from '@/types/portfolio'
 
+import { GitHubImportTab } from './github-import-tab'
 import { ProjectSummaryEditor } from './project-summary-editor'
 
 // Validation schema
@@ -60,6 +63,8 @@ export function ProjectFormWithSummary({
   const [summary, setSummary] = useState<Value | undefined>(initialSummary)
   const [newTech, setNewTech] = useState('')
   const [newFeature, setNewFeature] = useState('')
+  const [creationMode, setCreationMode] = useState<ProjectCreationMode>('manual')
+  const [importedData, setImportedData] = useState<Partial<CreateProjectData> | null>(null)
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectFormSchema),
@@ -85,12 +90,64 @@ export function ProjectFormWithSummary({
     onSummaryChange?.(newSummary)
   }
 
+  const handleGitHubImport = (data: Partial<CreateProjectData>) => {
+    setImportedData(data)
+    
+    // Update form with imported data
+    if (data.title) {
+      form.setValue('title', data.title)
+    }
+    if (data.description) {
+      form.setValue('description', data.description)
+    }
+    if (data.shortDesc) {
+      form.setValue('shortDesc', data.shortDesc)
+    }
+    if (data.githubUrl) {
+      form.setValue('githubUrl', data.githubUrl)
+    }
+    if (data.demoUrl) {
+      form.setValue('demoUrl', data.demoUrl)
+    }
+    if (data.techStack) {
+      form.setValue('techStack', data.techStack)
+    }
+    if (data.features) {
+      form.setValue('features', data.features)
+    }
+
+    // Update summary if README was imported
+    if (data.summary) {
+      setSummary(data.summary)
+    }
+
+    // Switch to manual mode for editing
+    setCreationMode('manual')
+    
+    const hasReadme = !!data.summary
+    toast.success(`Repository data imported successfully! ${hasReadme ? 'README has been converted to project summary.' : ''} You can now edit the details before saving.`)
+  }
+
+  const handleImportError = (error: string) => {
+    toast.error(`Import failed: ${error}`)
+  }
+
+  // Update form when imported data changes
+  useEffect(() => {
+    if (importedData && creationMode === 'manual') {
+      // This effect ensures the form stays in sync with imported data
+      // if the user switches back to manual mode
+    }
+  }, [importedData, creationMode, form])
+
   const handleSubmit = async (data: ProjectFormData) => {
     const submitData: CreateProjectData = {
       ...data,
       summary,
       techStack: data.techStack,
       features: data.features?.filter(f => f.trim() !== ''),
+      // Include GitHub import metadata if available
+      githubImportData: importedData?.githubImportData,
     }
     await onSubmit(submitData)
   }
@@ -123,7 +180,52 @@ export function ProjectFormWithSummary({
 
   return (
     <div className="space-y-8">
-      <Form {...form}>
+      {/* Creation Mode Selector - only show for new projects */}
+      {!projectId && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Create Project</CardTitle>
+            <CardDescription>
+              Choose how you&apos;d like to create your project
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Tabs value={creationMode} onValueChange={(value) => setCreationMode(value as ProjectCreationMode)}>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="manual" className="flex items-center gap-2">
+                  <FileText className="h-4 w-4" />
+                  Manual Entry
+                </TabsTrigger>
+                <TabsTrigger value="github-import" className="flex items-center gap-2">
+                  <Github className="h-4 w-4" />
+                  Import from GitHub
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="github-import" className="mt-6">
+                <GitHubImportTab 
+                  onImport={handleGitHubImport}
+                  onError={handleImportError}
+                />
+              </TabsContent>
+              
+              <TabsContent value="manual" className="mt-6">
+                {importedData && (
+                  <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-md">
+                    <p className="text-sm text-green-800">
+                      ✅ Data imported from GitHub repository. You can now edit the details below.
+                    </p>
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Project Form - only show in manual mode or for existing projects */}
+      {(creationMode === 'manual' || projectId) && (
+        <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
           {/* Basic Information */}
           <Card>
@@ -455,10 +557,12 @@ export function ProjectFormWithSummary({
             </Button>
           </div>
         </form>
-      </Form>
+        </Form>
+      )}
 
-      {/* Project Summary Section */}
-      <Card>
+      {/* Project Summary Section - only show in manual mode or for existing projects */}
+      {(creationMode === 'manual' || projectId) && (
+        <Card>
         <CardHeader>
           <CardTitle>Project Summary</CardTitle>
           <CardDescription>
@@ -480,7 +584,8 @@ export function ProjectFormWithSummary({
             </div>
           )}
         </CardContent>
-      </Card>
+        </Card>
+      )}
     </div>
   )
 }

@@ -1,6 +1,8 @@
 'use client';
 
+import * as React from 'react';
 
+import type { VariantProps } from 'class-variance-authority';
 
 import {
   Caption as CaptionPrimitive,
@@ -9,9 +11,7 @@ import {
   useCaptionButtonState,
 } from '@platejs/caption/react';
 import { createPrimitiveComponent } from '@udecode/cn';
-import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
-import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';

@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 
 import { SuggestionPlugin } from '@platejs/suggestion/react';
 import {
@@ -8,7 +9,6 @@ import {
 } from '@radix-ui/react-dropdown-menu';
 import { CheckIcon, EyeIcon, PencilLineIcon, PenIcon } from 'lucide-react';
 import { useEditorRef, usePlateState, usePluginOption } from 'platejs/react';
-import * as React from 'react';
 
 import {
   DropdownMenu,

@@ -1,12 +1,12 @@
 'use client';
 
+import * as React from 'react';
 
+import type { PlateElementProps } from 'platejs/react';
 
 import { EmojiInlineIndexSearch, insertEmoji } from '@platejs/emoji';
 import { EmojiPlugin } from '@platejs/emoji/react';
-import type { PlateElementProps } from 'platejs/react';
 import { PlateElement, usePluginOption } from 'platejs/react';
-import * as React from 'react';
 
 import { useDebounce } from '@/hooks/use-debounce';
 
@@ -35,7 +35,7 @@ export function EmojiInputElement(props: PlateElementProps) {
   }, [data, debouncedValue]);
 
   return (
-    <PlateElement as="span" data-slate-value={element.value} {...props}>
+    <PlateElement as="span" {...props}>
       <InlineCombobox
         value={value}
         element={element}

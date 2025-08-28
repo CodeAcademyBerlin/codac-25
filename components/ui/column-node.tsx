@@ -1,10 +1,7 @@
 'use client';
 
-
-
 import { useDraggable, useDropLine } from '@platejs/dnd';
 import { setColumns } from '@platejs/layout';
-import { useDebouncePopoverOpen } from '@platejs/layout/react';
 import { ResizableProvider } from '@platejs/resizable';
 import { BlockSelectionPlugin } from '@platejs/selection/react';
 import { useComposedRef } from '@udecode/cn';
@@ -16,10 +13,13 @@ import type { PlateElementProps } from 'platejs/react';
 import {
   PlateElement,
   useEditorRef,
+  useEditorSelector,
   useElement,
+  useFocused,
   usePluginOption,
   useReadOnly,
   useRemoveNodeButton,
+  useSelected,
   withHOC,
 } from 'platejs/react';
 import * as React from 'react';
@@ -130,9 +130,9 @@ function DropLine() {
         'slate-dropLine',
         'absolute bg-brand/50',
         dropLine === 'left' &&
-          'inset-y-0 left-[-10.5px] w-1 group-first/column:-left-1',
+        'inset-y-0 left-[-10.5px] w-1 group-first/column:-left-1',
         dropLine === 'right' &&
-          'inset-y-0 right-[-11px] w-1 group-last/column:-right-1'
+        'inset-y-0 right-[-11px] w-1 group-last/column:-right-1'
       )}
     />
   );
@@ -152,10 +152,15 @@ function ColumnFloatingToolbar({ children }: React.PropsWithChildren) {
   const editor = useEditorRef();
   const readOnly = useReadOnly();
   const element = useElement<TColumnElement>();
-
   const { props: buttonProps } = useRemoveNodeButton({ element });
+  const selected = useSelected();
+  const isCollapsed = useEditorSelector(
+    (editor) => editor.api.isCollapsed(),
+    []
+  );
+  const isFocused = useFocused();
 
-  const isOpen = useDebouncePopoverOpen();
+  const open = isFocused && !readOnly && selected && isCollapsed;
 
   const onColumnChange = (widths: string[]) => {
     setColumns(editor, {
@@ -164,10 +169,8 @@ function ColumnFloatingToolbar({ children }: React.PropsWithChildren) {
     });
   };
 
-  if (readOnly) return <>{children}</>;
-
   return (
-    <Popover open={isOpen} modal={false}>
+    <Popover open={open} modal={false}>
       <PopoverAnchor>{children}</PopoverAnchor>
       <PopoverContent
         className="w-auto p-1"

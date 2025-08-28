@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 
 import {
   AIChatPlugin,
@@ -27,11 +28,14 @@ import {
   X,
 } from 'lucide-react';
 import { type NodeEntry, type SlateEditor, isHotkey, NodeApi } from 'platejs';
-import { useEditorPlugin, useHotkeys, usePluginOption } from 'platejs/react';
+import {
+  useEditorPlugin,
+  useFocused,
+  useHotkeys,
+  usePluginOption,
+} from 'platejs/react';
 import { type PlateEditor, useEditorRef } from 'platejs/react';
-import * as React from 'react';
 
-import { useChat } from '@/components/editor/use-chat';
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -45,16 +49,17 @@ import {
   PopoverContent,
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
+import { useChat } from '@/components/editor/use-chat';
 
 import { AIChatEditor } from './ai-chat-editor';
 
 export function AIMenu() {
   const { api, editor } = useEditorPlugin(AIChatPlugin);
-  const open = usePluginOption(AIChatPlugin, 'open');
   const mode = usePluginOption(AIChatPlugin, 'mode');
   const streaming = usePluginOption(AIChatPlugin, 'streaming');
   const isSelecting = useIsSelecting();
-
+  const isFocusedLast = useFocused();
+  const open = usePluginOption(AIChatPlugin, 'open') && isFocusedLast;
   const [value, setValue] = React.useState('');
 
   const chat = useChat();
@@ -119,6 +124,9 @@ export function AIMenu() {
 
   useHotkeys('esc', () => {
     api.aiChat.stop();
+
+    // remove when you implement the route /api/ai/command
+    chat._abortFakeStream();
   });
 
   const isLoading = status === 'streaming' || status === 'submitted';
@@ -145,7 +153,7 @@ export function AIMenu() {
         side="bottom"
       >
         <Command
-          className="w-full rounded border shadow-md"
+          className="w-full rounded-lg border shadow-md"
           value={value}
           onValueChange={setValue}
         >
@@ -310,7 +318,10 @@ Start writing a new paragraph AFTER <Document> ONLY ONE SENTENCE`
     label: 'Insert below',
     value: 'insertBelow',
     onSelect: ({ aiEditor, editor }) => {
-      void editor.getTransforms(AIChatPlugin).aiChat.insertBelow(aiEditor);
+      /** Format: 'none' Fix insert table */
+      void editor
+        .getTransforms(AIChatPlugin)
+        .aiChat.insertBelow(aiEditor, { format: 'none' });
     },
   },
   makeLonger: {
@@ -513,7 +524,7 @@ export function AILoadingBar() {
   return (
     <div
       className={cn(
-        'absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center gap-3 rounded border border-border bg-muted px-3 py-1.5 text-sm text-muted-foreground shadow-md transition-all duration-300'
+        'absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 items-center gap-3 rounded-md border border-border bg-muted px-3 py-1.5 text-sm text-muted-foreground shadow-md transition-all duration-300'
       )}
     >
       <span className="h-4 w-4 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent" />

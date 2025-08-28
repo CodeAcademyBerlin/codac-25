@@ -1,12 +1,12 @@
 'use client';
 
+import * as React from 'react';
 
+import type { PlateElementProps } from 'platejs/react';
 
 import { useTocElement, useTocElementState } from '@platejs/toc/react';
 import { cva } from 'class-variance-authority';
-import type { PlateElementProps } from 'platejs/react';
 import { PlateElement } from 'platejs/react';
-import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
 

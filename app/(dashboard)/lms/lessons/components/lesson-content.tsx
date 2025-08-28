@@ -18,7 +18,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { updateLessonProgress } from '@/actions/lms/update-lesson';
-import { UnifiedEditor } from '@/components/editor/unified-editor';
+import { SimplifiedUnifiedEditor } from '@/components/editor/simplified-unified-editor';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -254,7 +254,7 @@ export function LessonContent({ lesson, user: _user, canEdit }: LessonContentPro
                 <div className="flex-1 overflow-y-auto">
                     <div className="p-6">
                         <div className={isEditing ? "h-full" : "prose prose-neutral dark:prose-invert max-w-none"}>
-                            <UnifiedEditor
+                            <SimplifiedUnifiedEditor
                                 contentId={lesson.id}
                                 contentType="lesson"
                                 initialValue={lesson.content}

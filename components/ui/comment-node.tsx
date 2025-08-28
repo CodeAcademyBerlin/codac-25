@@ -1,14 +1,15 @@
 'use client';
 
-
-import { getCommentCount } from '@platejs/comment';
-import type { TCommentText } from 'platejs';
-import type { PlateLeafProps } from 'platejs/react';
-import { PlateLeaf, useEditorPlugin, usePluginOption } from 'platejs/react';
 import * as React from 'react';
 
-import { commentPlugin } from '@/components/editor/plugins/comment-kit';
+import type { TCommentText } from 'platejs';
+import type { PlateLeafProps } from 'platejs/react';
+
+import { getCommentCount } from '@platejs/comment';
+import { PlateLeaf, useEditorPlugin, usePluginOption } from 'platejs/react';
+
 import { cn } from '@/lib/utils';
+import { commentPlugin } from '@/components/editor/plugins/comment-kit';
 
 export function CommentLeaf(props: PlateLeafProps<TCommentText>) {
   const { children, leaf } = props;

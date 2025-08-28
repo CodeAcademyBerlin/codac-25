@@ -10,6 +10,11 @@ import {
   Code2,
   Trophy,
   BookOpen,
+  Home,
+  Settings,
+  Upload,
+  Users2,
+  ShieldCheck,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -56,8 +61,48 @@ const buildNavigationData = (role?: string) => {
     );
   }
 
+  // Career items with conditional sub-items
+  const careerItems = [
+    {
+      title: "Career",
+      url: "/career/jobs",
+      icon: Briefcase,
+    },
+  ];
+
+  // Add career sub-items for job posting and duck upload
+  if (role === "ADMIN" || role === "MENTOR") {
+    careerItems.push({
+      title: "Post Job",
+      url: "/career/jobs/post",
+      icon: Upload,
+    });
+  }
+
+  // LMS items with admin section
+  const lmsItems = [
+    {
+      title: "Learning",
+      url: "/lms",
+      icon: BookOpen,
+    },
+  ];
+
+  if (role === "ADMIN") {
+    lmsItems.push({
+      title: "LMS Admin",
+      url: "/lms/admin",
+      icon: ShieldCheck,
+    });
+  }
+
   return {
     navTop: [
+      {
+        title: "Dashboard",
+        url: "/",
+        icon: Home,
+      },
       {
         title: "My Projects",
         url: "/projects/my",
@@ -79,18 +124,25 @@ const buildNavigationData = (role?: string) => {
         icon: Users,
       },
       {
-        title: "Career",
-        url: "/career/jobs",
-        icon: Briefcase,
+        title: "Cohorts",
+        url: "/community/cohorts",
+        icon: Users2,
+      },
+      ...careerItems,
+      {
+        title: "Upload Duck",
+        url: "/career/ducks/upload",
+        icon: Upload,
       },
       ...mentorshipItems,
+      {
+        title: "Profile",
+        url: "/profile",
+        icon: Settings,
+      },
     ],
     navSecondary: [
-      {
-        title: "Learning",
-        url: "/lms",
-        icon: BookOpen,
-      },
+      ...lmsItems,
       {
         title: "Documents",
         url: "/docs",

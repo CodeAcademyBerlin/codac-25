@@ -1,7 +1,9 @@
 'use client';
 
+import * as React from 'react';
 
 import type { Emoji } from '@emoji-mart/data';
+
 import {
   type EmojiCategoryList,
   type EmojiIconList,
@@ -27,10 +29,8 @@ import {
   StarIcon,
   XIcon,
 } from 'lucide-react';
-import * as React from 'react';
 
 import { Button } from '@/components/ui/button';
-import { ToolbarButton } from '@/components/ui/toolbar';
 import {
   Tooltip,
   TooltipContent,
@@ -38,6 +38,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { ToolbarButton } from '@/components/ui/toolbar';
 
 export function EmojiToolbarButton({
   options,
@@ -251,7 +252,7 @@ function EmojiPickerContent({
   const getRowWidth = settings.perLine.value * settings.buttonSize.value;
 
   const isCategoryVisible = React.useCallback(
-    (categoryId: EmojiCategoryList) => {
+    (categoryId: any) => {
       return visibleCategories.has(categoryId)
         ? visibleCategories.get(categoryId)
         : false;
@@ -504,7 +505,7 @@ function EmojiPickerNavigation({
                     className={cn(
                       'h-fit rounded-full fill-current p-1.5 text-muted-foreground hover:bg-muted hover:text-muted-foreground',
                       id === focusedCategory &&
-                      'pointer-events-none bg-accent fill-current text-accent-foreground'
+                        'pointer-events-none bg-accent fill-current text-accent-foreground'
                     )}
                     onClick={() => {
                       onClick(id);
