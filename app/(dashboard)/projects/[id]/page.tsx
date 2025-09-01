@@ -1,6 +1,7 @@
 import { Heart, ExternalLink, Github, Calendar, Eye } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { type Value } from 'platejs'
 
 import { PageContainer } from '@/components/layout'
 import { ProjectActions } from '@/components/projects/project-actions'
@@ -106,7 +107,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             </CardHeader>
             <CardContent>
               <ProjectSummaryDisplay
-                summary={project.summary as any}
+                summary={project.summary as Value | null}
                 fallbackDescription={project.description}
               />
             </CardContent>

@@ -1,13 +1,12 @@
-import * as React from 'react';
 
+import { BaseTablePlugin } from '@platejs/table';
 import type {
   SlateElementProps,
   TTableCellElement,
   TTableElement,
 } from 'platejs';
-
-import { BaseTablePlugin } from '@platejs/table';
 import { SlateElement } from 'platejs';
+import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -64,12 +63,12 @@ export function TableCellElementStatic({
         'before:size-full',
         "before:absolute before:box-border before:content-[''] before:select-none",
         borders &&
-          cn(
-            borders.bottom?.size && `before:border-b before:border-b-border`,
-            borders.right?.size && `before:border-r before:border-r-border`,
-            borders.left?.size && `before:border-l before:border-l-border`,
-            borders.top?.size && `before:border-t before:border-t-border`
-          )
+        cn(
+          borders.bottom?.size && `before:border-b before:border-b-border`,
+          borders.right?.size && `before:border-r before:border-r-border`,
+          borders.left?.size && `before:border-l before:border-l-border`,
+          borders.top?.size && `before:border-t before:border-t-border`
+        )
       )}
       style={
         {

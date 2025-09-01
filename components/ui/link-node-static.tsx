@@ -14,7 +14,7 @@ export function LinkElementStatic(props: SlateElementProps<TLinkElement>) {
       attributes={{
         ...props.attributes,
         ...getLinkAttributes(props.editor, props.element),
-      }}
+      } as any}
     >
       {props.children}
     </SlateElement>

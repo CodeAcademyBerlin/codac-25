@@ -126,7 +126,7 @@ export function AIMenu() {
     api.aiChat.stop();
 
     // remove when you implement the route /api/ai/command
-    chat._abortFakeStream();
+    // chat._abortFakeStream(); // This method no longer exists
   });
 
   const isLoading = status === 'streaming' || status === 'submitted';

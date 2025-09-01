@@ -173,7 +173,10 @@ function MediaUrlDialogContent({
   const [url, setUrl] = React.useState('');
 
   const embedMedia = React.useCallback(() => {
-    if (!isUrl(url)) return toast.error('Invalid URL');
+    if (!isUrl(url)) {
+      toast.error('Invalid URL');
+      return;
+    }
 
     setOpen(false);
     editor.tf.insertNodes({

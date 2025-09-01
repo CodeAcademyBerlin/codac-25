@@ -1,23 +1,23 @@
-import { BaseAlignKit } from './plugins/align-base-kit';
-import { BaseBasicBlocksKit } from './plugins/basic-blocks-base-kit';
-import { BaseBasicMarksKit } from './plugins/basic-marks-base-kit';
-import { BaseCalloutKit } from './plugins/callout-base-kit';
-import { BaseCodeBlockKit } from './plugins/code-block-base-kit';
-import { BaseColumnKit } from './plugins/column-base-kit';
-import { BaseCommentKit } from './plugins/comment-base-kit';
-import { BaseDateKit } from './plugins/date-base-kit';
-import { BaseFontKit } from './plugins/font-base-kit';
-import { BaseLineHeightKit } from './plugins/line-height-base-kit';
-import { BaseLinkKit } from './plugins/link-base-kit';
-import { BaseListKit } from './plugins/list-base-kit';
-import { MarkdownKit } from './plugins/markdown-kit';
-import { BaseMathKit } from './plugins/math-base-kit';
-import { BaseMediaKit } from './plugins/media-base-kit';
-import { BaseMentionKit } from './plugins/mention-base-kit';
-import { BaseSuggestionKit } from './plugins/suggestion-base-kit';
-import { BaseTableKit } from './plugins/table-base-kit';
-import { BaseTocKit } from './plugins/toc-base-kit';
-import { BaseToggleKit } from './plugins/toggle-base-kit';
+import { BaseAlignKit } from '@/components/align-base-kit';
+import { BaseBasicBlocksKit } from '@/components/basic-blocks-base-kit';
+import { BaseBasicMarksKit } from '@/components/basic-marks-base-kit';
+import { BaseCalloutKit } from '@/components/callout-base-kit';
+import { BaseCodeBlockKit } from '@/components/code-block-base-kit';
+import { BaseColumnKit } from '@/components/column-base-kit';
+import { BaseCommentKit } from '@/components/comment-base-kit';
+import { BaseDateKit } from '@/components/date-base-kit';
+import { BaseFontKit } from '@/components/font-base-kit';
+import { BaseLineHeightKit } from '@/components/line-height-base-kit';
+import { BaseLinkKit } from '@/components/link-base-kit';
+import { BaseListKit } from '@/components/list-base-kit';
+import { MarkdownKit } from '@/components/markdown-kit';
+import { BaseMathKit } from '@/components/math-base-kit';
+import { BaseMediaKit } from '@/components/media-base-kit';
+import { BaseMentionKit } from '@/components/mention-base-kit';
+import { BaseSuggestionKit } from '@/components/suggestion-base-kit';
+import { BaseTableKit } from '@/components/table-base-kit';
+import { BaseTocKit } from '@/components/toc-base-kit';
+import { BaseToggleKit } from '@/components/toggle-base-kit';
 
 export const BaseEditorKit = [
   ...BaseBasicBlocksKit,

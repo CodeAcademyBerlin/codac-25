@@ -1,8 +1,6 @@
 'use client';
 
-import * as React from 'react';
 
-import type { PlateElementProps, RenderNodeWrapper } from 'platejs/react';
 
 import { getDraftCommentKey } from '@platejs/comment';
 import { CommentPlugin } from '@platejs/comment/react';
@@ -22,8 +20,16 @@ import {
   PathApi,
   TextApi,
 } from 'platejs';
+import type { PlateElementProps, RenderNodeWrapper } from 'platejs/react';
 import { useEditorPlugin, useEditorRef, usePluginOption } from 'platejs/react';
+import * as React from 'react';
 
+import { commentPlugin } from '@/components/editor/plugins/comment-kit';
+import {
+  type TDiscussion,
+  discussionPlugin,
+} from '@/components/editor/plugins/discussion-kit';
+import { suggestionPlugin } from '@/components/editor/plugins/suggestion-kit';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -31,12 +37,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { commentPlugin } from '@/components/editor/plugins/comment-kit';
-import {
-  type TDiscussion,
-  discussionPlugin,
-} from '@/components/editor/plugins/discussion-kit';
-import { suggestionPlugin } from '@/components/editor/plugins/suggestion-kit';
 
 import {
   BlockSuggestionCard,
@@ -70,7 +70,7 @@ export const BlockDiscussion: RenderNodeWrapper<AnyPluginConfig> = (props) => {
     return;
   }
 
-  return (props) => (
+  const Component = (props: PlateElementProps) => (
     <BlockCommentContent
       blockPath={blockPath}
       commentNodes={commentNodes}
@@ -79,6 +79,8 @@ export const BlockDiscussion: RenderNodeWrapper<AnyPluginConfig> = (props) => {
       {...props}
     />
   );
+  Component.displayName = 'BlockDiscussionComponent';
+  return Component;
 };
 
 const BlockCommentContent = ({
@@ -143,7 +145,7 @@ const BlockCommentContent = ({
         ([node]) =>
           TextApi.isText(node) &&
           editor.getApi(SuggestionPlugin).suggestion.nodeId(node) ===
-            activeSuggestion.suggestionId
+          activeSuggestion.suggestionId
       );
     }
 
