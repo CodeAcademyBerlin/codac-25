@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 
 import {
   ArrowUpToLineIcon,
@@ -16,6 +15,7 @@ import {
 } from 'lucide-react';
 import { KEYS } from 'platejs';
 import { useEditorReadOnly } from 'platejs/react';
+import * as React from 'react';
 
 import { AIToolbarButton } from './ai-toolbar-button';
 import { AlignToolbarButton } from './align-toolbar-button';

@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useTransition } from 'react'
 import { GitBranch, Loader2, AlertCircle, Search, Github } from 'lucide-react'
+import { useState, useTransition } from 'react'
 
 import { fetchRepository } from '@/actions/github/fetch-repository'
 import { Alert, AlertDescription } from '@/components/ui/alert'

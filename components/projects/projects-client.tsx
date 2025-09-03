@@ -1,23 +1,26 @@
 'use client'
 
-import { Search, Grid, List } from 'lucide-react'
-import { useState, useMemo } from 'react'
 import type { ProjectStatus } from '@prisma/client'
+import { Search, Grid, List } from 'lucide-react'
+import { Filter } from 'lucide-react'
+import { useState, useMemo } from 'react'
 
 import { Grid as LayoutGrid, Section } from '@/components/layout'
 import { ProjectCard } from '@/components/projects/project-card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { PROJECT_STATUSES, SKILL_CATEGORIES, type ProjectShowcaseWithStats } from '@/types/portfolio'
-import { Filter } from 'lucide-react'
+
 
 interface ProjectsClientProps {
   initialProjects: ProjectShowcaseWithStats[]
 }
+
+type ViewMode = 'grid' | 'list'
 
 export function ProjectsClient({ initialProjects }: ProjectsClientProps) {
   const [searchQuery, setSearchQuery] = useState('')
@@ -25,24 +28,25 @@ export function ProjectsClient({ initialProjects }: ProjectsClientProps) {
   const [selectedStatus, setSelectedStatus] = useState<ProjectStatus[]>([])
   const [showFeaturedOnly, setShowFeaturedOnly] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const [viewMode, setViewMode] = useState<ViewMode>('grid')
 
   const filteredProjects = useMemo(() => {
     return initialProjects.filter((project) => {
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase()
-        const matchesSearch = 
+        const matchesSearch =
           project.title.toLowerCase().includes(query) ||
           project.description?.toLowerCase().includes(query) ||
           project.shortDesc?.toLowerCase().includes(query)
-        
+
         if (!matchesSearch) return false
       }
 
       // Tech stack filter
       if (selectedTech.length > 0) {
         const projectTech = project.techStack as string[]
-        const hasMatchingTech = selectedTech.some(tech => 
+        const hasMatchingTech = selectedTech.some(tech =>
           projectTech.some(pt => pt.toLowerCase().includes(tech.toLowerCase()))
         )
         if (!hasMatchingTech) return false
@@ -183,10 +187,20 @@ export function ProjectsClient({ initialProjects }: ProjectsClientProps) {
             </Popover>
 
             <div className="flex items-center rounded-md border p-1">
-              <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+              <Button 
+                variant={viewMode === 'grid' ? 'default' : 'ghost'} 
+                size="sm" 
+                className="h-7 w-7 p-0"
+                onClick={() => setViewMode('grid')}
+              >
                 <Grid className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="sm" className="h-7 w-7 p-0">
+              <Button 
+                variant={viewMode === 'list' ? 'default' : 'ghost'} 
+                size="sm" 
+                className="h-7 w-7 p-0"
+                onClick={() => setViewMode('list')}
+              >
                 <List className="h-4 w-4" />
               </Button>
             </div>
@@ -198,7 +212,7 @@ export function ProjectsClient({ initialProjects }: ProjectsClientProps) {
           <div className="flex flex-wrap gap-2 mt-4">
             {searchQuery && (
               <Badge variant="secondary" className="gap-1">
-                Search: "{searchQuery}"
+                Search: &quot;{searchQuery}&quot;
                 <button
                   onClick={() => setSearchQuery('')}
                   className="ml-1 text-xs hover:text-destructive"
@@ -264,11 +278,19 @@ export function ProjectsClient({ initialProjects }: ProjectsClientProps) {
             <div className="mb-4 text-sm text-muted-foreground">
               Showing {filteredProjects.length} of {initialProjects.length} projects
             </div>
-            <LayoutGrid cols="3">
-              {filteredProjects.map((project) => (
-                <ProjectCard key={project.id} project={project} />
-              ))}
-            </LayoutGrid>
+            {viewMode === 'grid' ? (
+              <LayoutGrid cols="3">
+                {filteredProjects.map((project) => (
+                  <ProjectCard key={project.id} project={project} variant="card" />
+                ))}
+              </LayoutGrid>
+            ) : (
+              <div className="space-y-4">
+                {filteredProjects.map((project) => (
+                  <ProjectCard key={project.id} project={project} variant="list" />
+                ))}
+              </div>
+            )}
           </>
         )}
       </Section>

@@ -2,12 +2,11 @@ import { PageContainer, PageHeader } from '@/components/layout'
 import { ProjectsClient } from '@/components/projects/projects-client'
 import { getAllProjects } from '@/data/projects/get-projects'
 
-// Force static generation (SSG - no revalidation)
-export const dynamic = 'force-static'
+// Dynamic rendering to support user-specific like states
+export const dynamic = 'force-dynamic'
 
 export default async function ProjectsPage() {
-  // For static generation, we'll load all projects at build time
-  // All filtering will be handled client-side
+  // Load all projects with user-specific like status
   const projects = await getAllProjects({})
 
   return (

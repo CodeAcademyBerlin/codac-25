@@ -1,6 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import type { ProjectStatus } from '@prisma/client'
 import { CalendarIcon, PlusIcon, X, FileText, Github } from 'lucide-react'
 import { type Value } from 'platejs'
 import React, { useState, useEffect } from 'react'
@@ -20,7 +21,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 import { PROJECT_STATUSES, type CreateProjectData, type ProjectCreationMode } from '@/types/portfolio'
-import type { ProjectStatus } from '@prisma/client'
 
 import { GitHubImportTab } from './github-import-tab'
 import { ProjectSummaryEditor } from './project-summary-editor'

@@ -1,6 +1,7 @@
 import { Octokit } from '@octokit/rest'
 
 import { logger } from '@/lib/logger'
+
 import type {
   GitHubRepository,
   GitHubLanguages,

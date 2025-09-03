@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 
 import { AIChatPlugin } from '@platejs/ai/react';
 import {
@@ -10,6 +9,7 @@ import {
 } from '@platejs/selection/react';
 import { RangeApi } from 'platejs';
 import { usePluginOption } from 'platejs/react';
+import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 

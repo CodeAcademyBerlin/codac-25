@@ -129,6 +129,7 @@ export function ProjectSummaryEditor({
           showStatusBar={showStatusBar}
           canEdit={canEdit}
           readOnly={readOnly}
+          editorClassName="max-w-full px-4 sm:px-6 pt-4 pb-16 text-base overflow-x-hidden"
         />
       </div>
     </div>

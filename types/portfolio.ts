@@ -30,6 +30,7 @@ export type ProjectShowcaseWithStats = ProjectShowcase & {
   projectProfile: ProjectProfile & {
     user: Pick<User, 'id' | 'name' | 'avatar'>
   }
+  isLiked?: boolean
   _count: {
     comments: number
     projectLikes: number
@@ -41,6 +42,7 @@ export type ProjectShowcaseWithDetails = ProjectShowcase & {
   projectProfile: ProjectProfile & {
     user: Pick<User, 'id' | 'name' | 'avatar' | 'githubUrl' | 'linkedinUrl'>
   }
+  isLiked?: boolean
   comments: (ProjectComment & {
     author: Pick<User, 'id' | 'name' | 'avatar'>
     replies?: (ProjectComment & {

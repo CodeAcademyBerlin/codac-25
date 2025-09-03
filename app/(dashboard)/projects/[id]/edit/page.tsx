@@ -67,7 +67,7 @@ export default async function EditProjectPage({ params }: EditProjectPageProps) 
 
   return (
     <DndWrapper>
-      <PageContainer size="lg">
+      <PageContainer size="lg" padding="sm">
         <PageHeader
           title="Edit Project"
           description="Update your project details and summary"

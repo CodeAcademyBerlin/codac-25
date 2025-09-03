@@ -1,9 +1,7 @@
 'use client';
 
-import * as React from 'react';
 
 import type { DropdownMenuProps } from '@radix-ui/react-dropdown-menu';
-
 import {
   CalendarIcon,
   ChevronRightIcon,
@@ -28,17 +26,18 @@ import {
 } from 'lucide-react';
 import { KEYS } from 'platejs';
 import { type PlateEditor, useEditorRef } from 'platejs/react';
+import * as React from 'react';
 
+import {
+  insertBlock,
+  insertInlineElement,
+} from '@/components/editor/transforms';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  insertBlock,
-  insertInlineElement,
-} from '@/components/editor/transforms';
 
 import { ToolbarButton, ToolbarMenuGroup } from './toolbar';
 

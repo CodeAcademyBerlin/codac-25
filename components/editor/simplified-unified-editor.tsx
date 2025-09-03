@@ -7,12 +7,6 @@ import React, { createContext, useContext, useCallback, useEffect, useMemo, useR
 import { updateDoc } from "@/actions/doc/update-doc";
 import { updateLessonContent } from "@/actions/lms/update-lesson";
 import { updateProjectSummary } from "@/actions/projects/update-project-summary";
-import { Button } from "@/components/ui/button";
-import { useDebounce } from "@/hooks/use-debounce";
-import { useHasActiveUploads } from "@/hooks/use-upload-file";
-import { logger } from "@/lib/logger";
-import { cn } from "@/lib/utils";
-
 import { AIKit } from '@/components/ai-kit';
 import { AutoformatKit } from '@/components/autoformat-kit';
 import { BasicNodesKit } from '@/components/basic-nodes-kit';
@@ -23,7 +17,12 @@ import { FloatingToolbarKit } from '@/components/floating-toolbar-kit';
 import { ListKit } from '@/components/list-kit';
 import { MediaKit } from '@/components/media-kit';
 import { TableKit } from '@/components/table-kit';
+import { Button } from "@/components/ui/button";
 import { Editor, EditorContainer } from '@/components/ui/editor';
+import { useDebounce } from "@/hooks/use-debounce";
+import { useHasActiveUploads } from "@/hooks/use-upload-file";
+import { logger } from "@/lib/logger";
+import { cn } from "@/lib/utils";
 
 interface SaveStatus {
     status: 'idle' | 'saving' | 'saved' | 'error';
@@ -142,6 +141,7 @@ interface SimplifiedUnifiedEditorProps {
     canEdit?: boolean;
     readOnly?: boolean;
     children?: React.ReactNode;
+    editorClassName?: string;
 }
 
 export const SimplifiedUnifiedEditor = React.memo(function SimplifiedUnifiedEditor({
@@ -151,7 +151,8 @@ export const SimplifiedUnifiedEditor = React.memo(function SimplifiedUnifiedEdit
     showStatusBar = false,
     canEdit = false,
     readOnly,
-    children
+    children,
+    editorClassName
 }: SimplifiedUnifiedEditorProps) {
     const isReadOnly = readOnly ?? !canEdit;
 
@@ -165,7 +166,10 @@ export const SimplifiedUnifiedEditor = React.memo(function SimplifiedUnifiedEdit
             <Plate editor={editor} readOnly={isReadOnly}>
                 {children}
                 <EditorContainer className="max-w-full">
-                    <Editor variant="default" className="max-w-full" />
+                    <Editor 
+                        variant="default" 
+                        className={editorClassName || "max-w-full"} 
+                    />
                 </EditorContainer>
                 <SimplifiedStateUpdater
                     contentId={contentId}
