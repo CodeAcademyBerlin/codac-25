@@ -65,6 +65,8 @@ A comprehensive, production-ready learning management system built with Next.js 
 - **Media Support** - Images, videos, and documents
 
 ### **Development & Quality**
+- **[Vitest](https://vitest.dev/)** - Fast unit testing framework
+- **[React Testing Library](https://testing-library.com/react)** - Component testing utilities
 - **[Playwright](https://playwright.dev/)** - End-to-end testing framework
 - **[ESLint 9](https://eslint.org/)** - Code linting and formatting
 - **[Zod](https://zod.dev/)** - Schema validation and type inference
@@ -135,9 +137,12 @@ pnpm db:reset         # Reset database with fresh data
 pnpm lint             # Run ESLint
 pnpm lint:fix         # Fix ESLint issues
 pnpm ts:check         # TypeScript type checking
+pnpm test:unit        # Run unit tests (Vitest)
+pnpm test:unit:watch  # Run unit tests in watch mode
+pnpm test:unit:ui     # Interactive unit test debugging
 pnpm test             # Run Playwright E2E tests
-pnpm test:ui          # Run tests with interactive UI
-pnpm test:headed      # Run tests in headed browser mode
+pnpm test:ui          # Run E2E tests with interactive UI
+pnpm test:headed      # Run E2E tests in headed browser mode
 
 # Content Management
 pnpm import:lms       # Import LMS content from markdown
@@ -165,6 +170,7 @@ codac-25/
 ├── data/                  # Data access layer
 ├── hooks/                 # Custom React hooks
 ├── types/                 # TypeScript type definitions
+├── tests/                 # Test utilities and configuration
 └── prisma/                # Database schema and migrations
 ```
 
@@ -187,32 +193,38 @@ codac-25/
 
 CODAC includes comprehensive testing infrastructure to ensure reliability and code quality.
 
-### **Testing Framework**
-- **Playwright**: End-to-end testing with cross-browser support
-- **TypeScript**: Strict type checking for compile-time error detection
-- **ESLint**: Code linting with Next.js and TypeScript rules
+### **Testing Stack**
+- **[Vitest](https://vitest.dev/)**: Fast unit testing with TypeScript support
+- **[React Testing Library](https://testing-library.com/react)**: Component testing utilities
+- **[Playwright](https://playwright.dev/)**: End-to-end testing with cross-browser support
+- **[ESLint](https://eslint.org/)**: Code linting with Next.js and TypeScript rules
 
+### **Test Types**
+- **Unit Tests**: Functions, components, and server actions (`*.test.ts/tsx`)
+- **Integration Tests**: Multi-component workflows and forms
+- **E2E Tests**: Complete user journeys and accessibility (`tests/e2e/`)
 
 ### **Running Tests**
 ```bash
-# Run all tests
-pnpm test
+# Unit Tests
+pnpm test:unit        # Run all unit tests
+pnpm test:unit:watch  # Watch mode for development
 
-# Interactive test debugging
-pnpm test:ui
+# E2E Tests  
+pnpm test             # Run Playwright E2E tests
+pnpm test:ui          # Interactive E2E debugging
 
-# Run specific test files
-pnpm test tests/e2e/auth-registration.spec.ts
-
-# Generate test reports
-pnpm test:report
+# Coverage & Reports
+pnpm test:unit:coverage  # Unit test coverage
+pnpm test:report         # E2E test reports
 ```
 
 ### **Development Workflow**
 1. **Code Quality**: Always run `pnpm lint` and `pnpm ts:check` before committing
-2. **Database Updates**: Use `pnpm db:generate` after schema changes
-3. **Testing**: Run relevant tests for your changes
-4. **Build Verification**: Use `pnpm build` to ensure production compatibility
+2. **Unit Testing**: Write tests for new components and functions (`pnpm test:unit:watch`)
+3. **Database Updates**: Use `pnpm db:generate` after schema changes
+4. **Testing**: Run relevant tests for your changes
+5. **Build Verification**: Use `pnpm build` to ensure production compatibility
 
 
 ## 🔧 Environment Configuration
