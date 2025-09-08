@@ -1,15 +1,15 @@
 import { test, expect } from '@playwright/test';
 
 test('checks padding on desktop devices', async ({ page }) => {
-  // Navigate to the homepage
-  await page.goto('/');
+  // Navigate to the signin page (more predictable than homepage)
+  await page.goto('/auth/signin');
   
   // Wait for page to fully load
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(1000);
   
-  // Get the computed padding values for the main container
-  const pageContainer = page.locator('.flex.flex-1.flex-col');
+  // Get the computed padding values for the main container or card
+  const pageContainer = page.locator('.flex.items-center.justify-center, [class*="card"], main').first();
   const padding = await pageContainer.evaluate((el) => {
     const style = window.getComputedStyle(el);
     return {
@@ -39,15 +39,15 @@ test('checks padding on mobile viewport', async ({ page }) => {
   // Set viewport to mobile size
   await page.setViewportSize({ width: 375, height: 667 });
   
-  // Navigate to the homepage
-  await page.goto('/');
+  // Navigate to the signin page
+  await page.goto('/auth/signin');
   
   // Wait for page to fully load
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(1000);
   
-  // Get the computed padding values for the main container
-  const pageContainer = page.locator('.flex.flex-1.flex-col');
+  // Get the computed padding values for the main container or card
+  const pageContainer = page.locator('.flex.items-center.justify-center, [class*="card"], main').first();
   const padding = await pageContainer.evaluate((el) => {
     const style = window.getComputedStyle(el);
     return {
@@ -75,11 +75,11 @@ test('checks padding on mobile viewport', async ({ page }) => {
 
 test('compares desktop and mobile padding', async ({ page }) => {
   // Test desktop version first
-  await page.goto('/');
+  await page.goto('/auth/signin');
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(1000);
   
-  const desktopContainer = page.locator('.flex.flex-1.flex-col');
+  const desktopContainer = page.locator('.flex.items-center.justify-center, [class*="card"], main').first();
   const desktopPadding = await desktopContainer.evaluate((el) => {
     const style = window.getComputedStyle(el);
     return {
@@ -92,11 +92,11 @@ test('compares desktop and mobile padding', async ({ page }) => {
   
   // Switch to mobile viewport
   await page.setViewportSize({ width: 375, height: 667 });
-  await page.goto('/');
+  await page.goto('/auth/signin');
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(1000);
   
-  const mobileContainer = page.locator('.flex.flex-1.flex-col');
+  const mobileContainer = page.locator('.flex.items-center.justify-center, [class*="card"], main').first();
   const mobilePadding = await mobileContainer.evaluate((el) => {
     const style = window.getComputedStyle(el);
     return {

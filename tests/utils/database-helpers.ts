@@ -20,11 +20,11 @@ export class DatabaseHelpers {
   private prisma: PrismaClient;
 
   constructor() {
-    // Use test database connection
+    // Use development database for testing (same as main app)
     this.prisma = new PrismaClient({
       datasources: {
         db: {
-          url: process.env.TEST_DATABASE_URL || process.env.DATABASE_URL
+          url: process.env.DATABASE_URL
         }
       }
     });
@@ -92,14 +92,15 @@ export class DatabaseHelpers {
 
   // === TEST ISOLATION ===
   async cleanupTestUsers() {
-    // Delete users created for testing (with test-specific email patterns)
+    // Only delete users created for testing (very specific patterns to avoid dev data)
     await this.prisma.user.deleteMany({
       where: {
         OR: [
-          { email: { contains: 'test@' } },
           { email: { contains: '@example.com' } },
-          { email: { contains: 'playwright-' } },
-          { name: { startsWith: 'Test User' } }
+          { email: { startsWith: 'test-' } },
+          { email: { startsWith: 'playwright-' } },
+          { name: { startsWith: 'Test User' } },
+          { name: { contains: 'playwright' } }
         ]
       }
     });
@@ -107,27 +108,26 @@ export class DatabaseHelpers {
 
   async cleanupAllTestData() {
     // Clean up in order due to foreign key constraints
+    // Only clean up test-related data with very specific patterns
+    const testUserPatterns = {
+      OR: [
+        { email: { contains: '@example.com' } },
+        { email: { startsWith: 'test-' } },
+        { email: { startsWith: 'playwright-' } },
+        { name: { startsWith: 'Test User' } },
+        { name: { contains: 'playwright' } }
+      ]
+    };
+
     await this.prisma.session.deleteMany({
       where: {
-        user: {
-          OR: [
-            { email: { contains: 'test@' } },
-            { email: { contains: '@example.com' } },
-            { email: { contains: 'playwright-' } }
-          ]
-        }
+        user: testUserPatterns
       }
     });
 
     await this.prisma.account.deleteMany({
       where: {
-        user: {
-          OR: [
-            { email: { contains: 'test@' } },
-            { email: { contains: '@example.com' } },
-            { email: { contains: 'playwright-' } }
-          ]
-        }
+        user: testUserPatterns
       }
     });
 
@@ -145,6 +145,8 @@ export class DatabaseHelpers {
 
   // === SESSION MANAGEMENT ===
   async createUserSession(userId: string, expiresAt?: Date) {
+    // Note: With JWT strategy, sessions are not stored in database
+    // This method is kept for compatibility but may not be needed
     return await this.prisma.session.create({
       data: {
         userId,
@@ -356,7 +358,12 @@ export class DatabaseTestIntegration {
   }
 
   async verifyUserSessionExists(userId: string) {
-    const sessions = await this.db.getUserSessions(userId);
-    return sessions.length > 0;
+    // For JWT strategy, we don't have database sessions
+    // Instead, verify the user exists and is active
+    const user = await (this.db as any).prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, status: true }
+    });
+    return user?.status === 'ACTIVE';
   }
 }
