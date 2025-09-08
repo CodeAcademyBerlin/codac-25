@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 
 import { cn } from './utils'
 
-describe('cn utility function', () => {
+describe('CN Utility Function', () => {
   it('should merge classes correctly', () => {
     expect(cn('px-2 py-1', 'text-sm')).toBe('px-2 py-1 text-sm')
   })
