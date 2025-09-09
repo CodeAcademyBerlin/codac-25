@@ -1,6 +1,6 @@
 'use server';
 
-import { Prisma } from '@prisma/client';
+import { type PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { revalidatePath } from 'next/cache';
 
 import { auth } from '@/lib/auth/auth';
@@ -147,7 +147,7 @@ export async function updateProfile(data: UpdateProfileInput): Promise<UpdatePro
         }
 
         // Handle Prisma errors
-        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error instanceof PrismaClientKnownRequestError) {
             switch (error.code) {
                 case 'P2025':
                     return {
