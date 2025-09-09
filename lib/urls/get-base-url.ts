@@ -6,7 +6,7 @@ export function getBaseUrl(): string {
 
     // Server environment - defensive check for process.env
     const env = process.env || {};
-    
+
     if (env.VERCEL_URL) {
         return `https://${env.VERCEL_URL}`;
     }
@@ -15,6 +15,7 @@ export function getBaseUrl(): string {
         return env.NEXT_PUBLIC_APP_URL;
     }
 
-    // Development fallback
-    return `http://localhost:${env.PORT || 3000}`;
+    // Development fallback - check if we're in test mode
+    const port = env.PORT || (process.env.NODE_ENV === 'test' ? 3001 : 3000);
+    return `http://localhost:${port}`;
 } 

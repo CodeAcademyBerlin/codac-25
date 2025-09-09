@@ -1,6 +1,6 @@
 'use server';
 
-import { type PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { revalidatePath } from 'next/cache';
 
 import { auth } from '@/lib/auth/auth';

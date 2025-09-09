@@ -20,7 +20,10 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        hasTouch: true // Enable touch support for mobile tests
+      },
     },
 
     /* Test against branded browsers. */
@@ -40,5 +43,9 @@ export default defineConfig({
     url: 'http://localhost:3001',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
+    env: {
+      'AUTH_URL': 'http://localhost:3001',
+      'NEXTAUTH_URL': 'http://localhost:3001',
+    },
   },
 });
