@@ -1,180 +1,262 @@
-# CODAC Testing Guide
+# Testing Setup Documentation
 
-## 🎯 Test Status
-- **Coverage**: Validation schemas, UI components, server actions, utilities
-- **Test frameworks**: Vitest + React Testing Library (unit), Playwright (e2e)
+This document explains the enhanced testing setup for the CODAC project, including Prisma mocking, database helpers, and testing best practices.
 
-## 📝 Testing Types (Next.js App Router)
+## Overview
 
-### Unit Testing
-Tests individual components, functions, and modules in isolation. Mock external dependencies and focus on single units of code.
+The testing infrastructure is built around:
+- **Vitest** for unit and integration testing
+- **Playwright** for end-to-end testing
+- **vitest-mock-extended** for deep Prisma client mocking
+- **@testing-library/react** for component testing
 
-### Integration Testing  
-Tests how multiple components work together. Includes testing data fetching, user interactions, and component composition while mocking external services.
-
-### End-to-End (E2E) Testing
-Tests complete user workflows in a real browser environment. Validates the entire application stack from UI to database.
-
-### Component Testing
-- **Client Components**: Test interactivity, state changes, event handlers
-- **Server Components**: Test rendering, data fetching logic, async operations  
-- **Server Actions**: Test form submissions, data mutations, validation
-
-*Note: Server Components run during build/request time, so they're tested differently than client-side components.*
-
-## 🚀 Running Tests
-
-```bash
-# Unit tests
-npm run test:unit           # Run all unit tests
-npm run test:unit:watch     # Watch mode
-npm run test:unit:coverage  # With coverage report
-
-# E2E tests  
-npm run test               # Run Playwright e2e tests
-npm run test:ui            # Interactive test UI
-```
-
-## 📁 Test Organization
+## File Structure
 
 ```
-/tests/
-  /e2e/                    - Playwright end-to-end tests
-  /integration/            - Integration workflow tests
-  /utils/                  - Test helpers and fixtures
-  
-Component tests:           - Co-located with source (*.test.tsx)
-Server action tests:       - Co-located with actions (*.test.ts)  
-Utility tests:             - Co-located with utils (*.test.ts)
+tests/
+├── e2e/                    # Playwright end-to-end tests
+├── integration/            # Integration tests
+├── utils/                  # Testing utilities and helpers
+│   ├── prisma-mock.ts      # Prisma client mocking setup
+│   ├── database-helpers.ts # Database operation helpers
+│   ├── fixtures.ts         # Test data fixtures and factories
+│   ├── test-helpers.ts     # Playwright helpers (for e2e)
+│   └── test-examples.ts    # Example test patterns
+├── setup.ts               # Global test setup
+└── README.md              # This file
 ```
 
-## ✅ What's Tested
+## Key Features
+
+### 1. Prisma Client Mocking
+
+The testing setup provides a fully mocked Prisma client using `vitest-mock-extended`:
+
+```typescript
+import { mockPrisma, resetPrismaMock } from '@/tests/utils/prisma-mock'
+
+// Automatic reset in beforeEach hooks
+// Full type safety with DeepMockProxy
+```
+
+### 2. Database Helpers
+
+Comprehensive helpers for common database operations:
+
+```typescript
+import { DatabaseHelpers } from '@/tests/utils/database-helpers'
+
+const userHelpers = DatabaseHelpers.mockUserOperations()
+userHelpers.mockCreateUser({ name: 'John', email: 'john@test.com' })
+```
+
+### 3. Test Fixtures
+
+Factory functions for creating consistent test data:
+
+```typescript
+import { createMockUser, createMockDocument } from '@/tests/utils/fixtures'
+
+const user = createMockUser({ role: 'ADMIN' })
+const doc = createMockDocument({ authorId: user.id })
+```
+
+## Writing Tests
 
 ### Unit Tests
-- **Validation Schemas** (`lib/validation/*.test.ts`) - Zod schemas for user, auth, documents
-- **UI Components** (`components/ui/*.test.tsx`) - Input, Alert, Badge, Button with user interactions
-- **Server Actions** (`actions/**/*.test.ts`) - CRUD operations with database mocking
-- **Utilities** (`lib/**/*.test.ts`) - Helper functions, URL builders, error handlers
 
-### Integration Tests
-- **User workflows** (`tests/integration/`) - Complete form submissions, profile updates
+For testing individual functions or components:
 
-### E2E Tests  
-- **Auth flows** - Login, registration, permissions
-- **Core features** - Document creation, user management
-- **Accessibility** - WCAG compliance, keyboard navigation
-
-## 🔧 Writing Tests
-
-### Test File Conventions
-
-#### Import Order (Standardized)
-1. **Vitest imports** - Core testing framework functions
-2. **Testing library imports** - React Testing Library, user-event
-3. **Test utilities** - Custom render functions, test helpers  
-4. **Source imports** - The actual code being tested
-
-#### Describe Block Patterns
-- **UI Components**: `'Button Component'`, `'Alert Components'` (plural for multiple)
-- **Server Actions**: `'createUser Server Action'`, `'updateUser Server Action'`
-- **Validation Schemas**: `'User Validation Schemas'`, `'Auth Validation Schemas'`
-- **Utilities**: `'CN Utility Function'`, `'Get Base URL Function'`
-- **Integration Tests**: `'User Profile Update Integration'`
-
-### Component Test Pattern
 ```typescript
-import { describe, it, expect, vi } from 'vitest'
-import userEvent from '@testing-library/user-event'
+import { describe, test, expect, beforeEach } from 'vitest'
+import { mockPrisma } from '@/tests/utils/prisma-mock'
+import { DatabaseHelpers } from '@/tests/utils/database-helpers'
 
-import { render, screen } from '@/tests/utils/test-utils'
+describe('User Service', () => {
+  beforeEach(() => {
+    DatabaseHelpers.resetMocks()
+    DatabaseHelpers.setupCommonMocks()
+  })
 
-import { MyComponent } from './my-component'
-
-describe('MyComponent Component', () => {
-  it('should handle user interaction', async () => {
-    const user = userEvent.setup()
-    render(<MyComponent />)
+  test('should create user', async () => {
+    const userHelpers = DatabaseHelpers.mockUserOperations()
+    const expectedUser = userHelpers.mockCreateUser()
     
-    await user.click(screen.getByRole('button'))
-    expect(screen.getByText('Success')).toBeInTheDocument()
+    // Call your service function
+    // Assert results
   })
 })
 ```
 
-### Server Action Test Pattern
+### Integration Tests
+
+For testing complete workflows:
+
 ```typescript
-import { describe, it, expect, vi } from 'vitest'
-import { Prisma } from '@prisma/client'
+import { describe, test, expect } from 'vitest'
+import { mockPrisma } from '@/tests/utils/prisma-mock'
+import { createMockUser } from '@/tests/utils/fixtures'
 
-import type { CreateUserInput } from '@/lib/validation/user'
-
-import { createUser } from './create-user'
-
-// Mock dependencies
-vi.mock('@/lib/db', () => ({
-  prisma: { user: { create: vi.fn() } }
-}))
-
-describe('createUser Server Action', () => {
-  it('should create user successfully', async () => {
-    vi.mocked(prisma.user.create).mockResolvedValue(mockUser)
+describe('User Profile Update', () => {
+  test('should update user with validation', async () => {
+    // Set up complete mock chain
+    const user = createMockUser()
+    mockPrisma.user.findUnique.mockResolvedValue(user)
+    mockPrisma.user.update.mockResolvedValue({ ...user, name: 'Updated' })
     
-    const result = await createUser(validData)
+    // Test the complete flow
+    const result = await updateUserProfile(user.id, { name: 'Updated' })
+    
+    // Assert database calls and results
+    expect(mockPrisma.user.findUnique).toHaveBeenCalled()
+    expect(mockPrisma.user.update).toHaveBeenCalled()
     expect(result.success).toBe(true)
   })
 })
 ```
 
-### Validation Schema Test Pattern
+### Component Tests
+
+For testing React components:
+
 ```typescript
-import { describe, it, expect } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import { createMockUser } from '@/tests/utils/fixtures'
+import { DatabaseHelpers } from '@/tests/utils/database-helpers'
 
-import { userSchema, createUserSchema } from './user'
-
-describe('User Validation Schemas', () => {
-  describe('userSchema', () => {
-    it('should validate complete user object', () => {
-      const result = userSchema.safeParse(validUser)
-      expect(result.success).toBe(true)
-    })
-  })
-  
-  describe('createUserSchema', () => {
-    it('should require email and role', () => {
-      const result = createUserSchema.safeParse(incompleteData)
-      expect(result.success).toBe(false)
-    })
+describe('UserProfile Component', () => {
+  test('should display user information', () => {
+    const user = createMockUser({ name: 'John Doe' })
+    const userHelpers = DatabaseHelpers.mockUserOperations()
+    userHelpers.mockFindUserById(user.id, user)
+    
+    render(<UserProfile userId={user.id} />)
+    
+    expect(screen.getByText('John Doe')).toBeInTheDocument()
   })
 })
 ```
 
-## 🛠️ Test Utilities
+## Testing Patterns
 
-- **`@/tests/utils/test-utils`** - Custom render with providers
-- **`@/tests/utils/fixtures`** - Mock data for tests
-- **Global mocks** - Next.js router, logger, auth configured in `tests/setup.ts`
+### Server Action Testing
 
-## 📋 Key Commands
+When testing server actions, the enhanced setup automatically mocks common utilities:
 
-```bash
-# Run specific test file
-npm run test:unit -- button.test.tsx
-
-# Run tests matching pattern  
-npm run test:unit -- --grep "validation"
-
-# Debug failing test
-npm run test:unit -- --reporter=verbose
-
-# Generate coverage report
-npm run test:unit:coverage
+```typescript
+// Server action utils are automatically mocked
+// Database operations use the Prisma mock
+// Logger calls are mocked to avoid console noise
 ```
 
-## 🎯 Testing Philosophy
+### Error Testing
 
-- **Test behavior, not implementation** - Focus on user interactions and outcomes
-- **Mock external dependencies** - Database, APIs, complex integrations
-- **Keep tests simple and reliable** - Avoid overly complex test scenarios
-- **Test critical paths** - Authentication, data operations, user workflows
+Test error scenarios using the database helpers:
 
-The test suite provides comprehensive coverage while remaining maintainable and fast. All critical app functionality is tested with both unit and integration tests.
+```typescript
+const userHelpers = DatabaseHelpers.mockUserOperations()
+userHelpers.mockUserError('create', new Error('Database connection failed'))
+
+// Test your error handling
+```
+
+### Transaction Testing
+
+Mock database transactions:
+
+```typescript
+const transactionHelpers = DatabaseHelpers.mockTransaction()
+transactionHelpers.mockTransactionSuccess(expectedResult)
+```
+
+## Configuration
+
+### Vitest Configuration
+
+The enhanced `vitest.config.mjs` includes:
+- Optimized test isolation
+- Coverage reporting
+- Mock management
+- Performance optimizations
+
+### Environment Variables
+
+Tests run with mocked external dependencies:
+- Database operations → Prisma mock
+- Authentication → Mock auth
+- Logger → Silent mock
+- Next.js navigation → Mock router
+
+## Best Practices
+
+### 1. Test Structure
+- Use descriptive test names
+- Group related tests in describe blocks
+- Follow AAA pattern (Arrange, Act, Assert)
+
+### 2. Mock Management
+- Always reset mocks in beforeEach
+- Use specific mocks for each test
+- Avoid shared state between tests
+
+### 3. Data Management
+- Use factory functions for test data
+- Create realistic but minimal test data
+- Avoid hardcoded IDs when possible
+
+### 4. Error Testing
+- Test both happy path and error scenarios
+- Mock specific error types
+- Verify error handling and logging
+
+## Running Tests
+
+```bash
+# Unit tests
+pnpm test:unit
+
+# Unit tests with coverage
+pnpm test:unit:coverage
+
+# Watch mode
+pnpm test:unit:watch
+
+# UI mode
+pnpm test:unit:ui
+
+# End-to-end tests
+pnpm test
+
+# Specific test file
+pnpm test:unit user.test.ts
+```
+
+## Migration from Old Setup
+
+The enhanced setup is backward compatible but provides these improvements:
+
+1. **Better Prisma Mocking**: Full type safety and deep mocking
+2. **Database Helpers**: Reduce boilerplate in tests
+3. **Enhanced Fixtures**: Factory functions with overrides
+4. **Improved Performance**: Better test isolation and parallel execution
+5. **Comprehensive Mocking**: All external dependencies properly mocked
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Mock not working**: Check that imports match the mock paths
+2. **Type errors**: Ensure `vitest-mock-extended` is properly typed
+3. **Test isolation**: Use `DatabaseHelpers.resetMocks()` in beforeEach
+4. **Performance**: Check for async operations not being awaited
+
+### Debugging
+
+- Use `vi.mocked()` to access mock methods
+- Check mock call history with `.mock.calls`
+- Use `--reporter=verbose` for detailed test output
+- Enable coverage to see test coverage
+
+## Examples
+
+See `tests/utils/test-examples.ts` for comprehensive examples of all testing patterns.

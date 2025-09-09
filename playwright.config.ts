@@ -16,8 +16,6 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   timeout: 90000, // 90 seconds per test
-  // Load test environment variables
-  globalSetup: require.resolve('./tests/global-setup.ts'),
 
   projects: [
     {

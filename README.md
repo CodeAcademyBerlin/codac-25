@@ -234,8 +234,7 @@ Create a `.env` file in the root directory with the following variables:
 ### **Database Configuration**
 ```env
 # PostgreSQL Connection (Required)
-DATABASE_URL="postgresql://username:password@localhost:5432/codac"
-DIRECT_URL="postgresql://username:password@localhost:5432/codac"
+DATABASE_URL=
 ```
 
 ### **Authentication Setup**
@@ -265,37 +264,6 @@ We welcome contributions to CODAC! Please follow these steps:
 6. **Push**: Push to your branch (`git push origin feature/amazing-feature`)
 7. **Pull Request**: Open a PR with a clear description of changes
 
-### **Development Guidelines**
-- Follow the coding standards outlined in [CLAUDE.md](CLAUDE.md)
-- Ensure all tests pass before submitting
-- Add tests for new functionality
-- Update documentation as needed
-
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support & Community
-
-### **Getting Help**
-1. 📚 Check the [documentation](dev-docs/) first
-2. 🔍 Search existing [GitHub issues](../../issues)
-3. 💬 Join our community discussions
-4. 🐛 Report bugs with detailed reproduction steps
-
-### **Resources**
-- **Setup Issues**: See [SETUP.md](SETUP.md) troubleshooting section
-- **Development Guide**: Check [CLAUDE.md](CLAUDE.md) for coding standards
-- **Student Guide**: See [STUDENT_SETUP.md](STUDENT_SETUP.md) for user onboarding
-
----
-
-<div align="center">
-
-**🎓 Built with ❤️ for modern education**
-
-**[Live Demo](https://codac-demo.vercel.app)** • **[Documentation](dev-docs/)** • **[Contributing](CONTRIBUTING.md)**
-
-*Empowering learners with cutting-edge technology*
-
-</div>

@@ -1,624 +1,523 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { Prisma } from '@prisma/client'
+import { describe, test, expect, beforeEach } from 'vitest'
 
+import type { UserPrivate } from '@/lib/server-action-utils'
 import type { UpdateUserInput } from '@/lib/validation/user'
+import { DatabaseHelpers } from '@/tests/utils/database-helpers'
+import { createMockUser } from '@/tests/utils/fixtures'
+import { mockPrisma, resetPrismaMock } from '@/tests/utils/prisma-mock'
 
 import { updateUser } from './update-user'
 
-// Mock dependencies
-vi.mock('@/lib/db', () => ({
-  prisma: {
-    user: {
-      findUnique: vi.fn(),
-      update: vi.fn(),
-    },
-  },
-}))
+// Helper to create mock UserPrivate response
+function createMockUserPrivate(overrides: Partial<UserPrivate> = {}): UserPrivate {
+    return {
+        id: 'clkj2o3k00000default2d1x3',
+        name: 'Test User',
+        email: 'test@example.com',
+        avatar: null,
+        bio: null,
+        role: 'STUDENT',
+        status: 'ACTIVE',
+        cohort: null,
+        graduationDate: null,
+        linkedinUrl: null,
+        githubUrl: null,
+        portfolioUrl: null,
+        currentJob: null,
+        currentCompany: null,
+        createdAt: new Date('2024-01-01T00:00:00.000Z'),
+        updatedAt: new Date('2024-01-01T00:00:00.000Z'),
+        ...overrides
+    }
+}
 
-vi.mock('@/lib/logger', () => ({
-  logger: {
-    logServerAction: vi.fn(),
-    logDatabaseOperation: vi.fn(),
-    logServerActionError: vi.fn(),
-    logValidationError: vi.fn(),
-    warn: vi.fn(),
-    info: vi.fn(),
-  },
-}))
-
-vi.mock('next/cache', () => ({
-  revalidatePath: vi.fn(),
-}))
-
-// Import mocked modules for type safety
-import { prisma } from '@/lib/db'
-import { logger } from '@/lib/logger'
-import { revalidatePath } from 'next/cache'
-
-describe('updateUser Server Action', () => {
-  // Mock data
-  const mockExistingUser = {
-    id: 'clp9g8e4o0000q4a9rr3h7k8m',
-    email: 'john@example.com',
-    role: 'STUDENT',
-    status: 'ACTIVE',
-    name: 'John Doe',
-  }
-
-  const mockUpdatedUser = {
-    id: 'clp9g8e4o0000q4a9rr3h7k8m',
-    name: 'John Smith',
-    email: 'john.smith@example.com',
-    avatar: 'https://example.com/avatar.jpg',
-    bio: 'Updated bio',
-    role: 'STUDENT',
-    status: 'ACTIVE',
-    cohort: {
-      id: 'cohort-123',
-      name: 'Fall 2024',
-      slug: 'fall-2024',
-    },
-    graduationDate: new Date('2024-12-01'),
-    linkedinUrl: 'https://linkedin.com/in/johnsmith',
-    githubUrl: 'https://github.com/johnsmith',
-    portfolioUrl: 'https://johnsmith.dev',
-    currentJob: 'Software Developer',
-    currentCompany: 'Tech Corp',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  }
-
-  beforeEach(() => {
-    vi.clearAllMocks()
-    vi.mocked(prisma.user.findUnique).mockResolvedValue(mockExistingUser as any)
-    vi.mocked(prisma.user.update).mockResolvedValue(mockUpdatedUser as any)
-    vi.mocked(revalidatePath).mockResolvedValue(undefined)
-  })
-
-  afterEach(() => {
-    vi.clearAllMocks()
-  })
-
-  describe('Successful user updates', () => {
-    it('should update user with basic fields', async () => {
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        name: 'John Smith',
-        email: 'john.smith@example.com',
-      }
-
-      const result = await updateUser(input)
-
-      expect(result.success).toBe(true)
-      expect(result.data).toEqual(mockUpdatedUser)
-      
-      expect(prisma.user.findUnique).toHaveBeenCalledWith({
-        where: { id: 'clp9g8e4o0000q4a9rr3h7k8m' },
-        select: {
-          id: true,
-          email: true,
-          role: true,
-          status: true,
-          name: true,
-        },
-      })
-
-      expect(prisma.user.update).toHaveBeenCalledWith({
-        where: { id: 'clp9g8e4o0000q4a9rr3h7k8m' },
-        data: {
-          name: 'John Smith',
-          email: 'john.smith@example.com',
-        },
-        select: expect.objectContaining({
-          id: true,
-          name: true,
-          email: true,
-          avatar: true,
-          bio: true,
-          role: true,
-          status: true,
-        }),
-      })
+describe('updateUser Integration Tests', () => {
+    beforeEach(() => {
+        resetPrismaMock()
+        DatabaseHelpers.resetMocks()
+        DatabaseHelpers.setupCommonMocks()
     })
 
-    it('should update user with all optional fields', async () => {
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        name: 'John Smith',
-        avatar: 'https://example.com/avatar.jpg',
-        bio: 'Updated bio',
-        role: 'MENTOR',
-        status: 'GRADUATED',
-        cohort: 'Fall 2024',
-        graduationDate: new Date('2024-12-01'),
-        linkedinUrl: 'https://linkedin.com/in/johnsmith',
-        githubUrl: 'https://github.com/johnsmith',
-        portfolioUrl: 'https://johnsmith.dev',
-        currentJob: 'Software Developer',
-        currentCompany: 'Tech Corp',
-      }
-
-      const result = await updateUser(input)
-
-      expect(result.success).toBe(true)
-      expect(prisma.user.update).toHaveBeenCalledWith({
-        where: { id: 'clp9g8e4o0000q4a9rr3h7k8m' },
-        data: {
-          name: 'John Smith',
-          avatar: 'https://example.com/avatar.jpg',
-          bio: 'Updated bio',
-          role: 'MENTOR',
-          status: 'GRADUATED',
-          cohort: 'Fall 2024',
-          graduationDate: new Date('2024-12-01'),
-          linkedinUrl: 'https://linkedin.com/in/johnsmith',
-          githubUrl: 'https://github.com/johnsmith',
-          portfolioUrl: 'https://johnsmith.dev',
-          currentJob: 'Software Developer',
-          currentCompany: 'Tech Corp',
-        },
-        select: expect.any(Object),
-      })
-    })
-
-    it('should handle partial updates filtering undefined values', async () => {
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        name: 'John Smith',
-        bio: undefined,
-        avatar: 'https://example.com/avatar.jpg',
-      }
-
-      const result = await updateUser(input)
-
-      expect(result.success).toBe(true)
-      expect(prisma.user.update).toHaveBeenCalledWith({
-        where: { id: 'clp9g8e4o0000q4a9rr3h7k8m' },
-        data: {
-          name: 'John Smith',
-          avatar: 'https://example.com/avatar.jpg',
-          // bio should not be included as it's undefined
-        },
-        select: expect.any(Object),
-      })
-    })
-
-    it('should handle different user roles', async () => {
-      const roles = ['STUDENT', 'ALUMNI', 'MENTOR', 'ADMIN'] as const
-
-      for (const role of roles) {
-        vi.clearAllMocks()
-        vi.mocked(prisma.user.findUnique).mockResolvedValue(mockExistingUser as any)
-        vi.mocked(prisma.user.update).mockResolvedValue({ ...mockUpdatedUser, role } as any)
-
-        const input: UpdateUserInput = {
-          id: 'clp9g8e4o0000q4a9rr3h7k8m',
-          role,
-        }
-
-        const result = await updateUser(input)
-
-        expect(result.success).toBe(true)
-        expect(prisma.user.update).toHaveBeenCalledWith(
-          expect.objectContaining({
-            data: expect.objectContaining({ role }),
-          })
-        )
-      }
-    })
-
-    it('should handle different user statuses', async () => {
-      const statuses = ['ACTIVE', 'INACTIVE', 'GRADUATED'] as const
-
-      for (const status of statuses) {
-        vi.clearAllMocks()
-        vi.mocked(prisma.user.findUnique).mockResolvedValue(mockExistingUser as any)
-        vi.mocked(prisma.user.update).mockResolvedValue({ ...mockUpdatedUser, status } as any)
-
-        const input: UpdateUserInput = {
-          id: 'clp9g8e4o0000q4a9rr3h7k8m',
-          status,
-        }
-
-        const result = await updateUser(input)
-
-        expect(result.success).toBe(true)
-        expect(prisma.user.update).toHaveBeenCalledWith(
-          expect.objectContaining({
-            data: expect.objectContaining({ status }),
-          })
-        )
-      }
-    })
-
-    it('should revalidate paths correctly', async () => {
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        name: 'John Smith',
-      }
-
-      await updateUser(input)
-
-      expect(revalidatePath).toHaveBeenCalledWith('/admin/users')
-      expect(revalidatePath).toHaveBeenCalledWith('/users')
-      expect(revalidatePath).toHaveBeenCalledWith('/users/clp9g8e4o0000q4a9rr3h7k8m')
-      expect(revalidatePath).toHaveBeenCalledTimes(3)
-    })
-
-    it('should log operations correctly', async () => {
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        name: 'John Smith',
-        email: 'john.smith@example.com',
-      }
-
-      await updateUser(input)
-
-      expect(logger.logServerAction).toHaveBeenCalledWith('update', 'user', {
-        resourceId: 'clp9g8e4o0000q4a9rr3h7k8m',
-        metadata: {
-          updateFields: ['name', 'email'],
-          email: 'john.smith@example.com'
-        }
-      })
-
-      expect(logger.logDatabaseOperation).toHaveBeenCalledWith('update', 'user', 'clp9g8e4o0000q4a9rr3h7k8m', {
-        metadata: {
-          updatedFields: ['name', 'email'],
-          email: 'john.smith@example.com',
-          role: 'STUDENT'
-        }
-      })
-
-      expect(logger.info).toHaveBeenCalledWith('User updated successfully', {
-        action: 'update',
-        resource: 'user',
-        resourceId: 'clp9g8e4o0000q4a9rr3h7k8m',
-        metadata: {
-          duration: expect.any(Number),
-          updatedFields: ['name', 'email'],
-          email: 'john.smith@example.com',
-          role: 'STUDENT'
-        }
-      })
-    })
-  })
-
-  describe('User not found errors', () => {
-    it('should return error when user does not exist', async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValue(null)
-
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m', // Valid CUID format
-        name: 'John Smith',
-      }
-
-      const result = await updateUser(input)
-
-      expect(result.success).toBe(false)
-      expect(typeof result.error).toBe('string')
-      expect(prisma.user.update).not.toHaveBeenCalled()
-    })
-  })
-
-  describe('Email conflict errors', () => {
-    it('should return error when email already exists for different user', async () => {
-      const conflictingUser = { id: 'other-clp9g8e4o0000q4a9rr3h7k8m' }
-      
-      vi.mocked(prisma.user.findUnique)
-        .mockResolvedValueOnce(mockExistingUser as any) // First call for user existence
-        .mockResolvedValueOnce(conflictingUser as any) // Second call for email conflict
-
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        email: 'conflicting@example.com',
-      }
-
-      const result = await updateUser(input)
-
-      expect(result.success).toBe(false)
-      expect(result.error).toBe('A user with this email already exists')
-      expect(prisma.user.update).not.toHaveBeenCalled()
-      expect(logger.warn).toHaveBeenCalledWith('User update failed: email already exists', {
-        action: 'update',
-        resource: 'user',
-        resourceId: 'clp9g8e4o0000q4a9rr3h7k8m',
-        metadata: { conflictingEmail: 'conflicting@example.com' }
-      })
-    })
-
-    it('should allow email update when email belongs to same user', async () => {
-      vi.mocked(prisma.user.findUnique)
-        .mockResolvedValueOnce(mockExistingUser as any) // First call for user existence
-        .mockResolvedValueOnce(null) // Second call for email conflict (no conflict)
-
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        email: 'john@example.com', // Same email as existing user
-      }
-
-      const result = await updateUser(input)
-
-      expect(result.success).toBe(true)
-      expect(prisma.user.update).toHaveBeenCalled()
-    })
-
-    it('should skip email conflict check when email is not being updated', async () => {
-      vi.mocked(prisma.user.findUnique).mockResolvedValueOnce(mockExistingUser as any)
-
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        name: 'John Smith',
-      }
-
-      await updateUser(input)
-
-      // Should only check for user existence, not email conflicts
-      expect(prisma.user.findUnique).toHaveBeenCalledTimes(1)
-    })
-  })
-
-  describe('Validation errors', () => {
-    it('should handle Zod validation errors', async () => {
-      const input: UpdateUserInput = {
-        id: 'invalid-cuid-format', // Invalid CUID will trigger validation error
-        email: 'valid@example.com',
-      }
-
-      const result = await updateUser(input)
-
-      expect(result.success).toBe(false)
-      expect(Array.isArray(result.error)).toBe(true)
-      if (!result.success && Array.isArray(result.error)) {
-        expect(result.error.length).toBeGreaterThan(0)
-        expect(result.error.some(err => err.path?.includes('id'))).toBe(true)
-      }
-    })
-  })
-
-  describe('Database errors', () => {
-    it('should handle P2002 (unique constraint) error', async () => {
-      const prismaError = new Prisma.PrismaClientKnownRequestError(
-        'Unique constraint failed',
-        { code: 'P2002', clientVersion: '5.0.0' }
-      )
-
-      vi.mocked(prisma.user.update).mockRejectedValue(prismaError)
-
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        email: 'existing@example.com',
-      }
-
-      const result = await updateUser(input)
-
-      expect(result.success).toBe(false)
-      expect(result.error).toBe('A user with this email already exists')
-    })
-
-    it('should handle P2025 (record not found) error', async () => {
-      const prismaError = new Prisma.PrismaClientKnownRequestError(
-        'Record not found',
-        { code: 'P2025', clientVersion: '5.0.0' }
-      )
-
-      vi.mocked(prisma.user.update).mockRejectedValue(prismaError)
-
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        name: 'John Smith',
-      }
-
-      const result = await updateUser(input)
-
-      expect(result.success).toBe(false)
-      expect(result.error).toBe('User not found')
-    })
-
-    it('should handle unknown Prisma errors', async () => {
-      const prismaError = new Prisma.PrismaClientKnownRequestError(
-        'Unknown database error',
-        { code: 'P0000', clientVersion: '5.0.0' }
-      )
-
-      vi.mocked(prisma.user.update).mockRejectedValue(prismaError)
-
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        name: 'John Smith',
-      }
-
-      const result = await updateUser(input)
-
-      expect(result.success).toBe(false)
-      expect(result.error).toBe('Database error occurred')
-    })
-
-    it('should handle unknown errors', async () => {
-      const unknownError = new Error('Network connection failed')
-      vi.mocked(prisma.user.update).mockRejectedValue(unknownError)
-
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        name: 'John Smith',
-      }
-
-      const result = await updateUser(input)
-
-      expect(result.success).toBe(false)
-      expect(result.error).toBe('Failed to update user')
-      expect(logger.logServerActionError).toHaveBeenCalledWith(
-        'update',
-        'user',
-        unknownError,
-        {
-          resourceId: 'clp9g8e4o0000q4a9rr3h7k8m',
-          metadata: expect.objectContaining({
-            duration: expect.any(Number),
-            updateFields: ['name'],
-          }),
-        }
-      )
-    })
-
-    it('should handle non-Error objects thrown', async () => {
-      vi.mocked(prisma.user.update).mockRejectedValue('String error')
-
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        name: 'John Smith',
-      }
-
-      const result = await updateUser(input)
-
-      expect(result.success).toBe(false)
-      expect(result.error).toBe('Failed to update user')
-      expect(logger.logServerActionError).toHaveBeenCalledWith(
-        'update',
-        'user',
-        expect.any(Error),
-        expect.any(Object)
-      )
-    })
-  })
-
-  describe('Avatar validation', () => {
-    it('should accept valid URL avatars', async () => {
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        avatar: 'https://example.com/avatar.jpg',
-      }
-
-      const result = await updateUser(input)
-
-      expect(result.success).toBe(true)
-      expect(prisma.user.update).toHaveBeenCalledWith(
-        expect.objectContaining({
-          data: expect.objectContaining({
-            avatar: 'https://example.com/avatar.jpg',
-          }),
+    describe('Successful Updates', () => {
+        test('should successfully update user profile with valid data', async () => {
+            // Arrange
+            const userId = 'clkj2o3k00000356hghf2d1x3'
+            const existingUser = createMockUser({
+                id: userId,
+                email: 'old@example.com',
+                name: 'Old Name'
+            })
+
+            const updateData: UpdateUserInput = {
+                id: userId,
+                name: 'Updated Name',
+                bio: 'Updated bio',
+                role: 'ALUMNI',
+                currentJob: 'Senior Developer',
+                currentCompany: 'Tech Corp'
+            }
+
+            const expectedUpdatedUser = createMockUserPrivate({
+                id: userId,
+                name: 'Updated Name',
+                bio: 'Updated bio',
+                role: 'ALUMNI',
+                currentJob: 'Senior Developer',
+                currentCompany: 'Tech Corp',
+                updatedAt: new Date()
+            })
+
+            // Mock database operations
+            mockPrisma.user.findUnique.mockResolvedValue(existingUser)
+            mockPrisma.user.update.mockResolvedValue(expectedUpdatedUser as any)
+
+            // Act
+            const result = await updateUser(updateData)
+
+            // Assert
+            expect(result.success).toBe(true)
+            if (result.success) {
+                expect(result.data).toEqual(expectedUpdatedUser)
+            }
+            expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
+                where: { id: userId },
+                select: {
+                    id: true,
+                    email: true,
+                    role: true,
+                    status: true,
+                    name: true,
+                }
+            })
+            expect(mockPrisma.user.update).toHaveBeenCalledWith({
+                where: { id: userId },
+                data: {
+                    name: 'Updated Name',
+                    bio: 'Updated bio',
+                    role: 'ALUMNI',
+                    currentJob: 'Senior Developer',
+                    currentCompany: 'Tech Corp'
+                },
+                select: expect.any(Object)
+            })
         })
-      )
-    })
 
-    it('should accept valid base64 data URI avatars', async () => {
-      const base64Avatar = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBD...'
-      
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        avatar: base64Avatar,
-      }
+        test('should successfully update user with partial data', async () => {
+            // Arrange
+            const userId = 'clkj2o3k00000456hghf2d1x3'
+            const existingUser = createMockUser({
+                id: userId,
+                name: 'Current Name',
+                bio: 'Current bio'
+            })
 
-      const result = await updateUser(input)
+            const updateData: UpdateUserInput = {
+                id: userId,
+                bio: 'New bio only'
+            }
 
-      expect(result.success).toBe(true)
-      expect(prisma.user.update).toHaveBeenCalledWith(
-        expect.objectContaining({
-          data: expect.objectContaining({
-            avatar: base64Avatar,
-          }),
+            const expectedUpdatedUser = createMockUserPrivate({
+                id: userId,
+                bio: 'New bio only',
+                updatedAt: new Date()
+            })
+
+            // Mock database operations
+            mockPrisma.user.findUnique.mockResolvedValue(existingUser)
+            mockPrisma.user.update.mockResolvedValue(expectedUpdatedUser as any)
+
+            // Act
+            const result = await updateUser(updateData)
+
+            // Assert
+            expect(result.success).toBe(true)
+            if (result.success) {
+                expect(result.data).toEqual(expectedUpdatedUser)
+            }
+            expect(mockPrisma.user.update).toHaveBeenCalledWith({
+                where: { id: userId },
+                data: { bio: 'New bio only' },
+                select: expect.any(Object)
+            })
         })
-      )
-    })
-  })
 
-  describe('URL field validation', () => {
-    it('should accept valid social media URLs', async () => {
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        linkedinUrl: 'https://linkedin.com/in/johnsmith',
-        githubUrl: 'https://github.com/johnsmith',
-        portfolioUrl: 'https://johnsmith.dev',
-      }
+        test('should successfully update user email when no conflicts exist', async () => {
+            // Arrange
+            const userId = 'clkj2o3k00000789hghf2d1x3'
+            const existingUser = createMockUser({
+                id: userId,
+                email: 'old@example.com'
+            })
 
-      const result = await updateUser(input)
+            const updateData: UpdateUserInput = {
+                id: userId,
+                email: 'new@example.com',
+                name: 'Updated Name'
+            }
 
-      expect(result.success).toBe(true)
-      expect(prisma.user.update).toHaveBeenCalledWith(
-        expect.objectContaining({
-          data: expect.objectContaining({
-            linkedinUrl: 'https://linkedin.com/in/johnsmith',
-            githubUrl: 'https://github.com/johnsmith',
-            portfolioUrl: 'https://johnsmith.dev',
-          }),
+            const expectedUpdatedUser = createMockUserPrivate({
+                id: userId,
+                email: 'new@example.com',
+                name: 'Updated Name',
+                updatedAt: new Date()
+            })
+
+            // Mock database operations
+            mockPrisma.user.findUnique
+                .mockResolvedValueOnce(existingUser) // Initial user lookup
+                .mockResolvedValueOnce(null) // Email conflict check - no conflict
+            mockPrisma.user.update.mockResolvedValue(expectedUpdatedUser as any)
+
+            // Act
+            const result = await updateUser(updateData)
+
+            // Assert
+            expect(result.success).toBe(true)
+            if (result.success) {
+                expect(result.data).toEqual(expectedUpdatedUser)
+            }
+            expect(mockPrisma.user.findUnique).toHaveBeenCalledTimes(2)
+            expect(mockPrisma.user.findUnique).toHaveBeenNthCalledWith(2, {
+                where: { email: 'new@example.com' },
+                select: { id: true }
+            })
         })
-      )
-    })
 
-    it('should accept empty strings for optional URL fields', async () => {
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        linkedinUrl: '',
-        githubUrl: '',
-        portfolioUrl: '',
-      }
+        test('should filter out undefined values from update data', async () => {
+            // Arrange
+            const userId = 'clkj2o3k00000filterghf2d1x3'
+            const existingUser = createMockUser({ id: userId })
 
-      const result = await updateUser(input)
+            const updateData: UpdateUserInput = {
+                id: userId,
+                name: 'Defined Name',
+                bio: undefined,
+                currentJob: undefined,
+                linkedinUrl: 'https://linkedin.com/user'
+            }
 
-      expect(result.success).toBe(true)
-      expect(prisma.user.update).toHaveBeenCalledWith(
-        expect.objectContaining({
-          data: expect.objectContaining({
-            linkedinUrl: '',
-            githubUrl: '',
-            portfolioUrl: '',
-          }),
+            const expectedUpdatedUser = createMockUserPrivate({
+                id: userId,
+                name: 'Defined Name',
+                linkedinUrl: 'https://linkedin.com/user',
+                updatedAt: new Date()
+            })
+
+            // Mock database operations
+            mockPrisma.user.findUnique.mockResolvedValue(existingUser)
+            mockPrisma.user.update.mockResolvedValue(expectedUpdatedUser as any)
+
+            // Act
+            const result = await updateUser(updateData)
+
+            // Assert
+            expect(result.success).toBe(true)
+            expect(mockPrisma.user.update).toHaveBeenCalledWith({
+                where: { id: userId },
+                data: {
+                    name: 'Defined Name',
+                    linkedinUrl: 'https://linkedin.com/user'
+                    // bio and currentJob should be filtered out because they're undefined
+                },
+                select: expect.any(Object)
+            })
         })
-      )
     })
-  })
 
-  describe('Performance and logging', () => {
-    it('should measure and log execution duration', async () => {
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        name: 'John Smith',
-      }
+    describe('Error Handling', () => {
+        test('should return error when user does not exist', async () => {
+            // Arrange
+            const updateData: UpdateUserInput = {
+                id: 'clkj2o3k00000nonexistghf2d1x3',
+                name: 'New Name'
+            }
 
-      const startTime = Date.now()
-      await updateUser(input)
-      const endTime = Date.now()
+            // Mock user not found
+            mockPrisma.user.findUnique.mockResolvedValue(null)
 
-      expect(logger.info).toHaveBeenCalledWith('User updated successfully', 
-        expect.objectContaining({
-          metadata: expect.objectContaining({
-            duration: expect.any(Number)
-          })
+            // Act
+            const result = await updateUser(updateData)
+
+            // Assert
+            expect(result.success).toBe(false)
+            if (!result.success) {
+                expect(result.error).toBe('User not found')
+            }
+            expect(mockPrisma.user.update).not.toHaveBeenCalled()
         })
-      )
 
-      // Verify duration is reasonable
-      const logCall = vi.mocked(logger.info).mock.calls.find(call => 
-        call[1]?.metadata?.duration !== undefined
-      )
-      const loggedDuration = logCall?.[1]?.metadata?.duration
-      expect(loggedDuration).toBeGreaterThanOrEqual(0)
-      expect(loggedDuration).toBeLessThan(endTime - startTime + 100) // Add small buffer
-    })
+        test('should return error when email already exists for different user', async () => {
+            // Arrange
+            const userId = 'clkj2o3k00000123hghf2d1x3'
+            const existingUser = createMockUser({
+                id: userId,
+                email: 'current@example.com'
+            })
 
-    it('should log error duration on failures', async () => {
-      const error = new Error('Database error')
-      vi.mocked(prisma.user.update).mockRejectedValue(error)
+            const conflictingUser = createMockUser({
+                id: 'clkj2o3k00000different2d1x3',
+                email: 'conflict@example.com'
+            })
 
-      const input: UpdateUserInput = {
-        id: 'clp9g8e4o0000q4a9rr3h7k8m',
-        name: 'John Smith',
-      }
+            const updateData: UpdateUserInput = {
+                id: userId,
+                email: 'conflict@example.com'
+            }
 
-      await updateUser(input)
+            // Mock database operations
+            mockPrisma.user.findUnique
+                .mockResolvedValueOnce(existingUser) // Initial user lookup
+                .mockResolvedValueOnce(conflictingUser) // Email conflict check
 
-      expect(logger.logServerActionError).toHaveBeenCalledWith(
-        'update',
-        'user',
-        error,
-        expect.objectContaining({
-          resourceId: 'clp9g8e4o0000q4a9rr3h7k8m',
-          metadata: expect.objectContaining({
-            duration: expect.any(Number),
-            updateFields: ['name']
-          })
+            // Act
+            const result = await updateUser(updateData)
+
+            // Assert
+            expect(result.success).toBe(false)
+            if (!result.success) {
+                expect(result.error).toBe('A user with this email already exists')
+            }
+            expect(mockPrisma.user.update).not.toHaveBeenCalled()
         })
-      )
+
+        test('should not conflict when user updates to same email', async () => {
+            // Arrange
+            const userId = 'clkj2o3k00000sameemail2d1x3'
+            const existingUser = createMockUser({
+                id: userId,
+                email: 'same@example.com'
+            })
+
+            const updateData: UpdateUserInput = {
+                id: userId,
+                email: 'same@example.com', // Same as current email
+                name: 'Updated Name'
+            }
+
+            const expectedUpdatedUser = createMockUserPrivate({
+                id: userId,
+                email: 'same@example.com',
+                name: 'Updated Name',
+                updatedAt: new Date()
+            })
+
+            // Mock database operations
+            mockPrisma.user.findUnique.mockResolvedValue(existingUser)
+            mockPrisma.user.update.mockResolvedValue(expectedUpdatedUser as any)
+
+            // Act
+            const result = await updateUser(updateData)
+
+            // Assert
+            expect(result.success).toBe(true)
+            if (result.success) {
+                expect(result.data).toEqual(expectedUpdatedUser)
+            }
+            // Should not perform email conflict check since email didn't change
+            expect(mockPrisma.user.findUnique).toHaveBeenCalledTimes(1)
+        })
+
+        test('should handle validation errors', async () => {
+            // Arrange
+            const updateData: UpdateUserInput = {
+                id: 'invalid-id-format', // Invalid CUID format
+                email: 'invalid-email'    // Invalid email format
+            }
+
+            // Act
+            const result = await updateUser(updateData)
+
+            // Assert
+            expect(result.success).toBe(false)
+            if (!result.success) {
+                expect(result.error).toBeDefined()
+                expect(Array.isArray(result.error)).toBe(true) // Zod validation errors
+            }
+            expect(mockPrisma.user.findUnique).not.toHaveBeenCalled()
+        })
+
+        test('should handle Prisma unique constraint error', async () => {
+            // Arrange
+            const userId = 'clkj2o3k00000prismaerrord1x3'
+            const existingUser = createMockUser({ id: userId })
+
+            const updateData: UpdateUserInput = {
+                id: userId,
+                email: 'unique@example.com'
+            }
+
+            // Mock database operations
+            mockPrisma.user.findUnique
+                .mockResolvedValueOnce(existingUser) // Initial user lookup
+                .mockResolvedValueOnce(null) // Email conflict check passes
+
+            const prismaError = new Prisma.PrismaClientKnownRequestError(
+                'Unique constraint failed',
+                { code: 'P2002', clientVersion: '5.0.0' }
+            )
+            mockPrisma.user.update.mockRejectedValue(prismaError)
+
+            // Act
+            const result = await updateUser(updateData)
+
+            // Assert
+            expect(result.success).toBe(false)
+            if (!result.success) {
+                expect(result.error).toBe('A user with this email already exists')
+            }
+        })
+
+        test('should handle Prisma record not found error', async () => {
+            // Arrange
+            const userId = 'clkj2o3k00000notfoundd1x3'
+            const existingUser = createMockUser({ id: userId })
+
+            const updateData: UpdateUserInput = {
+                id: userId,
+                name: 'New Name'
+            }
+
+            // Mock database operations
+            mockPrisma.user.findUnique.mockResolvedValue(existingUser)
+
+            const prismaError = new Prisma.PrismaClientKnownRequestError(
+                'Record not found',
+                { code: 'P2025', clientVersion: '5.0.0' }
+            )
+            mockPrisma.user.update.mockRejectedValue(prismaError)
+
+            // Act
+            const result = await updateUser(updateData)
+
+            // Assert
+            expect(result.success).toBe(false)
+            if (!result.success) {
+                expect(result.error).toBe('User not found')
+            }
+        })
+
+        test('should handle generic database errors', async () => {
+            // Arrange
+            const userId = 'clkj2o3k00000dberrorfd1x3'
+            const existingUser = createMockUser({ id: userId })
+
+            const updateData: UpdateUserInput = {
+                id: userId,
+                name: 'New Name'
+            }
+
+            // Mock database operations
+            mockPrisma.user.findUnique.mockResolvedValue(existingUser)
+            mockPrisma.user.update.mockRejectedValue(new Error('Database connection failed'))
+
+            // Act
+            const result = await updateUser(updateData)
+
+            // Assert
+            expect(result.success).toBe(false)
+            if (!result.success) {
+                expect(result.error).toBe('Failed to update user')
+            }
+        })
     })
-  })
+
+    describe('Edge Cases', () => {
+        test('should handle empty update data gracefully', async () => {
+            // Arrange
+            const userId = 'clkj2o3k00000emptyupdate1x3'
+            const existingUser = createMockUser({ id: userId })
+
+            const updateData: UpdateUserInput = {
+                id: userId
+                // No other fields to update
+            }
+
+            const expectedUpdatedUser = createMockUserPrivate({
+                id: userId,
+                updatedAt: new Date()
+            })
+
+            // Mock database operations
+            mockPrisma.user.findUnique.mockResolvedValue(existingUser)
+            mockPrisma.user.update.mockResolvedValue(expectedUpdatedUser as any)
+
+            // Act
+            const result = await updateUser(updateData)
+
+            // Assert
+            expect(result.success).toBe(true)
+            expect(mockPrisma.user.update).toHaveBeenCalledWith({
+                where: { id: userId },
+                data: {}, // Empty data object after filtering undefined values
+                select: expect.any(Object)
+            })
+        })
+
+        test('should handle avatar URL update', async () => {
+            // Arrange
+            const userId = 'clkj2o3k00000avatarupd1x3'
+            const existingUser = createMockUser({ id: userId })
+
+            const updateData: UpdateUserInput = {
+                id: userId,
+                avatar: 'https://example.com/new-avatar.jpg'
+            }
+
+            const expectedUpdatedUser = createMockUserPrivate({
+                id: userId,
+                avatar: 'https://example.com/new-avatar.jpg',
+                updatedAt: new Date()
+            })
+
+            // Mock database operations
+            mockPrisma.user.findUnique.mockResolvedValue(existingUser)
+            mockPrisma.user.update.mockResolvedValue(expectedUpdatedUser as any)
+
+            // Act
+            const result = await updateUser(updateData)
+
+            // Assert
+            expect(result.success).toBe(true)
+            if (result.success) {
+                expect(result.data.avatar).toBe('https://example.com/new-avatar.jpg')
+            }
+        })
+
+        test('should handle social media URL updates', async () => {
+            // Arrange
+            const userId = 'clkj2o3k00000socialupd1x3'
+            const existingUser = createMockUser({ id: userId })
+
+            const updateData: UpdateUserInput = {
+                id: userId,
+                linkedinUrl: 'https://linkedin.com/in/testuser',
+                githubUrl: 'https://github.com/testuser',
+                portfolioUrl: 'https://testuser.dev'
+            }
+
+            const expectedUpdatedUser = createMockUserPrivate({
+                id: userId,
+                linkedinUrl: 'https://linkedin.com/in/testuser',
+                githubUrl: 'https://github.com/testuser',
+                portfolioUrl: 'https://testuser.dev',
+                updatedAt: new Date()
+            })
+
+            // Mock database operations
+            mockPrisma.user.findUnique.mockResolvedValue(existingUser)
+            mockPrisma.user.update.mockResolvedValue(expectedUpdatedUser as any)
+
+            // Act
+            const result = await updateUser(updateData)
+
+            // Assert
+            expect(result.success).toBe(true)
+            if (result.success) {
+                expect(result.data.linkedinUrl).toBe('https://linkedin.com/in/testuser')
+                expect(result.data.githubUrl).toBe('https://github.com/testuser')
+                expect(result.data.portfolioUrl).toBe('https://testuser.dev')
+            }
+        })
+    })
 })

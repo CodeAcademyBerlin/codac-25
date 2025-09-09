@@ -1,13 +1,15 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { Prisma } from '@prisma/client'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { z } from 'zod'
 
-import { 
+// Import actual implementation for testing
+const serverActionUtils = await vi.importActual('./server-action-utils') as any
+const {
   handlePrismaError,
   handleValidationError,
   createServerAction,
   checkPermission
-} from './server-action-utils'
+} = serverActionUtils
 
 // Mock the logger
 vi.mock('@/lib/logger', () => ({
@@ -307,7 +309,7 @@ describe('Server Action Utils', () => {
     it('should return false for empty userId', async () => {
       const { logger } = await import('@/lib/logger')
       const result = await checkPermission('', 'document', 'read')
-      
+
       expect(result).toBe(false)
       expect(logger.warn).toHaveBeenCalledWith('Permission check failed: No user ID provided', {
         action: 'permission_check',

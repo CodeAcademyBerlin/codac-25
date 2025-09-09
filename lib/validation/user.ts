@@ -6,13 +6,20 @@ export type { ServerActionResult } from '@/lib/server-action-utils';
 // Avatar validation schema - supports both URLs and base64 data URIs
 const avatarSchema = z.string().refine(
     (value) => {
-        // Check if it's a valid URL
-        try {
-            new URL(value);
-            return true;
-        } catch {
-            // Check if it's a valid base64 data URI
+        // Allow empty strings
+        if (value === '') return true;
+
+        // First check if it's a data URI - must be image type
+        if (value.startsWith('data:')) {
             return value.startsWith('data:image/') && value.includes('base64,');
+        }
+
+        // Otherwise check if it's a valid HTTP/HTTPS URL
+        try {
+            const url = new URL(value);
+            return url.protocol === 'http:' || url.protocol === 'https:';
+        } catch {
+            return false;
         }
     },
     {

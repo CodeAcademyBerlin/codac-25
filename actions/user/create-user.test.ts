@@ -1,24 +1,11 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { Prisma } from '@prisma/client'
+import { describe, it, expect, beforeEach } from 'vitest'
 
-import { mockUserPrivate } from '@/tests/utils/fixtures'
+import { createUser } from '@/actions/user/create-user'
+import { DatabaseHelpers } from '@/tests/utils/database-helpers'
+import { createMockUser } from '@/tests/utils/fixtures'
+import { mockPrisma } from '@/tests/utils/prisma-mock'
 
-// Mock the database module
-vi.mock('@/lib/db', () => ({
-  prisma: {
-    user: {
-      findUnique: vi.fn(),
-      create: vi.fn(),
-    },
-  },
-}))
-
-// Import after mocking
-import { createUser } from './create-user'
-import { prisma } from '@/lib/db'
-
-// Get references to the mocked functions
-const mockPrisma = vi.mocked(prisma)
 
 describe('createUser Server Action', () => {
   const validUserData = {
@@ -29,23 +16,27 @@ describe('createUser Server Action', () => {
   }
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    DatabaseHelpers.resetMocks()
+    DatabaseHelpers.setupCommonMocks()
   })
 
   it('should create a user successfully', async () => {
-    // Mock Prisma responses
-    mockPrisma.user.findUnique.mockResolvedValue(null) // No existing user
-    mockPrisma.user.create.mockResolvedValue(mockUserPrivate)
+    // Set up mocks using database helpers
+    const expectedUser = createMockUser(validUserData)
+    const userHelpers = DatabaseHelpers.mockUserOperations()
+
+    userHelpers.mockUserNotFound() // No existing user with this email
+    userHelpers.mockCreateUser(expectedUser)
 
     const result = await createUser(validUserData)
 
     expect(result.success).toBe(true)
     if (result.success) {
       expect(result.data).toEqual(expect.objectContaining({
-        email: mockUserPrivate.email,
-        name: mockUserPrivate.name,
-        role: mockUserPrivate.role,
-        status: mockUserPrivate.status,
+        email: expectedUser.email,
+        name: expectedUser.name,
+        role: expectedUser.role,
+        status: expectedUser.status,
       }))
     }
 
@@ -62,10 +53,9 @@ describe('createUser Server Action', () => {
 
   it('should return error when user with email already exists', async () => {
     // Mock existing user
-    mockPrisma.user.findUnique.mockResolvedValue({
-      id: 'existing-user-id',
-      email: validUserData.email,
-    })
+    const existingUser = createMockUser({ email: validUserData.email })
+    const userHelpers = DatabaseHelpers.mockUserOperations()
+    userHelpers.mockFindUserByEmail(validUserData.email, existingUser)
 
     const result = await createUser(validUserData)
 
@@ -94,16 +84,18 @@ describe('createUser Server Action', () => {
   })
 
   it('should handle Prisma unique constraint error', async () => {
-    mockPrisma.user.findUnique.mockResolvedValue(null)
-    mockPrisma.user.create.mockRejectedValue(
-      new Prisma.PrismaClientKnownRequestError(
-        'Unique constraint failed',
-        {
-          code: 'P2002',
-          clientVersion: '5.0.0',
-        }
-      )
+    const userHelpers = DatabaseHelpers.mockUserOperations()
+    userHelpers.mockUserNotFound()
+
+    // Mock unique constraint error
+    const uniqueError = new Prisma.PrismaClientKnownRequestError(
+      'Unique constraint failed',
+      {
+        code: 'P2002',
+        clientVersion: '5.0.0',
+      }
     )
+    userHelpers.mockUserError('create', uniqueError)
 
     const result = await createUser(validUserData)
 
@@ -114,16 +106,18 @@ describe('createUser Server Action', () => {
   })
 
   it('should handle generic Prisma errors', async () => {
-    mockPrisma.user.findUnique.mockResolvedValue(null)
-    mockPrisma.user.create.mockRejectedValue(
-      new Prisma.PrismaClientKnownRequestError(
-        'Database error',
-        {
-          code: 'P2014', // Different error code to test default case
-          clientVersion: '5.0.0',
-        }
-      )
+    const userHelpers = DatabaseHelpers.mockUserOperations()
+    userHelpers.mockUserNotFound()
+
+    // Mock generic Prisma error
+    const genericError = new Prisma.PrismaClientKnownRequestError(
+      'Database error',
+      {
+        code: 'P2014', // Different error code to test default case
+        clientVersion: '5.0.0',
+      }
     )
+    userHelpers.mockUserError('create', genericError)
 
     const result = await createUser(validUserData)
 
@@ -134,8 +128,9 @@ describe('createUser Server Action', () => {
   })
 
   it('should handle unexpected errors', async () => {
-    mockPrisma.user.findUnique.mockResolvedValue(null)
-    mockPrisma.user.create.mockRejectedValue(new Error('Unexpected error'))
+    const userHelpers = DatabaseHelpers.mockUserOperations()
+    userHelpers.mockUserNotFound()
+    userHelpers.mockUserError('create', new Error('Unexpected error'))
 
     const result = await createUser(validUserData)
 
