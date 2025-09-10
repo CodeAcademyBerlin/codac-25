@@ -83,7 +83,7 @@ export async function PUT(
     if (createVersion) {
       try {
         // Use a transaction to handle race conditions
-        await prisma.$transaction(async (tx) => {
+        await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
           const latestVersion = await tx.documentVersion.findFirst({
             where: { documentId: id },
             orderBy: { version: 'desc' },

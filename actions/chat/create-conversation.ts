@@ -2,6 +2,7 @@
 
 import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
+import { Prisma } from '@prisma/client'
 
 import { prisma } from '@/lib/db/prisma'
 import { handleServerAction } from '@/lib/server-action-utils'
@@ -63,7 +64,7 @@ export async function createConversation(input: unknown) {
 
             // Check if direct conversation already exists
             if (type === 'DIRECT') {
-                const existingConversation = await (prisma as any).conversation.findFirst({
+                const existingConversation = await prisma.conversation.findFirst({
                     where: {
                         type: 'DIRECT',
                         participants: {
@@ -97,8 +98,8 @@ export async function createConversation(input: unknown) {
             }
 
             // Create conversation with participants in a transaction
-            const result = await prisma.$transaction(async (tx) => {
-                const conversation = await (tx as any).conversation.create({
+            const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+                const conversation = await tx.conversation.create({
                     data: {
                         type: type as any, // Using any for now until types are properly generated
                         name: name || (type === 'DIRECT' ? null : 'New Group'),

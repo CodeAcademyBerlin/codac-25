@@ -18,7 +18,7 @@ export const likeProject = createServerAction(
   async ({ projectId }: LikeProjectInput) => {
     const session = await auth()
     if (!session?.user?.id) {
-      logger.warn('Unauthorized like attempt', { 
+      logger.warn('Unauthorized like attempt', {
         action: 'like_project',
         metadata: { projectId }
       })
@@ -29,7 +29,7 @@ export const likeProject = createServerAction(
 
     try {
       // Use transaction to ensure data consistency
-      const result = await prisma.$transaction(async (tx) => {
+      const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         // Check if like already exists
         const existingLike = await tx.projectLike.findUnique({
           where: {
@@ -98,12 +98,12 @@ export const likeProject = createServerAction(
           throw new Error('Like already exists')
         }
       }
-      
+
       logger.error('Failed to like/unlike project', error as Error, {
         userId,
         metadata: { projectId },
       })
-      
+
       throw error
     }
   },

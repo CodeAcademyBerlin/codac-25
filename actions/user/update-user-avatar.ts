@@ -56,7 +56,7 @@ export async function updateUserAvatar(
         const hash = crypto.createHash('sha256').update(buffer).digest('hex');
 
         // Start a transaction to update both User and UserImage
-        const result = await prisma.$transaction(async (tx) => {
+        const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
             // First, delete any existing UserImage records for this user
             await tx.userImage.deleteMany({
                 where: { userId }
