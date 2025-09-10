@@ -23,7 +23,6 @@
     "db:seed:clean": "tsx prisma/seed/seed.ts clean",
     "db:seed:attack-on-titan": "tsx prisma/seed/seed.ts 1",
     "db:seed:lms": "tsx prisma/seed/seed.ts 3",
-    "storage:init": "node scripts/init-storage.js",
     "db:seed:quizzes": "tsx prisma/seed/seed.ts 4",
     "db:seed:jobs": "tsx prisma/seed/seed.ts 5",
     "db:seed:projects": "tsx prisma/seed/seed.ts 6",
