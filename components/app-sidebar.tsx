@@ -10,6 +10,7 @@ import {
   Code2,
   Trophy,
   BookOpen,
+  MessageCircle,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -100,6 +101,11 @@ const buildNavigationData = (role?: string) => {
         title: "Quizzes",
         url: "/learning/quiz",
         icon: Pyramid,
+      },
+      {
+        title: "Chat",
+        url: "/chat",
+        icon: MessageCircle,
       },
     ],
     footer: [],

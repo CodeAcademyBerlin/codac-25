@@ -115,6 +115,10 @@ model User {
   projectLikes          ProjectLike[]
   projectCollaborations ProjectCollaborator[]
 
+  // Chat Relations
+  conversationParticipants ConversationParticipant[]
+  chatMessages             ChatMessage[]
+
   @@map("users")
 }
 
@@ -986,4 +990,70 @@ enum ExperienceType {
   VOLUNTEER
   PROJECT
   INTERNSHIP
+}
+
+// Chat Models
+model Conversation {
+  id          String           @id @default(cuid())
+  type        ConversationType @default(DIRECT)
+  name        String? // For group chats
+  description String? // For group chats
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // Relations
+  participants ConversationParticipant[]
+  messages     ChatMessage[]
+
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  id             String          @id @default(cuid())
+  conversationId String
+  userId         String
+  role           ParticipantRole @default(MEMBER)
+  joinedAt       DateTime        @default(now())
+  lastSeenAt     DateTime?
+
+  // Relations
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@map("conversation_participants")
+}
+
+model ChatMessage {
+  id             String   @id @default(cuid())
+  content        String
+  conversationId String
+  userId         String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Legacy fields for backward compatibility (can be removed later)
+  roomName String?
+  userName String?
+
+  @@index([conversationId])
+  @@index([createdAt])
+  @@index([userId])
+  @@map("chat_messages")
+}
+
+enum ConversationType {
+  DIRECT // One-on-one chat
+  GROUP // Group chat
+  CHANNEL // Public channel (like general-chat)
+}
+
+enum ParticipantRole {
+  MEMBER
+  ADMIN
+  OWNER
 }
