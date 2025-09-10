@@ -41,7 +41,7 @@ export async function createConversation(input: unknown) {
             logger.info('Participant validation debug', {
                 metadata: {
                     requestedParticipants: allParticipantIds,
-                    foundUsers: existingUsers.map(u => u.id),
+                    foundUsers: existingUsers.map((u: { id: string }) => u.id),
                     expectedCount: allParticipantIds.length,
                     actualCount: existingUsers.length,
                 },
@@ -55,7 +55,7 @@ export async function createConversation(input: unknown) {
                     metadata: {
                         missing: missingUsers,
                         requested: allParticipantIds,
-                        found: existingUsers.map(u => u.id),
+                        found: existingUsers.map((u: { id: string }) => u.id),
                     },
                 })
                 throw new Error('One or more participants not found')

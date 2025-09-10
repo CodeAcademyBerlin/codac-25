@@ -191,7 +191,7 @@ export default async function DashboardPage() {
         )}
 
         {/* Quick Actions */}
-        <Section>
+        <Section bottomSpacing="none">
           <SectionErrorBoundary sectionName="quick actions">
             <Card>
               <CardHeader>

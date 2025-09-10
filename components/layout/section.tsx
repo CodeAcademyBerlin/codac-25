@@ -4,6 +4,7 @@ interface SectionProps {
   children: React.ReactNode;
   className?: string;
   spacing?: "sm" | "md" | "lg";
+  bottomSpacing?: "sm" | "md" | "lg" | "none";
 }
 
 const spacingClasses = {
@@ -12,14 +13,23 @@ const spacingClasses = {
   lg: "space-y-6 md:space-y-8"
 };
 
-export function Section({ 
-  children, 
+const bottomSpacingClasses = {
+  sm: "mb-6 md:mb-8",
+  md: "mb-8 md:mb-12",
+  lg: "mb-12 md:mb-16",
+  none: ""
+};
+
+export function Section({
+  children,
   className,
-  spacing = "md"
+  spacing = "md",
+  bottomSpacing = "md"
 }: SectionProps) {
   return (
     <section className={cn(
       spacingClasses[spacing],
+      bottomSpacingClasses[bottomSpacing],
       className
     )}>
       {children}
@@ -35,12 +45,12 @@ interface SectionHeaderProps {
   className?: string;
 }
 
-export function SectionHeader({ 
-  title, 
-  description, 
+export function SectionHeader({
+  title,
+  description,
   badge,
-  children, 
-  className 
+  children,
+  className
 }: SectionHeaderProps) {
   return (
     <div className={cn("flex items-center justify-between mb-3 md:mb-6", className)}>
