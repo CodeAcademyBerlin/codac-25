@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { PrismaClient, UserRole, UserStatus } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import type { UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { logger } from '../../../lib/logger';
 import { encodeSeedImageToBase64 } from '../../../lib/imaging/encode-image-to-base64';
@@ -114,8 +115,8 @@ export async function seedAttackOnTitan() {
                 email: 'admin@codac.academy',
                 name: 'Admin User',
                 password: defaultPassword,
-                role: UserRole.ADMIN,
-                status: UserStatus.ACTIVE,
+                role: 'ADMIN' as UserRole,
+                status: 'ACTIVE' as UserStatus,
                 image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2RjMjYyNiIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjMwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QUQ8L3RleHQ+PC9zdmc+',
                 bio: 'System administrator responsible for platform management and user oversight.',
                 githubUrl: 'https://github.com/codac-admin',
