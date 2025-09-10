@@ -20,7 +20,7 @@ export class AuthHelpers {
 
     // Wait for form to be fully loaded
     await this.page.waitForSelector('input[type="email"]', { timeout: 10000 });
-    
+
     // Use robust selectors that match the actual form structure
     const emailInput = this.page.locator('input[type="email"]');
     const passwordInput = this.page.locator('input[type="password"]');
@@ -54,7 +54,7 @@ export class AuthHelpers {
     await this.page.goto('/auth/signin');
     await this.page.waitForLoadState('networkidle');
     await this.page.waitForSelector('input[type="email"]', { timeout: 10000 });
-    
+
     await this.page.locator('input[type="email"]').fill(email);
     const magicLinkButton = this.page.getByRole('button', { name: /Send Magic Link/i });
     await magicLinkButton.click();
@@ -70,7 +70,7 @@ export class AuthHelpers {
   }) {
     await this.page.goto('/auth/signup');
     await this.page.waitForLoadState('networkidle');
-    
+
     // Wait for form to be fully loaded
     await this.page.waitForSelector('input[name="name"]', { timeout: 10000 });
 
@@ -104,7 +104,7 @@ export class AuthHelpers {
     // Try to find link to signup from signin page, or navigate directly
     await this.page.goto('/auth/signin');
     await this.page.waitForLoadState('networkidle');
-    
+
     const signUpLink = this.page.getByRole('link', { name: /sign up/i });
     if (await signUpLink.isVisible().catch(() => false)) {
       await signUpLink.click();
@@ -168,7 +168,7 @@ export class AuthHelpers {
     try {
       await this.page.waitForFunction(() => {
         return !window.location.pathname.startsWith('/auth/signin') &&
-        !window.location.pathname.startsWith('/auth/error');
+          !window.location.pathname.startsWith('/auth/error');
       }, { timeout: 15000 });
     } catch (error) {
       // If timeout, check if we're on an error page
@@ -467,11 +467,12 @@ export class MockHelpers {
  * Test data factory
  */
 export class TestDataFactory {
-  static createUser(overrides: Partial<{ email: string; name: string; id: string }> = {}) {
+  static createUser(overrides: Partial<{ email: string; name: string; id: string; password: string }> = {}) {
     return {
       id: 'test-user-' + Math.random().toString(36).substr(2, 9),
       email: 'test@example.com',
       name: 'Test User',
+      password: 'password123',
       ...overrides
     };
   }

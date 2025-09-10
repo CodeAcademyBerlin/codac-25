@@ -1,8 +1,8 @@
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
 
-import { logger } from "@/lib/logger";
 import { auth } from "@/lib/auth/auth";
+import { logger } from "@/lib/logger";
 
 // Generic server action result type
 export type ServerActionResult<T = unknown> =

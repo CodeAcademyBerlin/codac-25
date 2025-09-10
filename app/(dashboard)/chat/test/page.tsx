@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 
-import { auth } from "@/lib/auth/auth";
 import { ConversationTestClient } from "@/components/chat/conversation-test-client";
 import { MessageTestClient } from "@/components/chat/message-test-client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { auth } from "@/lib/auth/auth";
 
 export default async function ConversationTestPage() {
   const session = await auth();

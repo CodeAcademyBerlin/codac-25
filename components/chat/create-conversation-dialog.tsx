@@ -1,8 +1,10 @@
 "use client";
 
+import { Plus, MessageCircle, Users, Hash } from "lucide-react";
 import { useState } from "react";
+
+import { createConversation } from "@/actions/chat/create-conversation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -10,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -17,9 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, MessageCircle, Users, Hash } from "lucide-react";
 
-import { createConversation } from "@/actions/chat/create-conversation";
 
 interface CreateConversationDialogProps {
   onConversationCreated?: (conversationId: string) => void;

@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+
 import { STORAGE_BUCKETS } from '@/lib/supabase/storage';
 import { ensureBucket } from '@/lib/supabase/storage-server';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
     try {
         // Initialize all required buckets
         await Promise.all([

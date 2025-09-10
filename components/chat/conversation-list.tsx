@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { MessageCircle, Users, Hash, User, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 import { getUserConversationsAction } from "@/actions/chat/get-user-conversations";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import type { ConversationWithParticipants } from "@/data/chat/get-conversations";
+import { cn } from "@/lib/utils";
 
 interface ConversationListProps {
   currentUserId: string;

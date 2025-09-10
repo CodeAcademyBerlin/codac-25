@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { MessageCircle, Users, Hash, Plus, Settings } from "lucide-react";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+
 import { ConversationList } from "./conversation-list";
 import { ConversationView } from "./conversation-view";
 

@@ -18,7 +18,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUploadThing } from "@/hooks/use-upload-file";
-import { STORAGE_BUCKETS } from "@/lib/supabase/storage";
 
 export default function DuckUploadPage() {
   const [title, setTitle] = useState("");

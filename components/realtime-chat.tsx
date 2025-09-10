@@ -1,14 +1,15 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { ChatMessageItem } from "@/components/chat-message";
-import { useChatScroll } from "@/hooks/use-chat-scroll";
-import { useRealtimeChat } from "@/hooks/use-realtime-chat";
 import type { ChatMessage as PrismaChatMessage } from "@prisma/client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Send, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+
+import { ChatMessageItem } from "@/components/chat-message";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useChatScroll } from "@/hooks/use-chat-scroll";
+import { useRealtimeChat } from "@/hooks/use-realtime-chat";
+import { cn } from "@/lib/utils";
 
 interface RealtimeChatProps {
   roomName: string;
