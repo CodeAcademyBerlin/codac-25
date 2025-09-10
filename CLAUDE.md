@@ -234,6 +234,45 @@ Invoke the `@agent-design-review` subagent for thorough design validation when:
 - Before finalizing PRs with visual changes
 - Needing comprehensive accessibility and responsiveness testing
 
+## Testing Strategy
+
+### Unit Testing with Vitest
+- Use Vitest for all unit tests with React Testing Library for component testing
+- Write tests for utility functions, server actions, and React components
+- Follow the Test-Driven Development (TDD) approach when implementing new features
+- Use the established mocking patterns for Prisma database operations
+- Leverage the test utilities in `/tests/utils/` for consistent testing setup
+- Write descriptive test names that explain the behavior being tested
+- Group related tests using `describe` blocks for better organization
+- Use `beforeEach` and `afterEach` for proper test isolation and cleanup
+- Mock external dependencies and system modules consistently
+
+### Testing File Organization
+```
+/tests
+  /mocks - Mock implementations (Prisma, external APIs)
+  /utils - Test utilities and fixtures
+  /setup.ts - Global test configuration
+/component.test.tsx - Component tests co-located with components
+/utils.test.ts - Utility function tests co-located with utilities
+/action.test.ts - Server action tests co-located with actions
+```
+
+### Test Coverage and Quality
+- Aim for high test coverage on critical business logic (utilities, server actions)
+- Test both happy path and error scenarios for robust validation
+- Use meaningful test data and fixtures from `/tests/utils/fixtures.ts`
+- Implement proper mocking for database operations using `/tests/mocks/prisma.ts`
+- Write integration tests for complex workflows when unit tests aren't sufficient
+- Use snapshot testing sparingly and only for stable UI components
+- Follow the AAA pattern: Arrange, Act, Assert for clear test structure
+
+### Test Commands
+- `pnpm test:unit` - Run all unit tests
+- `pnpm test:unit:watch` - Run tests in watch mode during development
+- `pnpm test:unit:coverage` - Run tests with coverage report
+- `pnpm test:unit:ui` - Run tests with Vitest UI for interactive debugging
+
 ## Commands and Tools
 
 ### Lint and Type Check

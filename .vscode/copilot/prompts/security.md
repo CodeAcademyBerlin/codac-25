@@ -1,0 +1,22 @@
+# Security Guidelines
+
+- Validate all user input with Zod
+- Use proper auth and permissions
+- Implement CSRF protection
+- Use permission checks
+- Sanitize user content
+- Rate limit APIs
+- Validate uploads
+- Handle sensitive data securely
+- Manage sessions/tokens properly
+- Use env vars for secrets
+- Log without leaking sensitive data
+- Encrypt sensitive info
+- Use secure DB operations
+- Validate/encode outputs
+- Use CSP headers
+- Handle errors without leaking info
+- Use HTTPS
+- Follow privacy patterns
+- Backup and recovery
+- Use security headers and CORS

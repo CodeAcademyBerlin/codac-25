@@ -27,41 +27,53 @@ const codacBrandFont = localFont({
 
 export const metadata: Metadata = {
   title: "codac - learning community - code academy berlin ",
-  description: "Comprehensive learning management system and community platform for Code Academy Berlin students and alumni. Learn, collaborate, and grow together.",
-  keywords: ["Code Academy Berlin", "LMS", "Learning Platform", "Web Development", "Data Science", "UX/UI Design", "Bootcamp", "Programming Education"],
-  authors: [{
-    name: "Code Academy Berlin"
-  }],
+  description:
+    "Comprehensive learning management system and community platform for Code Academy Berlin students and alumni. Learn, collaborate, and grow together.",
+  keywords: [
+    "Code Academy Berlin",
+    "LMS",
+    "Learning Platform",
+    "Web Development",
+    "Data Science",
+    "UX/UI Design",
+    "Bootcamp",
+    "Programming Education",
+  ],
+  authors: [
+    {
+      name: "Code Academy Berlin",
+    },
+  ],
   creator: "Code Academy Berlin",
   icons: {
-    icon: [{
-      url: "/favicon.svg",
-      type: "image/svg+xml"
-    }, {
-      url: "/favicon.ico",
-      type: "image/x-icon",
-      sizes: "any"
-    }],
-    apple: "/apple-touch-icon.svg"
+    icon: [
+      {
+        url: "/favicon.svg",
+        type: "image/svg+xml",
+      },
+    ],
+    apple: "/apple-touch-icon.svg",
   },
   openGraph: {
     title: "codac - code academy berlin learning community",
-    description: "Comprehensive learning management system and community platform for Code Academy Berlin students and alumni.",
+    description:
+      "Comprehensive learning management system and community platform for Code Academy Berlin students and alumni.",
     type: "website",
-    locale: "en_US"
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: "codac - code academy berlin learning community",
-    description: "Learn, collaborate, and grow with Code Academy Berlin's comprehensive learning platform."
+    description:
+      "Learn, collaborate, and grow with Code Academy Berlin's comprehensive learning platform.",
   },
   robots: {
     index: true,
-    follow: true
-  }
+    follow: true,
+  },
 };
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
@@ -72,9 +84,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMonoFont.variable} ${codacBrandFont.variable} antialiased `}
       >
         <Providers>
-          <HeaderProvider>
-            {children}
-          </HeaderProvider>
+          <HeaderProvider>{children}</HeaderProvider>
         </Providers>
         <Toaster />
       </body>

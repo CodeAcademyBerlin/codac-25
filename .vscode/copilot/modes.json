@@ -1,0 +1,153 @@
+{
+  "refactor": {
+    "promptFile": ".vscode/copilot/prompts/refactor.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "generate-tests": {
+    "promptFile": ".vscode/copilot/prompts/testing.md",
+    "instruction": "test",
+    "toolSets": ["testing"],
+    "runOnSave": false
+  },
+  "review": {
+    "promptFile": ".vscode/copilot/prompts/review.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "feature": {
+    "promptFile": ".vscode/copilot/prompts/feature.md",
+    "instruction": "default",
+    "toolSets": ["quick-check", "prisma"],
+    "runOnSave": false
+  },
+  "accessibility": {
+    "promptFile": ".vscode/copilot/prompts/accessibility.md",
+    "instruction": "default",
+    "toolSets": ["accessibility"],
+    "runOnSave": false
+  },
+  "performance": {
+    "promptFile": ".vscode/copilot/prompts/performance.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "ai-integration": {
+    "promptFile": ".vscode/copilot/prompts/ai-integration.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "full-check": {
+    "promptFile": ".vscode/copilot/prompts/review.md",
+    "instruction": "default",
+    "toolSets": ["quick-check", "testing", "accessibility"],
+    "runOnSave": false
+  },
+  "create-route": {
+    "promptFile": ".vscode/copilot/prompts/create-route.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "create-server-action": {
+    "promptFile": ".vscode/copilot/prompts/create-server-action.md",
+    "instruction": "default",
+    "toolSets": ["quick-check", "prisma"],
+    "runOnSave": false
+  },
+  "create-component": {
+    "promptFile": ".vscode/copilot/prompts/create-component.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "create-data-module": {
+    "promptFile": ".vscode/copilot/prompts/create-data-module.md",
+    "instruction": "default",
+    "toolSets": ["quick-check", "prisma"],
+    "runOnSave": false
+  },
+  "planner": {
+    "promptFile": ".vscode/copilot/prompts/planner.md",
+    "instruction": "default",
+    "toolSets": ["quick-check", "prisma"],
+    "runOnSave": false
+  }
+  ,
+  "ai-assisted-coding": {
+    "promptFile": ".vscode/copilot/prompts/ai-assisted-coding.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "ai-quick-reference": {
+    "promptFile": ".vscode/copilot/prompts/ai-quick-reference.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "code-organization": {
+    "promptFile": ".vscode/copilot/prompts/code-organization.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "data-management": {
+    "promptFile": ".vscode/copilot/prompts/data-management.md",
+    "instruction": "default",
+    "toolSets": ["quick-check", "prisma"],
+    "runOnSave": false
+  },
+  "error-handling": {
+    "promptFile": ".vscode/copilot/prompts/error-handling.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "general-principles": {
+    "promptFile": ".vscode/copilot/prompts/general-principles.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "media-handling": {
+    "promptFile": ".vscode/copilot/prompts/media-handling.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "naming-conventions": {
+    "promptFile": ".vscode/copilot/prompts/naming-conventions.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "nextjs": {
+    "promptFile": ".vscode/copilot/prompts/nextjs.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "security": {
+    "promptFile": ".vscode/copilot/prompts/security.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "typescript": {
+    "promptFile": ".vscode/copilot/prompts/typescript.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  },
+  "ui-and-styling": {
+    "promptFile": ".vscode/copilot/prompts/ui-and-styling.md",
+    "instruction": "default",
+    "toolSets": ["quick-check"],
+    "runOnSave": false
+  }
+}

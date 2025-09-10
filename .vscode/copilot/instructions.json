@@ -1,0 +1,63 @@
+{
+  "default": {
+    "tone": "professional",
+    "format": "typescript",
+    "repoGuide": ".github/copilot-instructions.md",
+    "maxTokens": 1500,
+    "rules": [
+      "Follow Next.js App Router with RSC-first approach",
+      "Place code in correct boundaries (app/, actions/, data/, lib/, components/)",
+      "Use Zod for validation and return ServerActionResult<T> for actions",
+      "Use lib/db/prisma.ts with narrow selects; wrap multi-step operations in transactions",
+      "Ensure WCAG AA accessibility for all UI components",
+      "Add comprehensive error handling with user-friendly messages",
+      "Use named exports; avoid default exports",
+      "Follow TypeScript best practices: strict types, prefer interfaces for public APIs",
+      "Use logger.ts instead of console.log",
+      "Implement proper security checks with auth() and permissions.ts",
+      "Follow existing code organization patterns"
+    ]
+  },
+  "overrides": {
+    "markdown": { 
+      "format": "markdown", 
+      "maxTokens": 800,
+      "rules": [
+        "Use clear headings and lists",
+        "Include code examples where appropriate",
+        "Be concise and focused on actionable information"
+      ]
+    },
+    "typescript": { 
+      "format": "typescript", 
+      "maxTokens": 2000,
+      "rules": [
+        "Use strict TypeScript with explicit types",
+        "Avoid any and type assertions when possible",
+        "Use type aliases for complex types",
+        "Prefer readonly for immutable data",
+        "Use proper error handling with typed errors"
+      ]
+    },
+    "css": {
+      "format": "css",
+      "maxTokens": 800,
+      "rules": [
+        "Use Tailwind utility classes following the project pattern",
+        "Follow mobile-first responsive design",
+        "Ensure sufficient color contrast (4.5:1 minimum)",
+        "Use CSS variables for themeable properties"
+      ]
+    },
+    "test": {
+      "format": "typescript",
+      "maxTokens": 1500,
+      "rules": [
+        "Follow AAA pattern (Arrange-Act-Assert)",
+        "Test both happy paths and error scenarios",
+        "Mock external dependencies",
+        "Use descriptive test names"
+      ]
+    }
+  }
+}

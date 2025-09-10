@@ -1,28 +1,52 @@
 ---
-description: 
-globs: 
-alwaysApply: false
+description: Testing standards and conventions for unit, integration, and e2e tests
+globs: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "tests/**/*"]
+alwaysApply: true
 ---
-## Testing Guidelines
 
-- Write tests for all critical business logic and server actions
-- Use Jest and React Testing Library for component testing
-- Implement integration tests for complex user workflows
-- Test error handling and edge cases thoroughly
-- Use proper mocking for external dependencies and APIs
-- Test accessibility features and keyboard navigation
-- Implement visual regression testing for UI components
-- Use proper test data and factories for consistent testing
-- Test responsive design and mobile functionality
-- Implement end-to-end tests for critical user journeys
-- Test database operations and data integrity
-- Use proper setup and teardown for test environments
-- Test performance characteristics of critical operations
-- Implement proper test coverage reporting
+# Testing Guidelines
+
+## Test File Conventions
+
+### Unit & Integration Tests (*.test.ts, *.test.tsx)
+- **Framework**: Vitest + React Testing Library
+- **Location**: Co-located with source files being tested
+- **Purpose**: Test individual components, functions, and integration workflows
+- **Examples**: 
+  - `lib/validation/user.test.ts` (co-located with `user.ts`)
+  - `actions/doc/create-doc.test.ts` (co-located with `create-doc.ts`)
+  - `tests/integration/user-profile-update.test.tsx` (complex workflows)
+
+### End-to-End Tests (*.spec.ts)
+- **Framework**: Playwright
+- **Location**: `tests/e2e/` folder
+- **Purpose**: Test complete user workflows in real browser environment
+- **Examples**:
+  - `tests/e2e/auth-login.spec.ts`
+  - `tests/e2e/dashboard-navigation.spec.ts`
+  - `tests/e2e/auth-accessibility.spec.ts`
+
+## Testing Best Practices
+
+### Unit/Integration Tests
 - Use descriptive test names and clear assertions
+- Mock external dependencies (database, APIs)
 - Test both happy path and error scenarios
-- Implement proper async testing patterns
-- Test user interactions and form submissions
-- Use proper component testing isolation
+- Focus on user interactions and behavior, not implementation
+- Use proper async testing patterns for server actions
+- Test form submissions and validation thoroughly
+
+### End-to-End Tests
+- Test critical user journeys and workflows
+- Include accessibility testing with WCAG compliance
+- Test responsive design and mobile functionality
+- Validate complete auth flows and permissions
+- Test database operations and data integrity
+
+### Test Organization
+- Keep tests simple, reliable, and maintainable
+- Use proper test data and fixtures
+- Implement proper setup and teardown
 - Maintain test data separate from production data
+- Use custom render functions with providers for component tests
 

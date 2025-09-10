@@ -1,0 +1,41 @@
+[
+  {
+    "name": "quick-check",
+    "tools": [
+      { "name": "lint", "cmd": "pnpm lint", "cwd": "${workspaceFolder}" },
+      { "name": "typecheck", "cmd": "pnpm ts:check", "cwd": "${workspaceFolder}" },
+      { "name": "build", "cmd": "pnpm build", "cwd": "${workspaceFolder}" }
+    ]
+  },
+  {
+    "name": "prisma",
+    "tools": [
+      { "name": "generate", "cmd": "pnpm db:generate", "cwd": "${workspaceFolder}" },
+      { "name": "push", "cmd": "pnpm db:push", "cwd": "${workspaceFolder}" },
+      { "name": "studio", "cmd": "pnpm db:studio", "cwd": "${workspaceFolder}" },
+      { "name": "seed", "cmd": "pnpm db:seed", "cwd": "${workspaceFolder}" },
+      { "name": "reset", "cmd": "pnpm db:reset", "cwd": "${workspaceFolder}" }
+    ]
+  },
+  {
+    "name": "testing",
+    "tools": [
+      { "name": "test", "cmd": "pnpm test", "cwd": "${workspaceFolder}" },
+      { "name": "test-ui", "cmd": "pnpm test:ui", "cwd": "${workspaceFolder}" },
+      { "name": "vitest", "cmd": "pnpm vitest", "cwd": "${workspaceFolder}" }
+    ]
+  },
+  {
+    "name": "accessibility",
+    "tools": [
+      { "name": "a11y-check", "cmd": "pnpm test:a11y", "cwd": "${workspaceFolder}" }
+    ]
+  },
+  {
+    "name": "dev",
+    "tools": [
+      { "name": "dev", "cmd": "pnpm dev", "cwd": "${workspaceFolder}" },
+      { "name": "dev-safe", "cmd": "pnpm dev:safe", "cwd": "${workspaceFolder}" }
+    ]
+  }
+]

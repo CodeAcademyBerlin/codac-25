@@ -1,0 +1,21 @@
+# Media Handling
+
+- Use UploadThing for uploads
+- Follow `lib/uploadthing.ts` and `hooks/use-upload-file.ts`
+- Validate file type, size, format
+- Use `lib/imaging/` for image processing
+- Handle upload errors with user feedback
+- Show loading states
+- Use media placeholders
+- Support images, video, audio, files
+- Enforce file size limits
+- Use Next.js Image for images
+- Show upload progress
+- Clean up temp files
+- Use consistent error messages
+- Support drag-and-drop
+- Validate MIME types
+- Use alt text and accessibility
+- Show media previews
+- Retry failed uploads
+- Style upload components consistently

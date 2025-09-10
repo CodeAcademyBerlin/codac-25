@@ -56,8 +56,5 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
-.playwright-mcp/current-page-final.png
-.playwright-mcp/final-signin-state.png
-.playwright-mcp/homepage-screenshot.png
-.playwright-mcp/signin-form-filled.png
-.playwright-mcp/signin-page-screenshot.png
+/playwright-report/
+/.playwright-mcp/
