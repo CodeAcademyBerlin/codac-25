@@ -1,7 +1,7 @@
 # Media Handling
 
-- Use UploadThing for uploads
-- Follow `lib/uploadthing.ts` and `hooks/use-upload-file.ts`
+- Use Supabase Storage for uploads
+- Follow `lib/supabase/storage.ts` and `hooks/use-upload-file.ts`
 - Validate file type, size, format
 - Use `lib/imaging/` for image processing
 - Handle upload errors with user feedback

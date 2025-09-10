@@ -1,54 +1,67 @@
 import * as React from 'react';
-
-import type { OurFileRouter } from '@/lib/uploadthing';
-import type {
-  ClientUploadedFileData,
-  UploadFilesOptions,
-} from 'uploadthing/types';
-
-import { generateReactHelpers } from '@uploadthing/react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-export type UploadedFile<T = unknown> = ClientUploadedFileData<T>;
+import { uploadFile, STORAGE_BUCKETS, type UploadResult } from '@/lib/supabase/storage';
 
-interface UseUploadFileProps
-  extends Pick<
-    UploadFilesOptions<OurFileRouter['editorUploader']>,
-    'headers' | 'onUploadBegin' | 'onUploadProgress' | 'skipPolling'
-  > {
+// Legacy UploadThing types for compatibility
+export type UploadedFile = UploadResult & { appUrl?: string };
+
+interface UseUploadFileProps {
   onUploadComplete?: (file: UploadedFile) => void;
   onUploadError?: (error: unknown) => void;
+  onUploadBegin?: () => void;
+  onUploadProgress?: (progress: number) => void;
+  bucket?: string;
+  folder?: string;
+  headers?: Record<string, string>;
+  skipPolling?: boolean;
 }
 
 export function useUploadFile({
   onUploadComplete,
   onUploadError,
-  ...props
+  onUploadBegin,
+  onUploadProgress,
+  bucket = STORAGE_BUCKETS.GENERAL,
+  folder,
 }: UseUploadFileProps = {}) {
   const [uploadedFile, setUploadedFile] = React.useState<UploadedFile>();
   const [uploadingFile, setUploadingFile] = React.useState<File>();
   const [progress, setProgress] = React.useState<number>(0);
   const [isUploading, setIsUploading] = React.useState(false);
 
-  async function uploadThing(file: File) {
+  async function supabaseUploadFile(file: File): Promise<UploadedFile> {
+    const uploadId = `upload-${Date.now()}-${Math.random().toString(36).substring(2)}`;
+
     setIsUploading(true);
     setUploadingFile(file);
+    setProgress(0);
+
+    // Add to active uploads tracking
+    activeUploads.add(uploadId);
 
     try {
-      const res = await uploadFiles('editorUploader', {
-        ...props,
-        files: [file],
-        onUploadProgress: ({ progress }) => {
-          setProgress(Math.min(progress, 100));
+      onUploadBegin?.();
+
+      const result = await uploadFile(file, {
+        bucket,
+        folder,
+        onProgress: (uploadProgress) => {
+          setProgress(uploadProgress);
+          onUploadProgress?.(uploadProgress);
         },
       });
 
-      setUploadedFile(res[0]);
+      const uploadedFileResult: UploadedFile = {
+        ...result,
+        appUrl: result.url, // For compatibility with UploadThing interface
+      };
 
-      onUploadComplete?.(res[0]);
+      setUploadedFile(uploadedFileResult);
+      onUploadComplete?.(uploadedFileResult);
 
-      return uploadedFile;
+      return uploadedFileResult;
     } catch (error) {
       const errorMessage = getErrorMessage(error);
 
@@ -58,38 +71,36 @@ export function useUploadFile({
           : 'Something went wrong, please try again later.';
 
       toast.error(message);
-
       onUploadError?.(error);
 
-      // Mock upload for unauthenticated users
-      // toast.info('User not logged in. Mocking upload process.');
-      const mockUploadedFile = {
-        key: 'mock-key-0',
-        appUrl: `https://mock-app-url.com/${file.name}`,
+      // Mock upload for development/fallback
+      const mockUploadedFile: UploadedFile = {
+        key: `mock-key-${Date.now()}`,
         name: file.name,
         size: file.size,
         type: file.type,
         url: URL.createObjectURL(file),
-      } as UploadedFile;
+        appUrl: URL.createObjectURL(file),
+      };
 
       // Simulate upload progress
-      let progress = 0;
-
+      let mockProgress = 0;
       const simulateProgress = async () => {
-        while (progress < 100) {
+        while (mockProgress < 100) {
           await new Promise((resolve) => setTimeout(resolve, 50));
-          progress += 2;
-          setProgress(Math.min(progress, 100));
+          mockProgress += 2;
+          const currentProgress = Math.min(mockProgress, 100);
+          setProgress(currentProgress);
+          onUploadProgress?.(currentProgress);
         }
       };
 
       await simulateProgress();
 
       setUploadedFile(mockUploadedFile);
-
       return mockUploadedFile;
     } finally {
-      setProgress(0);
+      activeUploads.delete(uploadId);
       setIsUploading(false);
       setUploadingFile(undefined);
     }
@@ -99,13 +110,83 @@ export function useUploadFile({
     isUploading,
     progress,
     uploadedFile,
-    uploadFile: uploadThing,
+    uploadFile: supabaseUploadFile,
     uploadingFile,
   };
 }
 
-export const { uploadFiles, useUploadThing } =
-  generateReactHelpers<OurFileRouter>();
+// Supabase-based uploadFiles function for compatibility
+export async function uploadFiles(
+  _endpoint: string, // For compatibility with UploadThing API
+  options: {
+    files: File[];
+    bucket?: string;
+    folder?: string;
+    onUploadProgress?: (data: { progress: number }) => void;
+  }
+): Promise<UploadedFile[]> {
+  const { files, bucket = STORAGE_BUCKETS.EDITOR, folder, onUploadProgress } = options;
+
+  const results = await Promise.all(
+    files.map(async (file, index) => {
+      return await uploadFile(file, {
+        bucket,
+        folder,
+        onProgress: (progress) => {
+          // Calculate overall progress across all files
+          const overallProgress = ((index * 100) + progress) / files.length;
+          onUploadProgress?.({ progress: overallProgress });
+        },
+      });
+    })
+  );
+
+  return results.map(result => ({
+    ...result,
+    appUrl: result.url,
+  }));
+}
+
+// Compatibility hook for UploadThing users
+export function useUploadThing(
+  endpoint: keyof { editorUploader: string; duckUploader: string },
+  callbacks: {
+    onClientUploadComplete?: (res: UploadedFile[]) => void;
+    onUploadError?: (error: Error) => void;
+    onUploadBegin?: () => void;
+    onUploadProgress?: () => void;
+  } = {}
+) {
+  const [isUploading, setIsUploading] = React.useState(false);
+
+  const startUpload = async (files: File[]): Promise<UploadedFile[] | undefined> => {
+    setIsUploading(true);
+
+    try {
+      callbacks.onUploadBegin?.();
+
+      const bucket = endpoint === 'duckUploader' ? STORAGE_BUCKETS.DUCKS : STORAGE_BUCKETS.EDITOR;
+      const results = await uploadFiles(endpoint as string, {
+        files,
+        bucket,
+        onUploadProgress: callbacks.onUploadProgress ? () => callbacks.onUploadProgress!() : undefined,
+      });
+
+      callbacks.onClientUploadComplete?.(results);
+      return results;
+    } catch (error) {
+      callbacks.onUploadError?.(error as Error);
+      return undefined;
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return {
+    startUpload,
+    isUploading,
+  };
+}
 
 export function getErrorMessage(err: unknown) {
   const unknownError = 'Something went wrong, please try again later.';

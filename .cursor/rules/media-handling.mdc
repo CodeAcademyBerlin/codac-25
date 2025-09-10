@@ -5,8 +5,8 @@ alwaysApply: false
 ---
 ## Media Handling Guidelines
 
-- Use UploadThing for all file upload operations
-- Follow the established patterns in `lib/uploadthing.ts` and `hooks/use-upload-file.ts`
+- Use Supabase Storage for all file upload operations
+- Follow the established patterns in `lib/supabase/storage.ts` and `hooks/use-upload-file.ts`
 - Implement proper file validation (type, size, format)
 - Use the established image processing utilities in `lib/imaging/`
 - Handle upload errors gracefully with appropriate user feedback

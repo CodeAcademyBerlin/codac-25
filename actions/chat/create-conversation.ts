@@ -49,7 +49,7 @@ export async function createConversation(input: unknown) {
 
             if (existingUsers.length !== allParticipantIds.length) {
                 const missingUsers = allParticipantIds.filter(id =>
-                    !existingUsers.some(user => user.id === id)
+                    !existingUsers.some((user: { id: string }) => user.id === id)
                 )
                 logger.error('Missing participants', undefined, {
                     metadata: {

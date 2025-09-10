@@ -17,7 +17,7 @@ A comprehensive, production-ready learning management system built with Next.js 
 
 ### 📝 **Advanced Content Editor**
 - **Unified Editor**: Plate.js-powered rich text editor with auto-save functionality
-- **Media Support**: Image, video, and file upload integration via UploadThing
+- **Media Support**: Image, video, and file upload integration via Supabase Storage
 - **Collaborative Features**: Real-time editing with comments and suggestions
 - **Export Options**: Multiple format exports including Markdown and DOCX
 
@@ -60,7 +60,7 @@ A comprehensive, production-ready learning management system built with Next.js 
 
 ### **Content & Editor**
 - **[Plate.js 49](https://platejs.org/)** - Rich text editor with plugins
-- **[UploadThing](https://uploadthing.com/)** - File upload and management
+- **[Supabase Storage](https://supabase.com/docs/guides/storage)** - File upload and management
 - **Auto-save System** - Real-time content persistence
 - **Media Support** - Images, videos, and documents
 
