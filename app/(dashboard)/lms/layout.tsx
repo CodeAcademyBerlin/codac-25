@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import { DndWrapper } from '@/app/(dashboard)/docs/components/dnd-wrapper';
+import { DndWrapper } from '@/components/dnd/dnd-wrapper';
 import { ResizableSidebar } from '@/components/ui/resizable-sidebar';
 import { getEnrolledCourses, getCourses } from '@/data/lms/courses';
 import { getLMSHierarchy } from '@/data/lms/lms-hierarchy';

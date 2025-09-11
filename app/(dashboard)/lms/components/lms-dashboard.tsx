@@ -106,13 +106,13 @@ export function LMSDashboard({ user: _user, enrolledCourses, allCourses }: LMSDa
         <Section>
             {/* Header with Navigation */}
             <div className="flex items-center gap-2 mb-2">
-                <Link href="/learning" className="text-muted-foreground hover:text-foreground">
+                <Link href="/lms" className="text-muted-foreground hover:text-foreground">
                     <ArrowLeft className="h-4 w-4" />
                 </Link>
                 <span className="text-sm text-muted-foreground">Learning / Course Management</span>
             </div>
-            
-            <PageHeader 
+
+            <PageHeader
                 title="Course Management"
                 description="Manage your enrolled courses, track progress, and explore new learning opportunities."
             />
@@ -194,7 +194,7 @@ export function LMSDashboard({ user: _user, enrolledCourses, allCourses }: LMSDa
                                         {enrolledInTrack.length} enrolled • {availableInTrack.length} available
                                     </CardDescription>
                                 </div>
-                                <Link href={`/learning/${trackSlug}`}>
+                                <Link href={`/lms/courses`}>
                                     <Button variant="outline" size="sm">
                                         View Track
                                     </Button>
@@ -291,7 +291,7 @@ export function LMSDashboard({ user: _user, enrolledCourses, allCourses }: LMSDa
                                     </div>
                                     {availableInTrack.length > 3 && (
                                         <div className="mt-4">
-                                            <Link href={`/learning/${trackSlug}`}>
+                                            <Link href={`/lms/courses`}>
                                                 <Button variant="ghost" size="sm">
                                                     View {availableInTrack.length - 3} more courses →
                                                 </Button>
@@ -354,7 +354,7 @@ export function LMSDashboard({ user: _user, enrolledCourses, allCourses }: LMSDa
                             </div>
                         </div>
                         <div className="mt-6 flex gap-3">
-                            <Link href="/learning">
+                            <Link href="/lms">
                                 <Button>
                                     <BookOpen className="h-4 w-4 mr-2" />
                                     Explore Learning Tracks

@@ -96,11 +96,7 @@ model User {
   mentorships       Mentorship[]    @relation("Mentor")
   menteeMentorships Mentorship[]    @relation("Mentee")
 
-  // Document Relations (keeping existing functionality)
-  documents     Document[]
-  favorites     Favorite[]
-  suggestions   Suggestion[]
-  collaborators DocumentCollaborator[]
+  // Document Relations removed
 
   // Job Relations
   postedJobs      Job[]            @relation("PostedJobs")
@@ -329,8 +325,7 @@ model Comment {
   postId String?
   post   CommunityPost? @relation(fields: [postId], references: [id], onDelete: Cascade)
 
-  documentId String?
-  document   Document? @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  // documentId and document relation removed
 
   parentId String?
   parent   Comment?  @relation("CommentThread", fields: [parentId], references: [id])
@@ -477,97 +472,7 @@ model PostTag {
   @@map("post_tags")
 }
 
-// Keep existing Document functionality for course content and community
-model Document {
-  id          String       @id @default(cuid())
-  title       String
-  content     Json
-  parentId    String?
-  isFolder    Boolean      @default(false)
-  isPublished Boolean      @default(false)
-  isArchived  Boolean      @default(false)
-  coverImage  String?
-  icon        String?
-  type        DocumentType @default(GENERAL)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  authorId      String
-  author        User                   @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  parent        Document?              @relation("DocumentHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
-  children      Document[]             @relation("DocumentHierarchy")
-  favorites     Favorite[]
-  comments      Comment[]
-  suggestions   Suggestion[]
-  collaborators DocumentCollaborator[]
-  versions      DocumentVersion[]
-
-  @@map("documents")
-}
-
-// Keep existing models with minimal changes
-model Favorite {
-  id String @id @default(cuid())
-
-  userId     String
-  documentId String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-
-  @@unique([userId, documentId])
-  @@map("favorites")
-}
-
-model Suggestion {
-  id          String           @id @default(cuid())
-  type        SuggestionType
-  content     Json
-  status      SuggestionStatus @default(PENDING)
-  description String?
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-
-  blockId String?
-  path    Json?
-
-  userId     String
-  documentId String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
-
-  @@map("suggestions")
-}
-
-model DocumentCollaborator {
-  id         String             @id @default(cuid())
-  permission DocumentPermission @default(READ)
-  createdAt  DateTime           @default(now())
-
-  userId     String
-  documentId String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, documentId])
-  @@map("document_collaborators")
-}
-
-model DocumentVersion {
-  id        String   @id @default(cuid())
-  content   Json
-  title     String
-  version   Int
-  createdAt DateTime @default(now())
-
-  documentId String
-  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
-
-  @@unique([documentId, version])
-  @@map("document_versions")
-}
+// Document functionality removed
 
 // Project Showcase Models
 model ProjectProfile {
@@ -816,37 +721,9 @@ enum ResourceType {
   LINK
   FILE
   VIDEO
-  DOCUMENT
 }
 
-enum DocumentType {
-  GENERAL
-  COURSE_MATERIAL
-  ASSIGNMENT
-  RESOURCE
-}
-
-// Existing enums
-enum SuggestionType {
-  INSERT
-  DELETE
-  REPLACE
-  BLOCK_INSERT
-  BLOCK_DELETE
-  BLOCK_REPLACE
-}
-
-enum SuggestionStatus {
-  PENDING
-  ACCEPTED
-  REJECTED
-}
-
-enum DocumentPermission {
-  READ
-  WRITE
-  ADMIN
-}
+// Document-related enums removed
 
 // Job Board Models
 model Job {

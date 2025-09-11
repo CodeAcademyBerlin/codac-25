@@ -98,7 +98,7 @@ export default function QuizSelectorPage() {
   };
 
   const handleQuizSelect = (quizId: string) => {
-    router.push(`/learning/quiz/${encodeURIComponent(category)}/${encodeURIComponent(level)}/${quizId}`);
+    router.push(`/lms/quiz/${encodeURIComponent(category)}/${encodeURIComponent(level)}/${quizId}`);
   };
 
   return (

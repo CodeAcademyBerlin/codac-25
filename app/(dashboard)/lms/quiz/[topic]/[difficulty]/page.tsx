@@ -1,104 +1,66 @@
 "use client";
-
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { use } from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-// Tipos locales
-interface Question {
+import { QuizQuestion } from '@/types/server-action';
+
+type Question = {
   id: string;
   text: string;
   options: string[];
   correctAnswer: string;
   explanation?: string;
-}
+};
 
-interface Quiz {
+type Quiz = {
   id: string;
   topic: string;
   difficulty: string;
-  quizTitle: string;
   questions: Question[];
-}
+};
 
-interface QuestionResponse {
-  id: string;
-  text: string;
-  options: string[] | string;
-  correctAnswer: string;
-  explanation?: string;
-}
-
-interface QuizApiResponse {
-  id: string;
-  topic: string;
-  difficulty: string;
-  quizTitle: string;
-  questions: QuestionResponse[];
-}
-
-export default function QuizByIdPage({
+export default function QuizPage({
   params,
 }: {
-  params: Promise<{ topic: string; difficulty: string; quizId: string }>;
+  params: Promise<{ topic: string; difficulty: string }>;
 }) {
-  const { quizId } = use(params);
-  const { data: session } = useSession();
+  const { topic, difficulty } = use(params);
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Estado interactivo
+  // Estado para el quiz interactivo
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
   const [showAnswer, setShowAnswer] = useState(false);
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
-  const [resultSaved, setResultSaved] = useState<boolean | null>(null);
 
   useEffect(() => {
     async function fetchQuiz() {
       try {
         setLoading(true);
-        const response = await fetch(`/api/quiz/by-id/${quizId}`);
+        const response = await fetch(`/api/quiz/${topic}/${difficulty}`);
         if (!response.ok) {
-          throw new Error("Quiz not found");
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to fetch quiz');
         }
-        const data: QuizApiResponse = await response.json();
-        const questions = data.questions.map((q: QuestionResponse) => ({
+        const data = await response.json();
+        // Parse options if needed
+        const questions = data.questions.map((q: QuizQuestion) => ({
           ...q,
           options: Array.isArray(q.options) ? q.options : JSON.parse(q.options),
         }));
         setQuiz({ ...data, questions });
-      } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      } catch (err) {
+        setError((err as Error).message);
       } finally {
         setLoading(false);
       }
     }
     fetchQuiz();
-  }, [quizId]);
-
-  useEffect(() => {
-    if (finished && quiz && session?.user?.id) {
-      fetch("/api/quiz/result", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: session.user.id,
-          quizId: quiz.id,
-          score,
-          total: quiz.questions.length,
-        }),
-      })
-        .then((res) => {
-          if (res.ok) setResultSaved(true);
-          else setResultSaved(false);
-        })
-        .catch(() => setResultSaved(false));
-    }
-  }, [finished, quiz, session, score]);
+  }, [topic, difficulty]);
 
   if (loading) return <div>Loading quiz...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -109,14 +71,14 @@ export default function QuizByIdPage({
   function handleSelect(option: string) {
     setSelected(option);
     setShowAnswer(true);
-    if (option === question.correctAnswer) setScore((s) => s + 1);
+    if (option === question.correctAnswer) setScore(s => s + 1);
   }
 
   function handleNext() {
     setSelected(null);
     setShowAnswer(false);
     if (quiz && current + 1 < quiz.questions.length) {
-      setCurrent((c) => c + 1);
+      setCurrent(c => c + 1);
     } else {
       setFinished(true);
     }
@@ -127,9 +89,6 @@ export default function QuizByIdPage({
       <div className="max-w-lg mx-auto mt-10 p-6 bg-white dark:bg-zinc-900 rounded shadow">
         <h1 className="text-2xl font-bold mb-4 text-center">Quiz completed!</h1>
         <p className="text-center mb-4">Score: <span className="font-bold">{score} / {quiz.questions.length}</span></p>
-        {resultSaved === false && (
-          <div className="text-red-600 text-center mb-2">Could not save your result.</div>
-        )}
         <ul className="mb-6">
           {quiz.questions.map((q, i) => (
             <li key={q.id} className="mb-2">
@@ -139,32 +98,31 @@ export default function QuizByIdPage({
             </li>
           ))}
         </ul>
-        <Link href="/learning/quiz" className="block text-center text-blue-600 hover:underline">Back to quiz selection</Link>
+        <Link href="/lms/quiz" className="block text-center text-blue-600 hover:underline">Back to quiz selection</Link>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center py-10 px-2" style={{ backgroundImage: 'url(/codacback.png)', backgroundSize: '77px 61px', backgroundRepeat: 'repeat', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
+    <div className="relative min-h-screen flex items-center justify-center py-10 px-2" style={{ backgroundImage: 'url(/codacback.png)', backgroundSize: 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', backgroundAttachment: 'fixed' }}>
       <div className="max-w-lg w-full p-6 bg-white/90 dark:bg-zinc-900/90 rounded shadow-lg z-10">
         <div className="mb-4">
-          <Link href="/learning/quiz" className="text-blue-600 hover:underline font-medium">← Back to quiz selection</Link>
+          <Link href="/lms/quiz" className="text-blue-600 hover:underline font-medium">← Back to quiz selection</Link>
         </div>
-        <h1 className="text-xl font-bold mb-2">{quiz.quizTitle}</h1>
-        <div className="mb-2 text-gray-600">{quiz.topic} ({quiz.difficulty})</div>
+        <h1 className="text-xl font-bold mb-2">{quiz.topic} Quiz ({quiz.difficulty})</h1>
         <div className="mb-4">
           <span className="text-gray-600">Question {current + 1} of {quiz.questions.length}</span>
         </div>
         <div className="mb-4 font-medium">{question.text}</div>
         <div className="space-y-2 mb-4">
-          {question.options.map((option) => (
+          {question.options.map(option => (
             <button
               key={option}
               className={`w-full text-left text-zinc-900 dark:text-zinc-100 px-4 py-2 rounded border
                 ${selected === option
                   ? option === question.correctAnswer
-                    ? 'bg-green-200 border-green-500 dark:bg-green-700/80 dark:border-green-400'
-                    : 'bg-red-200 border-red-500 dark:bg-red-700/80 dark:border-red-400'
+                    ? 'bg-green-200 border-green-500'
+                    : 'bg-red-200 border-red-500'
                   : 'bg-white border-gray-300 hover:bg-gray-100 dark:bg-zinc-800 dark:border-zinc-700 dark:hover:bg-zinc-700'}
                 ${showAnswer && option === question.correctAnswer ? 'font-bold' : ''}
               `}

@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 
 import { createProject } from '@/actions/projects/create-project'
-import { DndWrapper } from '@/app/(dashboard)/docs/components/dnd-wrapper'
+import { DndWrapper } from '@/components/dnd/dnd-wrapper'
 import { PageContainer, PageHeader } from '@/components/layout'
 import { ProjectFormWithSummary } from '@/components/projects/project-form-with-summary'
 import { getCurrentUser } from '@/lib/auth/auth-utils'

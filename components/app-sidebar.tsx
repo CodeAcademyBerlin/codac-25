@@ -78,12 +78,8 @@ const buildNavigationData = (role?: string): NavigationGroup[] => {
       url: "/lms",
     },
     {
-      title: "Documents",
-      url: "/docs",
-    },
-    {
       title: "Quizzes",
-      url: "/learning/quiz",
+      url: "/lms/quiz",
     },
   ];
 

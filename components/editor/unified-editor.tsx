@@ -4,7 +4,7 @@ import { Value } from "platejs";
 import { PlateController, useEditorRef, useEditorSelector } from "platejs/react";
 import React, { createContext, useContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { updateDoc } from "@/actions/doc/update-doc";
+// updateDoc import removed
 import { updateLessonContent } from "@/actions/lms/update-lesson";
 import { updateProjectSummary } from "@/actions/projects/update-project-summary";
 import { Button } from "@/components/ui/button";
@@ -111,7 +111,7 @@ const SaveStatusIndicator = React.memo(function SaveStatusIndicator({
 interface UnifiedEditorProps {
     initialValue: Value;
     contentId: string;
-    contentType: 'document' | 'lesson' | 'project';
+    contentType: 'lesson' | 'project';
     showStatusBar?: boolean;
     canEdit?: boolean;
     readOnly?: boolean;
@@ -155,7 +155,7 @@ const UnifiedStateUpdater = React.memo(function UnifiedStateUpdater({
     canEdit = false
 }: {
     contentId: string;
-    contentType: 'document' | 'lesson' | 'project';
+    contentType: 'lesson' | 'project';
     showStatusBar?: boolean;
     initialValue?: Value;
     canEdit?: boolean;
@@ -205,7 +205,7 @@ const UnifiedStateUpdater = React.memo(function UnifiedStateUpdater({
             } else if (contentType === 'project') {
                 result = await updateProjectSummary(contentId, content);
             } else {
-                result = await updateDoc({ id: contentId, content: content });
+                throw new Error(`Unsupported content type: ${contentType}`);
             }
 
             if (result.success) {

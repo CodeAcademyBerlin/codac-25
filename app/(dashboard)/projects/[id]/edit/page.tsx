@@ -2,7 +2,7 @@ import { notFound, redirect } from 'next/navigation'
 import { Value } from 'platejs'
 
 import { updateProject } from '@/actions/projects/update-project'
-import { DndWrapper } from '@/app/(dashboard)/docs/components/dnd-wrapper'
+import { DndWrapper } from '@/components/dnd/dnd-wrapper'
 import { PageContainer, PageHeader } from '@/components/layout'
 import { ProjectFormWithSummary } from '@/components/projects/project-form-with-summary'
 import { getProjectById } from '@/data/projects/get-project-by-id'

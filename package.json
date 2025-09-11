@@ -26,6 +26,7 @@
     "db:seed:quizzes": "tsx prisma/seed/seed.ts 4",
     "db:seed:jobs": "tsx prisma/seed/seed.ts 5",
     "db:seed:projects": "tsx prisma/seed/seed.ts 6",
+    "db:seed:chat": "tsx prisma/seed/seed.ts 7",
     "db:studio": "prisma studio",
     "db:reset": "prisma db push --force-reset && pnpm db:seed:all",
     "test:e2e": "playwright test",

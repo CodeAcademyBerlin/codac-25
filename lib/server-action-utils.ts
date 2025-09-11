@@ -168,17 +168,6 @@ export const commonSelects = {
     name: true,
     email: true,
   },
-  document: {
-    id: true,
-    title: true,
-    content: true,
-    createdAt: true,
-    updatedAt: true,
-    isPublished: true,
-    isArchived: true,
-    parentId: true,
-    type: true,
-  },
 } as const;
 
 // Type helpers for users
@@ -195,12 +184,10 @@ export type UserWithCounts = Prisma.UserGetPayload<{
   include: {
     _count: {
       select: {
-        documents: true;
         enrollments: true;
         posts: true;
         comments: true;
         achievements: true;
-        favorites: true;
       };
     };
   };
@@ -208,28 +195,6 @@ export type UserWithCounts = Prisma.UserGetPayload<{
   specialty?: string;
 };
 
-// Type helper for document with author
-export type DocumentWithAuthor = Prisma.DocumentGetPayload<{
-  include: {
-    author: {
-      select: typeof commonSelects.author;
-    };
-  };
-}>;
-
-// Type helper for document with full relations
-export type DocumentWithRelations = Prisma.DocumentGetPayload<{
-  include: {
-    author: {
-      select: typeof commonSelects.author;
-    };
-    children: true;
-    parent: true;
-    favorites: true;
-    comments: true;
-    suggestions: true;
-  };
-}>;
 
 // Permission checking logic is implemented in lib/permissions.ts
 export async function checkPermission(

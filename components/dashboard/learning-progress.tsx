@@ -32,10 +32,10 @@ export async function LearningProgress() {
                             <div className="flex items-center justify-between text-xs text-muted-foreground">
                                 <span>{item.category.replace('_', ' ')}</span>
                                 <Link
-                                    href={`/learning/${item.track}`}
+                                    href={`/lms/courses/${item.courseId}`}
                                     className="hover:text-primary transition-colors"
                                 >
-                                    View track →
+                                    View course →
                                 </Link>
                             </div>
                         </div>

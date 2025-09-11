@@ -36,13 +36,9 @@ export async function deleteUser(data: DeleteUserInput): Promise<DeleteUserResul
                 status: true,
                 _count: {
                     select: {
-                        documents: true,
                         enrollments: true,
                         posts: true,
                         comments: true,
-                        favorites: true,
-                        suggestions: true,
-                        collaborators: true,
                     },
                 },
             },

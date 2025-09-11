@@ -20,9 +20,7 @@ export async function GET() {
             select: {
                 _count: {
                     select: {
-                        documents: true,
                         achievements: true,
-                        favorites: true,
                         posts: true,
                         comments: true,
                     },
@@ -47,11 +45,11 @@ export async function GET() {
         const monthlyStudyTime = Math.min(daysSinceJoined * 2, 50)
 
         const stats = {
-            documentsCount: user._count.documents,
+            documentsCount: 0, // Documents removed
             achievementsCount: user._count.achievements,
             studyStreak: Math.min(daysSinceJoined, 30), // Cap at 30 days for demo
             monthlyStudyTime,
-            favoritesCount: user._count.favorites,
+            favoritesCount: 0, // Favorites removed with documents
             postsCount: user._count.posts,
             commentsCount: user._count.comments,
         }

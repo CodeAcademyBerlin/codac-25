@@ -1,0 +1,157 @@
+[
+    {
+        "cohortSlug": "trainees",
+        "name": "104th Training Corps Chat",
+        "description": "General discussion for all Training Corps members",
+        "messages": [
+            {
+                "senderEmail": "eren.yeager@codac.academy",
+                "content": "Welcome everyone to the 104th Training Corps! Ready to tackle these coding challenges together?",
+                "timestamp": "2024-09-01T09:00:00Z"
+            },
+            {
+                "senderEmail": "mikasa.ackerman@codac.academy",
+                "content": "Looking forward to working with everyone. Let's support each other through the bootcamp!",
+                "timestamp": "2024-09-01T09:15:00Z"
+            },
+            {
+                "senderEmail": "armin.arlert@codac.academy",
+                "content": "I've created a shared study schedule doc if anyone wants to collaborate on practice problems.",
+                "timestamp": "2024-09-01T10:30:00Z"
+            }
+        ]
+    },
+    {
+        "cohortSlug": "scouts",
+        "name": "Scout Regiment General",
+        "description": "Main chat channel for Scout Regiment members",
+        "messages": [
+            {
+                "senderEmail": "eren.yeager@codac.academy",
+                "content": "Just pushed my latest project to GitHub! The React component architecture is finally clicking for me.",
+                "timestamp": "2024-09-10T14:30:00Z"
+            },
+            {
+                "senderEmail": "mikasa.ackerman@codac.academy",
+                "content": "Nice work Eren! I reviewed your code - really clean implementation. Left some comments on the PR.",
+                "timestamp": "2024-09-10T15:00:00Z"
+            },
+            {
+                "senderEmail": "armin.arlert@codac.academy",
+                "content": "Has anyone worked with Next.js API routes before? I'm having some trouble with authentication middleware.",
+                "timestamp": "2024-09-10T16:15:00Z"
+            },
+            {
+                "senderEmail": "jean.kirstein@codac.academy",
+                "content": "@armin I just finished implementing auth in my project. Happy to help you debug it tomorrow!",
+                "timestamp": "2024-09-10T16:45:00Z"
+            },
+            {
+                "senderEmail": "connie.springer@codac.academy",
+                "content": "Speaking of Next.js, anyone want to pair program on the mobile responsive design assignment?",
+                "timestamp": "2024-09-10T17:30:00Z"
+            },
+            {
+                "senderEmail": "sasha.blouse@codac.academy",
+                "content": "Count me in! I love working on UI/UX stuff. When were you thinking?",
+                "timestamp": "2024-09-10T18:00:00Z"
+            },
+            {
+                "senderEmail": "historia.reiss@codac.academy",
+                "content": "Just finished the machine learning module. The TensorFlow.js integration was fascinating!",
+                "timestamp": "2024-09-11T10:00:00Z"
+            },
+            {
+                "senderEmail": "ymir@codac.academy",
+                "content": "I'm working on database optimization for my capstone project. Anyone have experience with PostgreSQL performance tuning?",
+                "timestamp": "2024-09-11T11:30:00Z"
+            },
+            {
+                "senderEmail": "reiner.braun@codac.academy",
+                "content": "PostgreSQL performance is my specialty! I can share some best practices. DM me your schema and I'll take a look.",
+                "timestamp": "2024-09-11T12:00:00Z"
+            },
+            {
+                "senderEmail": "bertholdt.hoover@codac.academy",
+                "content": "Just set up automated testing for my project. The peace of mind from having good test coverage is amazing!",
+                "timestamp": "2024-09-11T14:45:00Z"
+            }
+        ]
+    },
+    {
+        "cohortSlug": "garrison",
+        "name": "Garrison Regiment Hub",
+        "description": "Discussion space for Garrison Regiment members",
+        "messages": [
+            {
+                "senderEmail": "eren.yeager@codac.academy",
+                "content": "Good morning Garrison team! How's everyone's progress on the security fundamentals module?",
+                "timestamp": "2024-09-05T09:00:00Z"
+            },
+            {
+                "senderEmail": "mikasa.ackerman@codac.academy",
+                "content": "Working through the authentication patterns. The JWT implementation examples are really helpful.",
+                "timestamp": "2024-09-05T10:15:00Z"
+            },
+            {
+                "senderEmail": "armin.arlert@codac.academy",
+                "content": "I found a great resource on OWASP security guidelines. Sharing the link in our study materials folder.",
+                "timestamp": "2024-09-05T11:30:00Z"
+            }
+        ]
+    },
+    {
+        "cohortSlug": "mps",
+        "name": "Military Police Discussion",
+        "description": "Communication channel for Military Police Regiment",
+        "messages": [
+            {
+                "senderEmail": "eren.yeager@codac.academy",
+                "content": "Welcome to the Military Police regiment! Let's maintain high standards and help each other succeed.",
+                "timestamp": "2024-08-28T10:00:00Z"
+            },
+            {
+                "senderEmail": "mikasa.ackerman@codac.academy",
+                "content": "Looking forward to the advanced algorithms course next week. Anyone want to form a study group?",
+                "timestamp": "2024-08-28T14:30:00Z"
+            },
+            {
+                "senderEmail": "armin.arlert@codac.academy",
+                "content": "I'm in for the study group! We should also review system design principles together.",
+                "timestamp": "2024-08-28T15:00:00Z"
+            }
+        ]
+    },
+    {
+        "cohortSlug": "mentors",
+        "name": "Mentors Lounge",
+        "description": "Private channel for mentors to coordinate and discuss",
+        "messages": [
+            {
+                "senderEmail": "levi.ackerman@codac.academy",
+                "content": "Team meeting at 3 PM today to review student progress and discuss any concerns.",
+                "timestamp": "2024-09-11T12:00:00Z"
+            },
+            {
+                "senderEmail": "hange.zoe@codac.academy",
+                "content": "I've noticed great improvement in the students' problem-solving approaches this week. The new curriculum structure is working well!",
+                "timestamp": "2024-09-11T13:30:00Z"
+            },
+            {
+                "senderEmail": "erwin.smith@codac.academy",
+                "content": "Excellent observation Hange. Let's make sure to provide additional challenges for the advanced students who are progressing quickly.",
+                "timestamp": "2024-09-11T14:00:00Z"
+            },
+            {
+                "senderEmail": "kenny.ackerman@codac.academy",
+                "content": "I'll prepare some extra practice problems for the advanced track. Also updating the assessment rubrics based on recent feedback.",
+                "timestamp": "2024-09-11T14:15:00Z"
+            },
+            {
+                "senderEmail": "levi.ackerman@codac.academy",
+                "content": "Good work everyone. Remember office hours are available daily from 2-4 PM for students who need extra support.",
+                "timestamp": "2024-09-11T16:30:00Z"
+            }
+        ]
+    }
+]
