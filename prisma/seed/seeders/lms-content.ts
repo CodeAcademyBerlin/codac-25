@@ -1,7 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { PrismaClient } from '@prisma/client';
-import type { CourseCategory, LessonType } from '@prisma/client';
 import { MarkdownPlugin } from '@platejs/markdown';
 import matter from 'gray-matter';
 import { createPlateEditor } from 'platejs/react';
@@ -39,8 +38,8 @@ interface FileNode {
     children?: FileNode[];
 }
 
-const getCourseCategory = (dirName: string): CourseCategory => {
-    const categoryMap: { [key: string]: CourseCategory } = {
+const getCourseCategory = (dirName: string) => {
+    const categoryMap: { [key: string]: string } = {
         'web': 'WEB_DEVELOPMENT',
         'data': 'DATA_SCIENCE',
         'career': 'CAREER_DEVELOPMENT',
@@ -213,7 +212,7 @@ async function createLesson(filePath: string, projectId: string): Promise<string
 
         const plateContent = markdownToPlateJS(markdownContent);
 
-        let lessonType: LessonType = 'TEXT';
+        let lessonType: string = 'TEXT';
         if (markdownContent.includes('video') || markdownContent.includes('youtube')) {
             lessonType = 'VIDEO';
         } else if (markdownContent.includes('quiz') || markdownContent.includes('question')) {

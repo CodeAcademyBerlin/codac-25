@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+
 import { PrismaClient } from '@prisma/client';
+
 import { logger } from '../../../lib/logger';
 
 const prisma = new PrismaClient();
