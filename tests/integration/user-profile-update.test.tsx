@@ -34,10 +34,10 @@ vi.mock('sonner', () => ({
 import { toast } from 'sonner'
 
 // Mock profile form component for integration testing
-const MockUserProfileForm = ({ 
+const MockUserProfileForm = ({
   user,
-  onSubmit 
-}: { 
+  onSubmit
+}: {
   user: any,
   onSubmit: (data: any) => Promise<void>
 }) => {
@@ -70,7 +70,7 @@ const MockUserProfileForm = ({
           required
         />
       </div>
-      
+
       <div>
         <label htmlFor="email">Email</label>
         <input
@@ -81,7 +81,7 @@ const MockUserProfileForm = ({
           required
         />
       </div>
-      
+
       <div>
         <label htmlFor="bio">Bio</label>
         <textarea
@@ -90,7 +90,7 @@ const MockUserProfileForm = ({
           defaultValue={user.bio || ''}
         />
       </div>
-      
+
       <div>
         <label htmlFor="currentJob">Current Job</label>
         <input
@@ -100,7 +100,7 @@ const MockUserProfileForm = ({
           defaultValue={user.currentJob || ''}
         />
       </div>
-      
+
       <div>
         <label htmlFor="currentCompany">Current Company</label>
         <input
@@ -110,7 +110,7 @@ const MockUserProfileForm = ({
           defaultValue={user.currentCompany || ''}
         />
       </div>
-      
+
       <div>
         <label htmlFor="linkedinUrl">LinkedIn URL</label>
         <input
@@ -120,7 +120,7 @@ const MockUserProfileForm = ({
           defaultValue={user.linkedinUrl || ''}
         />
       </div>
-      
+
       <div>
         <label htmlFor="githubUrl">GitHub URL</label>
         <input
@@ -130,7 +130,7 @@ const MockUserProfileForm = ({
           defaultValue={user.githubUrl || ''}
         />
       </div>
-      
+
       <div>
         <label htmlFor="portfolioUrl">Portfolio URL</label>
         <input
@@ -140,7 +140,7 @@ const MockUserProfileForm = ({
           defaultValue={user.portfolioUrl || ''}
         />
       </div>
-      
+
       <button type="submit" data-testid="submit-button">
         Update Profile
       </button>
@@ -165,13 +165,13 @@ const MockProfilePage = () => {
   const handleUpdateProfile = async (data: any) => {
     try {
       toast.loading('Updating profile...', { id: 'update-profile' })
-      
+
       const result = await updateUser(data)
-      
+
       if (result.success) {
         toast.success('Profile updated successfully!', { id: 'update-profile' })
       } else {
-        toast.error(result.error || 'Failed to update profile', { id: 'update-profile' })
+        toast.error('Failed to update profile')
       }
     } catch (error) {
       toast.error('An unexpected error occurred', { id: 'update-profile' })
@@ -210,7 +210,7 @@ describe('User Profile Update Integration', () => {
     vi.clearAllMocks()
     vi.mocked(updateUser).mockResolvedValue({
       success: true,
-      data: mockUpdatedUser
+      data: mockUpdatedUser as any
     })
   })
 
@@ -221,7 +221,7 @@ describe('User Profile Update Integration', () => {
   describe('Successful profile updates', () => {
     it('should complete full profile update workflow', async () => {
       const user = userEvent.setup()
-      
+
       render(<MockProfilePage />)
 
       // Verify initial form state
@@ -281,7 +281,7 @@ describe('User Profile Update Integration', () => {
 
     it('should handle social media URL updates', async () => {
       const user = userEvent.setup()
-      
+
       render(<MockProfilePage />)
 
       // Update social media URLs
@@ -318,7 +318,7 @@ describe('User Profile Update Integration', () => {
 
     it('should handle partial profile updates', async () => {
       const user = userEvent.setup()
-      
+
       render(<MockProfilePage />)
 
       // Only update name and leave other fields unchanged
@@ -350,7 +350,7 @@ describe('User Profile Update Integration', () => {
 
     it('should handle empty optional fields', async () => {
       const user = userEvent.setup()
-      
+
       render(<MockProfilePage />)
 
       // Clear optional fields
@@ -409,10 +409,7 @@ describe('User Profile Update Integration', () => {
     it('should handle validation errors from server action', async () => {
       vi.mocked(updateUser).mockResolvedValue({
         success: false,
-        error: [
-          { path: ['email'], message: 'Invalid email address' },
-          { path: ['name'], message: 'Name is required' }
-        ]
+        error: [{ path: ['email'], message: 'Invalid email address', code: 'invalid_string', validation: 'email' }]
       })
 
       const user = userEvent.setup()
@@ -454,7 +451,7 @@ describe('User Profile Update Integration', () => {
     it('should handle generic error responses', async () => {
       vi.mocked(updateUser).mockResolvedValue({
         success: false,
-        error: undefined // No specific error message
+        error: "undefined" // No specific error message
       })
 
       const user = userEvent.setup()
@@ -536,9 +533,9 @@ describe('User Profile Update Integration', () => {
   describe('User experience', () => {
     it('should show loading state during update', async () => {
       // Mock slow response to test loading state
-      vi.mocked(updateUser).mockImplementation(() => 
-        new Promise(resolve => 
-          setTimeout(() => resolve({ success: true, data: mockUpdatedUser }), 100)
+      vi.mocked(updateUser).mockImplementation(() =>
+        new Promise(resolve =>
+          setTimeout(() => resolve({ success: true, data: mockUpdatedUser as any }), 100)
         )
       )
 

@@ -27,12 +27,10 @@ describe('Update User Integration Test', () => {
             ...mockUserData,
             cohort: null,
             _count: {
-                documents: 5,
                 enrollments: 2,
                 posts: 10,
                 comments: 15,
                 achievements: 3,
-                favorites: 8
             }
         }
 

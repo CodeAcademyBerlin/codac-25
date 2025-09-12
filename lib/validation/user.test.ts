@@ -141,7 +141,7 @@ describe('User Validation Schemas', () => {
         { field: 'currentCompany', limit: 100 }
       ]
 
-      fieldLimits.forEach(({ field, limit }) => {
+      fieldLimits.forEach(({ field }) => {
         const result = userSchema.safeParse({
           email: field === 'email' ? `${longString}@example.com` : 'test@example.com',
           [field]: field === 'email' ? `${longString}@example.com` : longString

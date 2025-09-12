@@ -2,8 +2,6 @@ import type {
   User,
   UserRole,
   UserStatus,
-  Document,
-  DocumentType,
   Job,
   JobType,
   JobLevel,
@@ -59,22 +57,6 @@ export const mockUserPrivate = {
   updatedAt: new Date('2024-01-01T00:00:00.000Z')
 }
 
-// Mock Document
-export const mockDocument: Document = {
-  id: 'doc-123',
-  title: 'Test Document',
-  content: { type: 'doc', content: [] },
-  parentId: null,
-  isFolder: false,
-  isPublished: false,
-  isArchived: false,
-  coverImage: null,
-  icon: null,
-  type: 'GENERAL' as DocumentType,
-  authorId: 'user-123',
-  createdAt: new Date('2024-01-01T00:00:00.000Z'),
-  updatedAt: new Date('2024-01-01T00:00:00.000Z')
-}
 
 // Mock Job
 export const mockJob: Job = {
@@ -130,13 +112,6 @@ export function createMockUser(overrides: Partial<User> = {}): User {
   }
 }
 
-export function createMockDocument(overrides: Partial<Document> = {}): Document {
-  return {
-    ...mockDocument,
-    ...overrides,
-    id: overrides.id || `doc-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-  }
-}
 
 export function createMockJob(overrides: Partial<Job> = {}): Job {
   return {

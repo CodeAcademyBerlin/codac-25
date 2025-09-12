@@ -9,6 +9,8 @@ import {
   HandHeart,
   MessageCircle,
   User2,
+  BookOpen,
+  Lock,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -84,6 +86,7 @@ const buildNavigationData = (role?: string): NavigationGroup[] => {
     learningItems.push({
       title: "LMS Admin",
       url: "/lms/admin",
+      icon: Lock
     });
   }
 

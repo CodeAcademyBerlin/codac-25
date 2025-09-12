@@ -1,8 +1,6 @@
 'use client';
 
 import {
-    FileText,
-    Heart,
     MessageSquare,
     Trophy,
     BookOpen,
@@ -21,20 +19,7 @@ type ProfileStatsProps = {
 
 export function ProfileStats({ user }: ProfileStatsProps) {
     const stats = [
-        {
-            label: 'Documents',
-            value: user._count.documents,
-            icon: FileText,
-            color: 'text-blue-600',
-            bgColor: 'bg-blue-100'
-        },
-        {
-            label: 'Favorites',
-            value: user._count.favorites,
-            icon: Heart,
-            color: 'text-red-600',
-            bgColor: 'bg-red-100'
-        },
+
         {
             label: 'Comments',
             value: user._count.comments,

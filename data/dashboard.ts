@@ -11,7 +11,6 @@ export interface UserStats {
     averageProgress: number;
     studyStreak: number;
     monthlyStudyTime: number;
-    documentsCount: number;
     achievementsCount: number;
 }
 
@@ -46,7 +45,6 @@ export async function getUserStats(): Promise<UserStats> {
                 averageProgress: 0,
                 studyStreak: 0,
                 monthlyStudyTime: 0,
-                documentsCount: 0,
                 achievementsCount: 0,
             };
         }
@@ -93,9 +91,6 @@ export async function getUserStats(): Promise<UserStats> {
         }, 0) / 60; // Convert minutes to hours
 
         // Get documents count
-        const documentsCount = await prisma.document.count({
-            where: { authorId: user.id },
-        });
 
         // Get achievements count (if they exist)
         const achievementsCount = await prisma.userAchievement.count({
@@ -112,7 +107,6 @@ export async function getUserStats(): Promise<UserStats> {
             averageProgress,
             studyStreak,
             monthlyStudyTime: Math.round(monthlyStudyTime),
-            documentsCount,
             achievementsCount,
         };
     } catch (error) {
@@ -124,7 +118,6 @@ export async function getUserStats(): Promise<UserStats> {
             averageProgress: 0,
             studyStreak: 0,
             monthlyStudyTime: 0,
-            documentsCount: 0,
             achievementsCount: 0,
         };
     }

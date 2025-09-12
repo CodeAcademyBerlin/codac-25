@@ -18,11 +18,6 @@ export class DatabaseHelpers {
     mockPrisma.user.findMany.mockReset()
     mockPrisma.user.update.mockReset()
     mockPrisma.user.delete.mockReset()
-    mockPrisma.document.create.mockReset()
-    mockPrisma.document.findUnique.mockReset()
-    mockPrisma.document.findMany.mockReset()
-    mockPrisma.document.update.mockReset()
-    mockPrisma.document.delete.mockReset()
   }
 
   /**

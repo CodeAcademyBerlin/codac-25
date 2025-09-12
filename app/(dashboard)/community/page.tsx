@@ -1,7 +1,6 @@
 import { Users, GraduationCap, Calendar, TrendingUp } from 'lucide-react';
 
 import { CohortCard } from '@/components/community/cohort-card';
-import { StudentCard } from '@/components/community/student-card';
 import { Grid, PageContainer, PageHeader, Section, SectionHeader, StatsGrid } from '@/components/layout';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,8 +13,8 @@ export default async function CommunityPage() {
         return (
             <PageContainer>
                 <div className="text-center">
-                    <PageHeader 
-                        title="Community" 
+                    <PageHeader
+                        title="Community"
                         description={'error' in result ? (typeof result.error === 'string' ? result.error : 'Invalid data format') : 'Failed to load community data'}
                     />
                 </div>
@@ -33,14 +32,7 @@ export default async function CommunityPage() {
         }))
     );
 
-    // Get featured students (most active ones)
-    const featuredStudents = allStudents
-        .sort((a, b) => {
-            const aActivity = a._count.documents + a._count.posts + a._count.comments + a._count.achievements;
-            const bActivity = b._count.documents + b._count.posts + b._count.comments + b._count.achievements;
-            return bActivity - aActivity;
-        })
-        .slice(0, 8);
+
 
     const activeStudents = allStudents.filter(student => student.status === 'ACTIVE').length;
     const graduatedStudents = allStudents.filter(student => student.status === 'GRADUATED').length;
@@ -48,65 +40,65 @@ export default async function CommunityPage() {
 
     return (
         <PageContainer>
-            <PageHeader 
-                title="Community" 
+            <PageHeader
+                title="Community"
                 description="Connect with your peers, explore cohorts, and be part of our growing community"
                 size="lg"
             />
 
             <Section>
                 <StatsGrid>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Total Students</CardTitle>
-                        <Users className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{totalStudents}</div>
-                        <p className="text-xs text-muted-foreground">
-                            Across all cohorts
-                        </p>
-                    </CardContent>
-                </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+                            <Users className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{totalStudents}</div>
+                            <p className="text-xs text-muted-foreground">
+                                Across all cohorts
+                            </p>
+                        </CardContent>
+                    </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Active Students</CardTitle>
-                        <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{activeStudents}</div>
-                        <p className="text-xs text-muted-foreground">
-                            Currently learning
-                        </p>
-                    </CardContent>
-                </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Active Students</CardTitle>
+                            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{activeStudents}</div>
+                            <p className="text-xs text-muted-foreground">
+                                Currently learning
+                            </p>
+                        </CardContent>
+                    </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Graduates</CardTitle>
-                        <GraduationCap className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{graduatedStudents}</div>
-                        <p className="text-xs text-muted-foreground">
-                            Successfully completed
-                        </p>
-                    </CardContent>
-                </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Graduates</CardTitle>
+                            <GraduationCap className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{graduatedStudents}</div>
+                            <p className="text-xs text-muted-foreground">
+                                Successfully completed
+                            </p>
+                        </CardContent>
+                    </Card>
 
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Active Cohorts</CardTitle>
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{activeCohorts}</div>
-                        <p className="text-xs text-muted-foreground">
-                            Currently running
-                        </p>
-                    </CardContent>
-                </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Active Cohorts</CardTitle>
+                            <Calendar className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{activeCohorts}</div>
+                            <p className="text-xs text-muted-foreground">
+                                Currently running
+                            </p>
+                        </CardContent>
+                    </Card>
                 </StatsGrid>
             </Section>
 
@@ -128,29 +120,7 @@ export default async function CommunityPage() {
                 </Grid>
             </Section>
 
-            {featuredStudents.length > 0 && (
-                <Section>
-                    <SectionHeader
-                        title="Featured Students"
-                        description="Most active community members"
-                        badge={
-                            <Badge variant="secondary" className="text-sm">
-                                Top {featuredStudents.length}
-                            </Badge>
-                        }
-                    />
 
-                    <Grid cols="4">
-                        {featuredStudents.map((student) => (
-                            <StudentCard
-                                key={student.id}
-                                student={student}
-                                cohortName={student.cohortName}
-                            />
-                        ))}
-                    </Grid>
-                </Section>
-            )}
 
             {cohorts.length === 0 && (
                 <Section>
