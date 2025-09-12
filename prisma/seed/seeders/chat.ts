@@ -80,7 +80,7 @@ export async function seedChatConversations() {
 
             // Create messages for the conversation
             for (const messageData of conversationData.messages) {
-                const sender = cohort.students.find((user: { email: string; }) => user.email === messageData.senderEmail);
+                const sender = cohort.students.find((user) => user.email === messageData.senderEmail);
 
                 if (!sender) {
                     // If sender not found in this cohort, try to find them in any cohort

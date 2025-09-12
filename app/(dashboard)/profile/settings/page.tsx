@@ -1,4 +1,4 @@
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeftIcon } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
@@ -35,7 +35,7 @@ export default async function ProfileSettingsPage() {
                 <div className="flex items-center gap-4">
                     <Button variant="ghost" size="sm" asChild>
                         <Link href="/profile">
-                            <ArrowLeft className="h-4 w-4 mr-2" />
+                            <ArrowLeftIcon className="h-4 w-4 mr-2" />
                             Back to Profile
                         </Link>
                     </Button>

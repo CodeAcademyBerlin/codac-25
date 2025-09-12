@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -41,7 +41,7 @@ export default async function DuckPage({ params }: DuckPageProps) {
     <div className="container mx-auto py-8">
       <Button asChild variant="ghost" className="mb-4">
         <Link href="/career/jobs">
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeftIcon className="mr-2 h-4 w-4" />
           Back to Job Board
         </Link>
       </Button>

@@ -4,7 +4,7 @@
 import * as ToolbarPrimitive from '@radix-ui/react-toolbar';
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import { type VariantProps, cva } from 'class-variance-authority';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDownIcon } from 'lucide-react';
 import * as React from 'react';
 
 import {
@@ -150,7 +150,7 @@ export const ToolbarButton = withTooltip(function ToolbarButton({
               {children}
             </div>
             <div>
-              <ChevronDown
+              <ChevronDownIcon
                 className="size-3.5 text-muted-foreground"
                 data-icon
               />
@@ -242,7 +242,7 @@ export function ToolbarSplitButtonSecondary({
       role="button"
       {...props}
     >
-      <ChevronDown className="size-3.5 text-muted-foreground" data-icon />
+      <ChevronDownIcon className="size-3.5 text-muted-foreground" data-icon />
     </span>
   );
 }

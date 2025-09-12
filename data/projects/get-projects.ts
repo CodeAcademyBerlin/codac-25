@@ -1,6 +1,5 @@
 'use server'
 
-import { auth } from '@/lib/auth/auth'
 import { prisma } from '@/lib/db'
 import { logger } from '@/lib/logger'
 import type { ProjectFilter, ProjectShowcaseWithStats } from '@/types/portfolio'
@@ -9,9 +8,9 @@ export async function getAllProjects(
   filter: ProjectFilter = {}
 ): Promise<ProjectShowcaseWithStats[]> {
   try {
-    const session = await auth()
-    const userId = session?.user?.id
-    
+    // For public projects, we don't need authentication
+    const userId = null
+
     const { search, techStack, status, featured } = filter
 
     // Build where clause
@@ -95,9 +94,9 @@ export async function getAllProjects(
 
 export async function getFeaturedProjects(limit = 6): Promise<ProjectShowcaseWithStats[]> {
   try {
-    const session = await auth()
-    const userId = session?.user?.id
-    
+    // For public projects, we don't need authentication
+    const userId = null
+
     const projects = await prisma.projectShowcase.findMany({
       where: {
         isPublic: true,

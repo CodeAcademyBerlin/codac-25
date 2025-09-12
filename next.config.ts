@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '2mb',
     },
   },
+
   // Headers configuration to handle large cookies/headers
   async headers() {
     return [

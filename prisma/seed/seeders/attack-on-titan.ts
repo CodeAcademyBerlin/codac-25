@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
 import { encodeSeedImageToBase64 } from '../../../lib/imaging/encode-image-to-base64';
@@ -12,8 +12,8 @@ const prisma = new PrismaClient();
 interface AttackOnTitanUser {
     name: string;
     email: string;
-    role: string;
-    status: string;
+    role: UserRole;
+    status: UserStatus;
     cohort: string;
     bio: string;
     image: string;
@@ -94,8 +94,8 @@ export async function seedAttackOnTitan() {
                         name: userData.name,
                         email: userData.email,
                         password: defaultPassword,
-                        role: userData.role,
-                        status: userData.status,
+                        role: userData.role as UserRole,
+                        status: userData.status as UserStatus,
                         cohortId: cohort?.id,
                         bio: userData.bio,
                         image: userImageBase64,

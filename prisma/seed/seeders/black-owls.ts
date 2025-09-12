@@ -3,7 +3,7 @@ import path from 'path';
 import bcrypt from 'bcryptjs';
 import { logger } from '../../../lib/logger';
 import { encodeSeedImageToBase64 } from '../../../lib/imaging/encode-image-to-base64';
-import { PrismaClient } from '@prisma/client';
+import { CourseCategory, LessonProgressStatus, PrismaClient, UserRole, UserStatus } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -119,7 +119,7 @@ export async function seedBlackOwls() {
                     data: {
                         title: courseData.name,
                         description: courseData.description,
-                        category: courseData.category,
+                        category: courseData.category as CourseCategory,
                         duration: courseData.duration,
                         isPublished: courseData.isPublished,
                         order: courseData.order,
@@ -245,8 +245,8 @@ export async function seedBlackOwls() {
                         name: userData.name,
                         email: userData.email,
                         password: defaultPassword,
-                        role: userData.role,
-                        status: userData.status,
+                        role: userData.role as UserRole,
+                        status: userData.status as UserStatus,
                         bio: userData.bio,
                         image: userImageBase64,
                         githubUrl: userData.githubUrl,
@@ -299,7 +299,7 @@ export async function seedBlackOwls() {
                         data: {
                             userId: student.id,
                             lessonId: lesson.id,
-                            status: lessonStatus,
+                            status: lessonStatus as LessonProgressStatus,
                             startedAt: lessonStatus !== 'NOT_STARTED' ? new Date(enrollment.enrolledAt) : null,
                             completedAt: lessonStatus === 'COMPLETED' ? new Date() : null,
                             timeSpent: lessonStatus === 'COMPLETED' ? lesson.duration || 30 : 0,

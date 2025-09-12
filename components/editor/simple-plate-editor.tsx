@@ -31,6 +31,19 @@ const plugins = [
     ...FloatingToolbarKit,
 ];
 
+const defaultValue: Value = [
+    {
+        children: [{ text: 'Welcome to Plate!' }],
+        type: 'h1',
+    },
+    {
+        children: [
+            { text: 'This is a simplified editor using out-of-the-box Plate registry components.' },
+        ],
+        type: 'p',
+    },
+];
+
 export function SimplePlateEditor({
     initialValue,
     readOnly = false,
@@ -58,16 +71,3 @@ export function SimplePlateEditor({
         </div>
     );
 }
-
-const defaultValue: Value = [
-    {
-        children: [{ text: 'Welcome to Plate!' }],
-        type: 'h1',
-    },
-    {
-        children: [
-            { text: 'This is a simplified editor using out-of-the-box Plate registry components.' },
-        ],
-        type: 'p',
-    },
-];

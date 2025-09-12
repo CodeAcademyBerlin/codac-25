@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
@@ -46,7 +46,7 @@ export default async function EditJobPage({ params }: EditJobPageProps) {
         </p>
         <Button asChild className="mt-4">
           <Link href="/career/jobs">
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeftIcon className="h-4 w-4 mr-2" />
             Back to Jobs
           </Link>
         </Button>
@@ -59,7 +59,7 @@ export default async function EditJobPage({ params }: EditJobPageProps) {
       <div className="mb-6">
         <Button variant="ghost" asChild className="mb-4">
           <Link href="/career/jobs">
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeftIcon className="h-4 w-4 mr-2" />
             Back to Jobs
           </Link>
         </Button>

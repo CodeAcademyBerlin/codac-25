@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 
 import { JobPostingForm } from "@/components/career/job-posting-form";
@@ -26,7 +26,7 @@ export default async function PostJobPage() {
         </p>
         <Button asChild className="mt-4">
           <Link href="/career/jobs">
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeftIcon className="h-4 w-4 mr-2" />
             Back to Jobs
           </Link>
         </Button>
@@ -39,7 +39,7 @@ export default async function PostJobPage() {
       <div className="mb-6">
         <Button variant="ghost" asChild className="mb-4">
           <Link href="/career/jobs">
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeftIcon className="h-4 w-4 mr-2" />
             Back to Jobs
           </Link>
         </Button>
