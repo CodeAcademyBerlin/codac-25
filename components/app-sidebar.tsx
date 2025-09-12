@@ -76,10 +76,7 @@ const buildNavigationData = (role?: string): NavigationGroup[] => {
     {
       title: "Learning",
       url: "/lms",
-    },
-    {
-      title: "Quizzes",
-      url: "/lms/quiz",
+      icon: BookOpen,
     },
   ];
 
