@@ -1,6 +1,6 @@
 ---
 description: Interaction with the database.
-globs: **/*.{js,jsx,ts,tsx}
+globs: **/*{.js,.jsx,.ts,.tsx}
 alwaysApply: false
 ---
 - Interact with the database exclusively using Prisma ORM client

@@ -1,6 +1,6 @@
 ---
 description: Enforces UI and styling conventions using Shadcn UI, Radix UI and Tailwind CSS for all components.
-globs: **/*.{js,jsx,ts,tsx}
+globs: **/*{.js,.jsx,.ts,.tsx}
 alwaysApply: false
 ---
 - Use Shadcn UI, Radix UI and Tailwind CSS for all components and styling
