@@ -1,16 +1,18 @@
 #!/usr/bin/env tsx
 
-import { PrismaClient } from '@prisma/client';
 import * as readline from 'readline';
+
+import { PrismaClient } from '@prisma/client';
+
 import { logger } from '../../lib/logger';
 
 // Import all seeder modules
 import { seedAttackOnTitan, cleanAttackOnTitan } from './seeders/attack-on-titan';
-import { seedLMSContent, cleanLMSContent } from './seeders/lms-content';
-import { seedQuizzes, seedQuizzesIncremental, cleanQuizzes } from './seeders/quizzes';
-import { seedJobs, cleanJobs } from './seeders/jobs';
-import { seedProjects, cleanProjects } from './seeders/projects';
 import { seedChatConversations, cleanChatConversations } from './seeders/chat';
+import { seedJobs, cleanJobs } from './seeders/jobs';
+import { seedLMSContent, cleanLMSContent } from './seeders/lms-content';
+import { seedProjects, cleanProjects } from './seeders/projects';
+import { seedQuizzes, seedQuizzesIncremental, cleanQuizzes } from './seeders/quizzes';
 
 const prisma = new PrismaClient();
 

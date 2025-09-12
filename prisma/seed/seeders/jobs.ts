@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+
 import { PrismaClient } from '@prisma/client';
-import type { JobType, JobLevel } from '@prisma/client';
+
 import { logger } from '../../../lib/logger';
 
 const prisma = new PrismaClient();
@@ -57,8 +58,8 @@ export async function seedJobs() {
                         title: jobData.title,
                         company: jobData.company,
                         location: jobData.location,
-                        type: jobData.type as JobType,
-                        level: jobData.level as JobLevel,
+                        type: jobData.type,
+                        level: jobData.level,
                         salary: jobData.salary,
                         description: jobData.description,
                         skills: jobData.skills,
@@ -118,8 +119,8 @@ export async function seedJobsWithPoster(posterEmail: string) {
                         title: jobData.title,
                         company: jobData.company,
                         location: jobData.location,
-                        type: jobData.type as JobType,
-                        level: jobData.level as JobLevel,
+                        type: jobData.type,
+                        level: jobData.level,
                         salary: jobData.salary,
                         description: jobData.description,
                         skills: jobData.skills,

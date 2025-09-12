@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+
 import { PrismaClient } from '@prisma/client';
-import type { ProjectStatus } from '@prisma/client';
+
 import { logger } from '../../../lib/logger';
 
 const prisma = new PrismaClient();
@@ -15,7 +16,7 @@ interface DemoProject {
     features: string[];
     challenges: string;
     solutions: string;
-    status: ProjectStatus;
+    status: string;
     demoUrl?: string;
     githubUrl?: string;
     isPublic: boolean;
@@ -84,7 +85,7 @@ export async function seedProjects() {
         logger.info('📁 Creating demo projects...');
         const createdProjects = await Promise.all(
             projectsData.map(async (projectData) => {
-                const user = users.find(u => u.email === projectData.authorEmail);
+                const user = users.find((u: { email: string; }) => u.email === projectData.authorEmail);
                 if (!user) {
                     logger.warn(`User not found for email: ${projectData.authorEmail}`);
                     return null;

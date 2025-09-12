@@ -1,6 +1,6 @@
 ---
 description: Enfore friendly and logical error handling.
-globs: **/*.{js,jsx,ts,tsx}
+globs: **/*{.js,.jsx,.ts,.tsx}
 ---
 - Implement robust error handling and logging mechanisms.
 - Implement robust error handling using the established `ServerActionResult<T>` pattern

@@ -38,7 +38,7 @@ export async function seedChatConversations() {
         let totalMessages = 0;
 
         for (const conversationData of chatData) {
-            const cohort = cohorts.find(c => c.slug === conversationData.cohortSlug);
+            const cohort = cohorts.find((c: { slug: string; }) => c.slug === conversationData.cohortSlug);
 
             if (!cohort) {
                 logger.warn(`⚠️ Cohort not found for slug: ${conversationData.cohortSlug}`);
@@ -64,7 +64,7 @@ export async function seedChatConversations() {
 
             // Add all cohort members as participants
             await Promise.all(
-                cohort.students.map(async (user) => {
+                cohort.students.map(async (user: { id: any; role: string; }) => {
                     return prisma.conversationParticipant.create({
                         data: {
                             conversationId: conversation.id,
@@ -80,7 +80,7 @@ export async function seedChatConversations() {
 
             // Create messages for the conversation
             for (const messageData of conversationData.messages) {
-                const sender = cohort.students.find(user => user.email === messageData.senderEmail);
+                const sender = cohort.students.find((user: { email: string; }) => user.email === messageData.senderEmail);
 
                 if (!sender) {
                     // If sender not found in this cohort, try to find them in any cohort

@@ -1,8 +1,7 @@
 ---
 description: Applies general TypeScript coding standards and best practices across the project.
-globs: **/*.{ts,tsx}
+globs: **/*{.ts,.tsx}
 ---
-- Use TypeScript for all code; prefer types over interfaces.
 - Use TypeScript for all code; prefer `type` over `interface`.
 - Write concise, technical TypeScript code with accurate examples.
 - Use functional and declarative programming patterns; avoid classes.

@@ -1,6 +1,6 @@
 ---
 description: Applies optimal Next.js rules and best practices.
-globs: **/*.{js,jsx,ts,tsx}
+globs: **/*{.js,.jsx,.ts,.tsx}
 ---
 - Favor React Server Components (RSC) where possible.
 - Minimize `'use client'` directives - only use for interactivity.
