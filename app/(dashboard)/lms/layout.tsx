@@ -1,13 +1,13 @@
 import { redirect } from 'next/navigation';
 
-import { DndWrapper } from '@/components/dnd/dnd-wrapper';
-import { ResizableSidebar } from '@/components/ui/resizable-sidebar';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { getEnrolledCourses, getCourses } from '@/data/lms/courses';
 import { getLMSHierarchy } from '@/data/lms/lms-hierarchy';
 import { getCurrentUser } from '@/lib/auth/auth-utils';
 
-import { LMSNavbar } from './components/lms-navbar';
 import { LMSSidebar } from './components/lms-sidebar';
+
+import { MobileTopPanel } from '@/app/(dashboard)/lms/components/mobile-top-panel';
 
 export default async function LMSLayout({
     children,
@@ -28,29 +28,42 @@ export default async function LMSLayout({
     ]);
 
     return (
-        <DndWrapper>
-            <div className="flex h-full flex-col">
-                <LMSNavbar user={user} />
-                <div className="flex flex-1 overflow-hidden">
-                    <ResizableSidebar
-                        defaultWidth={320}
-                        minWidth={240}
-                        maxWidth={600}
-                        storageKey="lms-sidebar-width"
-                        className="border-r bg-muted/30"
-                    >
+        <div className="h-[calc(100vh-4rem)] w-full bg-background">
+            {/* Mobile Layout - Vertical Stack */}
+            <div className="lg:hidden h-full flex flex-col">
+                {/* Collapsible Top Panel */}
+                <MobileTopPanel
+                    enrolledCourses={enrolledCourses}
+                    allCourses={allCourses}
+                    userRole={user.role}
+                    lmsHierarchy={lmsHierarchy}
+                />
+                {/* Main Content */}
+                <main className="flex-1 overflow-y-auto">
+                    {children}
+                </main>
+            </div>
+
+            {/* Desktop Layout - Horizontal Resizable */}
+            <div className="hidden lg:block h-full">
+                <ResizablePanelGroup direction="horizontal" className="h-full">
+                    {/* Conversations Sidebar */}
+                    <ResizablePanel defaultSize={25} minSize={15} maxSize={45}>
                         <LMSSidebar
                             enrolledCourses={enrolledCourses}
                             allCourses={allCourses}
                             userRole={user.role}
                             lmsHierarchy={lmsHierarchy}
                         />
-                    </ResizableSidebar>
-                    <main className="flex-1 overflow-y-auto">
-                        {children}
-                    </main>
-                </div>
+                    </ResizablePanel>
+                    <ResizableHandle />
+                    <ResizablePanel defaultSize={70}>
+                        <main className="flex-1 overflow-y-auto">
+                            {children}
+                        </main>
+                    </ResizablePanel>
+                </ResizablePanelGroup>
             </div>
-        </DndWrapper>
+        </div>
     );
 } 

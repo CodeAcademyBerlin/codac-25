@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { Value } from 'platejs';
 
 import { DndWrapper } from '@/components/dnd/dnd-wrapper';
-import { getLesson } from '@/data/lms/courses';
+import { getLesson, getLessonNavigation } from '@/data/lms/courses';
 import { getCurrentUser } from '@/lib/auth/auth-utils';
 
 import { LessonContent } from '../components/lesson-content';
@@ -160,6 +160,9 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
         notFound();
     }
 
+    // Get navigation data for previous/next lessons
+    const navigation = await getLessonNavigation(id);
+
     // Edit mode is only available for mentors and admins
     const canEditLesson = ['ADMIN', 'MENTOR'].includes(user.role);
 
@@ -173,6 +176,7 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
                     }}
                     user={user}
                     canEdit={canEditLesson}
+                    navigation={navigation}
                 />
             </div>
         </DndWrapper>

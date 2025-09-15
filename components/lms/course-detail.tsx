@@ -292,13 +292,31 @@ export function CourseDetail({ course, user, canEdit }: CourseDetailProps) {
 
                                                 <div className="flex-1">
                                                     <div className="flex items-center justify-between">
-                                                        <div>
-                                                            <div className="font-medium text-sm">
-                                                                {lessonIndex + 1}. {lesson.title}
-                                                            </div>
-                                                            {lesson.description && (
-                                                                <div className="text-xs text-muted-foreground">
-                                                                    {lesson.description}
+                                                        <div className="flex-1">
+                                                            {isEnrolled ? (
+                                                                <Link
+                                                                    href={`/lms/lessons/${lesson.id}`}
+                                                                    className="block hover:text-primary transition-colors"
+                                                                >
+                                                                    <div className="font-medium text-sm">
+                                                                        {lessonIndex + 1}. {lesson.title}
+                                                                    </div>
+                                                                    {lesson.description && (
+                                                                        <div className="text-xs text-muted-foreground">
+                                                                            {lesson.description}
+                                                                        </div>
+                                                                    )}
+                                                                </Link>
+                                                            ) : (
+                                                                <div>
+                                                                    <div className="font-medium text-sm">
+                                                                        {lessonIndex + 1}. {lesson.title}
+                                                                    </div>
+                                                                    {lesson.description && (
+                                                                        <div className="text-xs text-muted-foreground">
+                                                                            {lesson.description}
+                                                                        </div>
+                                                                    )}
                                                                 </div>
                                                             )}
                                                         </div>

@@ -20,7 +20,7 @@ interface BreadcrumbConfig {
 }
 
 const ROUTE_CONFIG: BreadcrumbConfig = {
-    '/': { label: 'Dashboard', href: '/' },
+    '/': { label: '', href: '/' },
     '/lms': { label: 'Learning Management', href: '/lms' },
     '/community': { label: 'Community', href: '/community' },
     '/community/cohorts': { label: 'Cohorts', href: '/community/cohorts' },
@@ -48,7 +48,7 @@ export function AppBreadcrumb() {
 
     // Always start with home
     breadcrumbItems.push({
-        label: 'Dashboard',
+        label: '',
         href: '/',
         isLast: false
     });

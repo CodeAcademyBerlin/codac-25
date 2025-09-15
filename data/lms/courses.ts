@@ -232,6 +232,75 @@ export async function canEditCourse(_courseId: string): Promise<boolean> {
     }
 }
 
+// Get previous and next lessons for navigation
+export async function getLessonNavigation(lessonId: string) {
+    try {
+        const user = await getCurrentUser();
+
+        // Get the current lesson with its project
+        const currentLesson = await prisma.lesson.findUnique({
+            where: { id: lessonId },
+            include: {
+                project: {
+                    include: {
+                        course: {
+                            include: {
+                                enrollments: user ? {
+                                    where: { userId: user.id },
+                                } : false,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        if (!currentLesson) {
+            return { previousLesson: null, nextLesson: null };
+        }
+
+        // Check if user has access to this lesson
+        if (user) {
+            const isEnrolled = currentLesson.project.course.enrollments.length > 0;
+            const canAccess = isEnrolled || ['ADMIN', 'MENTOR'].includes(user.role);
+
+            if (!canAccess) {
+                return { previousLesson: null, nextLesson: null };
+            }
+        }
+
+        // Get all lessons in the same project, ordered by order field
+        const allLessons = await prisma.lesson.findMany({
+            where: {
+                projectId: currentLesson.projectId,
+                isPublished: true
+            },
+            select: {
+                id: true,
+                title: true,
+                order: true,
+            },
+            orderBy: { order: 'asc' },
+        });
+
+        // Find current lesson index
+        const currentIndex = allLessons.findIndex(lesson => lesson.id === lessonId);
+
+        if (currentIndex === -1) {
+            return { previousLesson: null, nextLesson: null };
+        }
+
+        // Get previous and next lessons
+        const previousLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null;
+        const nextLesson = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null;
+
+        return { previousLesson, nextLesson };
+    } catch (error) {
+        logger.error('Failed to get lesson navigation', error instanceof Error ? error : new Error(String(error)));
+        return { previousLesson: null, nextLesson: null };
+    }
+}
+
 // Get user's enrolled courses
 export async function getEnrolledCourses() {
     try {
