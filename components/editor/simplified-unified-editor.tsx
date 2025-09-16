@@ -167,7 +167,7 @@ export const SimplifiedUnifiedEditor = React.memo(function SimplifiedUnifiedEdit
                 {children}
                 <EditorContainer className="max-w-full">
                     <Editor
-                        variant="default"
+                        variant="fullWidth"
                         className={editorClassName || "max-w-full"}
                     />
                 </EditorContainer>

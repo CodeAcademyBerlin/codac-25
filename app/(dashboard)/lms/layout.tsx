@@ -48,7 +48,7 @@ export default async function LMSLayout({
             <div className="hidden lg:block h-full">
                 <ResizablePanelGroup direction="horizontal" className="h-full">
                     {/* Conversations Sidebar */}
-                    <ResizablePanel defaultSize={25} minSize={15} maxSize={45}>
+                    <ResizablePanel defaultSize={20} minSize={15} maxSize={25}>
                         <LMSSidebar
                             enrolledCourses={enrolledCourses}
                             allCourses={allCourses}
@@ -57,8 +57,8 @@ export default async function LMSLayout({
                         />
                     </ResizablePanel>
                     <ResizableHandle />
-                    <ResizablePanel defaultSize={70}>
-                        <main className="flex-1 overflow-y-auto">
+                    <ResizablePanel defaultSize={80}>
+                        <main className="flex-1">
                             {children}
                         </main>
                     </ResizablePanel>

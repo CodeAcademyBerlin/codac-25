@@ -61,7 +61,7 @@ export function SimplePlateEditor({
     });
 
     return (
-        <div className="w-full max-w-full overflow-hidden">
+        <div className="w-full max-w-full">
             <Plate editor={editor} readOnly={readOnly}>
                 {children}
                 <EditorContainer className="max-w-full">

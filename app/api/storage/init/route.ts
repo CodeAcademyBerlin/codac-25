@@ -9,6 +9,7 @@ export async function POST() {
         await Promise.all([
             ensureBucket(STORAGE_BUCKETS.EDITOR),
             ensureBucket(STORAGE_BUCKETS.DUCKS),
+            ensureBucket(STORAGE_BUCKETS.LMS),
             ensureBucket(STORAGE_BUCKETS.GENERAL)
         ]);
 

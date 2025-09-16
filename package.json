@@ -22,7 +22,7 @@
     "db:seed:all": "tsx prisma/seed/seed.ts all",
     "db:seed:clean": "tsx prisma/seed/seed.ts clean",
     "db:seed:attack-on-titan": "tsx prisma/seed/seed.ts 1",
-    "db:seed:lms": "tsx prisma/seed/seed.ts 3",
+    "db:seed:lms": "tsx prisma/seed/seed.ts 2",
     "db:seed:quizzes": "tsx prisma/seed/seed.ts 4",
     "db:seed:jobs": "tsx prisma/seed/seed.ts 5",
     "db:seed:projects": "tsx prisma/seed/seed.ts 6",

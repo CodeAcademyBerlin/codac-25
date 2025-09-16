@@ -168,17 +168,16 @@ export default async function LessonPage({ params }: { params: Promise<{ id: str
 
     return (
         <DndWrapper>
-            <div className="h-full">
-                <LessonContent
-                    lesson={{
-                        ...lesson,
-                        content: transformLessonContent(lesson.content)
-                    }}
-                    user={user}
-                    canEdit={canEditLesson}
-                    navigation={navigation}
-                />
-            </div>
+
+            <LessonContent
+                lesson={{
+                    ...lesson,
+                    content: transformLessonContent(lesson.content)
+                }}
+                user={user}
+                canEdit={canEditLesson}
+                navigation={navigation}
+            />
         </DndWrapper>
     );
 } 

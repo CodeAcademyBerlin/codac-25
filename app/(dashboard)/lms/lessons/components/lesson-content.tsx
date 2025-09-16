@@ -1,9 +1,7 @@
 'use client';
 
 import {
-    BookOpen,
     CheckCircle2,
-    Clock,
     ArrowLeft,
     ArrowRight,
     Play,
@@ -18,12 +16,11 @@ import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 
 import { updateLessonProgress } from '@/actions/lms/update-lesson';
-import { SimplifiedUnifiedEditor } from '@/components/editor/simplified-unified-editor';
+import { SimplePlateEditor } from '@/components/editor/simple-plate-editor';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Separator } from '@/components/ui/separator';
 
 interface Lesson {
     id: string;
@@ -137,24 +134,10 @@ export function LessonContent({ lesson, user: _user, canEdit, navigation }: Less
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [navigation, isEditing, router]);
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'COMPLETED': return 'text-green-500';
-            case 'IN_PROGRESS': return 'text-blue-500';
-            default: return 'text-muted-foreground';
-        }
-    };
 
-    const getStatusIcon = (status: string) => {
-        switch (status) {
-            case 'COMPLETED': return <CheckCircle2 className="h-4 w-4" />;
-            case 'IN_PROGRESS': return <Clock className="h-4 w-4" />;
-            default: return <Play className="h-4 w-4" />;
-        }
-    };
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col">
             {/* Header */}
             {/* <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between p-4 gap-4">
@@ -291,18 +274,22 @@ export function LessonContent({ lesson, user: _user, canEdit, navigation }: Less
             </div>
 
             {/* Content Area */}
-            <div className="flex-1 flex overflow-hidden">
+            <div className="flex-1 flex min-h-0">
                 {/* Main Content */}
-                <div className="flex-1 overflow-y-auto pb-24 lg:pb-6">
-                    <div className="h-full">
-                        <div className={isEditing ? "h-full" : "prose prose-neutral dark:prose-invert max-w-none"}>
-                            <SimplifiedUnifiedEditor
+                <div className="flex-1 pb-24 lg:pb-6 overflow-y-auto">
+                    <div className="p-4 lg:p-6">
+                        <div className="prose prose-neutral dark:prose-invert max-w-none">
+                            <SimplePlateEditor
+                                initialValue={lesson.content}
+                                readOnly={!isEditing}
+                            />
+                            {/* <SimplifiedUnifiedEditor
                                 contentId={lesson.id}
                                 contentType="lesson"
                                 initialValue={lesson.content}
                                 showStatusBar={isEditing}
                                 canEdit={isEditing}
-                            />
+                            /> */}
                         </div>
                     </div>
                 </div>

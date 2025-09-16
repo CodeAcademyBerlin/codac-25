@@ -1,38 +1,29 @@
-import 'server-only';
+import fs from 'fs/promises';
 
-import { createClient } from './server';
-
-/**
- * Server-only storage utilities
- * These functions can only be used in server components, server actions, or API routes
- */
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 /**
- * Get signed URL for private files (server-side only)
+ * Seed-specific storage utilities
+ * These functions are for use in seeding scripts only (no 'server-only' directive)
  */
-export async function getSignedUrl(
-    filePath: string,
-    bucket: string,
-    expiresIn: number = 3600
-): Promise<string> {
-    const supabase = await createClient();
 
-    const { data, error } = await supabase.storage
-        .from(bucket)
-        .createSignedUrl(filePath, expiresIn);
+// Create a standalone Supabase client for seeding (no Next.js dependencies)
+function createClientForSeed() {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY;
 
-    if (error || !data) {
-        throw new Error(`Failed to get signed URL: ${error?.message}`);
+    if (!supabaseUrl || !supabaseServiceKey) {
+        throw new Error('Missing Supabase environment variables for seeding');
     }
 
-    return data.signedUrl;
+    return createSupabaseClient(supabaseUrl, supabaseServiceKey);
 }
 
 /**
- * Check if a bucket exists, create if it doesn't (server-side only)
+ * Check if a bucket exists, create if it doesn't (for seeding)
  */
-export async function ensureBucket(bucketName: string): Promise<void> {
-    const supabase = await createClient();
+export async function ensureBucketForSeed(bucketName: string): Promise<void> {
+    const supabase = createClientForSeed();
 
     const { data: buckets, error: listError } = await supabase.storage.listBuckets();
 
@@ -64,33 +55,17 @@ export async function ensureBucket(bucketName: string): Promise<void> {
 }
 
 /**
- * List all buckets (server-side only)
+ * Upload a file from filesystem (for seeding)
  */
-export async function listBuckets() {
-    const supabase = await createClient();
-
-    const { data, error } = await supabase.storage.listBuckets();
-
-    if (error) {
-        throw new Error(`Failed to list buckets: ${error.message}`);
-    }
-
-    return data;
-}
-
-/**
- * Upload a file from filesystem (server-side only)
- */
-export async function uploadFileFromPath(
+export async function uploadFileFromPathForSeed(
     localFilePath: string,
     storageFilePath: string,
     bucket: string,
     contentType?: string
 ): Promise<{ path: string; publicUrl: string }> {
-    const supabase = await createClient();
+    const supabase = createClientForSeed();
 
     // Read file from filesystem
-    const fs = await import('fs/promises');
     const fileBuffer = await fs.readFile(localFilePath);
 
     // Upload to Supabase storage
@@ -111,26 +86,14 @@ export async function uploadFileFromPath(
         .from(bucket)
         .getPublicUrl(storageFilePath);
 
+    console.log(`🔗 Upload result for ${localFilePath}:`);
+    console.log(`   - Storage path: ${data.path}`);
+    console.log(`   - Public URL: ${publicUrl}`);
+    console.log(`   - Bucket: ${bucket}`);
+    console.log(`   - File path: ${storageFilePath}`);
+
     return {
         path: data.path,
         publicUrl
     };
-}
-
-/**
- * Delete files (server-side only)
- */
-export async function deleteFiles(
-    filePaths: string[],
-    bucket: string
-): Promise<void> {
-    const supabase = await createClient();
-
-    const { error } = await supabase.storage
-        .from(bucket)
-        .remove(filePaths);
-
-    if (error) {
-        throw new Error(`Delete failed: ${error.message}`);
-    }
 }
