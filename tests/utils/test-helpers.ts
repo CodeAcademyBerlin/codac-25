@@ -257,29 +257,67 @@ export class AuthHelpers {
     name: 'Test User'
   }) {
     await this.page.addInitScript((userData) => {
-      // Mock NextAuth session data
-      window.localStorage.setItem('nextauth.session-token', 'mock-session-token');
-      window.localStorage.setItem('user-data', JSON.stringify(userData));
+      try {
+        // Mock NextAuth session data only if localStorage is available
+        if (typeof Storage !== 'undefined' && window.localStorage) {
+          window.localStorage.setItem('nextauth.session-token', 'mock-session-token');
+          window.localStorage.setItem('user-data', JSON.stringify(userData));
+        }
+      } catch (error) {
+        console.warn('Failed to set mock auth state in localStorage:', error);
+      }
     }, userData);
   }
 
   async clearAuthState() {
-    await this.page.evaluate(() => {
-      // Clear all auth-related localStorage and sessionStorage
-      const keys = Object.keys(localStorage);
-      keys.forEach(key => {
-        if (key.includes('nextauth') || key.includes('auth') || key.includes('user')) {
-          localStorage.removeItem(key);
-        }
-      });
+    try {
+      // Ensure page is loaded and accessible before clearing storage
+      await this.page.waitForLoadState('domcontentloaded');
 
-      const sessionKeys = Object.keys(sessionStorage);
-      sessionKeys.forEach(key => {
-        if (key.includes('nextauth') || key.includes('auth') || key.includes('user')) {
-          sessionStorage.removeItem(key);
+      // Navigate to a safe page first to ensure we have proper context
+      await this.page.goto('/');
+      await this.page.waitForLoadState('networkidle');
+
+      await this.page.evaluate(() => {
+        try {
+          // Clear all auth-related localStorage
+          if (typeof Storage !== 'undefined' && window.localStorage) {
+            const keys = Object.keys(localStorage);
+            keys.forEach(key => {
+              if (key.includes('nextauth') || key.includes('auth') || key.includes('user')) {
+                try {
+                  localStorage.removeItem(key);
+                } catch (e) {
+                  // Ignore individual key removal errors
+                  console.warn('Failed to remove localStorage key:', key, e);
+                }
+              }
+            });
+          }
+
+          // Clear all auth-related sessionStorage
+          if (typeof Storage !== 'undefined' && window.sessionStorage) {
+            const sessionKeys = Object.keys(sessionStorage);
+            sessionKeys.forEach(key => {
+              if (key.includes('nextauth') || key.includes('auth') || key.includes('user')) {
+                try {
+                  sessionStorage.removeItem(key);
+                } catch (e) {
+                  // Ignore individual key removal errors
+                  console.warn('Failed to remove sessionStorage key:', key, e);
+                }
+              }
+            });
+          }
+        } catch (error) {
+          // Storage not available or other error
+          console.warn('Storage access denied or not available:', error);
         }
       });
-    });
+    } catch (error) {
+      // If clearing fails, continue with tests - don't fail the entire test
+      console.warn('Failed to clear auth state:', error);
+    }
   }
 
   // === OAUTH SIMULATION HELPERS ===

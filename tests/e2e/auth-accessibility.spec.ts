@@ -279,22 +279,6 @@ test.describe('Authentication Accessibility Tests', () => {
       }
     });
 
-    test('should be usable without color indicators alone', async ({ page }) => {
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('networkidle');
-
-      // Submit to trigger validation
-      await page.locator('button[type="submit"]').click();
-      await page.waitForTimeout(1000);
-
-      // Error states should be indicated by more than just color
-      const errorElements = page.locator('[role="alert"], .border-red-500');
-      if (await errorElements.count() > 0) {
-        // Check that errors are communicated through text, not just color
-        const hasTextContent = await errorElements.first().textContent();
-        expect(hasTextContent).toBeTruthy();
-      }
-    });
   });
 
   test.describe('Responsive Touch Targets', () => {

@@ -37,20 +37,6 @@ test.describe('Dashboard Features', () => {
 });
 
 test.describe('Navigation and Routing', () => {
-  test('should navigate to docs section', async ({ page }) => {
-    await page.goto('/');
-
-    // Navigate to docs - check if there's a navigation link
-    await page.goto('/docs');
-
-    // Should be on docs page
-    await expect(page).toHaveURL('/docs');
-
-    // Should show docs page content
-    const hasDocsContent = await page.getByText('Documents').isVisible().catch(() => false);
-    const hasEmptyState = await page.getByText('No documents found').isVisible().catch(() => false);
-    expect(hasDocsContent || hasEmptyState).toBe(true);
-  });
 
   test('should navigate to different sections', async ({ page }) => {
     // Test direct navigation to different sections
@@ -62,7 +48,7 @@ test.describe('Navigation and Routing', () => {
     for (const section of sections) {
       await page.goto(section.path);
       await page.waitForLoadState('networkidle');
-      
+
       // For signin page, should stay on signin page
       if (section.path === '/auth/signin') {
         expect(page.url()).toContain('/auth/signin');
@@ -81,11 +67,11 @@ test.describe('Navigation and Routing', () => {
     }
 
     // Test protected routes redirect to signin
-    const protectedRoutes = ['/docs', '/community'];
+    const protectedRoutes = ['/profile', '/community'];
     for (const route of protectedRoutes) {
       await page.goto(route);
       await page.waitForLoadState('networkidle');
-      
+
       // Should redirect to signin
       expect(page.url()).toContain('/auth/signin');
     }

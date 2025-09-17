@@ -10,7 +10,7 @@ import { logger } from '../../lib/logger';
 import { seedAttackOnTitan, cleanAttackOnTitan } from './seeders/attack-on-titan';
 import { seedChatConversations, cleanChatConversations } from './seeders/chat';
 import { seedJobs, cleanJobs } from './seeders/jobs';
-import { seedLMSContent, cleanLMSContent } from './seeders/lms-content';
+// import { seedLMSContent, cleanLMSContent } from './seeders/lms-content';
 import { seedProjects, cleanProjects } from './seeders/projects';
 import { seedQuizzes, seedQuizzesIncremental, cleanQuizzes } from './seeders/quizzes';
 
@@ -32,13 +32,13 @@ const seedOptions: SeedOption[] = [
         action: seedAttackOnTitan,
         cleanAction: cleanAttackOnTitan,
     },
-    {
-        id: 'lms-content',
-        name: 'LMS Content',
-        description: 'Import LMS content from markdown files',
-        action: seedLMSContent,
-        cleanAction: cleanLMSContent,
-    },
+    // {
+    //     id: 'lms-content',
+    //     name: 'LMS Content',
+    //     description: 'Import LMS content from markdown files',
+    //     action: seedLMSContent,
+    //     cleanAction: cleanLMSContent,
+    // },
     {
         id: 'quizzes',
         name: 'Quiz Data',
@@ -98,7 +98,7 @@ async function seedAll() {
 
     try {
         // Seed in order: courses -> users -> content -> chats -> quizzes -> jobs -> projects
-        await seedLMSContent();
+        // await seedLMSContent();
         await seedAttackOnTitan();
         await seedChatConversations();
         await seedQuizzes();
@@ -138,7 +138,7 @@ async function cleanAll() {
         await cleanJobs();
         await cleanQuizzes();
         await cleanChatConversations();
-        await cleanLMSContent();
+        // await cleanLMSContent();
         await cleanAttackOnTitan();
 
         logger.info('✅ Complete cleanup finished successfully!');

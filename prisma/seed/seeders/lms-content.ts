@@ -354,7 +354,7 @@ function updateAssetUrlsInPlateJS(plateValue: unknown[]): unknown[] {
 
     // Test our replacement logic with a simple example
     if (assetUrlMap.size > 0) {
-        const [testLocalPath, testPublicUrl] = Array.from(assetUrlMap.entries())[0];
+        const [testLocalPath] = Array.from(assetUrlMap.entries())[0];
         const testElement = { type: 'img', url: testLocalPath, children: [{ text: '' }] };
         logger.info(`🧪 TEST: Before replacement: ${JSON.stringify(testElement)}`);
         const testUpdated = updateElementAssetUrls(testElement);
@@ -764,7 +764,7 @@ async function verifyAssetReplacement(): Promise<void> {
         }
 
     } catch (error) {
-        logger.error('Failed to verify asset replacement:', error);
+        logger.error('Failed to verify asset replacement:');
     }
 }
 

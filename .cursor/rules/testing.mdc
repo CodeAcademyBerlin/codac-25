@@ -1,9 +1,7 @@
 ---
-description: Testing standards and conventions for unit, integration, and e2e tests
 globs: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "tests/**/*"]
-alwaysApply: true
+alwaysApply: false
 ---
-
 # Testing Guidelines
 
 ## Test File Conventions
