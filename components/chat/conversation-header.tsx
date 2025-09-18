@@ -28,6 +28,9 @@ interface ConversationHeaderProps {
     participants: Array<{
       id: string;
       role: string;
+      userId: string;
+      conversationId: string;
+      joinedAt: Date;
       user: {
         id: string;
         name: string | null;
@@ -37,11 +40,17 @@ interface ConversationHeaderProps {
     }>;
   };
   currentUserId: string;
+  onlineUsers?: Array<{
+    userId: string;
+    username: string;
+    online_at: string;
+  }>;
 }
 
 export function ConversationHeader({
   conversation,
   currentUserId,
+  onlineUsers = [],
 }: ConversationHeaderProps) {
   const getConversationIcon = () => {
     switch (conversation.type) {
@@ -82,7 +91,24 @@ export function ConversationHeader({
       const otherParticipant = conversation.participants.find(
         (p: any) => p.user.id !== currentUserId
       );
+
+      // Check if the other user is online
+      const isOnline = onlineUsers.some(user => user.userId === otherParticipant?.user.id);
+
+      if (isOnline) {
+        return "Online";
+      }
+
       return otherParticipant?.user.email || "Direct message";
+    }
+
+    // For group conversations, show online count
+    const onlineCount = onlineUsers.filter(user =>
+      conversation.participants.some(p => p.user.id === user.userId)
+    ).length;
+
+    if (onlineCount > 0) {
+      return `${conversation.participants.length} participants • ${onlineCount} online`;
     }
 
     return `${conversation.participants.length} participants`;
@@ -113,10 +139,23 @@ export function ConversationHeader({
       <div className="flex items-center gap-3 min-w-0 flex-1">
         {/* Avatar for direct messages, icon for groups/channels */}
         {conversation.type === "DIRECT" ? (
-          <Avatar className="h-10 w-10">
-            <AvatarImage src={getConversationAvatar() || undefined} />
-            <AvatarFallback>{getAvatarInitials()}</AvatarFallback>
-          </Avatar>
+          <div className="relative">
+            <Avatar className="h-10 w-10">
+              <AvatarImage src={getConversationAvatar() || undefined} />
+              <AvatarFallback>{getAvatarInitials()}</AvatarFallback>
+            </Avatar>
+            {/* Online indicator */}
+            {(() => {
+              const otherParticipant = conversation.participants.find(
+                (p: any) => p.user.id !== currentUserId
+              );
+              const isOnline = onlineUsers.some(user => user.userId === otherParticipant?.user.id);
+
+              return isOnline ? (
+                <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 border-2 border-background rounded-full" />
+              ) : null;
+            })()}
+          </div>
         ) : (
           <div className="flex items-center justify-center h-10 w-10 rounded-full bg-muted">
             {getConversationIcon()}
@@ -130,7 +169,7 @@ export function ConversationHeader({
               {getConversationName()}
             </h2>
             <Badge variant="secondary" className="text-xs">
-              {conversation.type.toLowerCase()}
+              {conversation.type}
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground truncate">

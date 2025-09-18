@@ -10,29 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { auth } from "@/lib/auth/auth";
 
 export default async function PostJobPage() {
-  const session = await auth();
-  const user = session?.user;
-
-  if (!user || (user.role !== "ADMIN" && user.role !== "MENTOR")) {
-    return (
-      <div className="container mx-auto py-8 text-center">
-        <h1 className="text-3xl font-bold">Unauthorized</h1>
-        <p className="text-muted-foreground mt-2">
-          You do not have permission to post a job. Please contact an
-          administrator if you believe this is a mistake.
-        </p>
-        <Button asChild className="mt-4">
-          <Link href="/career/jobs">
-            <ArrowLeftIcon className="h-4 w-4 mr-2" />
-            Back to Jobs
-          </Link>
-        </Button>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto py-8">

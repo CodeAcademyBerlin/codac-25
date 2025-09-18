@@ -1,6 +1,7 @@
-import { auth } from "@/lib/auth/auth"
+import { NextRequest, NextResponse } from "next/server"
+import { getToken } from "next-auth/jwt"
 
-export default auth((req) => {
+export async function middleware(req: NextRequest) {
   // Monitor header sizes to debug 431 errors in development
   if (process.env.NODE_ENV === 'development') {
     const headerSize = JSON.stringify(Object.fromEntries(req.headers)).length;
@@ -27,35 +28,49 @@ export default auth((req) => {
 
   // Allow API auth routes
   if (isApiAuthRoute) {
-    return undefined;
+    return NextResponse.next();
   }
 
   // Allow public routes
   if (isPublicRoute) {
-    return undefined;
+    return NextResponse.next();
   }
 
-  const isLoggedIn = !!req.auth;
+  // Get token without importing the full auth configuration
+  const authSecret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
+
+  if (!authSecret) {
+    console.error("AUTH_SECRET environment variable is required for middleware authentication");
+    // Allow request to proceed if no secret is configured
+    return NextResponse.next();
+  }
+
+  const token = await getToken({
+    req,
+    secret: authSecret
+  });
+
+  const isLoggedIn = !!token;
 
   // Redirect authenticated users away from auth pages to dashboard
   if (isAuthPage && isLoggedIn) {
-    return Response.redirect(new URL("/", req.nextUrl.origin));
+    return NextResponse.redirect(new URL("/", req.nextUrl.origin));
   }
 
   // Redirect unauthenticated users to signin for protected routes
   if (!isLoggedIn && !isAuthPage) {
     const callbackUrl = req.nextUrl.pathname + req.nextUrl.search;
-    return Response.redirect(
+    return NextResponse.redirect(
       new URL(
         `/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`,
         req.nextUrl.origin
       )
     );
   }
-  
+
   // Allow the request to proceed
-  return undefined;
-})
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
@@ -68,4 +83,4 @@ export const config = {
      */
     "/((?!_next/static|_next/image|favicon.svg|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
-} 
+}

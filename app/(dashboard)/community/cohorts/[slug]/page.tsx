@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getCohorts } from '@/data/cohort/get-cohorts';
+import { requireServerAuth } from '@/lib/auth/auth-server';
 
 type CohortPageProps = {
     params: Promise<{
@@ -17,6 +18,11 @@ type CohortPageProps = {
 
 export default async function CohortPage({ params }: CohortPageProps) {
     const { slug } = await params;
+
+    // Get current user
+    const user = await requireServerAuth();
+    const currentUserId = user.id;
+
     const result = await getCohorts();
 
     if (!result.success || !result.data) {
@@ -169,6 +175,7 @@ export default async function CohortPage({ params }: CohortPageProps) {
                                 key={student.id}
                                 student={student}
                                 cohortName={cohort.name}
+                                currentUserId={currentUserId}
                             />
                         ))}
                     </div>

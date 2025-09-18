@@ -6,7 +6,7 @@ import { ProfileSettingsForm } from '@/components/profile/profile-settings-form'
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { getUser } from '@/data/user/get-user';
-import { auth } from '@/lib/auth/auth';
+import { requireServerAuth } from '@/lib/auth/auth-server';
 
 export const metadata = {
     title: 'Profile Settings | Codac',
@@ -14,19 +14,15 @@ export const metadata = {
 };
 
 export default async function ProfileSettingsPage() {
-    const session = await auth();
+    const user = await requireServerAuth();
 
-    if (!session?.user?.id) {
-        redirect('/auth/signin');
-    }
-
-    const result = await getUser(session.user.id);
+    const result = await getUser(user.id);
 
     if (!result.success || !result.data) {
         redirect('/auth/signin');
     }
 
-    const user = result.data;
+    const fullUser = result.data;
 
     return (
         <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -50,7 +46,7 @@ export default async function ProfileSettingsPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Settings Form */}
                     <div className="lg:col-span-2">
-                        <ProfileSettingsForm user={user} />
+                        <ProfileSettingsForm user={fullUser} />
                     </div>
 
                     {/* Account Information */}
@@ -67,21 +63,21 @@ export default async function ProfileSettingsPage() {
                                     <label className="text-sm font-medium text-muted-foreground">
                                         Email
                                     </label>
-                                    <p className="mt-1">{user.email}</p>
+                                    <p className="mt-1">{fullUser.email}</p>
                                 </div>
 
                                 <div>
                                     <label className="text-sm font-medium text-muted-foreground">
                                         Role
                                     </label>
-                                    <p className="mt-1 capitalize">{user.role.toLowerCase()}</p>
+                                    <p className="mt-1 capitalize">{fullUser.role.toLowerCase()}</p>
                                 </div>
 
                                 <div>
                                     <label className="text-sm font-medium text-muted-foreground">
                                         Status
                                     </label>
-                                    <p className="mt-1 capitalize">{user.status.toLowerCase()}</p>
+                                    <p className="mt-1 capitalize">{fullUser.status.toLowerCase()}</p>
                                 </div>
 
                                 <div>
@@ -89,7 +85,7 @@ export default async function ProfileSettingsPage() {
                                         Member Since
                                     </label>
                                     <p className="mt-1">
-                                        {new Date(user.createdAt).toLocaleDateString('en-US', {
+                                        {new Date(fullUser.createdAt).toLocaleDateString('en-US', {
                                             month: 'long',
                                             day: 'numeric',
                                             year: 'numeric'

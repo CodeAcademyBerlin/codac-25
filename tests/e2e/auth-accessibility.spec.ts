@@ -4,30 +4,52 @@ import { TestDataFactory } from '../utils/test-helpers';
 
 test.describe('Authentication Accessibility Tests', () => {
   test.describe('Mobile Responsive Design', () => {
+    test('should display registration form properly on mobile', async ({ page }) => {
+      // Set mobile viewport
+      await page.setViewportSize({ width: 375, height: 667 }); // iPhone SE
+
+      await page.goto('/auth/signup');
+      await page.waitForLoadState('networkidle');
+
+      // Check that form elements are visible and properly sized
+      await expect(page.locator('input[name="name"]')).toBeVisible();
+      await expect(page.locator('input[name="email"]')).toBeVisible();
+      await expect(page.locator('input[name="password"]')).toBeVisible();
+      await expect(page.locator('input[name="confirmPassword"]')).toBeVisible();
+      await expect(page.locator('button[type="submit"]')).toBeVisible();
+
+      // Check that buttons are touch-friendly (minimum 44px)
+      const submitButton = page.locator('button[type="submit"]');
+      const buttonBox = await submitButton.boundingBox();
+      expect(buttonBox?.height).toBeGreaterThanOrEqual(44);
+    });
+
     test('should display login form properly on mobile', async ({ page }) => {
       await page.setViewportSize({ width: 375, height: 667 });
 
       await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-      await page.waitForTimeout(2000);
+      await page.waitForLoadState('networkidle');
 
       // Check form visibility
-      await expect(page.locator('input[type="email"]')).toBeVisible();
-      await expect(page.locator('input[type="password"]')).toBeVisible();
+      await expect(page.locator('input[name="email"]')).toBeVisible();
+      await expect(page.locator('input[name="password"]')).toBeVisible();
       await expect(page.locator('button[type="submit"]')).toBeVisible();
 
       // Check OAuth buttons are visible
       await expect(page.getByRole('button', { name: /Google/i })).toBeVisible();
 
       // Test form interaction on mobile
-      await page.locator('input[type="email"]').tap();
-      await expect(page.locator('input[type="email"]')).toBeFocused();
+      await page.locator('input[name="email"]').tap();
+      await expect(page.locator('input[name="email"]')).toBeFocused();
     });
+
 
     test('should handle different mobile orientations', async ({ page }) => {
       const viewports = [
         { width: 375, height: 667 }, // iPhone SE Portrait
+        { width: 667, height: 375 }, // iPhone SE Landscape
         { width: 390, height: 844 }, // iPhone 12 Portrait
+        { width: 844, height: 390 }  // iPhone 12 Landscape
       ];
 
       for (const viewport of viewports) {
@@ -37,8 +59,8 @@ test.describe('Authentication Accessibility Tests', () => {
         await page.waitForTimeout(2000);
 
         // Form should be usable in all orientations
-        await expect(page.locator('input[type="email"]')).toBeVisible();
-        await expect(page.locator('input[type="password"]')).toBeVisible();
+        await expect(page.locator('input[name="email"]')).toBeVisible();
+        await expect(page.locator('input[name="password"]')).toBeVisible();
         await expect(page.locator('button[type="submit"]')).toBeVisible();
       }
     });
@@ -77,38 +99,20 @@ test.describe('Authentication Accessibility Tests', () => {
 
     test('should navigate login form with keyboard only', async ({ page }) => {
       await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-      await page.waitForTimeout(2000);
+      await page.waitForLoadState('networkidle');
 
       // Tab navigation through login form
-      await page.locator('input[type="email"]').focus();
-      await expect(page.locator('input[type="email"]')).toBeFocused();
+      await page.locator('input[name="email"]').focus();
+      await expect(page.locator('input[name="email"]')).toBeFocused();
 
       await page.keyboard.press('Tab');
-      await expect(page.locator('input[type="password"]')).toBeFocused();
+      await expect(page.locator('input[name="password"]')).toBeFocused();
 
       await page.keyboard.press('Tab');
       await expect(page.locator('button[type="submit"]')).toBeFocused();
     });
 
-    test('should support Enter key form submission', async ({ page }) => {
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-      await page.waitForTimeout(2000);
 
-      // Fill form fields
-      await page.locator('input[type="email"]').fill('test@example.com');
-      await page.locator('input[type="password"]').fill('password123');
-
-      // Press Enter from password field
-      await page.locator('input[type="password"]').press('Enter');
-
-      // Wait for response (error or navigation)
-      await Promise.race([
-        page.waitForURL(url => !url.toString().includes('/auth/signin'), { timeout: 5000 }),
-        page.waitForSelector('[role="alert"]', { timeout: 3000 })
-      ]).catch(() => { });
-    });
 
     test('should support Enter key submission from any form field', async ({ page }) => {
       const userData = TestDataFactory.createUser({
@@ -135,20 +139,27 @@ test.describe('Authentication Accessibility Tests', () => {
   });
 
   test.describe('Screen Reader Accessibility', () => {
-    test('should have proper form labels', async ({ page }) => {
-      await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-      await page.waitForTimeout(2000);
+    test('should have proper form labels and ARIA attributes', async ({ page }) => {
+      await page.goto('/auth/signup');
+      await page.waitForLoadState('networkidle');
 
-      // Inputs should have proper attributes for screen readers
-      await expect(page.locator('input[type="email"]')).toHaveAttribute('id');
-      await expect(page.locator('input[type="password"]')).toHaveAttribute('id');
-      await expect(page.locator('input[type="email"]')).toHaveAttribute('type', 'email');
-      await expect(page.locator('input[type="password"]')).toHaveAttribute('type', 'password');
+      // Check for proper labels
+      const nameInput = page.locator('input[name="name"]');
+      const emailInput = page.locator('input[name="email"]');
+      const passwordInput = page.locator('input[name="password"]');
+
+      // Inputs should have associated labels
+      await expect(nameInput).toHaveAttribute('id');
+      await expect(emailInput).toHaveAttribute('id');
+      await expect(passwordInput).toHaveAttribute('id');
+
+      // Look for label elements
+      await expect(page.locator('label[for]')).toHaveCount(4); // name, email, password, confirm password
     });
 
-    test('should have proper form labels and accessibility attributes', async ({ page }) => {
-      await page.goto('/auth/signin');
+    test('should have descriptive error messages', async ({ page }) => {
+      await page.goto('/auth/signup');
+      await page.waitForLoadState('networkidle');
 
       // Form inputs should exist and be accessible
       await expect(page.locator('input[type="email"], input[name="email"]')).toBeVisible();
@@ -167,8 +178,7 @@ test.describe('Authentication Accessibility Tests', () => {
 
     test('should have accessible button text', async ({ page }) => {
       await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-      await page.waitForTimeout(2000);
+      await page.waitForLoadState('networkidle');
 
       // Buttons should have clear, descriptive text
       await expect(page.getByRole('button', { name: /Sign In/i })).toBeVisible();
@@ -206,17 +216,17 @@ test.describe('Authentication Accessibility Tests', () => {
   test.describe('Focus Management', () => {
     test('should maintain logical focus order', async ({ page }) => {
       await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-      await page.waitForTimeout(2000);
+      await page.waitForLoadState('networkidle');
 
       // Track focus order
       const expectedFocusOrder = [
-        'input[type="email"]',
-        'input[type="password"]',
+        'input[name="email"]',
+        'input[name="password"]',
         'button[type="submit"]'
       ];
 
-      await page.locator(expectedFocusOrder[0]).focus();
+      let currentIndex = 0;
+      await page.locator(expectedFocusOrder[currentIndex]).focus();
 
       for (let i = 1; i < expectedFocusOrder.length; i++) {
         await page.keyboard.press('Tab');
@@ -285,13 +295,13 @@ test.describe('Authentication Accessibility Tests', () => {
     test('should have adequately sized touch targets on mobile', async ({ page }) => {
       await page.setViewportSize({ width: 375, height: 667 });
       await page.goto('/auth/signin');
-      await page.waitForLoadState('domcontentloaded');
-      await page.waitForTimeout(2000);
+      await page.waitForLoadState('networkidle');
 
       const interactiveElements = [
         'button[type="submit"]',
         'button:has-text("Google")',
-        'button:has-text("Send Magic Link")'
+        'button:has-text("Send Magic Link")',
+        'button:has-text("Sign up here")'
       ];
 
       for (const selector of interactiveElements) {

@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -107,16 +106,21 @@ model User {
   ducks Duck[]
 
   // Project Relations
-  projectProfile        ProjectProfile?
-  projectComments       ProjectComment[]
-  projectLikes          ProjectLike[]
+  projectProfile    ProjectProfile?
+  projectComments   ProjectComment[]
+  projectLikes      ProjectLike[]
   projectCollaborations ProjectCollaborator[]
 
+  // Chat Relations
+  chatMessages      ChatMessage[]            @relation("UserChatMessages")
+  conversations     ConversationParticipant[] @relation("UserConversations")
+
+  // Notification Relations
+  notifications            Notification[]
+  notificationPreferences  NotificationPreference?
   // Attendance Relations (only for STUDENT users)
   attendanceRecords        Attendance[]
-  // Chat Relations
-  conversationParticipants ConversationParticipant[]
-  chatMessages             ChatMessage[]
+
 
   @@map("users")
 }
@@ -481,70 +485,70 @@ model PostTag {
 
 // Project Showcase Models
 model ProjectProfile {
-  id        String  @id @default(cuid())
-  bio       String?
-  headline  String? // Professional headline/tagline
-  location  String?
-  website   String?
-  resume    String? // URL to resume/CV
-  theme     String  @default("default") // Project profile theme/template
-  isPublic  Boolean @default(true)
-  isActive  Boolean @default(true)
-  viewCount Int     @default(0)
+  id          String  @id @default(cuid())
+  bio         String?
+  headline    String? // Professional headline/tagline
+  location    String?
+  website     String?
+  resume      String? // URL to resume/CV
+  theme       String  @default("default") // Project profile theme/template
+  isPublic    Boolean @default(true)
+  isActive    Boolean @default(true)
+  viewCount   Int     @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
-  userId      String            @unique
-  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  projects    ProjectShowcase[]
-  skills      ProjectSkill[]
+  userId   String @unique
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projects ProjectShowcase[]
+  skills   ProjectSkill[]
   experiences Experience[]
 
   @@map("project_profiles")
 }
 
 model ProjectShowcase {
-  id          String        @id @default(cuid())
-  title       String
-  description String
-  summary     Json? // Rich Plate.js content for detailed project summary
-  shortDesc   String? // Brief description for cards
-  images      Json? // Array of image URLs
-  demoUrl     String? // Live demo URL
-  githubUrl   String? // Repository URL
-  techStack   Json // Array of technologies used
-  features    Json? // Array of key features
-  challenges  String? // Challenges faced during development
-  solutions   String? // Solutions implemented
-  status      ProjectStatus @default(COMPLETED)
-  startDate   DateTime?
-  endDate     DateTime?
-  isFeatured  Boolean       @default(false)
-  isPublic    Boolean       @default(true)
-  likes       Int           @default(0)
-  views       Int           @default(0)
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  summary       Json? // Rich Plate.js content for detailed project summary
+  shortDesc     String? // Brief description for cards
+  images        Json? // Array of image URLs
+  demoUrl       String? // Live demo URL
+  githubUrl     String? // Repository URL
+  techStack     Json // Array of technologies used
+  features      Json? // Array of key features
+  challenges    String? // Challenges faced during development
+  solutions     String? // Solutions implemented
+  status        ProjectStatus @default(COMPLETED)
+  startDate     DateTime?
+  endDate       DateTime?
+  isFeatured    Boolean @default(false)
+  isPublic      Boolean @default(true)
+  likes         Int     @default(0)
+  views         Int     @default(0)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
   projectProfileId String
-  projectProfile   ProjectProfile        @relation(fields: [projectProfileId], references: [id], onDelete: Cascade)
-  comments         ProjectComment[]
-  projectLikes     ProjectLike[]
-  collaborators    ProjectCollaborator[]
+  projectProfile   ProjectProfile @relation(fields: [projectProfileId], references: [id], onDelete: Cascade)
+  comments    ProjectComment[]
+  projectLikes ProjectLike[]
+  collaborators ProjectCollaborator[]
 
   @@map("project_showcases")
 }
 
 model Skill {
-  id       String  @id @default(cuid())
-  name     String  @unique
-  category String // e.g., "Frontend", "Backend", "Database", "DevOps"
-  icon     String? // Icon name or URL
-  color    String  @default("#3B82F6") // Display color
+  id          String @id @default(cuid())
+  name        String @unique
+  category    String // e.g., "Frontend", "Backend", "Database", "DevOps"
+  icon        String? // Icon name or URL
+  color       String @default("#3B82F6") // Display color
 
   createdAt DateTime @default(now())
 
@@ -614,7 +618,7 @@ model ProjectLike {
 
   userId    String
   projectId String
-  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   project   ProjectShowcase @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
@@ -629,7 +633,7 @@ model ProjectCollaborator {
 
   userId    String
   projectId String
-  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   project   ProjectShowcase @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
@@ -874,7 +878,6 @@ enum ExperienceType {
   INTERNSHIP
 }
 
-// Attendance Management
 model Attendance {
   id     String           @id @default(cuid())
   date   DateTime         @db.Date
@@ -900,12 +903,43 @@ enum AttendanceStatus {
   ABSENT_UNEXCUSED
 }
 
-// Chat Models
+
+
+// Chat System Models
+enum ConversationType {
+  DIRECT
+  GROUP
+  CHANNEL
+}
+
+enum ParticipantRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+model ChatMessage {
+  id             String   @id @default(cuid())
+  content        String
+  userName       String?
+  userId         String
+  conversationId String
+  roomName       String? // For backward compatibility
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  user User @relation("UserChatMessages", fields: [userId], references: [id], onDelete: Cascade)
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@map("chat_messages")
+}
+
 model Conversation {
   id          String           @id @default(cuid())
+  name        String?
+  description String?
   type        ConversationType @default(DIRECT)
-  name        String? // For group chats
-  description String? // For group chats
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
@@ -926,42 +960,73 @@ model ConversationParticipant {
 
   // Relations
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User         @relation("UserConversations", fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([conversationId, userId])
   @@map("conversation_participants")
 }
 
-model ChatMessage {
-  id             String   @id @default(cuid())
-  content        String
-  conversationId String
-  userId         String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
 
-  // Relations
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  // Legacy fields for backward compatibility (can be removed later)
-  roomName String?
-  userName String?
-
-  @@index([conversationId])
-  @@index([createdAt])
-  @@index([userId])
-  @@map("chat_messages")
+// Chat Notification System Models
+model Notification {
+  id        String   @id @default(cuid())
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  metadata  Json?    // Store additional context like messageId, conversationId, etc.
+  
+  // Recipient
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Optional: Link to specific entities
+  messageId       String?
+  conversationId  String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  readAt    DateTime?
+  
+  @@index([userId, isRead])
+  @@index([userId, createdAt])
+  @@map("notifications")
 }
 
-enum ConversationType {
-  DIRECT // One-on-one chat
-  GROUP // Group chat
-  CHANNEL // Public channel (like general-chat)
+model NotificationPreference {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Notification channels
+  inApp     Boolean @default(true)
+  email     Boolean @default(true)
+  push      Boolean @default(false)
+  
+  // Notification types
+  directMessages  Boolean @default(true)
+  groupMessages   Boolean @default(true)
+  channelMessages Boolean @default(true)
+  mentions        Boolean @default(true)
+  
+  // Timing preferences
+  quietHoursStart String? // Format: "22:00"
+  quietHoursEnd   String? // Format: "08:00"
+  timezone        String? // User's timezone
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([userId])
+  @@map("notification_preferences")
 }
 
-enum ParticipantRole {
-  MEMBER
-  ADMIN
-  OWNER
+// Add this enum
+enum NotificationType {
+  DIRECT_MESSAGE
+  GROUP_MESSAGE
+  CHANNEL_MESSAGE
+  MENTION
+  CONVERSATION_INVITE
+  SYSTEM
 }

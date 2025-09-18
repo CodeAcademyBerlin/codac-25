@@ -1,13 +1,11 @@
-import { redirect } from 'next/navigation';
-
+import { MobileTopPanel } from '@/app/(dashboard)/lms/components/mobile-top-panel';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { getEnrolledCourses, getCourses } from '@/data/lms/courses';
 import { getLMSHierarchy } from '@/data/lms/lms-hierarchy';
-import { getCurrentUser } from '@/lib/auth/auth-utils';
+import { requireServerAuth } from '@/lib/auth/auth-server';
 
 import { LMSSidebar } from './components/lms-sidebar';
 
-import { MobileTopPanel } from '@/app/(dashboard)/lms/components/mobile-top-panel';
 
 export default async function LMSLayout({
     children,
@@ -15,10 +13,7 @@ export default async function LMSLayout({
     children: React.ReactNode;
 }) {
     // Require authentication for LMS access
-    const user = await getCurrentUser();
-    if (!user) {
-        redirect('/auth/signin?callbackUrl=/lms');
-    }
+    const user = await requireServerAuth();
 
     // Get enrolled courses, all available courses, and LMS hierarchy
     const [enrolledCourses, allCourses, lmsHierarchy] = await Promise.all([

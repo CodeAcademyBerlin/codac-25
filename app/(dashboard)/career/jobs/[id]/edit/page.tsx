@@ -1,6 +1,6 @@
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { getJobById } from "@/actions/job/get-jobs";
 import { JobEditForm } from "@/components/career/job-edit-form";
@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { auth } from "@/lib/auth/auth";
+import { requireServerAuth } from "@/lib/auth/auth-server";
 
 interface EditJobPageProps {
   params: Promise<{
@@ -22,12 +22,7 @@ interface EditJobPageProps {
 
 export default async function EditJobPage({ params }: EditJobPageProps) {
   const { id } = await params;
-  const session = await auth();
-  const user = session?.user;
-
-  if (!user) {
-    redirect("/auth/signin");
-  }
+  const user = await requireServerAuth();
 
   const job = await getJobById(id);
 

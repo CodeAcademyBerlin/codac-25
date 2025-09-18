@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/db/prisma'
 import { handleServerAction } from '@/lib/server-action-utils'
 import { logger } from '@/lib/logger'
+import { notificationService } from '@/lib/notification-service'
 
 const sendConversationMessageSchema = z.object({
     conversationId: z.string().min(1),
@@ -22,7 +23,7 @@ export async function sendConversationMessage(input: unknown) {
             const { conversationId, content } = parsed
 
             // Verify user is a participant in this conversation
-            const participation = await (prisma as any).conversationParticipant.findFirst({
+            const participation = await prisma.conversationParticipant.findFirst({
                 where: {
                     conversationId,
                     userId: user.id,
@@ -42,7 +43,7 @@ export async function sendConversationMessage(input: unknown) {
             })
 
             // Create the message
-            const message = await (prisma as any).chatMessage.create({
+            const message = await prisma.chatMessage.create({
                 data: {
                     content,
                     userName: user.name || user.email || 'Anonymous',
@@ -62,10 +63,30 @@ export async function sendConversationMessage(input: unknown) {
             })
 
             // Update conversation's updated timestamp
-            await (prisma as any).conversation.update({
+            await prisma.conversation.update({
                 where: { id: conversationId },
                 data: { updatedAt: new Date() },
             })
+
+            // Send notifications to other participants
+            await notificationService.notifyConversationMessage(
+                message.id,
+                conversationId,
+                user.id,
+                content
+            )
+
+            // Broadcast conversation update for real-time UI updates
+            await notificationService.broadcastConversationUpdate(
+                conversationId,
+                'new_message',
+                {
+                    messageId: message.id,
+                    senderId: user.id,
+                    senderName: user.name || user.email || 'Anonymous',
+                    content: content.substring(0, 100) // Truncated content for preview
+                }
+            )
 
             revalidatePath('/chat')
             revalidatePath(`/chat/conversation/${conversationId}`)

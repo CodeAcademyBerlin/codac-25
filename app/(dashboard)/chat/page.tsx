@@ -1,15 +1,8 @@
-import { redirect } from "next/navigation";
-
 import { ChatLayout } from "@/components/chat/chat-layout";
-import { auth } from "@/lib/auth/auth";
+import { requireServerAuth } from "@/lib/auth/auth-server";
 
 export default async function ChatPage() {
-  const session = await auth();
-  const user = session?.user;
+  const user = await requireServerAuth();
 
-  if (!user) {
-    redirect("/auth/signin?callbackUrl=/chat");
-  }
-
-  return <ChatLayout currentUserId={user.id} />;
+  return <ChatLayout currentUserId={user.id} currentUserName={user.name || undefined} />;
 }

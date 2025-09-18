@@ -16,11 +16,13 @@ import {
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { ChatButton } from '@/components/chat/chat-button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getUser } from '@/data/user/get-user';
+import { requireServerAuth } from '@/lib/auth/auth-server';
 
 type Params = {
     userRole: string;
@@ -93,6 +95,10 @@ export default async function UserDetailsPage({ params }: { params: Promise<Para
     }
 
     const config = roleConfig[userRole as keyof typeof roleConfig];
+
+    // Get current user to check if this is their own profile
+    const authUser = await requireServerAuth();
+    const currentUserId = authUser.id;
 
     const result = await getUser(userId);
 
@@ -351,10 +357,17 @@ export default async function UserDetailsPage({ params }: { params: Promise<Para
                             <CardTitle>Quick Actions</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2">
-                            <Button variant="outline" size="sm" className="w-full justify-start">
-                                <MessageSquare className="h-4 w-4 mr-2" />
-                                Send Message
-                            </Button>
+                            {/* Only show chat button if not viewing own profile */}
+                            {currentUserId && currentUserId !== user.id && (
+                                <ChatButton
+                                    userId={user.id}
+                                    userName={user.name || undefined}
+                                    variant="outline"
+                                    size="sm"
+                                    className="w-full"
+                                    showText={true}
+                                />
+                            )}
                             {userRole === 'mentors' && (
                                 <Button variant="outline" size="sm" className="w-full justify-start">
                                     <Calendar className="h-4 w-4 mr-2" />

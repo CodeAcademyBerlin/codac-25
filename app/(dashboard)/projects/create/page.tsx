@@ -4,15 +4,9 @@ import { createProject } from '@/actions/projects/create-project'
 import { DndWrapper } from '@/components/dnd/dnd-wrapper'
 import { PageContainer, PageHeader } from '@/components/layout'
 import { ProjectFormWithSummary } from '@/components/projects/project-form-with-summary'
-import { getCurrentUser } from '@/lib/auth/auth-utils'
 import type { CreateProjectData } from '@/types/portfolio'
 
 export default async function CreateProjectPage() {
-  const user = await getCurrentUser()
-
-  if (!user) {
-    redirect('/auth/signin?callbackUrl=/projects/create')
-  }
 
   const handleCreateProject = async (data: CreateProjectData) => {
     'use server'

@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { User } from "next-auth";
+import type { User } from "next-auth";
 import { useSession } from "next-auth/react";
 import * as React from "react";
 
@@ -28,6 +28,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useTotalUnreadCount } from "@/hooks/use-total-unread-count";
 
 import { NavSecondary } from "./nav-secondary";
 import { NavTop, NavigationGroup } from "./nav-top";
@@ -89,14 +90,14 @@ const buildNavigationData = (role?: string): NavigationGroup[] => {
       url: "/lms/admin",
       icon: Lock
     });
-    
-  if (role === "ADMIN") {
-    learningItems.push({
-      title: "Attendance",
-      url: "/attendance",
-      icon: ClipboardCheck,
-    });
-  }
+
+    if (role === "ADMIN") {
+      learningItems.push({
+        title: "Attendance",
+        url: "/attendance",
+        icon: ClipboardCheck,
+      });
+    }
   }
 
   return [
@@ -176,17 +177,18 @@ const navSecondaryItems = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = useSession();
+  const { totalUnreadCount } = useTotalUnreadCount();
   const [navGroups, setNavGroups] = React.useState(() =>
     buildNavigationData(undefined)
   );
 
-  // Update navigation when user role is available
+  // Update navigation when user role or unread count changes
   React.useEffect(() => {
     if (session?.user) {
       const userData = session.user as User;
       setNavGroups(buildNavigationData(userData.role));
     }
-  }, [session]);
+  }, [session, totalUnreadCount]);
 
   return (
     <Sidebar variant="sidebar" collapsible="icon" {...props}>

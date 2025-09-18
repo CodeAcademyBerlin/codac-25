@@ -11,7 +11,7 @@ import { SecretDuckForm } from "@/components/career/secret-duck-form";
 import { PageContainer, PageHeader } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { auth } from "@/lib/auth/auth";
+import { requireServerAuth } from "@/lib/auth/auth-server";
 
 type Job = Awaited<ReturnType<typeof getJobs>>[number];
 type DuckItem = Awaited<ReturnType<typeof getDucks>>[number];
@@ -27,14 +27,13 @@ interface JobsPageProps {
 }
 
 export default async function JobsPage({ searchParams }: JobsPageProps) {
-  const session = await auth();
-  const user = session?.user;
+  const user = await requireServerAuth();
 
-  const canPostJob = user?.role === "ADMIN" || user?.role === "MENTOR";
+  const canPostJob = user.role === "ADMIN" || user.role === "MENTOR";
 
   return (
     <PageContainer size="xl">
-      <PageHeader 
+      <PageHeader
         title="Job Board"
         description="Discover career opportunities from our community and partners"
       >

@@ -1,11 +1,11 @@
-import { redirect } from 'next/navigation';
+import { redirect } from "next/navigation";
 
 import { PageContainer } from "@/components/layout";
 import { ProfileContent } from '@/components/profile/profile-content';
 import { ProfileHeader } from '@/components/profile/profile-header';
 import { ProfileStats } from '@/components/profile/profile-stats';
 import { getUser } from '@/data/user/get-user';
-import { auth } from '@/lib/auth/auth';
+import { requireServerAuth } from '@/lib/auth/auth-server';
 
 export const metadata = {
     title: 'Profile | Codac',
@@ -13,13 +13,9 @@ export const metadata = {
 };
 
 export default async function ProfilePage() {
-    const session = await auth();
+    const authUser = await requireServerAuth();
 
-    if (!session?.user?.id) {
-        redirect('/auth/signin');
-    }
-
-    const result = await getUser(session.user.id);
+    const result = await getUser(authUser.id);
 
     if (!result.success || !result.data) {
         redirect('/auth/signin');

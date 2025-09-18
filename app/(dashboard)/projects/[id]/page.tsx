@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { getProjectById } from '@/data/projects/get-project-by-id'
-import { getCurrentUser } from '@/lib/auth/auth-utils'
+import { requireServerAuth } from '@/lib/auth/auth-server'
 import { PROJECT_STATUSES } from '@/types/portfolio'
 
 interface ProjectPageProps {
@@ -25,7 +25,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const { id } = await params
   const [project, user] = await Promise.all([
     getProjectById(id),
-    getCurrentUser()
+    requireServerAuth()
   ])
 
   if (!project) {

@@ -6,7 +6,7 @@ import { DndWrapper } from '@/components/dnd/dnd-wrapper'
 import { PageContainer, PageHeader } from '@/components/layout'
 import { ProjectFormWithSummary } from '@/components/projects/project-form-with-summary'
 import { getProjectById } from '@/data/projects/get-project-by-id'
-import { getCurrentUser } from '@/lib/auth/auth-utils'
+import { requireServerAuth } from '@/lib/auth/auth-server'
 import type { CreateProjectData } from '@/types/portfolio'
 
 interface EditProjectPageProps {
@@ -18,13 +18,10 @@ interface EditProjectPageProps {
 export default async function EditProjectPage({ params }: EditProjectPageProps) {
   const { id } = await params
   const [user, project] = await Promise.all([
-    getCurrentUser(),
+    requireServerAuth(),
     getProjectById(id)
   ])
 
-  if (!user) {
-    redirect('/auth/signin?callbackUrl=/projects/' + id + '/edit')
-  }
 
   if (!project) {
     notFound()

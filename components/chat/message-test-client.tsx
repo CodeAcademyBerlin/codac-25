@@ -174,7 +174,11 @@ export function MessageTestClient({ currentUserId }: MessageTestClientProps) {
                             {msg.user?.name || msg.userId}
                           </span>
                           <span>
-                            {new Date(msg.createdAt).toLocaleTimeString()}
+                            {new Date(msg.createdAt).toLocaleTimeString('en-US', {
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              hour12: true,
+                            })}
                           </span>
                         </div>
                         <p className="mt-1">{msg.content}</p>

@@ -1,34 +1,21 @@
 import { ClipboardCheck, Users, School, TrendingUp } from 'lucide-react';
-import { redirect } from 'next/navigation';
 
 import { AttendanceCohortCard } from '@/components/attendance/attendance-cohort-card';
 import { PageErrorBoundary, SectionErrorBoundary } from '@/components/error';
 import { Grid, PageContainer, PageHeader, Section } from '@/components/layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getCohortsForAttendance } from '@/data/attendance/get-cohorts-for-attendance';
-import { auth } from '@/lib/auth/auth';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AttendancePage() {
-    // Check authentication and permissions
-    const session = await auth();
-    
-    if (!session?.user?.id) {
-        redirect('/auth/signin');
-    }
-
-    // Check if user has the right role (this will be double-checked in the data function)
-    if (session.user.role !== 'MENTOR' && session.user.role !== 'ADMIN') {
-        redirect('/');
-    }
 
     // Fetch cohorts for attendance
     const result = await getCohortsForAttendance();
 
     if (!result.success) {
         const errorMessage = typeof result.error === 'string' ? result.error : 'Failed to load attendance data';
-        
+
         return (
             <PageErrorBoundary pageName="Attendance">
                 <PageContainer>
@@ -67,10 +54,10 @@ export default async function AttendancePage() {
     const { cohorts, totalActiveStudents } = result.data;
 
     // Calculate additional statistics
-    const activeCohorts = cohorts.filter(cohort => 
+    const activeCohorts = cohorts.filter(cohort =>
         cohort.endDate ? new Date(cohort.endDate) > new Date() : true
     );
-    const endedCohorts = cohorts.filter(cohort => 
+    const endedCohorts = cohorts.filter(cohort =>
         cohort.endDate ? new Date(cohort.endDate) <= new Date() : false
     );
 
@@ -141,8 +128,8 @@ export default async function AttendancePage() {
 
                             <Grid cols="3">
                                 {activeCohorts.map((cohort) => (
-                                    <AttendanceCohortCard 
-                                        key={cohort.id} 
+                                    <AttendanceCohortCard
+                                        key={cohort.id}
                                         cohort={cohort}
                                     />
                                 ))}
@@ -164,8 +151,8 @@ export default async function AttendancePage() {
 
                             <Grid cols="3">
                                 {endedCohorts.map((cohort) => (
-                                    <AttendanceCohortCard 
-                                        key={cohort.id} 
+                                    <AttendanceCohortCard
+                                        key={cohort.id}
                                         cohort={cohort}
                                     />
                                 ))}

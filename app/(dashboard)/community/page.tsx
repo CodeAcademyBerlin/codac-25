@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getCohorts } from '@/data/cohort/get-cohorts';
 
 export default async function CommunityPage() {
+
+
     const result = await getCohorts();
 
     if (!result.success || !result.data) {
@@ -119,7 +121,6 @@ export default async function CommunityPage() {
                     ))}
                 </Grid>
             </Section>
-
 
 
             {cohorts.length === 0 && (

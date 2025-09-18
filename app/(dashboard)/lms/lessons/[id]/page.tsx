@@ -3,7 +3,7 @@ import { Value } from 'platejs';
 
 import { DndWrapper } from '@/components/dnd/dnd-wrapper';
 import { getLesson, getLessonNavigation } from '@/data/lms/courses';
-import { getCurrentUser } from '@/lib/auth/auth-utils';
+import { requireServerAuth } from '@/lib/auth/auth-server';
 
 import { LessonContent } from '../components/lesson-content';
 
@@ -148,11 +148,7 @@ function transformLessonContent(content: unknown): Value {
 
 export default async function LessonPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const user = await getCurrentUser();
-
-    if (!user) {
-        notFound();
-    }
+    const user = await requireServerAuth();
 
     const lesson = await getLesson(id);
 

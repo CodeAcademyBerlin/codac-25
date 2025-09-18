@@ -1,7 +1,7 @@
 "use client";
 
 import { Send, Paperclip, Smile } from "lucide-react";
-import { useState, useRef, KeyboardEvent } from "react";
+import { useState, useRef, KeyboardEvent, useEffect, useCallback } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,20 +11,69 @@ interface MessageInputProps {
   onSendMessage: (content: string) => Promise<void>;
   disabled?: boolean;
   placeholder?: string;
+  onStartTyping?: () => void;
+  onStopTyping?: () => void;
 }
 
 export function MessageInput({
   onSendMessage,
   disabled = false,
   placeholder = "Type a message...",
+  onStartTyping,
+  onStopTyping,
 }: MessageInputProps) {
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Stop typing when component unmounts
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+      if (isTyping && onStopTyping) {
+        onStopTyping();
+      }
+    };
+  }, [isTyping, onStopTyping]);
+
+  const handleStopTyping = useCallback(() => {
+    if (isTyping && onStopTyping) {
+      setIsTyping(false);
+      onStopTyping();
+    }
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+      typingTimeoutRef.current = null;
+    }
+  }, [isTyping, onStopTyping]);
+
+  const handleStartTyping = useCallback(() => {
+    if (!isTyping && onStartTyping) {
+      setIsTyping(true);
+      onStartTyping();
+    }
+
+    // Clear existing timeout
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    // Set timeout to stop typing after 3 seconds of inactivity
+    typingTimeoutRef.current = setTimeout(() => {
+      handleStopTyping();
+    }, 3000);
+  }, [isTyping, onStartTyping, handleStopTyping]);
 
   const handleSend = async () => {
     const trimmedMessage = message.trim();
     if (!trimmedMessage || sending || disabled) return;
+
+    // Stop typing indicator when sending
+    handleStopTyping();
 
     setSending(true);
     try {
@@ -36,6 +85,8 @@ export function MessageInput({
       }
     } catch (error) {
       console.error("Error sending message:", error);
+      // Keep the message in the input if sending failed
+      // so user can try again
     } finally {
       setSending(false);
     }
@@ -45,11 +96,22 @@ export function MessageInput({
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
+    } else if (e.key.length === 1 || e.key === "Backspace") {
+      // Trigger typing indicator for actual content changes
+      handleStartTyping();
     }
   };
 
   const handleInputChange = (value: string) => {
     setMessage(value);
+
+    // Trigger typing indicator when user types
+    if (value.trim() && !disabled) {
+      handleStartTyping();
+    } else if (!value.trim()) {
+      // Stop typing if input becomes empty
+      handleStopTyping();
+    }
 
     // Auto-resize textarea
     if (textareaRef.current) {

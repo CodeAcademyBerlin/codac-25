@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 
 import { AppBreadcrumb } from '@/components/app-breadcrumb';
+import { NotificationDropdown } from '@/components/notifications/notification-dropdown';
 import { ThemePicker } from '@/components/theme-picker';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -38,6 +39,7 @@ export function AppHeader({
 
             <div className="flex items-center gap-2">
                 <ThemePicker variant="dropdown" align="end" />
+                {user && <NotificationDropdown />}
                 
                 {user && (
                     <DropdownMenu>

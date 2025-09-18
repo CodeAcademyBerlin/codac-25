@@ -2,16 +2,12 @@ import { notFound } from 'next/navigation';
 
 import { CourseDetail } from '@/components/lms/course-detail';
 import { getCourse, canEditCourse } from '@/data/lms/courses';
-import { getCurrentUser } from '@/lib/auth/auth-utils';
+import { requireServerAuth } from '@/lib/auth/auth-server';
 
 
 export default async function CoursePage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const user = await getCurrentUser();
-
-    if (!user) {
-        notFound();
-    }
+    const user = await requireServerAuth();
 
     const [course, canEdit] = await Promise.all([
         getCourse(id),

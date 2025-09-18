@@ -1,0 +1,17 @@
+{
+  "exportedAt": "2025-09-12T09:57:21.229Z",
+  "totalConversations": 6,
+  "totalParticipants": 18,
+  "totalMessages": 13,
+  "conversationTypes": {
+    "GROUP": 3,
+    "DIRECT": 2,
+    "CHANNEL": 1
+  },
+  "messagesByConversation": {
+    "cmfdvwa2n00008omk237fukhk": 1,
+    "cmfdw1dw6000c8omkyea5tnu0": 5,
+    "cmfe0r12v000s8omkkv93ywvr": 6,
+    "cmfe0sjj6000y8omkrhdnidtl": 1
+  }
+}

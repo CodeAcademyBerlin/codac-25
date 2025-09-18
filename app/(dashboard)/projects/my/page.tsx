@@ -5,20 +5,10 @@ import { Grid, PageContainer, PageHeader, Section } from '@/components/layout'
 import { ProjectCard } from '@/components/projects/project-card'
 import { Button } from '@/components/ui/button'
 import { getUserProjects } from '@/data/projects/get-user-projects'
-import { getCurrentUser } from '@/lib/auth/auth-utils'
+import { requireServerAuth } from '@/lib/auth/auth-server'
 
 export default async function MyProjectsPage() {
-  const user = await getCurrentUser()
-
-  if (!user) {
-    return (
-      <PageContainer>
-        <div className="text-center py-12">
-          <div className="text-lg mb-4">Please sign in to view your projects</div>
-        </div>
-      </PageContainer>
-    )
-  }
+  const user = await requireServerAuth()
 
   const projects = await getUserProjects(user.id)
 

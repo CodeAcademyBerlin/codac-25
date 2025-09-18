@@ -20,7 +20,7 @@ export async function getAvailableUsers() {
             orderBy: {
                 name: 'asc',
             },
-            take: 10, // Limit to first 10 users for testing
+            take: 50, // Increased limit to show more users
         })
 
         return users

@@ -1,13 +1,13 @@
 import { Users, GraduationCap, Search, Filter, TrendingUp, Award, Star, Trophy, Briefcase, Calendar, MessageSquare } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
-
 import { StudentCard } from '@/components/community/student-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { getUsers } from '@/data/user/get-users';
+import { requireServerAuth } from '@/lib/auth/auth-server';
 import { UserWithCounts } from '@/lib/server-action-utils';
 
 type Params = {
@@ -66,6 +66,10 @@ export default async function CommunityRolePage({ params }: { params: Promise<Pa
     }
 
     const config = roleConfig[userRole as keyof typeof roleConfig];
+
+    // Get current user
+    const user = await requireServerAuth();
+    const currentUserId = user.id;
 
     const queryParams: {
         limit: number;
@@ -309,7 +313,7 @@ export default async function CommunityRolePage({ params }: { params: Promise<Pa
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {activeUsers.map((user) => (
-                            <StudentCard key={user.id} student={user} />
+                            <StudentCard key={user.id} student={user} currentUserId={currentUserId} />
                         ))}
                     </div>
                 </section>
@@ -332,7 +336,7 @@ export default async function CommunityRolePage({ params }: { params: Promise<Pa
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {inactiveUsers.map((user) => (
-                            <StudentCard key={user.id} student={user} />
+                            <StudentCard key={user.id} student={user} currentUserId={currentUserId} />
                         ))}
                     </div>
                 </section>

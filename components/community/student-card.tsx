@@ -1,6 +1,7 @@
 import { Github, Linkedin, ExternalLink, Briefcase, Calendar, Trophy, MessageSquare, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 
+import { ChatButton } from '@/components/chat/chat-button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -10,9 +11,10 @@ import type { CohortWithStudents } from '@/data/cohort/get-cohorts';
 type StudentCardProps = {
     student: CohortWithStudents['students'][0];
     cohortName?: string;
+    currentUserId?: string; // Add current user ID to props
 };
 
-export function StudentCard({ student, cohortName }: StudentCardProps) {
+export function StudentCard({ student, cohortName, currentUserId }: StudentCardProps) {
     const getInitials = (name: string) => {
         return name
             .split(' ')
@@ -153,30 +155,44 @@ export function StudentCard({ student, cohortName }: StudentCardProps) {
                 </div>
 
                 {/* Social links */}
-                <div className="flex items-center gap-2">
-                    {student.githubUrl && (
-                        <Button variant="outline" size="sm" className="h-8 w-8 p-0" asChild>
-                            <Link href={student.githubUrl} target="_blank" rel="noopener noreferrer">
-                                <Github className="h-4 w-4" />
-                                <span className="sr-only">GitHub</span>
-                            </Link>
-                        </Button>
-                    )}
-                    {student.linkedinUrl && (
-                        <Button variant="outline" size="sm" className="h-8 w-8 p-0" asChild>
-                            <Link href={student.linkedinUrl} target="_blank" rel="noopener noreferrer">
-                                <Linkedin className="h-4 w-4" />
-                                <span className="sr-only">LinkedIn</span>
-                            </Link>
-                        </Button>
-                    )}
-                    {student.portfolioUrl && (
-                        <Button variant="outline" size="sm" className="h-8 w-8 p-0" asChild>
-                            <Link href={student.portfolioUrl} target="_blank" rel="noopener noreferrer">
-                                <ExternalLink className="h-4 w-4" />
-                                <span className="sr-only">Portfolio</span>
-                            </Link>
-                        </Button>
+                <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                        {student.githubUrl && (
+                            <Button variant="outline" size="sm" className="h-8 w-8 p-0" asChild>
+                                <Link href={student.githubUrl} target="_blank" rel="noopener noreferrer">
+                                    <Github className="h-4 w-4" />
+                                    <span className="sr-only">GitHub</span>
+                                </Link>
+                            </Button>
+                        )}
+                        {student.linkedinUrl && (
+                            <Button variant="outline" size="sm" className="h-8 w-8 p-0" asChild>
+                                <Link href={student.linkedinUrl} target="_blank" rel="noopener noreferrer">
+                                    <Linkedin className="h-4 w-4" />
+                                    <span className="sr-only">LinkedIn</span>
+                                </Link>
+                            </Button>
+                        )}
+                        {student.portfolioUrl && (
+                            <Button variant="outline" size="sm" className="h-8 w-8 p-0" asChild>
+                                <Link href={student.portfolioUrl} target="_blank" rel="noopener noreferrer">
+                                    <ExternalLink className="h-4 w-4" />
+                                    <span className="sr-only">Portfolio</span>
+                                </Link>
+                            </Button>
+                        )}
+                    </div>
+                    
+                    {/* Chat button aligned to the right - only show if not current user */}
+                    {currentUserId && currentUserId !== student.id && (
+                        <ChatButton 
+                            userId={student.id}
+                            userName={student.name || undefined}
+                            variant="outline"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            showText={false}
+                        />
                     )}
                 </div>
             </CardContent>

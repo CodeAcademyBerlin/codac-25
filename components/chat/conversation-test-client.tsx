@@ -12,6 +12,7 @@ import { useState } from "react";
 
 import { createConversation } from "@/actions/chat/create-conversation";
 import { getAvailableUsers } from "@/actions/chat/get-available-users";
+import { getUserConversationsAction } from "@/actions/chat/get-user-conversations";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,7 +31,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getUserConversations } from "@/data/chat/get-conversations";
 
 interface ConversationTestClientProps {
   currentUserId: string;
@@ -101,8 +101,12 @@ export function ConversationTestClient({
   const loadConversations = async () => {
     setLoadingConversations(true);
     try {
-      const userConversations = await getUserConversations(currentUserId);
-      setConversations(userConversations);
+      const response = await getUserConversationsAction();
+      if (response.success) {
+        setConversations(response.data);
+      } else {
+        console.error("Failed to load conversations:", response.error);
+      }
     } catch (error) {
       console.error("Error loading conversations:", error);
     } finally {

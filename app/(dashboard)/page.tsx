@@ -11,18 +11,14 @@ import { getProjectStats } from '@/data/projects/get-project-stats';
 import { getFeaturedProjects } from '@/data/projects/get-projects';
 import { getUserProjects } from '@/data/projects/get-user-projects';
 import { getUser } from "@/data/user/get-user";
-import { auth } from "@/lib/auth/auth";
+import { requireServerAuth } from "@/lib/auth/auth-server";
 
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
-  const session = await auth();
+  const authUser = await requireServerAuth();
 
-  if (!session?.user?.id) {
-    redirect('/auth/signin');
-  }
-
-  const result = await getUser(session.user.id);
+  const result = await getUser(authUser.id);
 
   if (!result.success || !result.data) {
     // User has valid session but no database record - redirect to signout to clear session

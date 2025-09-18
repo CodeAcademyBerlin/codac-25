@@ -1,58 +1,144 @@
 "use client";
 
-import { MessageCircle, Users, Hash, User, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Users, User, Hash, MessageCircle, Loader2 } from "lucide-react";
+import { useEffect, useCallback, useMemo } from "react";
 
-import { getUserConversationsAction } from "@/actions/chat/get-user-conversations";
+import { markConversationReadAction } from "@/actions/chat/mark-conversation-read";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { ConversationWithParticipants } from "@/data/chat/get-conversations";
+import { useRealtimeConversationList } from "@/hooks/use-realtime-conversation-list";
 import { cn } from "@/lib/utils";
 
 interface ConversationListProps {
   currentUserId: string;
   selectedConversationId?: string | null;
   onConversationSelect: (conversationId: string) => void;
+  refreshRef?: React.MutableRefObject<(() => Promise<void>) | null>;
+  pendingConversationId?: string | null;
+  onPendingConversationHandled?: () => void;
   activeTab: "all" | "direct" | "group" | "channel";
+  onUnreadCountsChange?: (counts: {
+    all: number;
+    direct: number;
+    group: number;
+    channel: number;
+  }) => void;
 }
 
 export function ConversationList({
   currentUserId,
   selectedConversationId,
   onConversationSelect,
+  refreshRef,
+  pendingConversationId,
+  onPendingConversationHandled,
   activeTab,
+  onUnreadCountsChange,
 }: ConversationListProps) {
-  const [conversations, setConversations] = useState<
-    ConversationWithParticipants[]
-  >([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const {
+    loading,
+    error,
+    conversations,
+    getFilteredConversations,
+    refreshConversations,
+    getUnreadCount: getConversationUnreadCount,
+    markAsRead: markConversationReadLocally,
+  } = useRealtimeConversationList({
+    currentUserId,
+    selectedConversationId,
+  });
 
-  useEffect(() => {
-    loadConversations();
-  }, []);
-
-  const loadConversations = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await getUserConversationsAction({});
-      if (response.success) {
-        setConversations(response.data);
-      } else {
-        const errorMessage =
-          typeof response.error === "string"
-            ? response.error
-            : "Failed to load conversations";
-        setError(errorMessage);
-      }
-    } catch (err) {
-      setError("Failed to load conversations");
-      console.error("Error loading conversations:", err);
-    } finally {
-      setLoading(false);
-    }
+  // Get unread count for a conversation using the hook's method
+  const getUnreadCount = (conversationId: string) => {
+    return getConversationUnreadCount(conversationId);
   };
+
+  // Mark conversation as read both on server and locally
+  const markAsRead = useCallback(
+    async (conversationId?: string) => {
+      if (!conversationId) return;
+
+      try {
+        // Immediately update the UI to remove the unread badge
+        markConversationReadLocally(conversationId);
+
+        // Then update on the server
+        await markConversationReadAction({ conversationId });
+      } catch (error) {
+        console.error("Error marking conversation as read:", error);
+        // On error, you might want to refresh to get the correct state
+        // refreshConversations();
+      }
+    },
+    [markConversationReadLocally]
+  );
+
+  // Mark conversation as read when selected
+  useEffect(() => {
+    if (selectedConversationId) {
+      markAsRead(selectedConversationId);
+    }
+  }, [selectedConversationId, markAsRead]);
+
+  // Calculate unread counts using useMemo to prevent infinite re-renders
+  const unreadCounts = useMemo(() => {
+    if (!conversations.length) {
+      return { all: 0, direct: 0, group: 0, channel: 0 };
+    }
+
+    // Calculate counts directly from conversations data without using unstable function references
+    const directConversations = conversations.filter(c => c.type === "DIRECT");
+    const groupConversations = conversations.filter(c => c.type === "GROUP");
+    const channelConversations = conversations.filter(c => c.type === "CHANNEL");
+
+    return {
+      all: conversations.reduce((total, conv) => total + (conv.unreadCount || 0), 0),
+      direct: directConversations.reduce((total, conv) => total + (conv.unreadCount || 0), 0),
+      group: groupConversations.reduce((total, conv) => total + (conv.unreadCount || 0), 0),
+      channel: channelConversations.reduce((total, conv) => total + (conv.unreadCount || 0), 0),
+    };
+  }, [conversations]); // Only depend on conversations array, not functions
+
+  // Send unread counts to parent when they change
+  useEffect(() => {
+    if (onUnreadCountsChange) {
+      onUnreadCountsChange(unreadCounts);
+    }
+  }, [unreadCounts, onUnreadCountsChange]);
+
+  // Expose refresh function to parent
+  useEffect(() => {
+    if (refreshRef) {
+      refreshRef.current = refreshConversations;
+    }
+  }, [refreshConversations, refreshRef]);
+
+  // Handle pending conversation selection
+  useEffect(() => {
+    if (pendingConversationId && !loading) {
+      console.log('🔍 Checking for pending conversation:', pendingConversationId);
+      console.log('📝 Available conversations:', conversations.map(c => c.id));
+
+      // Check if the pending conversation is now available in the list
+      const pendingConversation = conversations.find(
+        (c) => c.id === pendingConversationId
+      );
+      if (pendingConversation) {
+        console.log('✅ Found pending conversation, selecting it');
+        onConversationSelect(pendingConversationId);
+        onPendingConversationHandled?.();
+      } else {
+        console.log('⏳ Pending conversation not yet available, waiting...');
+      }
+    }
+  }, [
+    pendingConversationId,
+    conversations,
+    loading,
+    onConversationSelect,
+    onPendingConversationHandled,
+  ]);
 
   const getConversationIcon = (type: string) => {
     switch (type) {
@@ -114,13 +200,7 @@ export function ConversationList({
     return `${Math.floor(diffInMinutes / 1440)}d`;
   };
 
-  const filteredConversations = conversations.filter((conversation) => {
-    if (activeTab === "all") return true;
-    if (activeTab === "direct") return conversation.type === "DIRECT";
-    if (activeTab === "group") return conversation.type === "GROUP";
-    if (activeTab === "channel") return conversation.type === "CHANNEL";
-    return true;
-  });
+  const filteredConversations = getFilteredConversations(activeTab);
 
   if (loading) {
     return (
@@ -138,7 +218,7 @@ export function ConversationList({
           <Button
             variant="outline"
             size="sm"
-            onClick={loadConversations}
+            onClick={refreshConversations}
             className="mt-2"
           >
             Retry
@@ -165,44 +245,67 @@ export function ConversationList({
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="space-y-1 p-2">
-        {filteredConversations.map((conversation) => (
-          <Button
-            key={conversation.id}
-            variant="ghost"
-            className={cn(
-              "w-full h-auto p-3 justify-start flex-col items-start gap-2",
-              selectedConversationId === conversation.id && "bg-muted"
-            )}
-            onClick={() => onConversationSelect(conversation.id)}
-          >
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center gap-2 min-w-0 flex-1">
-                {getConversationIcon(conversation.type)}
-                <span className="font-medium text-sm truncate">
-                  {getConversationName(conversation)}
-                </span>
-              </div>
-              <div className="flex items-center gap-1 flex-shrink-0">
-                <Badge variant="secondary" className="text-xs h-5">
-                  {conversation.participants.length}
-                </Badge>
-                {conversation.lastMessage && (
-                  <span className="text-xs text-muted-foreground">
-                    {getTimeAgo(conversation.lastMessage.createdAt.toString())}
-                  </span>
-                )}
-              </div>
-            </div>
+        {filteredConversations.map((conversation) => {
+          const unreadCount = getUnreadCount(conversation.id);
+          const hasUnread = unreadCount > 0;
 
-            {conversation.lastMessage && (
-              <div className="w-full text-left">
-                <p className="text-xs text-muted-foreground truncate">
-                  {getLastMessagePreview(conversation)}
-                </p>
+          return (
+            <Button
+              key={conversation.id}
+              variant="ghost"
+              className={cn(
+                "w-full h-auto p-3 justify-start flex-col items-start gap-2 transition-colors",
+                selectedConversationId === conversation.id && "bg-muted",
+                hasUnread &&
+                selectedConversationId !== conversation.id &&
+                "bg-blue-50 hover:bg-blue-100 border-l-2 border-l-blue-500"
+              )}
+              onClick={() => onConversationSelect(conversation.id)}
+            >
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  {getConversationIcon(conversation.type)}
+                  <span
+                    className={cn(
+                      "text-sm truncate",
+                      hasUnread ? "font-bold" : "font-medium"
+                    )}
+                  >
+                    {getConversationName(conversation)}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1 flex-shrink-0">
+                  {getUnreadCount(conversation.id) > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="text-xs h-5 min-w-5 justify-center"
+                    >
+                      {getUnreadCount(conversation.id)}
+                    </Badge>
+                  )}
+                  <Badge variant="secondary" className="text-xs h-5">
+                    {conversation.participants.length}
+                  </Badge>
+                  {conversation.lastMessage && (
+                    <span className="text-xs text-muted-foreground">
+                      {getTimeAgo(
+                        conversation.lastMessage.createdAt.toString()
+                      )}
+                    </span>
+                  )}
+                </div>
               </div>
-            )}
-          </Button>
-        ))}
+
+              {conversation.lastMessage && (
+                <div className="w-full text-left">
+                  <p className="text-xs text-muted-foreground truncate">
+                    {getLastMessagePreview(conversation)}
+                  </p>
+                </div>
+              )}
+            </Button>
+          );
+        })}
       </div>
     </div>
   );

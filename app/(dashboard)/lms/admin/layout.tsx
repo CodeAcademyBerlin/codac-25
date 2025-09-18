@@ -1,21 +1,11 @@
-import { redirect } from 'next/navigation';
-
-import { getCurrentUser } from '@/lib/auth/auth-utils';
+import { requireServerAnyRole } from '@/lib/auth/auth-server';
 
 export default async function AdminLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const user = await getCurrentUser();
-
-    if (!user) {
-        redirect('/auth/signin');
-    }
-
-    if (!['ADMIN', 'MENTOR'].includes(user.role)) {
-        redirect('/lms');
-    }
+    const user = await requireServerAnyRole(['ADMIN', 'MENTOR']);
 
     return (
         <div className="min-h-screen bg-background">

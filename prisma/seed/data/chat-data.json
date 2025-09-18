@@ -1,0 +1,334 @@
+{
+  "conversations": [
+    {
+      "id": "cmfdvwa2n00008omk237fukhk",
+      "name": "Test Group",
+      "description": "Group chat test",
+      "type": "GROUP",
+      "createdAt": "2025-09-10T11:16:19.583Z",
+      "updatedAt": "2025-09-10T11:18:37.236Z"
+    },
+    {
+      "id": "cmfdw143q00078omkbccgn5vj",
+      "name": "New Group",
+      "description": null,
+      "type": "GROUP",
+      "createdAt": "2025-09-10T11:20:05.126Z",
+      "updatedAt": "2025-09-10T11:20:05.126Z"
+    },
+    {
+      "id": "cmfdw1dw6000c8omkyea5tnu0",
+      "name": "Test Group 2",
+      "description": null,
+      "type": "GROUP",
+      "createdAt": "2025-09-10T11:20:17.814Z",
+      "updatedAt": "2025-09-10T13:30:46.030Z"
+    },
+    {
+      "id": "cmfe0r12v000s8omkkv93ywvr",
+      "name": null,
+      "description": "DM Test",
+      "type": "DIRECT",
+      "createdAt": "2025-09-10T13:32:12.724Z",
+      "updatedAt": "2025-09-12T09:17:48.651Z"
+    },
+    {
+      "id": "cmfe0sjj6000y8omkrhdnidtl",
+      "name": "Public Channel",
+      "description": "Channel chat test",
+      "type": "CHANNEL",
+      "createdAt": "2025-09-10T13:33:23.299Z",
+      "updatedAt": "2025-09-10T13:35:06.337Z"
+    },
+    {
+      "id": "cmfe0xrsx00168omkdd1s7pgf",
+      "name": null,
+      "description": null,
+      "type": "DIRECT",
+      "createdAt": "2025-09-10T13:37:27.295Z",
+      "updatedAt": "2025-09-10T13:37:27.295Z"
+    }
+  ],
+  "conversationParticipants": [
+    {
+      "id": "cmfdvwa2o00038omk4ixaovs4",
+      "conversationId": "cmfdvwa2n00008omk237fukhk",
+      "userId": "cmfdvuch3000y8olevdwub8ou",
+      "role": "MEMBER",
+      "joinedAt": "2025-09-10T11:16:19.583Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfdvwa2o00048omkg6qv78te",
+      "conversationId": "cmfdvwa2n00008omk237fukhk",
+      "userId": "cmfdvuch300108oleedb9hewm",
+      "role": "MEMBER",
+      "joinedAt": "2025-09-10T11:16:19.583Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfdvwa2o00028omk0gjhb4x3",
+      "conversationId": "cmfdvwa2n00008omk237fukhk",
+      "userId": "cmfdvucn600118ole4ze43tax",
+      "role": "OWNER",
+      "joinedAt": "2025-09-10T11:16:19.583Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfdw143q000a8omkzcnuyb4a",
+      "conversationId": "cmfdw143q00078omkbccgn5vj",
+      "userId": "cmfdvucaw000b8oleq9z2m27y",
+      "role": "MEMBER",
+      "joinedAt": "2025-09-10T11:20:05.126Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfdw143q000b8omk45vm9o1n",
+      "conversationId": "cmfdw143q00078omkbccgn5vj",
+      "userId": "cmfdvuch300108oleedb9hewm",
+      "role": "MEMBER",
+      "joinedAt": "2025-09-10T11:20:05.126Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfdw143q00098omkehfkivfy",
+      "conversationId": "cmfdw143q00078omkbccgn5vj",
+      "userId": "cmfdvucn600118ole4ze43tax",
+      "role": "OWNER",
+      "joinedAt": "2025-09-10T11:20:05.126Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfdw1dw6000f8omkw0idtoli",
+      "conversationId": "cmfdw1dw6000c8omkyea5tnu0",
+      "userId": "cmfdvucaw000b8oleq9z2m27y",
+      "role": "MEMBER",
+      "joinedAt": "2025-09-10T11:20:17.814Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfdw1dw6000h8omkhxfbq4fg",
+      "conversationId": "cmfdw1dw6000c8omkyea5tnu0",
+      "userId": "cmfdvucgm000g8olec2v85jjr",
+      "role": "MEMBER",
+      "joinedAt": "2025-09-10T11:20:17.814Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfdw1dw6000g8omkiqykhgc9",
+      "conversationId": "cmfdw1dw6000c8omkyea5tnu0",
+      "userId": "cmfdvuch300108oleedb9hewm",
+      "role": "MEMBER",
+      "joinedAt": "2025-09-10T11:20:17.814Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfdw1dw6000e8omkb6vgqs55",
+      "conversationId": "cmfdw1dw6000c8omkyea5tnu0",
+      "userId": "cmfdvucn600118ole4ze43tax",
+      "role": "OWNER",
+      "joinedAt": "2025-09-10T11:20:17.814Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfe0r12v000v8omkrw0g90iz",
+      "conversationId": "cmfe0r12v000s8omkkv93ywvr",
+      "userId": "cmfdvucaw000b8oleq9z2m27y",
+      "role": "MEMBER",
+      "joinedAt": "2025-09-10T13:32:12.724Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfe0r12v000u8omkcad31t5y",
+      "conversationId": "cmfe0r12v000s8omkkv93ywvr",
+      "userId": "cmfdvucn600118ole4ze43tax",
+      "role": "OWNER",
+      "joinedAt": "2025-09-10T13:32:12.724Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfe0sjj600118omkceczsknb",
+      "conversationId": "cmfe0sjj6000y8omkrhdnidtl",
+      "userId": "cmfdvucaw000b8oleq9z2m27y",
+      "role": "MEMBER",
+      "joinedAt": "2025-09-10T13:33:23.299Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfe0sjj600138omks94pgkxs",
+      "conversationId": "cmfe0sjj6000y8omkrhdnidtl",
+      "userId": "cmfdvucgm000g8olec2v85jjr",
+      "role": "MEMBER",
+      "joinedAt": "2025-09-10T13:33:23.299Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfe0sjj600128omk4aic6mw3",
+      "conversationId": "cmfe0sjj6000y8omkrhdnidtl",
+      "userId": "cmfdvuch300108oleedb9hewm",
+      "role": "MEMBER",
+      "joinedAt": "2025-09-10T13:33:23.299Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfe0sjj600108omkby9zj34y",
+      "conversationId": "cmfe0sjj6000y8omkrhdnidtl",
+      "userId": "cmfdvucn600118ole4ze43tax",
+      "role": "OWNER",
+      "joinedAt": "2025-09-10T13:33:23.299Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfe0xrsx00198omkkm9im7t4",
+      "conversationId": "cmfe0xrsx00168omkdd1s7pgf",
+      "userId": "cmfdvuch300108oleedb9hewm",
+      "role": "MEMBER",
+      "joinedAt": "2025-09-10T13:37:27.295Z",
+      "lastSeenAt": null
+    },
+    {
+      "id": "cmfe0xrsx00188omk1xjbr3db",
+      "conversationId": "cmfe0xrsx00168omkdd1s7pgf",
+      "userId": "cmfdvucn600118ole4ze43tax",
+      "role": "OWNER",
+      "joinedAt": "2025-09-10T13:37:27.295Z",
+      "lastSeenAt": null
+    }
+  ],
+  "chatMessages": [
+    {
+      "id": "cmfdvz84u00068omkg52m6sby",
+      "content": "Chat message...",
+      "userName": "Admin User",
+      "userId": "cmfdvucn600118ole4ze43tax",
+      "conversationId": "cmfdvwa2n00008omk237fukhk",
+      "roomName": null,
+      "createdAt": "2025-09-10T11:18:37.038Z",
+      "updatedAt": "2025-09-10T11:18:37.038Z"
+    },
+    {
+      "id": "cmfdyr2jg000j8omk62pfydcs",
+      "content": "group 2 texts",
+      "userName": "Admin User",
+      "userId": "cmfdvucn600118ole4ze43tax",
+      "conversationId": "cmfdw1dw6000c8omkyea5tnu0",
+      "roomName": null,
+      "createdAt": "2025-09-10T12:36:15.387Z",
+      "updatedAt": "2025-09-10T12:36:15.387Z"
+    },
+    {
+      "id": "cmfdyrc5p000l8omk0o9evyru",
+      "content": "hello",
+      "userName": "Jean Kirstein",
+      "userId": "cmfdvucaw000b8oleq9z2m27y",
+      "conversationId": "cmfdw1dw6000c8omkyea5tnu0",
+      "roomName": null,
+      "createdAt": "2025-09-10T12:36:27.854Z",
+      "updatedAt": "2025-09-10T12:36:27.854Z"
+    },
+    {
+      "id": "cmfe0jz3s000n8omkl7j47xza",
+      "content": "hi",
+      "userName": "Jean Kirstein",
+      "userId": "cmfdvucaw000b8oleq9z2m27y",
+      "conversationId": "cmfdw1dw6000c8omkyea5tnu0",
+      "roomName": null,
+      "createdAt": "2025-09-10T13:26:43.576Z",
+      "updatedAt": "2025-09-10T13:26:43.576Z"
+    },
+    {
+      "id": "cmfe0k87z000p8omktot49g6d",
+      "content": "hey",
+      "userName": "Admin User",
+      "userId": "cmfdvucn600118ole4ze43tax",
+      "conversationId": "cmfdw1dw6000c8omkyea5tnu0",
+      "roomName": null,
+      "createdAt": "2025-09-10T13:26:55.391Z",
+      "updatedAt": "2025-09-10T13:26:55.391Z"
+    },
+    {
+      "id": "cmfe0p632000r8omkd2cdedqr",
+      "content": "Hello~~~",
+      "userName": "Jean Kirstein",
+      "userId": "cmfdvucaw000b8oleq9z2m27y",
+      "conversationId": "cmfdw1dw6000c8omkyea5tnu0",
+      "roomName": null,
+      "createdAt": "2025-09-10T13:30:45.902Z",
+      "updatedAt": "2025-09-10T13:30:45.902Z"
+    },
+    {
+      "id": "cmfe0rr2v000x8omkfjos7vnz",
+      "content": "Hello",
+      "userName": "Admin User",
+      "userId": "cmfdvucn600118ole4ze43tax",
+      "conversationId": "cmfe0r12v000s8omkkv93ywvr",
+      "roomName": null,
+      "createdAt": "2025-09-10T13:32:46.423Z",
+      "updatedAt": "2025-09-10T13:32:46.423Z"
+    },
+    {
+      "id": "cmfe0uqvf00158omku940s7tm",
+      "content": "Channel tests",
+      "userName": "Admin User",
+      "userId": "cmfdvucn600118ole4ze43tax",
+      "conversationId": "cmfe0sjj6000y8omkrhdnidtl",
+      "roomName": null,
+      "createdAt": "2025-09-10T13:35:06.124Z",
+      "updatedAt": "2025-09-10T13:35:06.124Z"
+    },
+    {
+      "id": "cmfe239q9001b8omkpq31pw3a",
+      "content": "Hi",
+      "userName": "Jean Kirstein",
+      "userId": "cmfdvucaw000b8oleq9z2m27y",
+      "conversationId": "cmfe0r12v000s8omkkv93ywvr",
+      "roomName": null,
+      "createdAt": "2025-09-10T14:09:43.425Z",
+      "updatedAt": "2025-09-10T14:09:43.425Z"
+    },
+    {
+      "id": "cmfe2v8ph001d8omkhn063mwh",
+      "content": "realtime messages",
+      "userName": "Jean Kirstein",
+      "userId": "cmfdvucaw000b8oleq9z2m27y",
+      "conversationId": "cmfe0r12v000s8omkkv93ywvr",
+      "roomName": null,
+      "createdAt": "2025-09-10T14:31:28.469Z",
+      "updatedAt": "2025-09-10T14:31:28.469Z"
+    },
+    {
+      "id": "cmff9bx8f00018opcrgkr37zf",
+      "content": "Day 3 test",
+      "userName": "Jean Kirstein",
+      "userId": "cmfdvucaw000b8oleq9z2m27y",
+      "conversationId": "cmfe0r12v000s8omkkv93ywvr",
+      "roomName": null,
+      "createdAt": "2025-09-11T10:20:10.622Z",
+      "updatedAt": "2025-09-11T10:20:10.622Z"
+    },
+    {
+      "id": "cmff9cdju00038opcztw17m99",
+      "content": "Day 3 test 2",
+      "userName": "Jean Kirstein",
+      "userId": "cmfdvucaw000b8oleq9z2m27y",
+      "conversationId": "cmfe0r12v000s8omkkv93ywvr",
+      "roomName": null,
+      "createdAt": "2025-09-11T10:20:31.770Z",
+      "updatedAt": "2025-09-11T10:20:31.770Z"
+    },
+    {
+      "id": "cmfgmjkhd00018ohae8zcnwji",
+      "content": "Hi on Friday",
+      "userName": "Jean Kirstein",
+      "userId": "cmfdvucaw000b8oleq9z2m27y",
+      "conversationId": "cmfe0r12v000s8omkkv93ywvr",
+      "roomName": null,
+      "createdAt": "2025-09-12T09:17:48.528Z",
+      "updatedAt": "2025-09-12T09:17:48.528Z"
+    }
+  ],
+  "exportedAt": "2025-09-12T09:57:21.229Z",
+  "totalConversations": 6,
+  "totalParticipants": 18,
+  "totalMessages": 13
+}

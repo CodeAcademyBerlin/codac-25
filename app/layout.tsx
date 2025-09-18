@@ -6,6 +6,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 
 import { HeaderProvider } from "@/components/header-provider";
+import { NotificationToasts } from "@/components/notifications/notification-toasts";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -85,6 +86,7 @@ export default function RootLayout({
       >
         <Providers>
           <HeaderProvider>{children}</HeaderProvider>
+          <NotificationToasts />
         </Providers>
         <Toaster />
       </body>
