@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import { Prisma } from '@prisma/client';
-import { type Value } from 'platejs';
+// import { type Value } from 'platejs';
 import { z } from 'zod';
 
 import { getCurrentUser } from '@/lib/auth/auth-utils';
@@ -88,15 +88,8 @@ export async function createDocument(
             },
         });
 
-        // If this is a project summary document, update the project
-        if (validatedInput.projectId && validatedInput.documentType === 'project_summary') {
-            await prisma.project.update({
-                where: { id: validatedInput.projectId },
-                data: {
-                    summaryDocumentId: document.id,
-                },
-            });
-        }
+        // Note: Project model doesn't have a summaryDocumentId field
+        // The relationship is handled through the Document model's projectId field
 
         // Revalidate relevant pages
         if (validatedInput.projectId) {
@@ -127,6 +120,11 @@ export async function createDocument(
             };
         }
 
-        return handlePrismaError(error);
+        return {
+            success: false,
+            error: error instanceof Prisma.PrismaClientKnownRequestError 
+                ? handlePrismaError(error)
+                : 'An unexpected error occurred',
+        };
     }
 }

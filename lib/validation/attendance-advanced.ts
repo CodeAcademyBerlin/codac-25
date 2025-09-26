@@ -418,7 +418,7 @@ export async function validateAttendanceOperation(
       case 'update':
         const recordValidation = attendanceRecordValidationSchema.safeParse(operation.data);
         if (!recordValidation.success) {
-          allErrors.push(...recordValidation.error.errors.map(e => `${e.path.join('.')}: ${e.message}`));
+          allErrors.push(...recordValidation.error.issues.map(e => `${e.path.join('.')}: ${e.message}`));
         } else {
           const dateValidation = validateAttendanceDate(recordValidation.data.date, operation.context);
           allErrors.push(...dateValidation.errors);
@@ -429,14 +429,14 @@ export async function validateAttendanceOperation(
       case 'export':
         const exportValidation = attendanceExportValidationSchema.safeParse(operation.data);
         if (!exportValidation.success) {
-          allErrors.push(...exportValidation.error.errors.map(e => `${e.path.join('.')}: ${e.message}`));
+          allErrors.push(...exportValidation.error.issues.map(e => `${e.path.join('.')}: ${e.message}`));
         }
         break;
 
       case 'import':
         const importValidation = attendanceImportValidationSchema.safeParse(operation.data);
         if (!importValidation.success) {
-          allErrors.push(...importValidation.error.errors.map(e => `${e.path.join('.')}: ${e.message}`));
+          allErrors.push(...importValidation.error.issues.map(e => `${e.path.join('.')}: ${e.message}`));
         }
         break;
     }

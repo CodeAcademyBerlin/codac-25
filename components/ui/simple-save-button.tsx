@@ -28,11 +28,6 @@ export function SimpleSaveButton({
   const [saveState, setSaveState] = React.useState<SaveState>('idle');
   const [lastSaved, setLastSaved] = React.useState<Date | null>(null);
 
-  // Don't render during SSR if editor is not available
-  if (!editor) {
-    return null;
-  }
-
   // Get documentId from plugin options if not provided as prop
   const pluginDocumentId = usePluginOption(savePlugin, 'documentId') ?? '';
   const documentId = propDocumentId || pluginDocumentId;
@@ -65,6 +60,11 @@ export function SimpleSaveButton({
       setTimeout(() => setSaveState('idle'), 3000);
     }
   }, [editor, documentId, onSave]);
+
+  // Don't render during SSR if editor is not available
+  if (!editor) {
+    return null;
+  }
 
   const getTooltip = () => {
     switch (saveState) {

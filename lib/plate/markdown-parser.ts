@@ -31,7 +31,7 @@ export async function parseMarkdownFile(filePath: string): Promise<ParsedMarkdow
     try {
         const content = readFileSync(fullPath, 'utf-8');
         return parseMarkdownContent(content, filePath);
-    } catch (error) {
+    } catch (_error) {
         throw new Error(`Failed to read markdown file: ${filePath}`);
     }
 }
@@ -145,12 +145,12 @@ export function getLMSContentStructure(): Record<string, string[]> {
     for (const file of files) {
         const parts = file.split('/');
         if (parts.length >= 2) {
-            const module = parts[0];
-            if (module && !structure[module]) {
-                structure[module] = [];
+            const moduleName = parts[0];
+            if (moduleName && !structure[moduleName]) {
+                structure[moduleName] = [];
             }
-            if (module) {
-                structure[module]!.push(file);
+            if (moduleName) {
+                structure[moduleName]!.push(file);
             }
         }
     }

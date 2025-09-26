@@ -186,7 +186,7 @@ export function handleValidationError(
   const errorId = requestId || crypto.randomUUID();
 
   if (error instanceof z.ZodError) {
-    const formattedErrors = error.errors.map(e => ({
+    const formattedErrors = error.issues.map(e => ({
       field: e.path.join('.'),
       message: e.message,
       code: e.code
@@ -295,7 +295,7 @@ export async function validateAttendanceRequest(
     if (!schemaValidation.success) {
       return {
         success: false,
-        errors: schemaValidation.error.errors.map(e => `${e.path.join('.')}: ${e.message}`)
+        errors: schemaValidation.error.issues.map(e => `${e.path.join('.')}: ${e.message}`)
       };
     }
 

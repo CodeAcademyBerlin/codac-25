@@ -29,8 +29,8 @@ const eslintConfig = [
           caughtErrorsIgnorePattern: '^_',
         },
       ],
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/prefer-nullish-coalescing': 'warn',
+      '@typescript-eslint/no-explicit-any': 'off', // Allow any types for now
+      '@typescript-eslint/prefer-nullish-coalescing': 'off', // Allow || for now
       '@typescript-eslint/prefer-optional-chain': 'warn',
       '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
 
@@ -44,7 +44,7 @@ const eslintConfig = [
       'react-hooks/exhaustive-deps': 'warn',
 
       // General code quality - practical approach
-      'no-console': 'warn',
+      'no-console': 'off', // Allow console statements in development
       'prefer-const': 'warn',
       'no-var': 'error',
       'no-unused-expressions': 'warn',

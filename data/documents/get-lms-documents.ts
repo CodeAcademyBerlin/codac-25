@@ -268,7 +268,7 @@ export async function getRelatedLMSDocuments(slug: string): Promise<{
 /**
  * Build access filter based on user role
  */
-function buildAccessFilter(access: string, userRole?: string) {
+function buildAccessFilter(_access: string, _userRole?: string) {
     // Admin can access everything
     if (userRole === 'ADMIN') {
         return {};

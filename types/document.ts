@@ -1,4 +1,4 @@
-import type { Value } from '@udecode/plate-common';
+import type { Value } from 'platejs';
 
 // Document Discussion Types - matching Plate.js discussion kit
 export interface DocumentDiscussion {

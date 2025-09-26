@@ -146,7 +146,6 @@ export async function createProjectFromGitHub(
           additionalData?.description ||
           repository.description ||
           `A project from ${repository.name}`,
-        summary: Prisma.JsonNull, // Can be populated later with rich content
         shortDesc:
           additionalData?.shortDesc ||
           repository.description ||

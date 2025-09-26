@@ -81,15 +81,13 @@ export async function createDocumentComment(
         // Create the document comment
         const comment = await prisma.documentComment.create({
             data: {
-                content: validatedInput.content as Prisma.InputJsonValue,
+                contentRich: validatedInput.content as Prisma.InputJsonValue,
                 discussionId: validatedInput.discussionId,
-                documentId: validatedInput.documentId,
-                authorId: user.id,
+                userId: user.id,
                 parentId: validatedInput.parentId,
-                documentContent: validatedInput.documentContent,
             },
             include: {
-                author: {
+                user: {
                     select: {
                         id: true,
                         name: true,
@@ -130,6 +128,11 @@ export async function createDocumentComment(
             };
         }
 
-        return handlePrismaError(error);
+        return {
+            success: false,
+            error: error instanceof Prisma.PrismaClientKnownRequestError 
+                ? handlePrismaError(error)
+                : 'An unexpected error occurred',
+        };
     }
 }

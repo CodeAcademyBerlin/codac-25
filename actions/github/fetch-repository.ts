@@ -32,7 +32,7 @@ export async function fetchRepository(
     const validationResult = fetchRepositorySchema.safeParse(input);
     if (!validationResult.success) {
       const errorMessage =
-        validationResult.error.errors[0]?.message || 'Invalid input';
+        validationResult.error.issues[0]?.message || 'Invalid input';
       return {
         success: false,
         error: errorMessage,

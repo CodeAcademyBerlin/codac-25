@@ -1,10 +1,10 @@
+import { VerticalToolbarSkeleton } from '@/components/skeleton/vertical-toolbar-skeletob';
 import {
   ResizablePanelGroup,
   ResizablePanel,
   ResizableHandle,
 } from '@/components/ui/resizable';
 import { Skeleton } from '@/components/ui/skeleton';
-import { VerticalToolbarSkeleton } from '@/components/skeleton/vertical-toolbar-skeletob';
 
 const SIDE_PANEL_DEFAULT_SIZE = 15;
 const MAIN_PANEL_DEFAULT_SIZE = 100 - SIDE_PANEL_DEFAULT_SIZE;

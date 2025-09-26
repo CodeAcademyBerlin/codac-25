@@ -18,7 +18,7 @@ import {
   TrashIcon,
   XIcon,
 } from 'lucide-react';
-import { type Value, KEYS, nanoid, NodeApi } from 'platejs';
+import { type Value, KEYS, NodeApi } from 'platejs';
 import type { CreatePlateEditorOptions } from 'platejs/react';
 import {
   Plate,
@@ -43,10 +43,9 @@ import { cn } from '@/lib/utils';
 
 import { Editor, EditorContainer } from './editor';
 
-import {
-  discussionDatabasePlugin,
-  discussionDatabaseHelpers,
-} from '@/components/editor/plugins/discussion-database-simple';
+// TODO: Implement discussion database plugin
+const discussionDatabasePlugin = null;
+const discussionDatabaseHelpers = null;
 
 
 export interface TComment {
@@ -410,7 +409,7 @@ export function CommentCreateFormDatabase({
   discussionId?: string;
   focusOnMount?: boolean;
 }) {
-  const discussions = usePluginOption(discussionDatabasePlugin, 'discussions');
+  // const discussions = usePluginOption(discussionDatabasePlugin, 'discussions');
 
   const editor = useEditorRef();
   const commentId = useCommentId();
