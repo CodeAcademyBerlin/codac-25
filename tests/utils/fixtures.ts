@@ -14,6 +14,7 @@ export const mockUser: User = {
   id: 'user-123',
   email: 'test@example.com',
   name: 'Test User',
+  username: 'testuser',
   avatar: null,
   bio: null,
   role: 'STUDENT' as UserRole,

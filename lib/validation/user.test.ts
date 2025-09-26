@@ -53,7 +53,7 @@ describe('User Validation Schemas', () => {
         expect(result.success).toBe(false);
         if (!result.success) {
           expect(
-            result.error.errors.some(err => err.path.includes('email'))
+            result.error.issues.some(err => err.path.includes('email'))
           ).toBe(true);
         }
       });
@@ -167,7 +167,7 @@ describe('User Validation Schemas', () => {
         expect(result.success).toBe(false);
         if (!result.success) {
           expect(
-            result.error.errors.some(
+            result.error.issues.some(
               err =>
                 err.path.includes(field) && err.message.includes('too long')
             )
@@ -195,11 +195,11 @@ describe('User Validation Schemas', () => {
       const result = createUserSchema.safeParse(incompleteData);
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.errors.some(err => err.path.includes('role'))).toBe(
+        expect(result.error.issues.some(err => err.path.includes('role'))).toBe(
           true
         );
         expect(
-          result.error.errors.some(err => err.path.includes('status'))
+          result.error.issues.some(err => err.path.includes('status'))
         ).toBe(true);
       }
     });

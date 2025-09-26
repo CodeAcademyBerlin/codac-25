@@ -17,14 +17,7 @@ export function SaveToolbarButton(
   const [saveState, setSaveState] = React.useState<SaveState>('idle');
   const [lastSaved, setLastSaved] = React.useState<Date | null>(null);
 
-  // Don't render during SSR if editor is not available
-  if (!editor) {
-    return null;
-  }
-
   // Safely access plugin options with fallbacks
-  const isAutoSaveEnabled =
-    usePluginOption(savePlugin, 'isAutoSaveEnabled') ?? true;
   const documentId = usePluginOption(savePlugin, 'documentId') ?? '';
 
   const handleSave = React.useCallback(async () => {
@@ -50,6 +43,11 @@ export function SaveToolbarButton(
       setTimeout(() => setSaveState('idle'), 3000);
     }
   }, [editor, documentId]);
+
+  // Don't render during SSR if editor is not available
+  if (!editor) {
+    return null;
+  }
 
   const getTooltip = () => {
     switch (saveState) {
@@ -100,20 +98,11 @@ export function SaveStateMenu(
   const [lastSaved, setLastSaved] = React.useState<Date | null>(null);
   const [autoSaveEnabled, setAutoSaveEnabled] = React.useState(true);
 
-  // Don't render during SSR if editor is not available
-  if (!editor) {
-    return null;
-  }
-
   // Safely access plugin options with fallbacks
   const isAutoSaveEnabledOption =
     usePluginOption(savePlugin, 'isAutoSaveEnabled') ?? true;
   const documentId = usePluginOption(savePlugin, 'documentId') ?? '';
-  const saveDelay = usePluginOption(savePlugin, 'saveDelay') ?? 2000;
-
-  React.useEffect(() => {
-    setAutoSaveEnabled(isAutoSaveEnabledOption);
-  }, [isAutoSaveEnabledOption]);
+  // const saveDelay = usePluginOption(savePlugin, 'saveDelay') ?? 2000;
 
   const handleSave = React.useCallback(async () => {
     if (!editor || !documentId) return;
@@ -137,6 +126,10 @@ export function SaveStateMenu(
     }
   }, [editor, documentId]);
 
+  React.useEffect(() => {
+    setAutoSaveEnabled(isAutoSaveEnabledOption);
+  }, [isAutoSaveEnabledOption]);
+
   const toggleAutoSave = React.useCallback(() => {
     if (!editor) return;
 
@@ -145,6 +138,11 @@ export function SaveStateMenu(
     // Note: Auto-save toggle would need to be handled at the component level
     // since the plugin doesn't support boolean toggles directly
   }, [editor, autoSaveEnabled]);
+
+  // Don't render during SSR if editor is not available
+  if (!editor) {
+    return null;
+  }
 
   const getStatusText = () => {
     switch (saveState) {

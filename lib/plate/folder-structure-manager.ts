@@ -62,7 +62,7 @@ export class FolderStructureManager {
 
             // Create subfolders if needed
             const subfolders = this.extractSubfolders(files);
-            for (const [subfolderName, subfolderFiles] of Object.entries(subfolders)) {
+            for (const [subfolderName, _subfolderFiles] of Object.entries(subfolders)) {
                 const subfolderId = await this.createOrGetFolder({
                     name: this.formatFolderName(subfolderName),
                     description: `Content for ${subfolderName}`,
@@ -244,7 +244,7 @@ export class FolderStructureManager {
     /**
      * Get subfolder icon
      */
-    private getSubfolderIcon(name: string): string {
+    private getSubfolderIcon(_name: string): string {
         return 'folder-open';
     }
 

@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 
 import { z } from 'zod';
+import { Prisma } from '@prisma/client';
 
 import { getCurrentUser } from '@/lib/auth/auth-utils';
 import { prisma } from '@/lib/db';
@@ -38,7 +39,7 @@ export async function deleteDocumentComment(
         const existingComment = await prisma.documentComment.findFirst({
             where: {
                 id: validatedInput.id,
-                authorId: user.id,
+                userId: user.id,
             },
         });
 
@@ -60,7 +61,7 @@ export async function deleteDocumentComment(
         });
 
         // Revalidate relevant pages
-        revalidatePath(`/projects/${existingComment.documentId}`);
+        // Note: DocumentComment doesn't have direct documentId, revalidate general pages
         revalidatePath('/projects');
 
         logger.info('Document comment deleted successfully', {
@@ -69,8 +70,8 @@ export async function deleteDocumentComment(
             resourceId: validatedInput.id,
             metadata: {
                 userId: user.id,
-                documentType: existingComment.documentType,
-                documentId: existingComment.documentId,
+                commentId: validatedInput.id,
+                discussionId: existingComment.discussionId,
             },
         });
 
@@ -86,6 +87,11 @@ export async function deleteDocumentComment(
             };
         }
 
-        return handlePrismaError(error);
+        return {
+            success: false,
+            error: error instanceof Prisma.PrismaClientKnownRequestError
+                ? handlePrismaError(error)
+                : 'An unexpected error occurred',
+        };
     }
 }

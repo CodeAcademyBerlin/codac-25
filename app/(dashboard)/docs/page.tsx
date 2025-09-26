@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { DocumentList } from '@/components/documents/document-list';
 import { FolderNavigation } from '@/components/documents/folder-navigation';
+import { VerticalToolbarSkeleton } from '@/components/skeleton/vertical-toolbar-skeletob';
 import {
   ResizablePanelGroup,
   ResizablePanel,
@@ -12,7 +13,6 @@ import {
   getFolderTreeWithDocuments,
 } from '@/data/documents/get-folders';
 import { requireServerAuth } from '@/lib/auth/auth-server';
-import { VerticalToolbarSkeleton } from '@/components/skeleton/vertical-toolbar-skeletob';
 
 interface DocumentsPageProps {
   searchParams: Promise<{

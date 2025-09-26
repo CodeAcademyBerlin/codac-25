@@ -64,7 +64,6 @@ export async function createProject(
       data: {
         title: data.title,
         description: data.description,
-        summary: data.summary,
         shortDesc: data.shortDesc,
         images: formattedImages,
         demoUrl: data.demoUrl || null,

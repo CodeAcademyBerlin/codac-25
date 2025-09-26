@@ -59,8 +59,11 @@ export function sanitizeForStatic(content: Value): Value {
  */
 export function createMinimalStaticEditor(value: Value) {
     // Import minimal plugins
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { BaseBasicBlocksKit } = require('@/components/editor/plugins/basic-blocks-base-kit');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { BaseBasicMarksKit } = require('@/components/editor/plugins/basic-marks-base-kit');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { BaseLinkKit } = require('@/components/editor/plugins/link-base-kit');
 
     const MinimalKit = [

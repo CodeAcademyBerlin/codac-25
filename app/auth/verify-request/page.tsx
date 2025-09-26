@@ -1,8 +1,8 @@
 import { Mail } from 'lucide-react';
 import Link from 'next/link';
 
-import { Button } from '@/components/ui/button';
 import { CodacLogo } from '@/components/codac-brand/codac-logo';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,

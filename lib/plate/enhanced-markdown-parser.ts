@@ -2,11 +2,11 @@ import { readFileSync, readdirSync, statSync } from 'fs';
 import { join } from 'path';
 
 import type { Value } from 'platejs';
-import rehypeStringify from 'rehype-stringify';
-import { remark } from 'remark';
-import remarkGfm from 'remark-gfm';
-import remarkMath from 'remark-math';
-import remarkRehype from 'remark-rehype';
+// import rehypeStringify from 'rehype-stringify';
+// import { remark } from 'remark';
+// import remarkGfm from 'remark-gfm';
+// import remarkMath from 'remark-math';
+// import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 
 export interface MarkdownMetadata {
@@ -36,12 +36,12 @@ const CONTENT_DIR = join(process.cwd(), 'content');
  * Enhanced markdown parser with Plate MCP and rehype plugins
  */
 export class EnhancedMarkdownParser {
-    private processor: ReturnType<typeof unified>;
+    // private processor: ReturnType<typeof unified>;
 
     constructor() {
         // Initialize a simple unified processor without problematic plugins for now
         // TODO: Fix plugin compatibility issues
-        this.processor = unified();
+        // this.processor = unified();
     }
 
     /**

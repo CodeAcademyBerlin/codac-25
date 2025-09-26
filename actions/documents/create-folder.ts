@@ -35,11 +35,7 @@ export async function createFolder(
             if (!parentFolder) {
                 return {
                     success: false,
-                    error: {
-                        form: 'Parent folder not found or access denied',
-                        id: '',
-                        name: '',
-                    },
+                    error: 'Parent folder not found or access denied',
                 };
             }
         }
@@ -100,22 +96,13 @@ export async function createFolder(
         if (error instanceof z.ZodError) {
             return {
                 success: false,
-                error: {
-                    form: 'Invalid input data',
-                    id: '',
-                    name: '',
-                    _errors: [],
-                },
+                error: 'Invalid input data',
             };
         }
 
         return {
             success: false,
-            error: {
-                form: 'Failed to create folder',
-                id: '',
-                name: '',
-            },
+            error: 'Failed to create folder',
         };
     }
 }

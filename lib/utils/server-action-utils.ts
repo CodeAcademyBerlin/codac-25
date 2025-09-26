@@ -9,8 +9,8 @@ export type ServerActionResult<T = unknown> =
   | { success: true; data: T }
   | {
       success: false;
-      error: string | z.ZodError['errors'];
-      validationErrors?: z.ZodError['errors'];
+      error: string | z.ZodIssue[];
+      validationErrors?: z.ZodIssue[];
     };
 
 // Common Prisma error handling
@@ -37,9 +37,9 @@ export function handlePrismaError(
 // Common validation error handling
 export function handleValidationError(
   error: unknown
-): string | z.ZodError['errors'] {
+): string | z.ZodIssue[] {
   if (error instanceof Error && error.name === 'ZodError') {
-    return (error as z.ZodError).errors;
+    return (error as z.ZodError).issues;
   }
   return 'Validation failed';
 }
@@ -99,7 +99,7 @@ export function createServerAction<TInput, TOutput>(
       if (error instanceof Error && error.name === 'ZodError') {
         logger.logValidationError(
           resourceName || 'unknown',
-          (error as z.ZodError).errors
+          (error as z.ZodError).issues
         );
         return { success: false, error: handleValidationError(error) };
       }
@@ -301,7 +301,7 @@ export async function handleServerAction<TInput, TOutput>(
       return {
         success: false,
         error: 'Invalid input data',
-        validationErrors: error.errors,
+        validationErrors: error.issues,
       };
     }
 

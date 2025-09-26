@@ -11,9 +11,9 @@ import { updateProjectSummary } from '../../../../../actions/projects/update-pro
 
 
 interface ProjectPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function ProjectEditPage({ params }: ProjectPageProps) {

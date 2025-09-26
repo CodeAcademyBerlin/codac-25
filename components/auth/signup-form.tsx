@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { oAuthSignIn } from "@/actions/auth/oauth-signin";
+import { CodacLogo } from "@/components/codac-brand/codac-logo";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { CodacLogo } from "@/components/codac-brand/codac-logo";
 import {
   Card,
   CardContent,

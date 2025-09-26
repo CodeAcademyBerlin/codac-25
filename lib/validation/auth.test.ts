@@ -40,7 +40,7 @@ describe('Auth Validation Schemas', () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(
-          result.error.errors.some(
+          result.error.issues.some(
             err =>
               err.path.includes('id') && err.message.includes('Invalid user ID')
           )
@@ -93,7 +93,7 @@ describe('Auth Validation Schemas', () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(
-          result.error.errors.some(
+          result.error.issues.some(
             err =>
               err.path.includes('email') &&
               err.message.includes('Invalid email')
@@ -172,7 +172,7 @@ describe('Auth Validation Schemas', () => {
         expect(result.success).toBe(false);
         if (!result.success) {
           expect(
-            result.error.errors.some(
+            result.error.issues.some(
               err =>
                 err.path.includes(field) && err.message.includes('too long')
             )

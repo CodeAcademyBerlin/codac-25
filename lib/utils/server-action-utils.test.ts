@@ -134,7 +134,7 @@ describe('Server Action Utils', () => {
 
       const result = handleValidationError(zodError);
       expect(Array.isArray(result)).toBe(true);
-      expect(result).toEqual(zodError.errors);
+      expect(result).toEqual(zodError.issues);
     });
 
     it('should handle non-Zod errors', () => {

@@ -50,7 +50,7 @@ export async function seedDocumentFolders(prisma: PrismaClient) {
         },
     });
 
-    const archiveFolder = await prisma.documentFolder.create({
+    const _archiveFolder = await prisma.documentFolder.create({
         data: {
             name: 'Archive',
             description: 'Old and completed documents',
@@ -136,7 +136,7 @@ export async function seedDocumentFolders(prisma: PrismaClient) {
         },
     });
 
-    const journalFolder = await prisma.documentFolder.create({
+    const _journalFolder = await prisma.documentFolder.create({
         data: {
             name: 'Journal',
             description: 'Daily thoughts and reflections',
@@ -161,7 +161,7 @@ export async function seedDocumentFolders(prisma: PrismaClient) {
         },
     });
 
-    const nextjsFolder = await prisma.documentFolder.create({
+    const _nextjsFolder = await prisma.documentFolder.create({
         data: {
             name: 'Next.js Projects',
             description: 'Next.js applications and configurations',

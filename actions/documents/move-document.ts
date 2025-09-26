@@ -92,7 +92,6 @@ export async function moveDocument(
             return {
                 success: false,
                 error: 'Invalid input data',
-                fieldErrors: error.flatten().fieldErrors,
             };
         }
 

@@ -1,8 +1,8 @@
 import { AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CodacLogo } from '@/components/codac-brand/codac-logo';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
   Card,

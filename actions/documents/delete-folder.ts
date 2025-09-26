@@ -146,7 +146,6 @@ export async function deleteFolder(
             return {
                 success: false,
                 error: 'Invalid input data',
-                fieldErrors: error.flatten().fieldErrors,
             };
         }
 
