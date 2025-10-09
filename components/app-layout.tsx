@@ -10,7 +10,7 @@ import { AppHeader } from './app-header';
 
 interface AppLayoutProps {
   children: React.ReactNode;
-  userProfile: UserProfile | null;
+  userProfile?: UserProfile | null;
 }
 
 export function AppLayout({ children, userProfile }: AppLayoutProps) {
@@ -18,7 +18,7 @@ export function AppLayout({ children, userProfile }: AppLayoutProps) {
     <SidebarProvider defaultOpen={true}>
       <AppSidebar />
       <SidebarInset>
-        <AppHeader userProfile={userProfile} />
+        <AppHeader userProfile={userProfile ?? null} />
         <div className='flex flex-1 flex-col'>{children}</div>
       </SidebarInset>
     </SidebarProvider>

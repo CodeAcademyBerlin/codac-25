@@ -1,4 +1,4 @@
-import { VerticalToolbarSkeleton } from '@/components/skeleton/vertical-toolbar-skeletob';
+import { VerticalToolbarSkeleton } from '@/components/skeleton/vertical-toolbar-skeleton';
 import {
   ResizableHandle,
   ResizablePanel,
@@ -14,7 +14,6 @@ const SIDE_PANEL_MAX_SIZE = 15;
 
 const MAIN_PANEL_MAX_SIZE = 100 - SIDE_PANEL_MIN_SIZE;
 const MAIN_PANEL_MIN_SIZE = 100 - SIDE_PANEL_MAX_SIZE;
-
 
 function DocumentSkeleton() {
   return (

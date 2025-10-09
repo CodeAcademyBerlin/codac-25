@@ -4,7 +4,7 @@ import { DocsPageSkeleton } from '@/components/documents/docs-page-skeleton';
 import { DocumentList } from '@/components/documents/document-list';
 import { DocumentPreview } from '@/components/documents/document-preview';
 import { DocumentPreviewSkeleton } from '@/components/documents/document-preview-skeleton';
-import { VerticalToolbarSkeleton } from '@/components/skeleton/vertical-toolbar-skeletob';
+import { VerticalToolbarSkeleton } from '@/components/skeleton/vertical-toolbar-skeleton';
 import {
   ResizableHandle,
   ResizablePanel,

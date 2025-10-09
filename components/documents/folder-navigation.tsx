@@ -41,7 +41,7 @@ import { Label } from '@/components/ui/label';
 import type { FolderTreeItem } from '@/data/documents/get-folders';
 import { cn } from '@/lib/utils';
 
-import { VerticalToolbarSkeleton } from '../skeleton/vertical-toolbar-skeletob';
+import { VerticalToolbarSkeleton } from '../skeleton/vertical-toolbar-skeleton';
 
 interface FolderNavigationProps {
   _treeDataPromise: Promise<{

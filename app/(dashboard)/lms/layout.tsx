@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { Suspense } from 'react';
 
 import { LMSNavigation } from '@/components/lms/lms-navigation';
-import { VerticalToolbarSkeleton } from '@/components/skeleton/vertical-toolbar-skeletob';
+import { VerticalToolbarSkeleton } from '@/components/skeleton/vertical-toolbar-skeleton';
 import {
   ResizableHandle,
   ResizablePanel,
@@ -27,10 +27,7 @@ const SIDE_PANEL_MAX_SIZE = 30;
 const MAIN_PANEL_MAX_SIZE = 100 - SIDE_PANEL_MIN_SIZE;
 const MAIN_PANEL_MIN_SIZE = 100 - SIDE_PANEL_MAX_SIZE;
 
-export default function LMSLayout({
-  children,
-}: LMSLayoutProps) {
-
+export default function LMSLayout({ children }: LMSLayoutProps) {
   return (
     <div className='min-h-screen bg-background'>
       <div className='h-[calc(100vh-4rem)] flex flex-col'>

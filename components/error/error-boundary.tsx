@@ -127,13 +127,3 @@ export class ErrorBoundary extends Component<
     return this.props.children;
   }
 }
-
-// Async Error Boundary Hook for handling async errors in components
-export function useAsyncError() {
-  const throwError = (error: Error) => {
-    // This will trigger the nearest error boundary
-    throw error;
-  };
-
-  return { throwError };
-}
