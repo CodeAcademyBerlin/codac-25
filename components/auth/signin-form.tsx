@@ -1,9 +1,13 @@
 'use client';
 
-import { signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import {
+  signInWithCredentials,
+  signInWithMagicLink,
+} from '@/actions/auth/signin';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/ui/icons';
@@ -13,6 +17,7 @@ import { Separator } from '@/components/ui/separator';
 
 interface SignInFormProps {
   callbackUrl?: string;
+  verifiedEmail?: string;
 }
 
 function getErrorMessage(error: string | undefined): string {
@@ -30,15 +35,16 @@ function getErrorMessage(error: string | undefined): string {
 
 export function SignInForm({
   callbackUrl: initialCallbackUrl,
+  verifiedEmail,
 }: SignInFormProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
 
   // Form state
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(verifiedEmail || '');
   const [password, setPassword] = useState('');
-  const [magicEmail, setMagicEmail] = useState('');
+  const [magicEmail, setMagicEmail] = useState(verifiedEmail || '');
   const [isCredentialsLoading, setIsCredentialsLoading] = useState(false);
   const [isMagicLinkLoading, setIsMagicLinkLoading] = useState(false);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
@@ -77,19 +83,24 @@ export function SignInForm({
     setError(undefined);
 
     try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-      });
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+      formData.append('callbackUrl', callbackUrl);
 
-      if (result?.error) {
+      const result = await signInWithCredentials(formData);
+
+      if (result.error) {
         setError(result.error);
-      } else if (result?.ok) {
-        router.push(callbackUrl);
+      } else if (result.success) {
+        router.push(result.redirectUrl || callbackUrl);
       }
-    } catch {
-      setError('An error occurred during sign in.');
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'An error occurred during sign in.';
+      setError(errorMessage);
     } finally {
       setIsCredentialsLoading(false);
     }
@@ -107,23 +118,27 @@ export function SignInForm({
     setError(undefined);
 
     try {
-      const result = await signIn('nodemailer', {
-        email: magicEmail,
-        redirect: false,
-        callbackUrl,
-      });
+      const formData = new FormData();
+      formData.append('email', magicEmail);
+      formData.append('callbackUrl', callbackUrl);
 
-      if (result?.error) {
+      const result = await signInWithMagicLink(formData);
+
+      if (result.error) {
         setError(result.error);
-      } else {
+      } else if (result.success) {
         setMagicLinkSent(true);
         // Redirect to verify-request page after a short delay
         setTimeout(() => {
-          router.push('/auth/verify-request');
+          router.push(result.redirectUrl || '/auth/verify-request');
         }, 1500);
       }
-    } catch {
-      setError('An error occurred while sending the magic link.');
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'An error occurred while sending the magic link.';
+      setError(errorMessage);
     } finally {
       setIsMagicLinkLoading(false);
     }
@@ -195,6 +210,16 @@ export function SignInForm({
         </Button>
       </form>
 
+      {/* Forgot Password Link */}
+      <div className='text-center'>
+        <a
+          href='/auth/forgot-password'
+          className='text-sm text-muted-foreground hover:text-primary hover:underline'
+        >
+          Forgot your password?
+        </a>
+      </div>
+
       {/* Separator */}
       <div className='relative'>
         <Separator className='my-6' />
@@ -212,8 +237,8 @@ export function SignInForm({
             🎓 Alumni Sign In
           </p>
           <p className='text-xs text-blue-700 dark:text-blue-300 mb-4'>
-            If you're an alumni, use your email to receive a magic sign-in link.
-            No password needed!
+            If you&apos;re an alumni, use your email to receive a magic sign-in
+            link. No password needed!
           </p>
 
           {magicLinkSent ? (

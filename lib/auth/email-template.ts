@@ -2,13 +2,14 @@
  * HTML email template for magic link authentication
  */
 export function html(params: { url: string; host: string; email: string }) {
-    const { url, host } = params;
+  const { url } = params;
 
-    const brandColor = '#8b5cf6'; // Purple from codac branding
-    const buttonColor = '#8b5cf6';
-    const buttonTextColor = '#ffffff';
+  const host = process.env.AUTH_URL || "http://localhost:3000";
+  const brandColor = '#8b5cf6'; // Purple from codac branding
+  const buttonColor = '#8b5cf6';
+  const buttonTextColor = '#ffffff';
 
-    return `
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,9 +23,10 @@ export function html(params: { url: string; host: string; email: string }) {
       <td align="center">
         <table width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
           
-          <!-- Header -->
+          <!-- Header with Logo -->
           <tr>
             <td style="padding: 40px 40px 0 40px; text-align: center;">
+              <img src="https://${host}/codac.png" alt="CODAC" style="height: 60px; width: auto; margin-bottom: 20px;" />
               <h1 style="margin: 0; font-size: 32px; font-weight: bold; background: linear-gradient(135deg, ${brandColor} 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
                 codac
               </h1>
@@ -88,12 +90,12 @@ export function html(params: { url: string; host: string; email: string }) {
  * Plain text email template for magic link authentication (fallback)
  */
 export function text(params: { url: string; host: string }) {
-    const { url, host } = params;
-    return `Sign in to CODAC\n\n` +
-        `Click the link below to sign in to your CODAC account:\n\n` +
-        `${url}\n\n` +
-        `This link will expire in 24 hours.\n\n` +
-        `If you didn't request this email, you can safely ignore it.\n\n` +
-        `© ${new Date().getFullYear()} CODAC - Share your learning journey with the community.`;
+  const { url, host } = params;
+  return `Sign in to CODAC\n\n` +
+    `Click the link below to sign in to your CODAC account:\n\n` +
+    `${url}\n\n` +
+    `This link will expire in 24 hours.\n\n` +
+    `If you didn't request this email, you can safely ignore it.\n\n` +
+    `© ${new Date().getFullYear()} CODAC - Share your learning journey with the community.`;
 }
 

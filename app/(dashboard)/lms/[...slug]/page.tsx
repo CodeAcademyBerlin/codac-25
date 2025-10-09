@@ -1,13 +1,13 @@
 import { notFound, redirect } from 'next/navigation';
 
 import { DocumentStaticViewer } from '@/components/editor/document-static-viewer';
+import { PageContainer } from '@/components/layout';
 import {
   checkLMSDocumentAccess,
   getLMSDocumentBySlug,
   getRelatedLMSDocuments,
 } from '@/data/lms/get-lms-documents';
 import { requireServerAuth } from '@/lib/auth/auth-server';
-
 interface LMSContentPageProps {
   params: Promise<{
     slug: string[];
@@ -98,67 +98,65 @@ export default async function LMSContentPage({ params }: LMSContentPageProps) {
     const { prev, next } = await getRelatedLMSDocuments(slug);
 
     return (
-      <div className='h-full overflow-y-auto'>
-        <div className='container mx-auto p-6'>
-          <div className='space-y-6'>
-            {/* Document header */}
-            <div className='space-y-2'>
-              <h1 className='text-4xl font-bold'>{document.title}</h1>
-              {document.description && (
-                <p className='text-lg text-muted-foreground'>
-                  {document.description}
-                </p>
-              )}
-              <div className='flex items-center gap-4 text-sm text-muted-foreground'>
-                <span>LMS Content</span>
-                <span>
-                  created: {new Date(document.createdAt).toLocaleDateString()}
-                </span>
-                <span>
-                  updated: {new Date(document.updatedAt).toLocaleDateString()}
-                </span>
-              </div>
-            </div>
-
-            {/* Document content rendered statically */}
-            <div className='border rounded-lg'>
-              <div className='p-6'>
-                <DocumentStaticViewer
-                  document={document}
-                  className='prose max-w-none'
-                  variant='server'
-                />
-              </div>
-            </div>
-
-            {/* Navigation */}
-            {(prev || next) && (
-              <div className='flex justify-between pt-6 border-t'>
-                {prev ? (
-                  <a
-                    href={`/lms/${prev.slug}`}
-                    className='inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50'
-                  >
-                    ← {prev.title ?? 'Previous'}
-                  </a>
-                ) : (
-                  <div />
-                )}
-                {next ? (
-                  <a
-                    href={`/lms/${next.slug}`}
-                    className='inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50'
-                  >
-                    {next.title ?? 'Next'} →
-                  </a>
-                ) : (
-                  <div />
-                )}
-              </div>
+      <PageContainer>
+        <div className='space-y-6'>
+          {/* Document header */}
+          <div className='space-y-2'>
+            <h1 className='text-4xl font-bold'>{document.title}</h1>
+            {document.description && (
+              <p className='text-lg text-muted-foreground'>
+                {document.description}
+              </p>
             )}
+            <div className='flex items-center gap-4 text-sm text-muted-foreground'>
+              <span>LMS Content</span>
+              <span>
+                created: {new Date(document.createdAt).toLocaleDateString()}
+              </span>
+              <span>
+                updated: {new Date(document.updatedAt).toLocaleDateString()}
+              </span>
+            </div>
           </div>
+
+          {/* Document content rendered statically */}
+          <div className='border rounded-lg'>
+            <div className='p-6'>
+              <DocumentStaticViewer
+                document={document}
+                className='prose max-w-none'
+                variant='server'
+              />
+            </div>
+          </div>
+
+          {/* Navigation */}
+          {(prev || next) && (
+            <div className='flex justify-between pt-6 border-t'>
+              {prev ? (
+                <a
+                  href={`/lms/${prev.slug}`}
+                  className='inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50'
+                >
+                  ← {prev.title ?? 'Previous'}
+                </a>
+              ) : (
+                <div />
+              )}
+              {next ? (
+                <a
+                  href={`/lms/${next.slug}`}
+                  className='inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50'
+                >
+                  {next.title ?? 'Next'} →
+                </a>
+              ) : (
+                <div />
+              )}
+            </div>
+          )}
         </div>
-      </div>
+      </PageContainer>
     );
   } catch (error) {
     // Log error in development only

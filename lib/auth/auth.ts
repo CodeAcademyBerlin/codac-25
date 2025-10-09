@@ -1,14 +1,14 @@
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import { UserRole, UserStatus } from "@prisma/client"
 import bcrypt from "bcryptjs"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
-import Nodemailer from "next-auth/providers/nodemailer"
+import Resend from "next-auth/providers/resend"
 
 import { prisma } from "@/lib/db/prisma"
 import { logger } from "@/lib/logger"
+
 import { html as emailHtml, text as emailText } from "./email-template"
 
 // Module augmentations are handled in types/next-auth.d.ts
@@ -53,45 +53,32 @@ if (customPrismaAdapter.createUser) {
       username = finalUsername;
     }
 
-    // Handle email for GitHub OAuth users (email might be null)
-    let email = user.email;
-    if (!email && user.name) {
-      // Generate a temporary email for GitHub users without public email
-      email = `${username}@github.local`;
+    // Beta phase: Check if user already exists before creating
+    const existingUser = await prisma.user.findUnique({
+      where: { email: user.email },
+    });
+
+    if (!existingUser) {
+      // Beta phase: Only allow existing users to sign in
+      logger.warn('Beta phase: Attempted sign-in by non-existing user', {
+        metadata: {
+          email: user.email,
+          provider: 'magic-link'
+        }
+      });
+      throw new Error('Access is currently limited to pre-registered users during the beta phase. Please contact support if you believe this is an error.');
     }
 
-    const userData = {
-      ...user,
-      email: email || `${username}@github.local`,
-      username,
-      role: 'STUDENT' as UserRole,
-      status: 'ACTIVE' as UserStatus,
-    };
-
-    logger.info('createUser data prepared', {
+    // Return existing user instead of creating new one
+    logger.info('Beta phase: Existing user signed in via magic link', {
       metadata: {
-        userId: userData.id,
-        email: userData.email,
-        username: userData.username,
-        role: userData.role,
-        status: userData.status
+        userId: existingUser.id,
+        email: existingUser.email,
+        username: existingUser.username
       }
     });
 
-    // Create user with username and email
-    const createdUser = await prisma.user.create({
-      data: userData,
-    });
-
-    logger.info('createUser successful', {
-      metadata: {
-        userId: createdUser.id,
-        email: createdUser.email,
-        username: createdUser.username
-      }
-    });
-
-    return createdUser;
+    return existingUser;
   };
 }
 
@@ -99,28 +86,60 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: customPrismaAdapter,
   trustHost: true,
   providers: [
-    Nodemailer({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: Number(process.env.EMAIL_SERVER_PORT),
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
-        },
-      },
-      from: process.env.EMAIL_FROM || process.env.EMAIL_SERVER_USER,
+    Resend({
+      apiKey: process.env.AUTH_RESEND_KEY,
+      from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
       sendVerificationRequest: async ({ identifier: email, url, provider }) => {
-        const { host } = new URL(url);
-        const nodemailer = await import('nodemailer');
-        const transport = nodemailer.createTransport(provider.server);
+        try {
+          // Beta phase: Check if user exists before sending magic link
+          const existingUser = await prisma.user.findUnique({
+            where: { email },
+          });
 
-        await transport.sendMail({
-          to: email,
-          from: provider.from,
-          subject: `Sign in to CODAC`,
-          text: emailText({ url, host }),
-          html: emailHtml({ url, host, email }),
-        });
+          if (!existingUser) {
+            logger.warn('Beta phase: Magic link requested for non-existing user', {
+              metadata: { email },
+            });
+            throw new Error('Access is currently limited to pre-registered users during the beta phase. Please contact support if you believe this is an error.');
+          }
+
+          const { host } = new URL(url);
+          const { Resend } = await import('resend');
+          const resend = new Resend(process.env.AUTH_RESEND_KEY);
+
+          logger.info('Attempting to send magic link email', {
+            metadata: {
+              to: email,
+              from: provider.from,
+              host: host || 'unknown',
+            }
+          });
+
+          const fromEmail: string = provider.from || 'onboarding@resend.dev';
+
+          const result = await resend.emails.send({
+            from: fromEmail,
+            to: email,
+            subject: 'Sign in to CODAC',
+            text: emailText({ url, host }),
+            html: emailHtml({ url, host, email }),
+          });
+
+          logger.info('Magic link email sent successfully', {
+            metadata: {
+              to: email,
+              emailId: result.data?.id,
+            }
+          });
+        } catch (err) {
+          const errorObj = err instanceof Error ? err : new Error(String(err));
+          logger.error('Failed to send magic link email', errorObj, {
+            metadata: {
+              to: email,
+            }
+          });
+          throw errorObj;
+        }
       },
     }),
     Google,

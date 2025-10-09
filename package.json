@@ -8,8 +8,6 @@
     "pnpm": ">=9.0.0"
   },
   "scripts": {
-    "migrate:images": "tsx scripts/migrate-base64-to-storage.ts",
-    "migrate:images:dry": "tsx scripts/migrate-base64-to-storage.ts --dry-run",
     "dev": "next dev --turbopack",
     "build": "prisma generate && next build",
     "start": "next start",
@@ -31,8 +29,6 @@
     "db:seed:prod": "tsx prisma/seed/seed.ts 1",
     "db:seed:dev": "tsx prisma/seed/seed.ts all",
     "lms:seed": "tsx scripts/seed-lms-content.ts",
-    "lms:seed:test": "tsx scripts/test-enhanced-seeding.ts",
-    "lms:check": "tsx scripts/check-lms-db.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
@@ -140,7 +136,6 @@
     "next": "15.3.3",
     "next-auth": "5.0.0-beta.28",
     "next-themes": "^0.4.6",
-    "nodemailer": "7.0.9",
     "pdf-lib": "1.17.1",
     "pg": "^8.12.0",
     "platejs": "^49.2.21",
@@ -191,7 +186,6 @@
     "@testing-library/user-event": "14.6.1",
     "@types/lodash": "4.17.20",
     "@types/node": "^22.18.6",
-    "@types/nodemailer": "7.0.2",
     "@types/pg": "^8.11.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",

@@ -1,6 +1,7 @@
 'use client';
 
 import { Calendar, Edit, MoreVertical, Share, Trash2 } from 'lucide-react';
+import Link from 'next/link';
 import { use } from 'react';
 
 import { ServerDocumentViewer } from '@/components/editor/document-static-viewer';
@@ -13,8 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import Link from 'next/link';
-
 import type { DocumentWithPlateContent } from '@/data/documents/get-document';
 
 interface DocumentPreviewProps {

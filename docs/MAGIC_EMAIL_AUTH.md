@@ -6,10 +6,10 @@ Magic email authentication has been implemented to allow alumni to join the CODA
 
 ## Features Implemented
 
-### 1. Nodemailer Provider
+### 1. Resend Provider
 
-- Integrated Nodemailer provider into NextAuth configuration
-- Configured SMTP server connection using environment variables
+- Integrated Resend provider into NextAuth configuration
+- Configured with Resend API key for reliable email delivery
 - Custom email templates with CODAC branding
 
 ### 2. Custom Email Templates
@@ -43,14 +43,11 @@ Magic email authentication has been implemented to allow alumni to join the CODA
 Make sure these variables are set in your `.env` file:
 
 ```bash
-# Email Server Configuration
-EMAIL_SERVER_HOST=smtp.example.com
-EMAIL_SERVER_PORT=587
-EMAIL_SERVER_USER=your-email@example.com
-EMAIL_SERVER_PASSWORD=your-password
+# Resend API Configuration
+AUTH_RESEND_KEY=re_your_api_key_here
 
-# Optional: Custom "from" address (defaults to EMAIL_SERVER_USER)
-EMAIL_FROM=noreply@codac.com
+# Optional: Custom "from" address (must be a verified domain in Resend)
+EMAIL_FROM=noreply@yourdomain.com
 ```
 
 ## How It Works
@@ -130,9 +127,9 @@ The following Prisma/NextAuth tables are involved:
 
 ### Modified:
 
-- `lib/auth/auth.ts` - Added Nodemailer provider
+- `lib/auth/auth.ts` - Added Resend provider
 - `components/auth/signin-form.tsx` - Added alumni magic link section
-- `package.json` - Added nodemailer dependencies
+- `package.json` - Added resend dependency
 
 ### Already Existed (No Changes):
 
@@ -142,10 +139,11 @@ The following Prisma/NextAuth tables are involved:
 
 ### Email Not Sending
 
-- Verify `EMAIL_SERVER_*` environment variables are correct
-- Check SMTP server credentials
-- Ensure SMTP port is accessible (common: 587 for TLS, 465 for SSL)
+- Verify `AUTH_RESEND_KEY` environment variable is set correctly
+- Ensure your Resend API key is active and valid
+- Check that the `EMAIL_FROM` address uses a verified domain in Resend
 - Check server logs for detailed error messages
+- Verify you haven't exceeded Resend's rate limits
 
 ### Magic Link Not Working
 
@@ -162,18 +160,20 @@ The following Prisma/NextAuth tables are involved:
 
 ## Production Considerations
 
-1. **Email Service**: Use a reliable email service (SendGrid, AWS SES, Mailgun, etc.)
-2. **Rate Limiting**: Consider implementing rate limiting on magic link requests
-3. **Email Verification**: Current implementation auto-verifies email on first sign-in
-4. **Logging**: Monitor email sending success/failure rates
-5. **Spam Prevention**: Ensure proper SPF/DKIM/DMARC records for your domain
+1. **Email Service**: Resend provides reliable email delivery with excellent deliverability
+2. **Domain Verification**: Verify your domain in Resend for better deliverability and custom "from" addresses
+3. **Rate Limiting**: Consider implementing rate limiting on magic link requests
+4. **Email Verification**: Current implementation auto-verifies email on first sign-in
+5. **Logging**: Monitor email sending success/failure rates in Resend dashboard
+6. **Spam Prevention**: Resend handles SPF/DKIM/DMARC automatically for verified domains
 
 ## Support
 
 For issues or questions:
 
 1. Check server logs for detailed error messages
-2. Verify environment variables are correctly set
-3. Test SMTP connection separately if emails aren't sending
-4. Review NextAuth documentation: https://next-auth.js.org/providers/email
-
+2. Verify environment variables are correctly set (`AUTH_RESEND_KEY`, `EMAIL_FROM`)
+3. Check Resend dashboard for email delivery status and logs
+4. Ensure your domain is verified in Resend for production use
+5. Review NextAuth documentation: https://next-auth.js.org/providers/email
+6. Review Resend documentation: https://resend.com/docs
