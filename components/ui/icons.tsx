@@ -33,4 +33,5 @@ export const Icons = {
     </svg>
   ),
   email: Mail,
+  mail: Mail,
 };

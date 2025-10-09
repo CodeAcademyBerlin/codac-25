@@ -52,7 +52,7 @@ export function ProjectCard({
   if (variant === 'list') {
     return (
       <Card className='group overflow-hidden hover:shadow-md transition-shadow'>
-        <div className='flex gap-4 p-6'>
+        <CardContent className='gap-4 p-6'>
           {/* Project Image */}
           {primaryImage && (
             <div className='flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32 overflow-hidden rounded-lg bg-muted'>
@@ -189,7 +189,7 @@ export function ProjectCard({
               </div>
             </div>
           </div>
-        </div>
+        </CardContent>
       </Card>
     );
   }

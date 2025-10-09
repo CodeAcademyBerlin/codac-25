@@ -5,9 +5,11 @@ import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
+import Nodemailer from "next-auth/providers/nodemailer"
 
 import { prisma } from "@/lib/db/prisma"
 import { logger } from "@/lib/logger"
+import { html as emailHtml, text as emailText } from "./email-template"
 
 // Module augmentations are handled in types/next-auth.d.ts
 
@@ -97,6 +99,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: customPrismaAdapter,
   trustHost: true,
   providers: [
+    Nodemailer({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: Number(process.env.EMAIL_SERVER_PORT),
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: process.env.EMAIL_FROM || process.env.EMAIL_SERVER_USER,
+      sendVerificationRequest: async ({ identifier: email, url, provider }) => {
+        const { host } = new URL(url);
+        const nodemailer = await import('nodemailer');
+        const transport = nodemailer.createTransport(provider.server);
+
+        await transport.sendMail({
+          to: email,
+          from: provider.from,
+          subject: `Sign in to CODAC`,
+          text: emailText({ url, host }),
+          html: emailHtml({ url, host, email }),
+        });
+      },
+    }),
     Google,
     GitHub({
       clientId: process.env.AUTH_GITHUB_ID,

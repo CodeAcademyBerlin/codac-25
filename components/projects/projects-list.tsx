@@ -19,8 +19,6 @@ import { Separator } from '@/components/ui/separator';
 import { ProjectDTO } from '@/data/projects/get-projects';
 import { useUrlFilters, type FilterState } from '@/lib/utils/url-utils';
 
-
-
 interface ProjectsListProps {
   _projectsPromise: Promise<ProjectDTO[]>;
   initialFilters: FilterState;

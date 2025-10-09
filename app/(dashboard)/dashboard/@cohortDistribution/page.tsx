@@ -14,7 +14,7 @@ import { getCohortDistribution } from '@/data/cohort/get-cohort-stats';
 export const dynamic = 'force-dynamic';
 
 export default async function CohortDistributionSlot() {
-  let cohortData = await getCohortDistribution();
+  const cohortData = await getCohortDistribution();
 
   return (
     <SectionErrorBoundary sectionName='cohort distribution'>
