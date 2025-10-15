@@ -17,7 +17,7 @@ export function AnimatedLandingContent() {
           ease: [0, 0.71, 0.2, 1.01],
         }}
       >
-        <CodacLeftAngleBracket size='8xl' animated />
+        <CodacLeftAngleBracket size='6xl' animated />
       </motion.div>
 
       <motion.div
@@ -31,7 +31,7 @@ export function AnimatedLandingContent() {
         }}
       >
         <h1
-          className='text-[15rem] uppercase font-codac-brand bg-gradient-to-br from-[#E77096] to-[#52EACE] bg-clip-text text-transparent'
+          className='text-[12rem] uppercase font-codac-brand bg-gradient-to-br from-[#E77096] to-[#52EACE] bg-clip-text text-transparent'
           style={{ WebkitTextStroke: '4px white' }}
         >
           codac
@@ -48,7 +48,7 @@ export function AnimatedLandingContent() {
           ease: [0, 0.71, 0.2, 1.01],
         }}
       >
-        <CodacRightAngleBracket size='8xl' animated />
+        <CodacRightAngleBracket size='6xl' animated />
       </motion.div>
     </div>
   );

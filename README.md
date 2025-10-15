@@ -23,7 +23,7 @@ Following the announcement of the academy's closure in 2025, the app was redesig
 - **Chat**: Built-in messaging system for direct and group conversations.
 - **Forum**: **Reddit-like** forum for sharing memories of the academy.
 
-### 📝 **Documents Editor (Notion-like)**
+### 📝 **Documents Editor**
 
 - **Unified Editor**: Plate.js-powered rich text editor with auto-save functionality.
 - **Document Management**: Hierarchical folder structure for organizing content.

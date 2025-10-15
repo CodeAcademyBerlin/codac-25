@@ -1,4 +1,4 @@
-import { Users, Calendar } from 'lucide-react';
+import { Calendar, Users } from 'lucide-react';
 import Link from 'next/link';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -28,8 +28,8 @@ export function CohortCard({ cohort }: CohortCardProps) {
   };
 
   const isActive = cohort.startDate <= new Date();
-  const statusColor = isActive ? 'bg-green-500' : 'bg-blue-500';
-  const statusText = isActive ? 'Active' : 'Upcoming';
+  const statusColor = isActive ? 'bg-purple-500' : 'bg-blue-500';
+  const statusText = isActive ? 'Completed' : 'Legacy';
 
   return (
     <Card className='transition-all duration-200 hover:shadow-lg border-border/50 hover:border-border'>

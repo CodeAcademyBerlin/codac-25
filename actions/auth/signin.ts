@@ -56,7 +56,12 @@ export async function signInWithCredentials(
             redirectUrl: callbackUrl,
         };
     } catch (error) {
+        // Next.js throws NEXT_REDIRECT when signIn is successful - this is not an error
         const errorMessage = error instanceof Error ? error.message : String(error);
+        if (errorMessage.includes("NEXT_REDIRECT")) {
+            throw error;
+        }
+
         logger.error(
             "Credentials sign-in failed",
             error instanceof Error ? error : new Error(String(error)),
@@ -105,7 +110,12 @@ export async function signInWithMagicLink(
             redirectUrl: "/auth/verify-request",
         };
     } catch (error) {
+        // Next.js throws NEXT_REDIRECT when signIn is successful - this is not an error
         const errorMessage = error instanceof Error ? error.message : String(error);
+        if (errorMessage.includes("NEXT_REDIRECT")) {
+            throw error;
+        }
+
         logger.error(
             "Magic link sign-in failed",
             error instanceof Error ? error : new Error(String(error)),
@@ -137,6 +147,12 @@ export async function signInWithOAuth(
             redirectTo: callbackUrl || "/",
         });
     } catch (error) {
+        // Next.js throws NEXT_REDIRECT when signIn is successful - this is not an error
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        if (errorMessage.includes("NEXT_REDIRECT")) {
+            throw error;
+        }
+
         logger.error(
             "OAuth sign-in failed",
             error instanceof Error ? error : new Error(String(error)),
@@ -161,6 +177,12 @@ export async function signOutAction(callbackUrl?: string): Promise<void> {
 
         logger.info("Sign-out successful");
     } catch (error) {
+        // Next.js throws NEXT_REDIRECT when signOut is successful - this is not an error
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        if (errorMessage.includes("NEXT_REDIRECT")) {
+            throw error;
+        }
+
         logger.error(
             "Sign-out failed",
             error instanceof Error ? error : new Error(String(error))

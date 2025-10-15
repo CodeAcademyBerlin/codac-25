@@ -1,4 +1,4 @@
-import { Users, Calendar, Search, Filter } from 'lucide-react';
+import { Calendar, Filter, Search, Users } from 'lucide-react';
 
 import { CohortCard } from '@/components/community/cohort-card';
 import { Badge } from '@/components/ui/badge';
@@ -42,7 +42,7 @@ export default async function CohortsPage() {
       <div className='mb-8'>
         <h1 className='text-4xl font-bold mb-2'>Cohorts</h1>
         <p className='text-xl text-muted-foreground'>
-          Explore our different cohorts and their specializations
+          Explore our completed cohorts and celebrate their remarkable achievements
         </p>
       </div>
 
@@ -55,27 +55,27 @@ export default async function CohortsPage() {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>{cohorts.length}</div>
-            <p className='text-xs text-muted-foreground'>All cohorts</p>
+            <p className='text-xs text-muted-foreground'>Successfully completed</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-sm font-medium'>
-              Active Cohorts
+              Graduated Cohorts
             </CardTitle>
             <Calendar className='h-4 w-4 text-muted-foreground' />
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold'>{activeCohorts.length}</div>
-            <p className='text-xs text-muted-foreground'>Currently running</p>
+            <p className='text-xs text-muted-foreground'>Concluded their journey</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-sm font-medium'>
-              Total Students
+              Total Alumni
             </CardTitle>
             <Users className='h-4 w-4 text-muted-foreground' />
           </CardHeader>
@@ -98,16 +98,16 @@ export default async function CohortsPage() {
         </Button>
       </div>
 
-      {/* Active Cohorts Section */}
+      {/* Completed Cohorts Section */}
       {activeCohorts.length > 0 && (
         <section className='mb-12'>
           <div className='flex items-center justify-between mb-6'>
             <div>
-              <h2 className='text-2xl font-bold mb-2'>Active Cohorts</h2>
-              <p className='text-muted-foreground'>Currently running cohorts</p>
+              <h2 className='text-2xl font-bold mb-2'>Completed Cohorts</h2>
+              <p className='text-muted-foreground'>Successfully concluded programs</p>
             </div>
             <Badge variant='secondary' className='text-sm'>
-              {activeCohorts.length} active
+              {activeCohorts.length} completed
             </Badge>
           </div>
 
@@ -119,16 +119,16 @@ export default async function CohortsPage() {
         </section>
       )}
 
-      {/* Upcoming Cohorts Section */}
+      {/* Legacy Cohorts Section */}
       {upcomingCohorts.length > 0 && (
         <section className='mb-12'>
           <div className='flex items-center justify-between mb-6'>
             <div>
-              <h2 className='text-2xl font-bold mb-2'>Upcoming Cohorts</h2>
-              <p className='text-muted-foreground'>Starting soon</p>
+              <h2 className='text-2xl font-bold mb-2'>Legacy Cohorts</h2>
+              <p className='text-muted-foreground'>Earlier cohorts from our academy</p>
             </div>
             <Badge variant='outline' className='text-sm'>
-              {upcomingCohorts.length} upcoming
+              {upcomingCohorts.length} legacy
             </Badge>
           </div>
 
@@ -146,7 +146,7 @@ export default async function CohortsPage() {
           <Users className='h-16 w-16 text-muted-foreground mx-auto mb-4' />
           <h3 className='text-lg font-semibold mb-2'>No cohorts found</h3>
           <p className='text-muted-foreground'>
-            There are no cohorts at the moment. Check back later!
+            The academy has completed its mission. Thank you to all our graduates!
           </p>
         </div>
       )}

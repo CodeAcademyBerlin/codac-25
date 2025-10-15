@@ -32,6 +32,12 @@ export async function authenticateWithCredentials(
       success: 'Sign-in successful',
     };
   } catch (error) {
+    // Next.js throws NEXT_REDIRECT when signIn is successful - this is not an error
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (errorMessage.includes('NEXT_REDIRECT')) {
+      throw error;
+    }
+
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':
@@ -61,6 +67,12 @@ export async function authenticateWithGoogle(callbackUrl: string) {
       redirectTo: callbackUrl,
     });
   } catch (error) {
+    // Next.js throws NEXT_REDIRECT when signIn is successful - this is not an error
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (errorMessage.includes('NEXT_REDIRECT')) {
+      throw error;
+    }
+
     if (error instanceof AuthError) {
       logger.error('Google OAuth error', error);
       redirect(`/auth/error?error=OAuthCallback`);
@@ -96,6 +108,12 @@ export async function authenticateWithEmail(
       success: 'Check your email for a sign-in link',
     };
   } catch (error) {
+    // Next.js throws NEXT_REDIRECT when signIn is successful - this is not an error
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (errorMessage.includes('NEXT_REDIRECT')) {
+      throw error;
+    }
+
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'EmailSignInError':

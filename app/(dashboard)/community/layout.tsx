@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Community | CODAC',
   description:
-    'Connect with your peers, explore cohorts, and be part of our growing community.',
+    'Celebrate the achievements of our graduates and stay connected with the CODAC alumni community.',
 };
 
 export default function CommunityLayout({

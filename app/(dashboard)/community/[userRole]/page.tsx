@@ -1,4 +1,4 @@
-import { Users, GraduationCap, Search, Filter, TrendingUp, Award, Star, Trophy, Briefcase, Calendar, MessageSquare } from 'lucide-react';
+import { Award, Briefcase, Calendar, Filter, GraduationCap, MessageSquare, Search, Star, TrendingUp, Trophy, Users } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
 import { StudentCard } from '@/components/community/student-card';
@@ -16,24 +16,24 @@ type Params = {
 
 const roleConfig = {
     students: {
-        title: 'Students',
-        description: 'Connect with fellow students and see what they\'re working on',
+        title: 'Alumni',
+        description: 'Connect with our graduates and celebrate their continued success',
         role: 'STUDENT' as const,
         statusFilter: null,
-        emptyMessage: 'There are no students to display at the moment.',
+        emptyMessage: 'There are no alumni to display at the moment.',
         sections: {
-            active: { title: 'Active Students', description: 'Currently enrolled and learning' },
-            inactive: { title: 'Other Students', description: 'Previous students and inactive accounts' }
+            active: { title: 'Graduated Alumni', description: 'Successfully completed the program' },
+            inactive: { title: 'Legacy Members', description: 'Part of our community history' }
         }
     },
     mentors: {
         title: 'Mentors',
-        description: 'Connect with experienced mentors who can guide your learning journey',
+        description: 'Connect with our mentors who guided students throughout their journey',
         role: 'MENTOR' as const,
         statusFilter: null,
         emptyMessage: 'There are no mentors to display at the moment.',
         sections: {
-            active: { title: 'Active Mentors', description: 'Available mentors ready to help you grow' },
+            active: { title: 'Former Mentors', description: 'Mentors who shaped our students\' success' },
             inactive: { title: 'Other Mentors', description: 'Previous mentors and inactive profiles' }
         }
     },
@@ -199,13 +199,13 @@ export default async function CommunityRolePage({ params }: { params: Promise<Pa
 
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Active {config.title}</CardTitle>
+                        <CardTitle className="text-sm font-medium">Graduated</CardTitle>
                         <IconComponent className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{activeUsers.length}</div>
                         <p className="text-xs text-muted-foreground">
-                            {userRole === 'mentors' ? 'Currently available' : 'Currently learning'}
+                            {userRole === 'mentors' ? 'Former mentors' : 'Successfully completed'}
                         </p>
                     </CardContent>
                 </Card>
@@ -230,19 +230,17 @@ export default async function CommunityRolePage({ params }: { params: Promise<Pa
                 <div className="mt-12 text-center">
                     <Card className="p-8 bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
                         <MessageSquare className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold mb-2">Want to become a mentor?</h3>
+                        <h3 className="text-xl font-semibold mb-2">Thank You, Mentors!</h3>
                         <p className="text-muted-foreground mb-4">
-                            Share your knowledge and help others on their learning journey
+                            Our mentors played a crucial role in shaping the success of our graduates.
+                            Your guidance and support made a lasting impact on our community.
                         </p>
-                        <Button className="bg-blue-600 hover:bg-blue-700">
-                            Apply to be a Mentor
-                        </Button>
                     </Card>
                 </div>
             );
         }
 
-        if (userRole === 'alumni') {
+        if (userRole === 'alumni' || userRole === 'students') {
             return (
                 <div className="mt-12">
                     <Card className="p-8 bg-gradient-to-r from-green-50 to-blue-50 border-green-200">

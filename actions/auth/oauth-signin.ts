@@ -11,9 +11,10 @@ export async function oAuthSignIn(
   try {
     await signIn(provider, { callbackUrl, redirect: true });
   } catch (error) {
-    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
-      // This is an expected error when redirecting, so we can ignore it.
-      return;
+    // Next.js throws NEXT_REDIRECT when signIn is successful - this is not an error
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    if (errorMessage.includes("NEXT_REDIRECT")) {
+      throw error;
     }
     // Log other errors or handle them as needed
     console.error("OAuth sign-in error:", error);

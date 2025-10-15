@@ -1,6 +1,8 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import { CodacLogoShader } from '@/components/hero/codac-logo-shader';
+import { AnimatedLandingContent } from '@/components/codac-brand/animated-landing-content';
+import Prism from '@/components/prism';
 import { getCurrentUser } from '@/lib/auth/auth-utils';
 
 export default async function LandingPage() {
@@ -10,24 +12,31 @@ export default async function LandingPage() {
   if (user) {
     redirect('/dashboard');
   }
+  
   return (
-    <div className='relative flex h-screen w-full items-center justify-center overflow-hidden rounded-lg border bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900'>
-      {/* <Link
+    <div className='relative flex h-screen w-full items-center justify-center overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900'>
+      {/* Prism background - positioned absolutely behind content */}
+      <div className='absolute inset-0 z-0'>
+        <Prism
+          animationType='rotate'
+          timeScale={0.5}
+          height={3.5}
+          baseWidth={5.5}
+          scale={3.6}
+          hueShift={0}
+          colorFrequency={1}
+          noise={0.5}
+          glow={1}
+        />
+      </div>
+
+      {/* Landing content overlay - positioned above Prism */}
+      <Link
         href='/auth/signin'
-        className='relative z-10 flex items-center justify-center h-full w-full cursor-pointer hover:bg-white/5 transition-colors duration-300'
+        className='relative z-10 flex h-full w-full cursor-pointer items-center justify-center transition-colors duration-300 hover:bg-white/5'
       >
         <AnimatedLandingContent />
-      </Link> */}
-      <div className='flex justify-center items-center h-full'>
-        <CodacLogoShader />
-      </div>
-      {/* <RetroGrid
-        angle={65}
-        cellSize={60}
-        opacity={0.5}
-        lightLineColor='#00ff41'
-        darkLineColor='#00ff41'
-      /> */}
+      </Link>
     </div>
   );
 }

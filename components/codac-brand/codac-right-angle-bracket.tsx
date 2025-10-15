@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 interface CodacRightAngleBracketProps {
   className?: string;
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '8xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl' | '6xl' | '8xl';
   animated?: boolean;
 }
 
@@ -18,6 +18,8 @@ const sizeConfig = {
   lg: 'w-16 h-16',
   xl: 'w-20 h-20',
   '2xl': 'w-24 h-24',
+  '4xl': 'w-32 h-32',
+  '6xl': 'w-48 h-48',
   '8xl': 'w-96 h-96',
 };
 
@@ -44,7 +46,7 @@ export const CodacRightAngleBracket: React.FC<CodacRightAngleBracketProps> = ({
         />
         <path
           d='M0 0L167.462 334.461L0 668.923M0 0L334.462 334.461L0 668.923'
-          stroke='currentColor'
+          stroke='white'
           strokeWidth='15'
           strokeLinejoin='round'
         />
