@@ -1,0 +1,247 @@
+[
+  {
+    "name": "Staff",
+    "slug": "staff",
+    "image": "images/cohorts-ai/staff.png",
+    "start_date": "2020-08-01T00:00:00.000Z",
+    "end_date": "2025-12-31T00:00:00.000Z"
+  },
+  {
+    "name": "Yellow Leopards",
+    "slug": "yellow-leopards",
+    "image": "images/cohorts-ai/yellow-leopards.png",
+    "start_date": "2020-11-02T00:00:00.000Z",
+    "end_date": "2021-03-26T00:00:00.000Z"
+  },
+  {
+    "name": "Grey Mambas",
+    "slug": "grey-mambas",
+    "image": "images/cohorts-ai/grey-mambas.png",
+    "start_date": "2020-11-23T00:00:00.000Z",
+    "end_date": "2021-04-16T00:00:00.000Z"
+  },
+  {
+    "name": "Pink Eichhörnchen",
+    "slug": "pink-eichhrnchen",
+    "image": "images/cohorts-ai/pink-eichhrnchen.png",
+    "start_date": "2021-01-25T00:00:00.000Z",
+    "end_date": "2021-06-18T00:00:00.000Z"
+  },
+  {
+    "name": "White Flamingo",
+    "slug": "white-flamingo",
+    "image": "images/cohorts-ai/white-flamingo.png",
+    "start_date": "2021-03-15T00:00:00.000Z",
+    "end_date": "2021-08-06T00:00:00.000Z"
+  },
+  {
+    "name": "Pistachio Parrots",
+    "slug": "pistachio-parrots",
+    "image": "images/cohorts-ai/pistachio-parrots.png",
+    "start_date": "2021-04-19T00:00:00.000Z",
+    "end_date": "2021-09-10T00:00:00.000Z"
+  },
+  {
+    "name": "Blue Puffer Fishes",
+    "slug": "blue-puffer-fishes",
+    "image": "images/cohorts-ai/blue-puffer-fishes.png",
+    "start_date": "2021-06-21T00:00:00.000Z",
+    "end_date": "2021-11-12T00:00:00.000Z"
+  },
+  {
+    "name": "Green Wombats",
+    "slug": "green-wombats",
+    "image": "images/cohorts-ai/green-wombats.png",
+    "start_date": "2021-09-13T00:00:00.000Z",
+    "end_date": "2022-02-04T00:00:00.000Z"
+  },
+  {
+    "name": "Indigo Honey Badgers",
+    "slug": "indigo-honey-badgers",
+    "image": "images/cohorts-ai/indigo-honey-badgers.png",
+    "start_date": "2021-10-04T00:00:00.000Z",
+    "end_date": "2022-02-25T00:00:00.000Z"
+  },
+  {
+    "name": "Wine Red Cheetahs",
+    "slug": "wine-red-cheetahs",
+    "image": "images/cohorts-ai/wine-red-cheetahs.png",
+    "start_date": "2022-01-24T00:00:00.000Z",
+    "end_date": "2022-06-17T00:00:00.000Z"
+  },
+  {
+    "name": "Rose Gold Quokkas",
+    "slug": "rose-gold-quokkas",
+    "image": "images/cohorts-ai/rose-gold-quokkas.png",
+    "start_date": "2022-03-21T00:00:00.000Z",
+    "end_date": "2022-08-12T00:00:00.000Z"
+  },
+  {
+    "name": "Ginger Suricatas",
+    "slug": "ginger-suricatas",
+    "image": "images/cohorts-ai/ginger-suricatas.png",
+    "start_date": "2022-03-21T00:00:00.000Z",
+    "end_date": "2022-10-21T00:00:00.000Z"
+  },
+  {
+    "name": "Neon Narwhals",
+    "slug": "neon-narwhals",
+    "image": "images/cohorts-ai/neon-narwhals.png",
+    "start_date": "2022-07-11T00:00:00.000Z",
+    "end_date": "2022-12-02T00:00:00.000Z"
+  },
+  {
+    "name": "Orange Pumas",
+    "slug": "orange-pumas",
+    "image": "images/cohorts-ai/orange-pumas.png",
+    "start_date": "2022-08-15T00:00:00.000Z",
+    "end_date": "2023-01-13T00:00:00.000Z"
+  },
+  {
+    "name": "Mint-Green Octopuses",
+    "slug": "mint-green-octopuses",
+    "image": "images/cohorts-ai/mint-green-octopuses.png",
+    "start_date": "2022-09-12T00:00:00.000Z",
+    "end_date": "2023-02-10T00:00:00.000Z"
+  },
+  {
+    "name": "Bronze Elephants",
+    "slug": "bronze-elephants",
+    "image": "images/cohorts-ai/bronze-elephants.png",
+    "start_date": "2022-11-14T00:00:00.000Z",
+    "end_date": "2023-04-25T00:00:00.000Z"
+  },
+  {
+    "name": "Cobalt Kangaroos",
+    "slug": "cobalt-kangaroos",
+    "image": "images/cohorts-ai/cobalt-kangaroos.png",
+    "start_date": "2023-01-30T00:00:00.000Z",
+    "end_date": "2023-07-10T00:00:00.000Z"
+  },
+  {
+    "name": "Purple Phoenixes",
+    "slug": "purple-phoenixes",
+    "image": "images/cohorts-ai/purple-phoenixes.png",
+    "start_date": "2023-03-13T00:00:00.000Z",
+    "end_date": "2023-08-18T00:00:00.000Z"
+  },
+  {
+    "name": "Coral Honey Badgers",
+    "slug": "coral-honey-badgers",
+    "image": "images/cohorts-ai/coral-honey-badgers.png",
+    "start_date": "2023-05-22T00:00:00.000Z",
+    "end_date": "2023-10-18T00:00:00.000Z"
+  },
+  {
+    "name": "Orange Pigs",
+    "slug": "orange-pigs",
+    "image": "images/cohorts-ai/orange-pigs.png",
+    "start_date": "2023-07-24T00:00:00.000Z",
+    "end_date": "2023-12-19T00:00:00.000Z"
+  },
+  {
+    "name": "Salmon Pink Treehoppers",
+    "slug": "salmon-pink-treehoppers",
+    "image": "images/cohorts-ai/salmon-pink-treehoppers.png",
+    "start_date": "2023-09-04T00:00:00.000Z",
+    "end_date": "2024-02-15T00:00:00.000Z"
+  },
+  {
+    "name": "Petrol Raccoons",
+    "slug": "petrol-raccoons",
+    "image": "images/cohorts-ai/petrol-raccoons.png",
+    "start_date": "2023-10-30T00:00:00.000Z",
+    "end_date": "2024-04-12T00:00:00.000Z"
+  },
+  {
+    "name": "Blue Ants",
+    "slug": "blue-ants",
+    "image": "images/cohorts-ai/blue-ants.png",
+    "start_date": "2023-12-04T00:00:00.000Z",
+    "end_date": "2024-05-23T00:00:00.000Z"
+  },
+  {
+    "name": "Rainbow Chameleons",
+    "slug": "rainbow-chameleons",
+    "image": "images/cohorts-ai/rainbow-chameleons.png",
+    "start_date": "2024-01-29T00:00:00.000Z",
+    "end_date": "2024-07-02T00:00:00.000Z"
+  },
+  {
+    "name": "Turquoise Pandas",
+    "slug": "turquoise-pandas",
+    "image": "images/cohorts-ai/turquoise-pandas.png",
+    "start_date": "2024-03-18T00:00:00.000Z",
+    "end_date": "2024-08-19T00:00:00.000Z"
+  },
+  {
+    "name": "Ultraviolet Eagles",
+    "slug": "ultraviolet-eagles",
+    "image": "images/cohorts-ai/ultraviolet-eagles.png",
+    "start_date": "2024-05-27T00:00:00.000Z",
+    "end_date": "2024-10-22T00:00:00.000Z"
+  },
+  {
+    "name": "Purple Cats",
+    "slug": "purple-cats",
+    "image": "images/cohorts-ai/purple-cats.png",
+    "start_date": "2024-07-15T00:00:00.000Z",
+    "end_date": "2024-12-10T00:00:00.000Z"
+  },
+  {
+    "name": "Silver Tarantulas",
+    "slug": "silver-tarantulas",
+    "image": "images/cohorts-ai/silver-tarantulas.png",
+    "start_date": "2024-08-19T00:00:00.000Z",
+    "end_date": "2025-01-28T00:00:00.000Z"
+  },
+  {
+    "name": "Blue Dackel",
+    "slug": "blue-dackel",
+    "image": "images/cohorts-ai/blue-dackel.png",
+    "start_date": "2024-08-19T00:00:00.000Z",
+    "end_date": "2025-03-04T00:00:00.000Z"
+  },
+  {
+    "name": "Purple Llamas",
+    "slug": "purple-llamas",
+    "image": "images/cohorts-ai/purple-llamas.png",
+    "start_date": "2024-11-18T00:00:00.000Z",
+    "end_date": "2025-04-29T00:00:00.000Z"
+  },
+  {
+    "name": "Black Owls",
+    "slug": "black-owls",
+    "image": "images/cohorts-ai/black-owls.png",
+    "start_date": "2025-01-27T00:00:00.000Z",
+    "end_date": "2025-07-03T00:00:00.000Z"
+  },
+  {
+    "name": "Turquoise Axolotl",
+    "slug": "turquoise-axolotl",
+    "image": "images/cohorts-ai/turquoise-axolotl.png",
+    "start_date": "2025-03-24T00:00:00.000Z",
+    "end_date": "2025-08-28T00:00:00.000Z"
+  },
+  {
+    "name": "Green Dragonflies",
+    "slug": "green-dragonflies",
+    "image": "images/cohorts-ai/green-dragonflies.png",
+    "start_date": "2025-04-14T00:00:00.000Z",
+    "end_date": "2025-09-18T00:00:00.000Z"
+  },
+  {
+    "name": "Silver Foxes",
+    "slug": "silver-foxes",
+    "image": "images/cohorts-ai/silver-foxes.png",
+    "start_date": "2025-04-14T00:00:00.000Z",
+    "end_date": "2025-11-10T00:00:00.000Z"
+  },
+  {
+    "name": "Magenta Capybaras",
+    "slug": "magenta-capybaras",
+    "image": "images/cohorts-ai/magenta-capybaras.png",
+    "start_date": "2025-08-18T00:00:00.000Z",
+    "end_date": "2026-03-13T00:00:00.000Z"
+  }
+]
