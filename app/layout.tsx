@@ -4,7 +4,6 @@ import localFont from 'next/font/local';
 
 import './globals.css';
 
-import { HeaderProvider } from '@/components/header-provider';
 import { NotificationToasts } from '@/components/notifications/notification-toasts';
 import { Providers } from '@/components/providers';
 import { Toaster } from '@/components/ui/sonner';
@@ -84,7 +83,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMonoFont.variable} ${codacBrandFont.variable} antialiased `}
       >
         <Providers>
-          <HeaderProvider>{children}</HeaderProvider>
+          {children}
           <NotificationToasts />
         </Providers>
         <Toaster />
