@@ -12,20 +12,20 @@ export default async function LandingPage() {
   if (user) {
     redirect('/dashboard');
   }
-  
+
   return (
-    <div className='relative flex h-screen w-full items-center justify-center overflow-hidden bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900'>
+    <div className='relative flex h-screen w-full items-center justify-center overflow-hidden'>
       {/* Prism background - positioned absolutely behind content */}
       <div className='absolute inset-0 z-0'>
         <Prism
-          animationType='rotate'
-          timeScale={0.5}
-          height={3.5}
-          baseWidth={5.5}
+          animationType='3drotate'
+          timeScale={0.2}
+          height={3}
+          baseWidth={5}
           scale={3.6}
           hueShift={0}
           colorFrequency={1}
-          noise={0.5}
+          noise={0.1}
           glow={1}
         />
       </div>

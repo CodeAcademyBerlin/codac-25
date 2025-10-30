@@ -1,4 +1,4 @@
-import { BetaSigninPage } from '@/components/auth/beta-signin-page';
+import { SignInForm } from '@/components/auth/signin-form';
 
 interface SignInPageProps {
   searchParams?: Promise<{
@@ -12,7 +12,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
   const params = await searchParams;
 
   return (
-    <BetaSigninPage
+    <SignInForm
       callbackUrl={params?.callbackUrl}
       verifiedEmail={params?.email}
     />
