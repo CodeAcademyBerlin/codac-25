@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import {
   signInWithCredentials,
   signInWithMagicLink,
+  signInWithOAuth,
 } from '@/actions/auth/signin';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,12 @@ import { Separator } from '@/components/ui/separator';
 interface SignInFormProps {
   callbackUrl?: string;
   verifiedEmail?: string;
+  providers?: {
+    google?: boolean;
+    github?: boolean;
+    resend?: boolean;
+    credentials?: boolean;
+  };
 }
 
 function getErrorMessage(error: string | undefined): string {
@@ -36,6 +43,7 @@ function getErrorMessage(error: string | undefined): string {
 export function SignInForm({
   callbackUrl: initialCallbackUrl,
   verifiedEmail,
+  providers = { google: false, github: false, resend: false, credentials: true },
 }: SignInFormProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -47,6 +55,7 @@ export function SignInForm({
   const [magicEmail, setMagicEmail] = useState(verifiedEmail || '');
   const [isCredentialsLoading, setIsCredentialsLoading] = useState(false);
   const [isMagicLinkLoading, setIsMagicLinkLoading] = useState(false);
+  const [isOAuthLoading, setIsOAuthLoading] = useState<string | null>(null);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
 
   // Get parameters from URL
@@ -144,6 +153,20 @@ export function SignInForm({
     }
   };
 
+  const handleOAuth = async (provider: 'google' | 'github') => {
+    setIsOAuthLoading(provider);
+    setError(undefined);
+    try {
+      await signInWithOAuth(provider, callbackUrl);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'OAuth sign-in failed.';
+      setError(errorMessage);
+    } finally {
+      setIsOAuthLoading(null);
+    }
+  };
+
   // Show loading while checking authentication status
   if (status === 'loading') {
     return (
@@ -171,44 +194,46 @@ export function SignInForm({
       )}
 
       {/* Credentials Form */}
-      <form onSubmit={handleCredentialsSubmit} className='space-y-4'>
-        <div className='space-y-2'>
-          <Label htmlFor='email'>Email</Label>
-          <Input
-            id='email'
-            name='email'
-            type='email'
-            placeholder='Enter your email address'
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
+      {providers.credentials !== false && (
+        <form onSubmit={handleCredentialsSubmit} className='space-y-4'>
+          <div className='space-y-2'>
+            <Label htmlFor='email'>Email</Label>
+            <Input
+              id='email'
+              name='email'
+              type='email'
+              placeholder='Enter your email address'
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              disabled={isCredentialsLoading}
+            />
+          </div>
+          <div className='space-y-2'>
+            <Label htmlFor='password'>Password</Label>
+            <Input
+              id='password'
+              name='password'
+              type='password'
+              placeholder='Enter your password'
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              disabled={isCredentialsLoading}
+            />
+          </div>
+          <Button
+            type='submit'
+            className='w-full'
             disabled={isCredentialsLoading}
-          />
-        </div>
-        <div className='space-y-2'>
-          <Label htmlFor='password'>Password</Label>
-          <Input
-            id='password'
-            name='password'
-            type='password'
-            placeholder='Enter your password'
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-            disabled={isCredentialsLoading}
-          />
-        </div>
-        <Button
-          type='submit'
-          className='w-full'
-          disabled={isCredentialsLoading}
-        >
-          {isCredentialsLoading && (
-            <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
-          )}
-          Sign In
-        </Button>
-      </form>
+          >
+            {isCredentialsLoading && (
+              <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
+            )}
+            Sign In
+          </Button>
+        </form>
+      )}
 
       {/* Forgot Password Link */}
       <div className='text-center'>
@@ -220,68 +245,110 @@ export function SignInForm({
         </a>
       </div>
 
-      {/* Separator */}
-      <div className='relative'>
-        <Separator className='my-6' />
-        <div className='absolute inset-0 flex items-center justify-center'>
-          <span className='bg-card px-4 text-sm text-muted-foreground'>
-            Alumni Access
-          </span>
-        </div>
-      </div>
-
-      {/* Magic Link Form for Alumni */}
-      <div className='space-y-4'>
-        <div className='rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950'>
-          <p className='text-sm font-medium text-blue-900 dark:text-blue-100 mb-2'>
-            🎓 Alumni Sign In
-          </p>
-          <p className='text-xs text-blue-700 dark:text-blue-300 mb-4'>
-            If you&apos;re an alumni, use your email to receive a magic sign-in
-            link. No password needed!
-          </p>
-
-          {magicLinkSent ? (
-            <Alert className='border-green-500 bg-green-50 dark:bg-green-950'>
-              <Icons.checkCircle className='h-4 w-4 text-green-600' />
-              <AlertDescription className='text-sm text-green-900 dark:text-green-100'>
-                Magic link sent! Check your email and click the link to sign in.
-                Redirecting...
-              </AlertDescription>
-            </Alert>
-          ) : (
-            <form onSubmit={handleMagicLinkSubmit} className='space-y-3'>
-              <div className='space-y-2'>
-                <Label htmlFor='magic-email' className='text-sm'>
-                  Email Address
-                </Label>
-                <Input
-                  id='magic-email'
-                  name='magic-email'
-                  type='email'
-                  placeholder='your.email@example.com'
-                  value={magicEmail}
-                  onChange={e => setMagicEmail(e.target.value)}
-                  required
-                  disabled={isMagicLinkLoading}
-                />
-              </div>
-              <Button
-                type='submit'
-                className='w-full'
-                variant='outline'
-                disabled={isMagicLinkLoading}
-              >
-                {isMagicLinkLoading && (
-                  <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
-                )}
-                <Icons.mail className='mr-2 h-4 w-4' />
-                Send Magic Link
-              </Button>
-            </form>
+      {/* OAuth Buttons */}
+      {(providers.google || providers.github) && (
+        <div className='space-y-2'>
+          {providers.google && (
+            <Button
+              type='button'
+              className='w-full'
+              variant='outline'
+              onClick={() => handleOAuth('google')}
+              disabled={isOAuthLoading === 'google'}
+            >
+              {isOAuthLoading === 'google' ? (
+                <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
+              ) : (
+                <Icons.google className='mr-2 h-4 w-4' />
+              )}
+              Continue with Google
+            </Button>
+          )}
+          {providers.github && (
+            <Button
+              type='button'
+              className='w-full'
+              variant='outline'
+              onClick={() => handleOAuth('github')}
+              disabled={isOAuthLoading === 'github'}
+            >
+              {isOAuthLoading === 'github' ? (
+                <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
+              ) : (
+                <Icons.gitHub className='mr-2 h-4 w-4' />
+              )}
+              Continue with GitHub
+            </Button>
           )}
         </div>
-      </div>
+      )}
+
+      {/* Separator */}
+      {providers.resend && (
+        <div className='relative'>
+          <Separator className='my-6' />
+          <div className='absolute inset-0 flex items-center justify-center'>
+            <span className='bg-card px-4 text-sm text-muted-foreground'>
+              Alumni Access
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Magic Link Form for Alumni */}
+      {providers.resend && (
+        <div className='space-y-4'>
+          <div className='rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950'>
+            <p className='text-sm font-medium text-blue-900 dark:text-blue-100 mb-2'>
+              🎓 Alumni Sign In
+            </p>
+            <p className='text-xs text-blue-700 dark:text-blue-300 mb-4'>
+              If you&apos;re an alumni, use your email to receive a magic sign-in
+              link. No password needed!
+            </p>
+
+            {magicLinkSent ? (
+              <Alert className='border-green-500 bg-green-50 dark:bg-green-950'>
+                <Icons.checkCircle className='h-4 w-4 text-green-600' />
+                <AlertDescription className='text-sm text-green-900 dark:text-green-100'>
+                  Magic link sent! Check your email and click the link to sign in.
+                  Redirecting...
+                </AlertDescription>
+              </Alert>
+            ) : (
+              <form onSubmit={handleMagicLinkSubmit} className='space-y-3'>
+                <div className='space-y-2'>
+                  <Label htmlFor='magic-email' className='text-sm'>
+                    Email Address
+                  </Label>
+                  <Input
+                    id='magic-email'
+                    name='magic-email'
+                    type='email'
+                    placeholder='your.email@example.com'
+                    value={magicEmail}
+                    onChange={e => setMagicEmail(e.target.value)}
+                    required
+                    disabled={isMagicLinkLoading}
+                  />
+                </div>
+                <Button
+                  type='submit'
+                  className='w-full'
+                  variant='outline'
+                  disabled={isMagicLinkLoading}
+                >
+                  {isMagicLinkLoading && (
+                    <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
+                  )}
+                  <Icons.mail className='mr-2 h-4 w-4' />
+                  Send Magic Link
+                </Button>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
