@@ -1,7 +1,7 @@
 'use server';
 
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 
 import { auth } from '@/lib/auth/auth';
 import { prisma } from '@/lib/db';
@@ -103,9 +103,9 @@ export async function updateProfile(
         userId: session.user.id,
       },
     });
-    // Revalidate user cache tags to refresh session
-    revalidateTag('user');
-    revalidateTag(`user-${user.id}`);
+    // Update user cache tags to refresh session (Next.js 16)
+    updateTag('user');
+    updateTag(`user-${user.id}`);
 
     // Revalidate relevant paths
     revalidatePath('/');

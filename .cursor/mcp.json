@@ -1,5 +1,9 @@
 {
   "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
+    },
     "plate": {
       "description": "Plate editors, plugins, components, and docs",
       "type": "stdio",

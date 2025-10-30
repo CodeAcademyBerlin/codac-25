@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { SectionErrorBoundary } from '@/components/error/section-error-boundary';
 import { Grid, Section } from '@/components/layout';
 import { ProjectCard } from '@/components/projects/project-card';
-import { BrandButton } from '@/components/ui/brand-button';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { getUserProjects } from '@/data/projects/get-projects';
 
@@ -28,7 +28,7 @@ export default async function MyProjectsSlot() {
             <p className='text-muted-foreground'>Your latest project work</p>
           </div>
           <Link href='/projects/my'>
-            <BrandButton variant='outline'>View All</BrandButton>
+            <Button variant='outline'>View All</Button>
           </Link>
         </div>
 
@@ -51,10 +51,10 @@ export default async function MyProjectsSlot() {
                 Start building your portfolio by creating your first project
               </p>
               <Link href='/projects/create'>
-                <BrandButton variant='gradient'>
+                <Button variant='brandGradient'>
                   <Plus className='h-4 w-4 mr-2' />
                   Create Your First Project
-                </BrandButton>
+                </Button>
               </Link>
             </CardContent>
           </Card>

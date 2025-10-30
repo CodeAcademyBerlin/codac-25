@@ -1,12 +1,7 @@
 import { Code, Star, Trophy, Users } from 'lucide-react';
 
 import { Grid, Section } from '@/components/layout';
-import {
-  BrandCard,
-  BrandCardContent,
-  BrandCardHeader,
-  BrandCardTitle,
-} from '@/components/ui/brand-card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getProjectStats } from '@/data/projects/get-project-stats';
 import { getUserProjects } from '@/data/projects/get-projects';
 
@@ -36,69 +31,69 @@ export default async function StatsSlot() {
   return (
     <Section>
       <Grid cols='4'>
-        <BrandCard variant='outline'>
-          <BrandCardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <BrandCardTitle className='text-sm font-medium'>
+        <Card className='border-codac-pink/20'>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>
               My Projects
-            </BrandCardTitle>
+            </CardTitle>
             <Code className='h-4 w-4 text-primary' />
-          </BrandCardHeader>
-          <BrandCardContent>
+          </CardHeader>
+          <CardContent>
             <div className='text-2xl font-bold text-primary'>
               {userProjects.length}
             </div>
             <p className='text-xs text-muted-foreground'>
               {userProjects.filter(p => p.isPublic).length} public
             </p>
-          </BrandCardContent>
-        </BrandCard>
+          </CardContent>
+        </Card>
 
-        <BrandCard variant='teal'>
-          <BrandCardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <BrandCardTitle className='text-sm font-medium'>
+        <Card className='border-codac-teal/20 bg-codac-teal/5'>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>
               Community Projects
-            </BrandCardTitle>
+            </CardTitle>
             <Trophy className='h-4 w-4 text-chart-2' />
-          </BrandCardHeader>
-          <BrandCardContent>
+          </CardHeader>
+          <CardContent>
             <div className='text-2xl font-bold text-chart-2'>
               {stats.totalProjects}
             </div>
             <p className='text-xs text-muted-foreground'>
               {stats.featuredProjects} featured
             </p>
-          </BrandCardContent>
-        </BrandCard>
+          </CardContent>
+        </Card>
 
-        <BrandCard variant='pink'>
-          <BrandCardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <BrandCardTitle className='text-sm font-medium'>
+        <Card className='border-codac-pink/20 bg-codac-pink/5'>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>
               Active Students
-            </BrandCardTitle>
+            </CardTitle>
             <Users className='h-4 w-4 text-chart-3' />
-          </BrandCardHeader>
-          <BrandCardContent>
+          </CardHeader>
+          <CardContent>
             <div className='text-2xl font-bold text-chart-3'>
               {stats.activeStudents}
             </div>
             <p className='text-xs text-muted-foreground'>Building projects</p>
-          </BrandCardContent>
-        </BrandCard>
+          </CardContent>
+        </Card>
 
-        <BrandCard variant='gradient'>
-          <BrandCardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <BrandCardTitle className='text-sm font-medium text-white'>
+        <Card className='border-transparent bg-gradient-codac text-white shadow-lg'>
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium text-white'>
               This Month
-            </BrandCardTitle>
+            </CardTitle>
             <Star className='h-4 w-4 text-white' />
-          </BrandCardHeader>
-          <BrandCardContent>
+          </CardHeader>
+          <CardContent>
             <div className='text-2xl font-bold text-white'>
               {stats.newThisMonth}
             </div>
             <p className='text-xs text-white/80'>New projects</p>
-          </BrandCardContent>
-        </BrandCard>
+          </CardContent>
+        </Card>
       </Grid>
     </Section>
   );

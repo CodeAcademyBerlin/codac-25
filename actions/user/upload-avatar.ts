@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { Prisma } from '@prisma/client';
 
 import { auth } from '@/lib/auth/auth';
@@ -74,8 +74,8 @@ export async function uploadAvatar(
         revalidatePath('/profile');
         revalidatePath('/profile/settings');
         revalidatePath('/');
-        revalidateTag('user');
-        revalidateTag(`user-${session.user.id}`);
+        updateTag('user');
+        updateTag(`user-${session.user.id}`);
 
         logger.info('Avatar uploaded successfully', {
             action: 'upload',
@@ -158,8 +158,8 @@ export async function resetAvatar(): Promise<UploadAvatarResult> {
         revalidatePath('/profile');
         revalidatePath('/profile/settings');
         revalidatePath('/');
-        revalidateTag('user');
-        revalidateTag(`user-${session.user.id}`);
+        updateTag('user');
+        updateTag(`user-${session.user.id}`);
 
         logger.info('Avatar reset to default', {
             action: 'reset',

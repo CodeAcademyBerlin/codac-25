@@ -5,6 +5,7 @@ import { ThemeProvider } from 'next-themes';
 import { ReactNode } from 'react';
 
 import { SidebarProvider } from './ui/sidebar';
+import { HeaderProvider } from './header-provider';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -20,7 +21,9 @@ export function Providers({ children }: ProvidersProps) {
         disableTransitionOnChange
       >
         <SidebarProvider defaultOpen={true}>
-          {children}
+          <HeaderProvider>
+            {children}
+          </HeaderProvider>
         </SidebarProvider>
       </ThemeProvider>
     </SessionProvider>

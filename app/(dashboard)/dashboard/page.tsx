@@ -2,7 +2,7 @@ import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import { BrandButton } from '@/components/ui/brand-button';
+import { Button } from '@/components/ui/button';
 import { getUser } from '@/data/user/get-user';
 import { requireServerAuth } from '@/lib/auth/auth-server';
 
@@ -21,10 +21,10 @@ export default async function DashboardPage() {
   return (
     <div className='flex justify-end mb-6'>
       <Link href='/projects/create'>
-        <BrandButton variant='gradient'>
+        <Button variant='brandGradient'>
           <Plus className='h-4 w-4 mr-2' />
           New Project
-        </BrandButton>
+        </Button>
       </Link>
     </div>
   );

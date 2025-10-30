@@ -2,7 +2,7 @@ import type { UserRole, UserStatus } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import { cache } from 'react';
 
-import { auth } from '@/lib/auth/auth';
+import { getSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db/prisma';
 import { logger } from '@/lib/logger';
 
@@ -45,7 +45,7 @@ export type UserProfile = {
  */
 export const getCurrentUser = cache(async (): Promise<AuthUser | null> => {
   try {
-    const session = await auth();
+    const session = await getSession();
     if (!session?.user) {
       return null;
     }

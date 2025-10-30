@@ -1,7 +1,7 @@
 'use server';
 
 import { Prisma } from '@prisma/client';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
@@ -79,7 +79,7 @@ export async function createUser(
     // Revalidate relevant paths and tags
     revalidatePath('/admin/users');
     revalidatePath('/users');
-    revalidateTag('user');
+    updateTag('user');
 
     logger.info('User created successfully', {
       action: 'create',

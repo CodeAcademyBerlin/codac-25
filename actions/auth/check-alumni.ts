@@ -13,7 +13,7 @@ export type AlumniCheckResult = {
     message?: string;
     user?: {
         id: string;
-        email: string;
+        email: string | null;
         name: string | null;
         role: string;
         status: string;

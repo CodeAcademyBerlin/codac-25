@@ -11,7 +11,7 @@ interface SimpleShaderLogoProps {
 }
 
 function LogoShaderMaterial() {
-  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const materialRef = useRef<any>(null);
 
   // Define uniforms for the shader
   const uniforms = useMemo(
@@ -100,7 +100,7 @@ function LogoRightDiamond() {
 }
 
 function CodacText() {
-  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const materialRef = useRef<any>(null);
 
   // Define uniforms for the shader
   const uniforms = useMemo(

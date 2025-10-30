@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { SectionErrorBoundary } from '@/components/error/section-error-boundary';
 import { Grid, Section } from '@/components/layout';
 import { ProjectCard } from '@/components/projects/project-card';
-import { BrandButton } from '@/components/ui/brand-button';
+import { Button } from '@/components/ui/button';
 import { getFeaturedProjects } from '@/data/projects/get-projects';
 
 export const dynamic = 'force-dynamic';
@@ -34,7 +34,7 @@ export default async function FeaturedProjectsSlot() {
             </p>
           </div>
           <Link href='/showcase'>
-            <BrandButton variant='outline'>View Showcase</BrandButton>
+            <Button variant='outline'>View Showcase</Button>
           </Link>
         </div>
 
