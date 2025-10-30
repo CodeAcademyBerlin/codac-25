@@ -1,37 +1,36 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-import { oAuthSignIn } from "@/actions/auth/oauth-signin";
-import { CodacLogo } from "@/components/codac-brand/codac-logo";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { oAuthSignIn } from '@/actions/auth/oauth-signin';
+import { CodacLogo } from '@/components/codac-brand/codac-logo';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Icons } from "@/components/ui/icons";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/card';
+import { Icons } from '@/components/ui/icons';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface SignUpFormProps {
   callbackUrl?: string;
 }
 
-export function SignUpForm({ callbackUrl = "/" }: SignUpFormProps) {
+export function SignUpForm({ callbackUrl = '/' }: SignUpFormProps) {
   const router = useRouter();
 
   // Form state
   const [formData, setFormData] = useState({
-    name: "",
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    name: '',
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
@@ -39,42 +38,44 @@ export function SignUpForm({ callbackUrl = "/" }: SignUpFormProps) {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
     // Clear error when user starts typing
     if (error) setError(undefined);
   };
 
   const validateForm = () => {
     if (!formData.name.trim()) {
-      setError("Name is required");
+      setError('Name is required');
       return false;
     }
     if (!formData.username.trim()) {
-      setError("Username is required");
+      setError('Username is required');
       return false;
     }
     if (!/^[a-zA-Z0-9_-]+$/.test(formData.username.trim())) {
-      setError("Username can only contain letters, numbers, underscores, and hyphens");
+      setError(
+        'Username can only contain letters, numbers, underscores, and hyphens'
+      );
       return false;
     }
     if (formData.username.trim().length < 3) {
-      setError("Username must be at least 3 characters long");
+      setError('Username must be at least 3 characters long');
       return false;
     }
     if (!formData.email.trim()) {
-      setError("Email is required");
+      setError('Email is required');
       return false;
     }
     if (!formData.password) {
-      setError("Password is required");
+      setError('Password is required');
       return false;
     }
     if (formData.password.length < 8) {
-      setError("Password must be at least 8 characters long");
+      setError('Password must be at least 8 characters long');
       return false;
     }
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      setError('Passwords do not match');
       return false;
     }
     return true;
@@ -89,10 +90,10 @@ export function SignUpForm({ callbackUrl = "/" }: SignUpFormProps) {
     setError(undefined);
 
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           name: formData.name.trim(),
@@ -105,7 +106,7 @@ export function SignUpForm({ callbackUrl = "/" }: SignUpFormProps) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to create account");
+        throw new Error(data.error || 'Failed to create account');
       }
 
       setSuccess(true);
@@ -119,7 +120,7 @@ export function SignUpForm({ callbackUrl = "/" }: SignUpFormProps) {
       setError(
         err instanceof Error
           ? err.message
-          : "An error occurred during registration."
+          : 'An error occurred during registration.'
       );
     } finally {
       setIsLoading(false);
@@ -128,196 +129,206 @@ export function SignUpForm({ callbackUrl = "/" }: SignUpFormProps) {
 
   if (success) {
     return (
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center text-green-600">
-            codac
-          </CardTitle>
-          <CardDescription className="text-center">
-            Your account has been created successfully. Redirecting to sign
-            in...
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex justify-center">
-          <Icons.checkCircle className="h-16 w-16 text-green-600" />
-        </CardContent>
-      </Card>
+      <div className='flex flex-col gap-6'>
+        <Card className='bg-background/50'>
+          <CardHeader className='text-center'>
+            <div className='flex justify-center mb-4'>
+              <CodacLogo size='lg' useGradient />
+            </div>
+            <CardDescription>
+              <span className='text-2xl font-bold text-center font-codac-brand uppercase'>
+                account created
+              </span>
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Icons.checkCircle className='h-16 w-16 text-green-600' />
+            <p className='text-center text-lg font-medium text-green-600'>
+              Account created successfully!
+            </p>
+            <p className='text-center text-sm text-muted-foreground'>
+              Redirecting you to the sign in page...
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader className="space-y-1">
-        <div className="flex justify-center mb-4">
-          <CodacLogo size="lg" useGradient />
-        </div>
-        <CardTitle className="text-2xl font-bold text-center">
-          codac
-        </CardTitle>
-        <CardDescription className="text-center">
-          Join the community and share your developer learning journey
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 gap-4">
-          <Button
-            variant="outline"
-            onClick={async () => {
-              setIsLoading(true);
-              setError(undefined);
-              try {
-                await oAuthSignIn("github", callbackUrl);
-              } catch (err) {
-                setError("GitHub sign-up failed. Please try again.");
-                setIsLoading(false);
-              }
-            }}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Icons.gitHub className="mr-2 h-4 w-4" />
-            )}{" "}
-            GitHub
-          </Button>
-          <Button
-            variant="outline"
-            onClick={async () => {
-              setIsLoading(true);
-              setError(undefined);
-              try {
-                await oAuthSignIn("google", callbackUrl);
-              } catch (err) {
-                setError("Google sign-up failed. Please try again.");
-                setIsLoading(false);
-              }
-            }}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Icons.google className="mr-2 h-4 w-4" />
-            )}{" "}
-            Google
-          </Button>
-        </div>
-        <div className="relative my-6">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
+    <div className='flex flex-col gap-6'>
+      <Card className='bg-background/50'>
+        <CardHeader className='text-center'>
+          <div className='flex justify-center mb-4'>
+            <CodacLogo size='lg' useGradient />
           </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-card px-2 text-muted-foreground">
-              Or continue with email
+          <CardDescription>
+            <span className='text-2xl font-bold text-center font-codac-brand uppercase'>
+              sign up
             </span>
-          </div>
-        </div>
-
-        {error && (
-          <Alert variant="destructive" className="mb-6">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
-            <Input
-              id="name"
-              name="name"
-              type="text"
-              placeholder="Enter your full name"
-              value={formData.name}
-              onChange={handleInputChange}
-              required
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className='grid grid-cols-2 gap-4'>
+            <Button
+              variant='outline'
+              onClick={async () => {
+                setIsLoading(true);
+                setError(undefined);
+                try {
+                  await oAuthSignIn('github', callbackUrl);
+                } catch (err) {
+                  setError('GitHub sign-up failed. Please try again.');
+                  setIsLoading(false);
+                }
+              }}
               disabled={isLoading}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
-            <Input
-              id="username"
-              name="username"
-              type="text"
-              placeholder="Choose a unique username"
-              value={formData.username}
-              onChange={handleInputChange}
-              required
+            >
+              {isLoading ? (
+                <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
+              ) : (
+                <Icons.gitHub className='mr-2 h-4 w-4' />
+              )}{' '}
+              GitHub
+            </Button>
+            <Button
+              variant='outline'
+              onClick={async () => {
+                setIsLoading(true);
+                setError(undefined);
+                try {
+                  await oAuthSignIn('google', callbackUrl);
+                } catch (err) {
+                  setError('Google sign-up failed. Please try again.');
+                  setIsLoading(false);
+                }
+              }}
               disabled={isLoading}
-            />
+            >
+              {isLoading ? (
+                <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
+              ) : (
+                <Icons.google className='mr-2 h-4 w-4' />
+              )}{' '}
+              Google
+            </Button>
+          </div>
+          <div className='relative my-6'>
+            <div className='absolute inset-0 flex items-center'>
+              <span className='w-full border-t' />
+            </div>
+            <div className='relative flex justify-center text-xs uppercase'>
+              <span className='bg-card px-2 text-muted-foreground'>
+                Or continue with email
+              </span>
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Enter your email address"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
+          {error && (
+            <Alert variant='destructive' className='mb-6'>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          <form onSubmit={handleSubmit} className='space-y-4'>
+            <div className='space-y-2'>
+              <Label htmlFor='name'>Full Name</Label>
+              <Input
+                id='name'
+                name='name'
+                type='text'
+                placeholder='Enter your full name'
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className='space-y-2'>
+              <Label htmlFor='username'>Username</Label>
+              <Input
+                id='username'
+                name='username'
+                type='text'
+                placeholder='Choose a unique username'
+                value={formData.username}
+                onChange={handleInputChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className='space-y-2'>
+              <Label htmlFor='email'>Email</Label>
+              <Input
+                id='email'
+                name='email'
+                type='email'
+                placeholder='Enter your email address'
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className='space-y-2'>
+              <Label htmlFor='password'>Password</Label>
+              <Input
+                id='password'
+                name='password'
+                type='password'
+                placeholder='Create a password (min. 8 characters)'
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                disabled={isLoading}
+                minLength={8}
+              />
+            </div>
+
+            <div className='space-y-2'>
+              <Label htmlFor='confirmPassword'>Confirm Password</Label>
+              <Input
+                id='confirmPassword'
+                name='confirmPassword'
+                type='password'
+                placeholder='Confirm your password'
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <Button type='submit' className='w-full' disabled={isLoading}>
+              {isLoading && (
+                <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
+              )}
+              Create Account
+            </Button>
+          </form>
+
+          <div className='mt-6 text-center text-sm'>
+            <span className='text-muted-foreground'>
+              Already have an account?{' '}
+            </span>
+            <Button
+              variant='link'
+              className='p-0 h-auto font-normal'
+              onClick={() =>
+                router.push(
+                  `/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
+                )
+              }
               disabled={isLoading}
-            />
+            >
+              Sign in here
+            </Button>
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Create a password (min. 8 characters)"
-              value={formData.password}
-              onChange={handleInputChange}
-              required
-              disabled={isLoading}
-              minLength={8}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
-            <Input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              placeholder="Confirm your password"
-              value={formData.confirmPassword}
-              onChange={handleInputChange}
-              required
-              disabled={isLoading}
-            />
-          </div>
-
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            Create Account
-          </Button>
-        </form>
-
-        <div className="mt-6 text-center text-sm">
-          <span className="text-muted-foreground">
-            Already have an account?{" "}
-          </span>
-          <Button
-            variant="link"
-            className="p-0 h-auto font-normal"
-            onClick={() =>
-              router.push(
-                `/auth/signin?callbackUrl=${encodeURIComponent(callbackUrl)}`
-              )
-            }
-            disabled={isLoading}
-          >
-            Sign in here
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

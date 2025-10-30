@@ -11,10 +11,17 @@ import {
 } from '@/actions/auth/signin';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from '@/components/ui/card';
 import { Icons } from '@/components/ui/icons';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
+import CodacLogo from '../codac-brand/codac-logo';
+import { Separator } from '../ui/separator';
 
 interface SignInFormProps {
   callbackUrl?: string;
@@ -43,7 +50,12 @@ function getErrorMessage(error: string | undefined): string {
 export function SignInForm({
   callbackUrl: initialCallbackUrl,
   verifiedEmail,
-  providers = { google: false, github: false, resend: false, credentials: true },
+  providers = {
+    google: false,
+    github: false,
+    resend: false,
+    credentials: true,
+  },
 }: SignInFormProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -177,178 +189,123 @@ export function SignInForm({
   }
 
   return (
-    <div className='space-y-6'>
-      <Alert
-        variant='default'
-        className='border-blue-500 bg-blue-50 dark:bg-blue-950'
-      >
-        <AlertDescription className='text-sm text-blue-900 dark:text-blue-100'>
-          Beta access is currently limited to existing users only.
-        </AlertDescription>
-      </Alert>
-
-      {error && (
-        <Alert variant='destructive'>
-          <AlertDescription>{getErrorMessage(error)}</AlertDescription>
-        </Alert>
-      )}
-
-      {/* Credentials Form */}
-      {providers.credentials !== false && (
-        <form onSubmit={handleCredentialsSubmit} className='space-y-4'>
-          <div className='space-y-2'>
-            <Label htmlFor='email'>Email</Label>
-            <Input
-              id='email'
-              name='email'
-              type='email'
-              placeholder='Enter your email address'
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-              disabled={isCredentialsLoading}
-            />
+    <div className='flex flex-col gap-6'>
+      <Card className='bg-background/50'>
+        <CardHeader className='text-center'>
+          <div className='flex justify-center mb-4'>
+            <CodacLogo size='lg' useGradient />
           </div>
-          <div className='space-y-2'>
-            <Label htmlFor='password'>Password</Label>
-            <Input
-              id='password'
-              name='password'
-              type='password'
-              placeholder='Enter your password'
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              disabled={isCredentialsLoading}
-            />
-          </div>
-          <Button
-            type='submit'
-            className='w-full'
-            disabled={isCredentialsLoading}
-          >
-            {isCredentialsLoading && (
-              <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
-            )}
-            Sign In
-          </Button>
-        </form>
-      )}
-
-      {/* Forgot Password Link */}
-      <div className='text-center'>
-        <a
-          href='/auth/forgot-password'
-          className='text-sm text-muted-foreground hover:text-primary hover:underline'
-        >
-          Forgot your password?
-        </a>
-      </div>
-
-      {/* OAuth Buttons */}
-      {(providers.google || providers.github) && (
-        <div className='space-y-2'>
-          {providers.google && (
-            <Button
-              type='button'
-              className='w-full'
-              variant='outline'
-              onClick={() => handleOAuth('google')}
-              disabled={isOAuthLoading === 'google'}
-            >
-              {isOAuthLoading === 'google' ? (
-                <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
-              ) : (
-                <Icons.google className='mr-2 h-4 w-4' />
-              )}
-              Continue with Google
-            </Button>
-          )}
-          {providers.github && (
-            <Button
-              type='button'
-              className='w-full'
-              variant='outline'
-              onClick={() => handleOAuth('github')}
-              disabled={isOAuthLoading === 'github'}
-            >
-              {isOAuthLoading === 'github' ? (
-                <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
-              ) : (
-                <Icons.gitHub className='mr-2 h-4 w-4' />
-              )}
-              Continue with GitHub
-            </Button>
-          )}
-        </div>
-      )}
-
-      {/* Separator */}
-      {providers.resend && (
-        <div className='relative'>
-          <Separator className='my-6' />
-          <div className='absolute inset-0 flex items-center justify-center'>
-            <span className='bg-card px-4 text-sm text-muted-foreground'>
-              Alumni Access
+          <CardDescription>
+            <span className='text-2xl font-bold text-center font-codac-brand uppercase'>
+              sign in
             </span>
-          </div>
-        </div>
-      )}
-
-      {/* Magic Link Form for Alumni */}
-      {providers.resend && (
-        <div className='space-y-4'>
-          <div className='rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950'>
-            <p className='text-sm font-medium text-blue-900 dark:text-blue-100 mb-2'>
-              🎓 Alumni Sign In
-            </p>
-            <p className='text-xs text-blue-700 dark:text-blue-300 mb-4'>
-              If you&apos;re an alumni, use your email to receive a magic sign-in
-              link. No password needed!
-            </p>
-
-            {magicLinkSent ? (
-              <Alert className='border-green-500 bg-green-50 dark:bg-green-950'>
-                <Icons.checkCircle className='h-4 w-4 text-green-600' />
-                <AlertDescription className='text-sm text-green-900 dark:text-green-100'>
-                  Magic link sent! Check your email and click the link to sign in.
-                  Redirecting...
-                </AlertDescription>
-              </Alert>
-            ) : (
-              <form onSubmit={handleMagicLinkSubmit} className='space-y-3'>
-                <div className='space-y-2'>
-                  <Label htmlFor='magic-email' className='text-sm'>
-                    Email Address
-                  </Label>
-                  <Input
-                    id='magic-email'
-                    name='magic-email'
-                    type='email'
-                    placeholder='your.email@example.com'
-                    value={magicEmail}
-                    onChange={e => setMagicEmail(e.target.value)}
-                    required
-                    disabled={isMagicLinkLoading}
-                  />
-                </div>
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {error && (
+            <Alert variant='destructive'>
+              <AlertDescription>{getErrorMessage(error)}</AlertDescription>
+            </Alert>
+          )}
+          {/* OAuth Buttons */}
+          {(providers.google || providers.github) && (
+            <div className='space-y-2'>
+              {providers.google && (
                 <Button
-                  type='submit'
+                  type='button'
                   className='w-full'
                   variant='outline'
-                  disabled={isMagicLinkLoading}
+                  onClick={() => handleOAuth('google')}
+                  disabled={isOAuthLoading === 'google'}
                 >
-                  {isMagicLinkLoading && (
+                  {isOAuthLoading === 'google' ? (
                     <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
+                  ) : (
+                    <Icons.google className='mr-2 h-4 w-4' />
                   )}
-                  <Icons.mail className='mr-2 h-4 w-4' />
-                  Send Magic Link
+                  Continue with Google
                 </Button>
-              </form>
-            )}
+              )}
+              {providers.github && (
+                <Button
+                  type='button'
+                  className='w-full'
+                  variant='outline'
+                  onClick={() => handleOAuth('github')}
+                  disabled={isOAuthLoading === 'github'}
+                >
+                  {isOAuthLoading === 'github' ? (
+                    <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
+                  ) : (
+                    <Icons.gitHub className='mr-2 h-4 w-4' />
+                  )}
+                  Continue with GitHub
+                </Button>
+              )}
+            </div>
+          )}
+          {/* Credentials Form */}
+          {providers.credentials !== false && (
+            <form onSubmit={handleCredentialsSubmit} className='space-y-4'>
+              <div className='space-y-2'>
+                <Label htmlFor='email'>Email</Label>
+                <Input
+                  id='email'
+                  name='email'
+                  type='email'
+                  placeholder='Enter your email address'
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                  disabled={isCredentialsLoading}
+                />
+              </div>
+              <div className='space-y-2'>
+                <Label htmlFor='password'>Password</Label>
+                <Input
+                  id='password'
+                  name='password'
+                  type='password'
+                  placeholder='Enter your password'
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                  disabled={isCredentialsLoading}
+                />
+              </div>
+              <Button
+                type='submit'
+                className='w-full'
+                disabled={isCredentialsLoading}
+              >
+                {isCredentialsLoading && (
+                  <Icons.spinner className='mr-2 h-4 w-4 animate-spin' />
+                )}
+                Sign In
+              </Button>
+            </form>
+          )}
+
+          <Separator />
+          <div className='text-center'>
+            <span className='text-sm text-muted-foreground'>
+              don't have an account?{' '}
+              <a href='/auth/signup' className='text-primary hover:underline'>
+                sign up
+              </a>
+            </span>
           </div>
-        </div>
-      )}
+          {/* Forgot Password Link */}
+          <div className='text-center'>
+            <a
+              href='/auth/forgot-password'
+              className='text-sm text-muted-foreground hover:text-primary hover:underline'
+            >
+              Forgot your password?
+            </a>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
