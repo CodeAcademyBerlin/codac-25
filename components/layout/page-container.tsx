@@ -2,38 +2,28 @@ import { cn } from '@/lib/utils';
 
 interface PageContainerProps {
   children: React.ReactNode;
-  className?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
-  padding?: 'none' | 'sm' | 'md' | 'lg';
+  className?: string;
 }
-
-const sizeClasses = {
-  sm: 'max-w-4xl mx-auto',
-  md: 'max-w-6xl mx-auto',
-  lg: 'max-w-7xl mx-auto',
-  xl: 'max-w-screen-2xl mx-auto',
-  full: 'w-full',
-};
-
-const paddingClasses = {
-  none: '',
-  sm: 'p-2 md:p-4',
-  md: 'p-3 md:p-6',
-  lg: 'p-4 md:p-8',
-};
 
 export function PageContainer({
   children,
+  size = 'md',
   className,
-  size = 'xl',
-  padding = 'md',
 }: PageContainerProps) {
+  const sizeClasses = {
+    sm: 'max-w-2xl',
+    md: 'max-w-4xl',
+    lg: 'max-w-6xl',
+    xl: 'max-w-7xl',
+    full: 'max-w-full',
+  };
+
   return (
     <div
       className={cn(
-        'flex flex-1 flex-col',
+        'mx-auto w-full px-4 py-8 sm:px-6 lg:px-8',
         sizeClasses[size],
-        paddingClasses[padding],
         className
       )}
     >

@@ -1,8 +1,7 @@
 ---
-description: Enfore friendly and logical error handling.
+description: Enforce friendly and logical error handling.
 globs: **/*{.js,.jsx,.ts,.tsx}
 ---
-- Implement robust error handling and logging mechanisms.
 - Implement robust error handling using the established `ServerActionResult<T>` pattern
 - Use the centralized error handling utilities in `lib/server-action-utils.ts`
 - Provide clear and user-friendly error messages using toast notifications (Sonner)

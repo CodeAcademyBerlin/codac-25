@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client';
 import { z } from 'zod';
 
-import { auth } from '@/lib/auth/auth';
+import { getSession } from '@/lib/auth/session';
 import { logger } from '@/lib/logger';
 
 // Generic server action result type
@@ -174,6 +174,7 @@ export const commonSelects = {
     avatar: true,
     bio: true,
     role: true,
+    applicationRole: true,
     status: true,
     cohort: {
       select: {
@@ -298,7 +299,7 @@ export async function handleServerAction<TInput, TOutput>(
     const parsed = schema.parse(input);
 
     // Get current user from auth
-    const session = await auth();
+    const session = await getSession();
     const user = session?.user;
 
     // Execute the handler with context

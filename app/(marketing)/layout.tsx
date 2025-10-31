@@ -22,9 +22,7 @@ export default async function MarketingLayout({
         />
       </div>
 
-      <div className='relative z-10 flex h-full w-full items-center justify-center'>
-        {children}
-      </div>
+      <div className='relative z-10'>{children}</div>
     </div>
   );
 }

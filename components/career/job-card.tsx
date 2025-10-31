@@ -1,5 +1,5 @@
 import { getJobs } from "@/actions/job/get-jobs";
-import { auth } from "@/lib/auth/auth";
+import { getSession } from '@/lib/auth/session';
 
 import { JobCardClient } from "./job-card-client";
 
@@ -10,6 +10,6 @@ interface JobCardProps {
 }
 
 export async function JobCard({ job }: JobCardProps) {
-  const session = await auth();
+  const session = await getSession();
   return <JobCardClient job={job} session={session} />;
 }

@@ -125,6 +125,13 @@ export async function updateProject(
       },
     });
 
+    if (!user.username) {
+      return {
+        success: false,
+        error: 'Username is required to update projects. Please set a username in your profile settings.',
+      };
+    }
+
     return {
       success: true,
       data: {

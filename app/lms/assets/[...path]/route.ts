@@ -3,7 +3,7 @@ import path from 'path';
 
 import { NextRequest, NextResponse } from 'next/server';
 
-import { auth } from '@/lib/auth/auth';
+import { getSession } from '@/lib/auth/session';
 
 const contentAssetsDir = path.join(process.cwd(), 'content/assets');
 
@@ -13,7 +13,7 @@ export async function GET(
 ) {
     try {
         // Check if user is authenticated
-        const session = await auth();
+        const session = await getSession();
         if (!session?.user) {
             return new NextResponse('Unauthorized', { status: 401 });
         }

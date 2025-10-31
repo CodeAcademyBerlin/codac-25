@@ -75,3 +75,51 @@ Following the announcement of the academy's closure in 2025, the app was redesig
 
 - **[Vercel AI SDK](https://sdk.vercel.ai/)** - AI integration toolkit
 - **OpenAI API** - AI-powered features and content generation
+
+## How to Run
+
+To run the development server, execute the following command in your terminal:
+
+```bash
+pnpm dev
+```
+
+This will start the Next.js development server with Turbopack. The application will be available at `http://localhost:3000`.
+
+### Prerequisites
+
+Before running the application, make sure you have:
+
+1. **Node.js** (>=22.0.0) and **pnpm** (>=9.0.0) installed
+2. **PostgreSQL** database set up and running
+3. Environment variables configured (`.env` file)
+4. Database initialized:
+   ```bash
+   pnpm db:generate
+   pnpm db:push
+   pnpm db:seed
+   ```
+
+## How to Test
+
+To run the tests for this project, execute the following commands:
+
+### Unit Tests
+
+```bash
+pnpm test:unit
+```
+
+### End-to-End Tests
+
+```bash
+pnpm test:e2e
+```
+
+### All Tests
+
+```bash
+pnpm test
+```
+
+This will run both unit tests (using Vitest) and end-to-end tests (using Playwright).

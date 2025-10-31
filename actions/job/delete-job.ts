@@ -1,14 +1,22 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/lib/auth/auth";
+import { getSession } from '@/lib/auth/session';
 import { prisma } from "@/lib/db/prisma";
 
 export async function deleteJob(jobId: string) {
-  const session = await auth();
-  const user = session?.user;
+  const session = await getSession();
+  if (!session?.session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
 
-  if (!user || (user.role !== "ADMIN" && user.role !== "MENTOR")) {
+  // Fetch user with role information
+  const user = await prisma.user.findUnique({
+    where: { id: session?.session?.user?.id! },
+    select: { id: true, applicationRole: true },
+  });
+
+  if (!user || (user.applicationRole !== "ADMIN" && user.applicationRole !== "MENTOR")) {
     throw new Error("Unauthorized");
   }
 
@@ -22,7 +30,7 @@ export async function deleteJob(jobId: string) {
       throw new Error("Job not found");
     }
 
-    if (user.role !== "ADMIN" && job.postedById !== user.id) {
+    if (user.applicationRole !== "ADMIN" && job.postedById !== user.id) {
       throw new Error("You do not have permission to delete this job");
     }
 

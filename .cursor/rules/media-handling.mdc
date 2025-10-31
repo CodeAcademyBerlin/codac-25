@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: Guidelines for handling media uploads, processing, and storage.
+globs: **/*{.js,.jsx,.ts,.tsx}
 alwaysApply: false
 ---
 ## Media Handling Guidelines

@@ -1,10 +1,10 @@
 'use server'
 
 import { prisma } from '@/lib/db/prisma'
-import { auth } from '@/lib/auth/auth'
+import { getSession } from '@/lib/auth/session'
 
 export async function getAvailableUsers() {
-    const session = await auth()
+    const session = await getSession()
     if (!session?.user?.id) {
         throw new Error('Authentication required')
     }

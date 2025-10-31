@@ -215,6 +215,13 @@ export async function createProjectFromGitHub(
       },
     });
 
+    if (!user.username) {
+      return {
+        success: false,
+        error: 'Username is required to create projects. Please set a username in your profile settings.',
+      };
+    }
+
     return {
       success: true,
       data: {

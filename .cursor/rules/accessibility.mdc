@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: Accessibility guidelines following WCAG 2.1 AA standards.
+globs: **/*{.js,.jsx,.ts,.tsx}
 alwaysApply: false
 ---
 ## Accessibility Guidelines

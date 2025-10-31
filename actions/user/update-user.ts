@@ -41,7 +41,7 @@ export async function updateUser(
       select: {
         id: true,
         email: true,
-        role: true,
+        applicationRole: true,
         status: true,
         name: true,
       },

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 
-import { auth } from '@/lib/auth/auth';
+import { getSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import { type ServerActionResult } from '@/lib/validation/user';
@@ -20,7 +20,7 @@ export async function updateImagePrivacy(
     data: ImagePrivacyData
 ): Promise<ServerActionResult<void>> {
     try {
-        const session = await auth();
+        const session = await getSession();
 
         if (!session?.user?.id) {
             return {
@@ -60,7 +60,7 @@ export async function updateImagePrivacy(
  */
 export async function removeUserImage(): Promise<ServerActionResult<void>> {
     try {
-        const session = await auth();
+        const session = await getSession();
 
         if (!session?.user?.id) {
             return {

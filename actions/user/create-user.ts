@@ -64,16 +64,16 @@ export async function createUser(
       data: {
         email: validatedData.email,
         username: validatedData.username,
-        name: validatedData.name,
+        name: validatedData.name || validatedData.email.split('@')[0],
         avatar: '/codac_logo.svg', // Set default Codac logo as avatar
-        role: validatedData.role,
+        applicationRole: validatedData.role,
         status: validatedData.status,
       },
       select: commonSelects.userPrivate,
     });
 
     logger.logDatabaseOperation('create', 'user', user.id, {
-      metadata: { email: user.email, username: user.username, role: user.role },
+      metadata: { email: user.email, username: user.username, role: user.applicationRole },
     });
 
     // Revalidate relevant paths and tags
@@ -89,7 +89,7 @@ export async function createUser(
         duration: Date.now() - startTime,
         email: user.email,
         username: user.username,
-        role: user.role,
+        role: user.applicationRole,
       },
     });
 

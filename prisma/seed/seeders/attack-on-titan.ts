@@ -3,6 +3,7 @@ import path from 'path';
 
 import { PrismaClient, UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { nanoid } from 'nanoid';
 
 import { encodeSeedImageToBase64 } from '../../../lib/imaging/encode-image-to-base64';
 import { logger } from '../../../lib/logger';
@@ -94,10 +95,12 @@ export async function seedAttackOnTitan() {
                 const userImageBase64 = await encodeSeedImageToBase64(userData.image, 'prisma/seed/dev/');
                 return prisma.user.create({
                     data: {
+                        id: nanoid(),
                         name: userData.name,
                         email: userData.email,
+                        emailVerified: false,
                         password: defaultPassword,
-                        role: userData.role as UserRole,
+                        applicationRole: userData.role as UserRole,
                         status: userData.status as UserStatus,
                         cohortId: cohort?.id,
                         username: userData.username,
@@ -118,12 +121,14 @@ export async function seedAttackOnTitan() {
         // Create admin user
         await prisma.user.create({
             data: {
+                id: nanoid(),
                 username: 'admin',
                 email: 'admin@codac.academy',
                 name: 'Admin User',
+                emailVerified: false,
                 password: defaultPassword,
-                role: 'ADMIN',
-                status: 'ACTIVE',
+                applicationRole: 'ADMIN' as UserRole,
+                status: 'ACTIVE' as UserStatus,
                 image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2RjMjYyNiIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjMwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QUQ8L3RleHQ+PC9zdmc+',
                 bio: 'System administrator responsible for platform management and user oversight.',
                 githubUrl: 'https://github.com/codac-admin',

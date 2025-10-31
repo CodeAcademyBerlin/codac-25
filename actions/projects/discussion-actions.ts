@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { Value } from 'platejs';
 
-import { auth } from '@/lib/auth/auth';
+import { getSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import { ServerActionResult } from '@/types/server-action';
@@ -36,7 +36,7 @@ export async function createDiscussion(
     input: CreateDiscussionInput
 ): Promise<ServerActionResult<{ discussionId: string }>> {
     try {
-        const session = await auth();
+        const session = await getSession();
 
         if (!session?.user?.id) {
             return {
@@ -91,7 +91,7 @@ export async function createComment(
     input: CreateCommentInput
 ): Promise<ServerActionResult<{ commentId: string }>> {
     try {
-        const session = await auth();
+        const session = await getSession();
 
         if (!session?.user?.id) {
             return {
@@ -160,7 +160,7 @@ export async function updateComment(
     input: UpdateCommentInput
 ): Promise<ServerActionResult<{ commentId: string }>> {
     try {
-        const session = await auth();
+        const session = await getSession();
 
         if (!session?.user?.id) {
             return {
@@ -238,7 +238,7 @@ export async function resolveDiscussion(
     input: ResolveDiscussionInput
 ): Promise<ServerActionResult<{ discussionId: string }>> {
     try {
-        const session = await auth();
+        const session = await getSession();
 
         if (!session?.user?.id) {
             return {

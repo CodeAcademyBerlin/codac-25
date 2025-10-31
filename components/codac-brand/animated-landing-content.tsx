@@ -8,15 +8,7 @@ import { CodacRightAngleBracket } from './codac-right-angle-bracket';
 export function AnimatedLandingContent() {
   return (
     <div className='flex justify-center items-center h-full'>
-      <motion.div
-        initial={{ x: -100 }}
-        animate={{ x: 0 }}
-        transition={{
-          duration: 3,
-          delay: 2,
-          ease: [0, 0.71, 0.2, 1.01],
-        }}
-      >
+      <motion.div className='animate-diamond-pulse opacity-0'>
         <CodacLeftAngleBracket size='6xl' animated />
       </motion.div>
 
@@ -38,16 +30,7 @@ export function AnimatedLandingContent() {
         </h1>
       </motion.div>
 
-      <motion.div
-        className='animate-diamond-pulse opacity-0'
-        initial={{ x: 100 }}
-        animate={{ x: 0 }}
-        transition={{
-          duration: 3,
-          delay: 2,
-          ease: [0, 0.71, 0.2, 1.01],
-        }}
-      >
+      <motion.div className='animate-diamond-pulse opacity-0'>
         <CodacRightAngleBracket size='6xl' animated />
       </motion.div>
     </div>

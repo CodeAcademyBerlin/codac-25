@@ -36,7 +36,7 @@ export async function seedJobs() {
         // Find admin user to post jobs
         const adminUser = await prisma.user.findFirst({
             where: {
-                role: 'ADMIN'
+                applicationRole: 'ADMIN'
             }
         });
 

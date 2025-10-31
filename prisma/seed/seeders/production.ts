@@ -3,6 +3,7 @@ import path from 'path';
 
 import { PrismaClient, UserRole, UserStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { nanoid } from 'nanoid';
 
 import { encodeSeedImageToBase64 } from '../../../lib/imaging/encode-image-to-base64';
 import { logger } from '../../../lib/logger';
@@ -152,11 +153,13 @@ export async function seedProduction() {
 
                 await prisma.user.create({
                     data: {
+                        id: nanoid(),
                         name: userData.name,
                         username: userData.username,
                         email: userData.email,
+                        emailVerified: false,
                         password: defaultPassword,
-                        role: userData.role,
+                        applicationRole: userData.role,
                         status: userData.status,
                         cohortId,
                         bio: userData.bio,

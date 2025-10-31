@@ -1,18 +1,14 @@
-import { headers } from 'next/headers'
-import { auth as nextAuth } from '@/lib/auth/auth'
-import { auth as betterAuth } from '@/lib/auth/better-auth'
+import { headers } from "next/headers";
+import { auth } from "./index";
 
-// Centralized session retrieval; prefers Better Auth
+/**
+ * Get the authenticated session from the server
+ * Use this in server actions and API routes to get the current user session
+ */
 export async function getSession() {
-  try {
-    const session = await betterAuth.api.getSession({ headers: headers() })
-    if (session) return session as any
-  } catch {}
-  // Fallback to NextAuth during migration
-  return nextAuth()
+  const result = await auth.api.getSession({
+    headers: await headers(),
+  });
+  return result as { session: { user: { id: string; email: string; name: string; image?: string | null } } } | null;
 }
-
-export type SessionUser = Awaited<ReturnType<typeof getSession>> extends { user: infer U }
-  ? U
-  : null
 

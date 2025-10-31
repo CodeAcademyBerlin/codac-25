@@ -25,7 +25,7 @@
 
 'use client';
 
-import { Monitor, Moon, Sun, Check } from 'lucide-react';
+import { Check, Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import * as React from 'react';
 
@@ -46,9 +46,9 @@ import {
 import { useMounted } from '@/hooks/use-mounted';
 import { cn } from '@/lib/utils';
 import {
+  applyColorScheme,
   colorSchemes,
   getStoredColorScheme,
-  applyColorScheme,
   type ColorScheme,
 } from '@/lib/utils/theme-utils';
 
@@ -80,7 +80,7 @@ export function ThemePicker({
   align = 'end',
 }: ThemePickerProps) {
   const { theme, setTheme } = useTheme();
-  const [colorScheme, setColorScheme] = React.useState<ColorScheme>('default');
+  const [colorScheme, setColorScheme] = React.useState<ColorScheme>('purple');
   const mounted = useMounted();
 
   React.useEffect(() => {

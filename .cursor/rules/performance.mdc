@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: Performance optimization guidelines and best practices.
+globs: **/*{.js,.jsx,.ts,.tsx}
 alwaysApply: false
 ---
 ## Performance Optimization Guidelines

@@ -38,7 +38,7 @@ export async function deleteUser(
         id: true,
         email: true,
         name: true,
-        role: true,
+        applicationRole: true,
         status: true,
         _count: {
           select: {
@@ -61,12 +61,12 @@ export async function deleteUser(
     }
 
     // Check if user is an admin (prevent accidental admin deletion)
-    if (existingUser.role === 'ADMIN') {
+    if (existingUser.applicationRole === 'ADMIN') {
       logger.warn('User deletion failed: cannot delete admin user', {
         action: 'delete',
         resource: 'user',
         resourceId: id,
-        metadata: { role: existingUser.role },
+        metadata: { role: existingUser.applicationRole },
       });
       return {
         success: false,

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-import { auth } from "@/lib/auth/auth";
+import { getSession } from '@/lib/auth/session';
 import { prisma } from "@/lib/db/prisma";
 import { jobSchema } from "@/lib/validation/job";
 import { ServerActionResult } from "@/types/server-action";
@@ -15,8 +15,16 @@ export async function updateJob(
   values: z.infer<typeof jobSchema>
 ): Promise<ServerActionResult<FieldErrors>> {
   try {
-    const session = await auth();
-    const user = session?.user;
+    const session = await getSession();
+    if (!session?.session?.user?.id) {
+      return { success: false, error: { form: "Unauthorized", _errors: [] } };
+    }
+
+    // Fetch user with role information
+    const user = await prisma.user.findUnique({
+      where: { id: session?.session?.user?.id! },
+      select: { id: true, applicationRole: true },
+    });
 
     if (!user) {
       return { success: false, error: { form: "Unauthorized", _errors: [] } };
@@ -41,7 +49,7 @@ export async function updateJob(
     }
 
     const canUpdate =
-      user.role === "ADMIN" || jobToUpdate.postedById === user.id;
+      user.applicationRole === "ADMIN" || jobToUpdate.postedById === user.id;
 
     if (!canUpdate) {
       return {

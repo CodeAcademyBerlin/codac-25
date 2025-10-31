@@ -2,7 +2,8 @@
 
 import { getUserConversationsAction } from "@/actions/chat/get-user-conversations";
 import { useCallback, useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+
+import { useSession } from "@/lib/auth-client";
 import { createClient } from "@/lib/supabase/client";
 
 export function useTotalUnreadCount() {

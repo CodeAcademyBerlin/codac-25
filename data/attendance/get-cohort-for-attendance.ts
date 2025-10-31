@@ -5,7 +5,7 @@ import { Prisma, UserRole, UserStatus } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import { type ServerActionResult } from '@/lib/utils/server-action-utils';
-import { auth } from '@/lib/auth/auth';
+import { getSession } from '@/lib/auth/session';
 
 export type CohortForAttendanceDetail = Prisma.CohortGetPayload<{
     include: {
@@ -45,7 +45,7 @@ export async function getCohortForAttendance(cohortSlug: string): Promise<GetCoh
             metadata: { cohortSlug },
         });
 
-        const session = await auth();
+        const session = await getSession();
         if (!session?.user?.id || (session.user.role !== UserRole.MENTOR && session.user.role !== UserRole.ADMIN)) {
             return {
                 success: false,

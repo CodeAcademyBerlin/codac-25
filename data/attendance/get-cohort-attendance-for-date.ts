@@ -3,7 +3,7 @@
 import { AttendanceStatus, UserRole } from '@prisma/client';
 import { isAfter, isBefore, isSameDay, startOfDay, subDays } from 'date-fns';
 
-import { auth } from '@/lib/auth/auth';
+import { getSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import { type ServerActionResult } from '@/lib/utils/server-action-utils';
@@ -46,7 +46,7 @@ export async function getCohortAttendanceForDate(
             metadata: { cohortSlug, date: targetDate.toISOString() },
         });
 
-        const session = await auth();
+        const session = await getSession();
         if (!session?.user?.id || (session.user.role !== UserRole.MENTOR && session.user.role !== UserRole.ADMIN)) {
             return {
                 success: false,

@@ -1,9 +1,10 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
+
+import { useSession } from "@/lib/auth-client";
 import { logger } from "@/lib/logger";
 import { createClient } from "@/lib/supabase/client";
-import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useState } from "react";
 
 export interface Notification {
   id: string;
@@ -35,7 +36,7 @@ export interface UseNotificationsReturn {
 }
 
 export function useNotifications(): UseNotificationsReturn {
-  const { data: session, status } = useSession();
+  const { data: session, isPending } = useSession();
   const user = session?.user;
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isConnected, setIsConnected] = useState(false);
@@ -44,7 +45,7 @@ export function useNotifications(): UseNotificationsReturn {
   // Subscribe to realtime notifications
   useEffect(() => {
     // Don't set up subscription if session is still loading or user is not authenticated
-    if (status === "loading" || !user?.id) return;
+    if (isPending || !user?.id) return;
 
     logger.info("Setting up notification subscription", {
       metadata: { userId: user.id },
@@ -74,7 +75,7 @@ export function useNotifications(): UseNotificationsReturn {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user?.id, supabase, status]);
+  }, [user?.id, supabase, isPending]);
 
   // Mark notification as read
   const markAsRead = useCallback((notificationId: string) => {

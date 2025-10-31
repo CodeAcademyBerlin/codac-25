@@ -1,101 +1,52 @@
-import type { UserRole } from "@prisma/client";
-import { headers } from "next/headers";
+import { prisma } from "@/lib/db";
 import { redirect } from "next/navigation";
-import { getToken } from "next-auth/jwt";
-
-import { prisma } from "@/lib/db/prisma";
+import { getSession } from "./session";
 
 /**
- * Server-side auth utility for pages that need database access
- * This should be used in Server Components, not in middleware
- */
-export async function getServerAuth() {
-    const headersList = await headers();
-    const secret = process.env['AUTH_SECRET'] || process.env['NEXTAUTH_SECRET'];
-    if (!secret) {
-        throw new Error("AUTH_SECRET or NEXTAUTH_SECRET environment variable is required");
-    }
-    const token = await getToken({
-        req: {
-            headers: headersList,
-        } as any,
-        secret
-    });
-
-    if (!token) {
-        return null;
-    }
-
-    // Fetch fresh user data from database
-    try {
-        const user = await prisma.user.findUnique({
-            where: { id: token.sub! },
-            select: {
-                id: true,
-                email: true,
-                name: true,
-                role: true,
-                status: true,
-                cohortId: true,
-                emailVerified: true,
-                avatar: true,
-            }
-        });
-
-        return user;
-    } catch (error) {
-        console.error("Error fetching user in getServerAuth:", error);
-        return null;
-    }
-}
-
-/**
- * Require authentication and return user data
+ * Require authentication on the server and return user with full profile
+ * Throws redirect if not authenticated
  */
 export async function requireServerAuth() {
-    const user = await getServerAuth();
-    if (!user) {
-        redirect("/auth/signin");
-    }
-    return user;
+  const result = await getSession();
+
+  if (!result?.session?.user?.id) {
+    redirect("/auth/signin");
+  }
+
+  // Fetch full user profile from database
+  const user = await prisma.user.findUnique({
+    where: { id: result.session.user.id! },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      username: true,
+      avatar: true,
+      bio: true,
+      applicationRole: true,
+      status: true,
+      cohortId: true,
+      githubUrl: true,
+      linkedinUrl: true,
+      portfolioUrl: true,
+      createdAt: true,
+      updatedAt: true,
+      role: true, // Better Auth role field
+      cohort: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          avatar: true,
+        },
+      },
+    },
+  });
+
+  if (!user) {
+    redirect("/auth/signin");
+  }
+
+  return user;
 }
 
-/**
- * Require specific role
- */
-export async function requireServerRole(role: UserRole) {
-    const user = await requireServerAuth();
-    if (user.role !== role) {
-        redirect("/");
-    }
-    return user;
-}
-
-/**
- * Require one of multiple roles
- */
-export async function requireServerAnyRole(roles: UserRole[]) {
-    const user = await requireServerAuth();
-    if (!roles.includes(user.role)) {
-        redirect("/");
-    }
-    return user;
-}
-
-/**
- * Require admin role
- */
-export async function requireServerAdmin() {
-    return requireServerRole("ADMIN");
-}
-
-/**
- * Require active user status
- */
-export async function requireServerActiveUser() {
-    const user = await requireServerAuth();
-    if (user.status !== "ACTIVE") {
-        redirect("/account-inactive");
-    }
-    return user;
-}

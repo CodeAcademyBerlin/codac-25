@@ -24,7 +24,7 @@ export async function unlinkGitHubAccount(): Promise<ServerActionResult<{ succes
         const githubAccount = await prisma.account.findFirst({
             where: {
                 userId: user.id,
-                provider: 'github',
+                providerId: 'github',
             },
         })
 
@@ -52,7 +52,7 @@ export async function unlinkGitHubAccount(): Promise<ServerActionResult<{ succes
             resourceId: githubAccount.id,
             metadata: {
                 userId: user.id,
-                providerAccountId: githubAccount.providerAccountId
+                accountId: githubAccount.accountId
             }
         })
 

@@ -10,10 +10,10 @@ import {
   User2,
   Users,
 } from 'lucide-react';
-import type { User } from 'next-auth';
-import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import * as React from 'react';
+
+import { useSession } from '@/lib/auth-client';
 
 import {
   Sidebar,
@@ -157,7 +157,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // Update navigation when user role or unread count changes
   React.useEffect(() => {
     if (session?.user) {
-      const userData = session.user as User;
+      const userData = session.user;
       setNavGroups(buildNavigationData(userData.role));
     }
   }, [session, totalUnreadCount]);

@@ -5,7 +5,7 @@ alwaysApply: false
 ---
 - Interact with the database exclusively using Prisma ORM client
 - Leverage Prisma's generated types for type safety
-- Use the centralized Prisma client from `lib/db/prisma.ts`
+- Use the centralized Prisma client from `lib/db.ts`
 - Implement data operations in separate layers:
   - `/actions` for mutations (Create, Update, Delete)
   - `/data` for queries (Read operations)

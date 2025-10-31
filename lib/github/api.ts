@@ -1,6 +1,6 @@
 'use server';
 
-import { auth } from '@/lib/auth/auth';
+import { getSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db/prisma';
 import { logger } from '@/lib/logger';
 
@@ -52,14 +52,14 @@ export async function getGitHubAccessToken(
     const account = await prisma.account.findFirst({
       where: {
         userId,
-        provider: 'github',
+        providerId: 'github',
       },
       select: {
-        access_token: true,
+        accessToken: true,
       },
     });
 
-    return account?.access_token || null;
+    return account?.accessToken || null;
   } catch (error) {
     logger.error(
       'Error fetching GitHub access token',
@@ -110,7 +110,7 @@ async function makeGitHubRequest<T>(
  */
 export async function getGitHubUser(): Promise<GitHubUser | null> {
   try {
-    const session = await auth();
+    const session = await getSession();
     if (!session?.user?.id) {
       return null;
     }
@@ -140,7 +140,7 @@ export async function getGitHubRepositories(options?: {
   type?: 'all' | 'owner' | 'public' | 'private' | 'member';
 }): Promise<GitHubRepository[]> {
   try {
-    const session = await auth();
+    const session = await getSession();
     if (!session?.user?.id) {
       return [];
     }
@@ -177,7 +177,7 @@ export async function getGitHubRepository(
   fullName: string
 ): Promise<GitHubRepository | null> {
   try {
-    const session = await auth();
+    const session = await getSession();
     if (!session?.user?.id) {
       return null;
     }
@@ -207,7 +207,7 @@ export async function getRepositoryLanguages(
   fullName: string
 ): Promise<Record<string, number>> {
   try {
-    const session = await auth();
+    const session = await getSession();
     if (!session?.user?.id) {
       return {};
     }
@@ -241,7 +241,7 @@ export async function isGitHubConnected(): Promise<boolean> {
       return false;
     }
 
-    const session = await auth();
+    const session = await getSession();
     if (!session?.user?.id) {
       return false;
     }
@@ -262,22 +262,22 @@ export async function isGitHubConnected(): Promise<boolean> {
  */
 export async function getGitHubUsername(): Promise<string | null> {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+    const session = await getSession();
+    if (!session?.session?.user?.id) {
       return null;
     }
 
     const account = await prisma.account.findFirst({
       where: {
-        userId: session.user.id,
-        provider: 'github',
+        userId: session?.session?.user?.id!,
+        providerId: 'github',
       },
       select: {
-        providerAccountId: true,
+        accountId: true,
       },
     });
 
-    return account?.providerAccountId || null;
+    return account?.accountId || null;
   } catch (error) {
     logger.error(
       'Error fetching GitHub username',

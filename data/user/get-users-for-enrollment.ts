@@ -14,7 +14,7 @@ export async function getUsersForEnrollment() {
         name: true,
         email: true,
         avatar: true,
-        role: true,
+        applicationRole: true,
         cohort: {
           select: {
             id: true,

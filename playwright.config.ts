@@ -45,7 +45,6 @@ export default defineConfig({
     timeout: 120000,
     env: {
       'AUTH_URL': 'http://localhost:3001',
-      'NEXTAUTH_URL': 'http://localhost:3001',
     },
   },
 });

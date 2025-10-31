@@ -2,9 +2,10 @@
 
 import { Heart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import { useState, useTransition } from 'react';
 import { toast } from 'sonner';
+
+import { useSession } from '@/lib/auth-client';
 
 import { likeProject } from '@/actions/projects/like-project';
 import { Button } from '@/components/ui/button';

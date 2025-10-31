@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: Security best practices and guidelines for secure coding.
+globs: **/*{.js,.jsx,.ts,.tsx}
 alwaysApply: false
 ---
 ## Security Guidelines

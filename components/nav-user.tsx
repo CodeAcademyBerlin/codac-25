@@ -7,9 +7,10 @@ import {
   IconPalette,
   IconUserCircle,
 } from '@tabler/icons-react';
-import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { Suspense } from 'react';
+
+import { signOut, useSession } from '@/lib/auth-client';
 
 import { ThemePicker } from '@/components/theme-picker';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -50,13 +51,13 @@ function ProfileSkeleton() {
 }
 
 function NavUser() {
-  const { data: session, status } = useSession();
+  const { data: session, isPending } = useSession();
   const { isMobile } = useSidebar();
 
-  console.log('NavUser - session:', session, 'status:', status);
+  console.log('NavUser - session:', session, 'isPending:', isPending);
 
   // Handle loading state (when session is still loading)
-  if (status === 'loading') {
+  if (isPending) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
@@ -179,9 +180,10 @@ function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className='cursor-pointer'
-              onSelect={event => {
+              onSelect={async (event) => {
                 event.preventDefault();
-                signOut({ callbackUrl: '/' });
+                await signOut();
+                window.location.href = '/';
               }}
             >
               <IconLogout />

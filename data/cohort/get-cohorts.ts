@@ -15,7 +15,7 @@ export type CohortWithStudents = Prisma.CohortGetPayload<{
         email: true;
         avatar: true;
         bio: true;
-        role: true;
+        applicationRole: true;
         status: true;
         githubUrl: true;
         linkedinUrl: true;
@@ -64,7 +64,7 @@ export async function getCohorts(): Promise<GetCohortsResult> {
             email: true,
             avatar: true,
             bio: true,
-            role: true,
+            applicationRole: true,
             status: true,
             githubUrl: true,
             linkedinUrl: true,

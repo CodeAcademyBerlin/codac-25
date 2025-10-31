@@ -3,7 +3,7 @@
 import { AttendanceStatus, Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
-import { auth } from '@/lib/auth/auth';
+import { getSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import {
@@ -53,7 +53,7 @@ export async function createAttendance(data: {
         });
 
         // Get authenticated user and check permissions
-        const session = await auth();
+        const session = await getSession();
         if (!session?.user?.id) {
             return {
                 success: false,
@@ -64,10 +64,10 @@ export async function createAttendance(data: {
         // Check if user has MENTOR or ADMIN role
         const user = await prisma.user.findUnique({
             where: { id: session.user.id },
-            select: { role: true }
+            select: { applicationRole: true }
         });
 
-        if (!user || (user.role !== 'MENTOR' && user.role !== 'ADMIN')) {
+        if (!user || (user.applicationRole !== 'MENTOR' && user.applicationRole !== 'ADMIN')) {
             return {
                 success: false,
                 error: 'Insufficient permissions. Only mentors and admins can manage attendance.'

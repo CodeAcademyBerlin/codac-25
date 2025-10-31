@@ -47,7 +47,7 @@ export async function getUsers(data: GetUsersInput): Promise<GetUsersResult> {
     const where: Prisma.UserWhereInput = {};
 
     if (validatedData.role) {
-      where.role = validatedData.role;
+      where.applicationRole = validatedData.role;
     }
 
     if (validatedData.status) {

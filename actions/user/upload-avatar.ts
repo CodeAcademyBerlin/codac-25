@@ -3,7 +3,7 @@
 import { revalidatePath, updateTag } from 'next/cache';
 import { Prisma } from '@prisma/client';
 
-import { auth } from '@/lib/auth/auth';
+import { getSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import { type ServerActionResult } from '@/lib/utils/server-action-utils';
@@ -20,7 +20,7 @@ export async function uploadAvatar(
 
     try {
         // Get current session
-        const session = await auth();
+        const session = await getSession();
         if (!session?.user?.id) {
             return {
                 success: false,
@@ -135,7 +135,7 @@ export async function resetAvatar(): Promise<UploadAvatarResult> {
 
     try {
         // Get current session
-        const session = await auth();
+        const session = await getSession();
         if (!session?.user?.id) {
             return {
                 success: false,

@@ -1,6 +1,6 @@
 'use server'
 
-import { auth } from '@/lib/auth/auth'
+import { getSession } from '@/lib/auth/session'
 import { findExistingDirectConversation } from './find-existing-conversation'
 import { createConversation } from './create-conversation'
 import { logger } from '@/lib/logger'
@@ -13,7 +13,7 @@ import { logger } from '@/lib/logger'
 export async function startDirectMessage(participantId: string) {
     try {
         // Check authentication
-        const session = await auth()
+        const session = await getSession()
         if (!session?.user?.id) {
             return {
                 success: false,

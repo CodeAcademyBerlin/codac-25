@@ -3,7 +3,7 @@
 import { Prisma } from '@prisma/client';
 import { z } from 'zod';
 
-import { auth } from '@/lib/auth/auth';
+import { getSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db/prisma';
 import { logger } from '@/lib/logger';
 import { createServerAction } from '@/lib/utils/server-action-utils';
@@ -17,7 +17,7 @@ type LikeProjectInput = z.infer<typeof likeProjectSchema>;
 export const likeProject = createServerAction(
   likeProjectSchema,
   async ({ projectId }: LikeProjectInput) => {
-    const session = await auth();
+    const session = await getSession();
     if (!session?.user?.id) {
       logger.warn('Unauthorized like attempt', {
         action: 'like_project',
