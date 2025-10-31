@@ -1,31 +1,31 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('User Login UI Tests', () => {
 
   test.describe('Sign-in Form UI', () => {
     test('should display sign-in form with all required elements', async ({ page }) => {
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(2000);
+      await page.waitForTimeout(2000);
 
       // Check basic page elements
       await expect(page).toHaveTitle(/codac/);
       await expect(page.getByText('Welcome to codac')).toBeVisible();
-      
+
       // Check form elements
       await expect(page.locator('input[type="email"]')).toBeVisible();
       await expect(page.locator('input[type="password"]')).toBeVisible();
       await expect(page.locator('button[type="submit"]')).toBeVisible();
-      
+
       // Check OAuth buttons
       await expect(page.getByRole('button', { name: /Google/i })).toBeVisible();
       await expect(page.getByRole('button', { name: /Send Magic Link/i })).toBeVisible();
     });
 
     test('should show error for invalid credentials', async ({ page }) => {
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(2000);
+      await page.waitForTimeout(2000);
 
       // Fill form with invalid credentials
       await page.locator('input[type="email"]').fill('nonexistent@example.com');
@@ -40,9 +40,9 @@ test.describe('User Login UI Tests', () => {
 
   test.describe('Magic Link UI', () => {
     test('should validate email format for magic link', async ({ page }) => {
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(2000);
+      await page.waitForTimeout(2000);
 
       // Try invalid email format
       await page.locator('input[type="email"]').fill('invalid-email');
@@ -56,9 +56,9 @@ test.describe('User Login UI Tests', () => {
 
   test.describe('OAuth UI', () => {
     test('should show Google login option', async ({ page }) => {
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(2000);
+      await page.waitForTimeout(2000);
 
       const googleButton = page.getByRole('button', { name: /Google/i });
       await expect(googleButton).toBeVisible();
@@ -68,9 +68,9 @@ test.describe('User Login UI Tests', () => {
 
   test.describe('Form Validation', () => {
     test('should have required fields marked as required', async ({ page }) => {
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(2000);
+      await page.waitForTimeout(2000);
 
       // Check required attributes
       await expect(page.locator('input[type="email"]')).toHaveAttribute('required');
@@ -78,7 +78,7 @@ test.describe('User Login UI Tests', () => {
     });
 
     test('should show client-side validation for empty credentials', async ({ page }) => {
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
 
       // Try to submit empty form - this should trigger client-side validation
       await page.getByRole('button', { name: 'Sign In' }).click();
@@ -93,22 +93,22 @@ test.describe('User Login UI Tests', () => {
     });
 
     test('should validate email format', async ({ page }) => {
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(2000);
+      await page.waitForTimeout(2000);
 
       // Fill with invalid email format
       await page.locator('input[type="email"]').fill('invalid-email');
       await page.locator('input[type="password"]').fill('somepassword');
-      
+
       // The form should not submit with invalid email (HTML5 validation)
       await expect(page.locator('input[type="email"]')).toHaveAttribute('type', 'email');
     });
 
     test('should show loading state during login attempt', async ({ page }) => {
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(2000);
+      await page.waitForTimeout(2000);
 
       // Fill form with any credentials
       await page.locator('input[type="email"]').fill('test@example.com');
@@ -124,9 +124,9 @@ test.describe('User Login UI Tests', () => {
 
   test.describe('Navigation', () => {
     test('should have link to sign up', async ({ page }) => {
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(2000);
+      await page.waitForTimeout(2000);
 
       // Should have sign up link
       await expect(page.getByRole('button', { name: /Sign up here/i })).toBeVisible();

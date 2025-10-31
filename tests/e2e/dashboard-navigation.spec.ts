@@ -15,7 +15,7 @@ test.describe('Dashboard Features', () => {
     await page.waitForTimeout(3000);
 
     // Should redirect to signin for unauthenticated users OR show welcome message for authenticated users
-    const isOnSignin = page.url().includes('/auth/signin');
+    const isOnSignin = page.url().includes('/sign-in');
     const hasWelcome = await page.getByText(/Welcome back/i).isVisible().catch(() => false);
 
     expect(isOnSignin || hasWelcome).toBe(true);
@@ -29,7 +29,7 @@ test.describe('Dashboard Features', () => {
     await page.waitForTimeout(3000);
 
     // Should either redirect to signin or show dashboard content
-    const isOnSignin = page.url().includes('/auth/signin');
+    const isOnSignin = page.url().includes('/sign-in');
     const hasDashboardContent = await page.getByText(/Welcome back|My Projects|Quick Actions/i).isVisible().catch(() => false);
 
     expect(isOnSignin || hasDashboardContent).toBe(true);
@@ -41,7 +41,7 @@ test.describe('Navigation and Routing', () => {
   test('should navigate to different sections', async ({ page }) => {
     // Test direct navigation to different sections
     const sections = [
-      { path: '/auth/signin', expectedText: ['Welcome to codac'] },
+      { path: '/sign-in', expectedText: ['Welcome to codac'] },
       // Note: /documents and /community may redirect to signin for unauthenticated users
     ];
 
@@ -50,8 +50,8 @@ test.describe('Navigation and Routing', () => {
       await page.waitForLoadState('networkidle');
 
       // For signin page, should stay on signin page
-      if (section.path === '/auth/signin') {
-        expect(page.url()).toContain('/auth/signin');
+      if (section.path === '/sign-in') {
+        expect(page.url()).toContain('/sign-in');
       }
 
       // Check that at least one expected text is visible
@@ -73,7 +73,7 @@ test.describe('Navigation and Routing', () => {
       await page.waitForLoadState('networkidle');
 
       // Should redirect to signin
-      expect(page.url()).toContain('/auth/signin');
+      expect(page.url()).toContain('/sign-in');
     }
   });
 

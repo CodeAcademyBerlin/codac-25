@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function StatsLoading() {
   return (
     <Section>
-      <Grid cols='4'>
+      <Grid cols={4}>
         {[1, 2, 3, 4].map(i => (
           <div key={i} className='border rounded-lg p-6 space-y-3'>
             <div className='flex justify-between items-center'>

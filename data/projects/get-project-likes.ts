@@ -10,7 +10,7 @@ export async function getProjectLikeStatus(projectId: string): Promise<{
 }> {
   try {
     const session = await getSession();
-    const userId = session?.user?.id;
+    const userId = session?.session?.user?.id;
 
     // Get the project with like count and user's like status
     const [project, userLike] = await Promise.all([
@@ -41,7 +41,7 @@ export async function getProjectLikeStatus(projectId: string): Promise<{
   } catch (error) {
     const session = await getSession();
     logger.error('Failed to get project like status', error as Error, {
-      metadata: { projectId, userId: session?.user?.id },
+      metadata: { projectId, userId: session?.session?.user?.id },
     });
 
     // Return safe defaults

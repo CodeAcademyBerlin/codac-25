@@ -1,20 +1,20 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { Prisma } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
 
+import { getSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
-import { getSession } from '@/lib/auth/session';
 import {
-    updateAttendanceSchema,
-    type UpdateAttendanceInput,
-    editAttendanceDateSchema
-} from '@/lib/validation/attendance';
-import {
-    type ServerActionResult,
-    handlePrismaError
+    handlePrismaError,
+    type ServerActionResult
 } from '@/lib/utils/server-action-utils';
+import {
+    editAttendanceDateSchema,
+    updateAttendanceSchema,
+    type UpdateAttendanceInput
+} from '@/lib/validation/attendance';
 
 
 // Define return type with Prisma's generated types
@@ -52,7 +52,7 @@ export async function updateAttendance(data: UpdateAttendanceInput): Promise<Upd
 
         // Get authenticated user and check permissions
         const session = await getSession();
-        if (!session?.user?.id) {
+        if (!session?.session?.user?.id) {
             return {
                 success: false,
                 error: 'Authentication required'
@@ -61,7 +61,7 @@ export async function updateAttendance(data: UpdateAttendanceInput): Promise<Upd
 
         // Check if user has MENTOR or ADMIN role
         const user = await prisma.user.findUnique({
-            where: { id: session.user.id },
+            where: { id: session.session.user.id },
             select: { applicationRole: true }
         });
 

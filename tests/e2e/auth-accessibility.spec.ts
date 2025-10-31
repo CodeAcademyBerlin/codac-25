@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 import { TestDataFactory } from '../utils/test-helpers';
 
@@ -27,7 +27,7 @@ test.describe('Authentication Accessibility Tests', () => {
     test('should display login form properly on mobile', async ({ page }) => {
       await page.setViewportSize({ width: 375, height: 667 });
 
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('networkidle');
 
       // Check form visibility
@@ -54,7 +54,7 @@ test.describe('Authentication Accessibility Tests', () => {
 
       for (const viewport of viewports) {
         await page.setViewportSize(viewport);
-        await page.goto('/auth/signin');
+        await page.goto('/sign-in');
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
 
@@ -98,7 +98,7 @@ test.describe('Authentication Accessibility Tests', () => {
     });
 
     test('should navigate login form with keyboard only', async ({ page }) => {
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('networkidle');
 
       // Tab navigation through login form
@@ -120,7 +120,7 @@ test.describe('Authentication Accessibility Tests', () => {
         password: 'password123'
       });
 
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('networkidle');
 
       // Fill email field and press Enter
@@ -132,7 +132,7 @@ test.describe('Authentication Accessibility Tests', () => {
 
       // Wait for response (error or navigation)
       await Promise.race([
-        page.waitForURL(url => !url.toString().includes('/auth/signin'), { timeout: 5000 }),
+        page.waitForURL(url => !url.toString().includes('/sign-in'), { timeout: 5000 }),
         page.waitForSelector('[role="alert"]', { timeout: 3000 })
       ]).catch(() => { });
     });
@@ -177,7 +177,7 @@ test.describe('Authentication Accessibility Tests', () => {
     });
 
     test('should have accessible button text', async ({ page }) => {
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('networkidle');
 
       // Buttons should have clear, descriptive text
@@ -215,7 +215,7 @@ test.describe('Authentication Accessibility Tests', () => {
 
   test.describe('Focus Management', () => {
     test('should maintain logical focus order', async ({ page }) => {
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('networkidle');
 
       // Track focus order
@@ -241,7 +241,7 @@ test.describe('Authentication Accessibility Tests', () => {
     });
 
     test('should restore focus after form submission errors', async ({ page }) => {
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('networkidle');
 
       // Focus on email input
@@ -263,7 +263,7 @@ test.describe('Authentication Accessibility Tests', () => {
 
   test.describe('Color Contrast and Visual Accessibility', () => {
     test('should have sufficient color contrast for error messages', async ({ page }) => {
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('networkidle');
 
       // Trigger error
@@ -294,7 +294,7 @@ test.describe('Authentication Accessibility Tests', () => {
   test.describe('Responsive Touch Targets', () => {
     test('should have adequately sized touch targets on mobile', async ({ page }) => {
       await page.setViewportSize({ width: 375, height: 667 });
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('networkidle');
 
       const interactiveElements = [
@@ -318,7 +318,7 @@ test.describe('Authentication Accessibility Tests', () => {
 
     test('should have adequate spacing between touch targets', async ({ page }) => {
       await page.setViewportSize({ width: 375, height: 667 });
-      await page.goto('/auth/signin');
+      await page.goto('/sign-in');
       await page.waitForLoadState('networkidle');
 
       // Check spacing between OAuth buttons
@@ -342,7 +342,7 @@ test.describe('Authentication Accessibility Tests', () => {
     ['chromium', 'firefox', 'webkit'].forEach(browserName => {
       test(`should maintain accessibility in ${browserName}`, async ({ page }) => {
         // Basic accessibility check across browsers
-        await page.goto('/auth/signin');
+        await page.goto('/sign-in');
         await page.waitForLoadState('networkidle');
 
         // Check basic form accessibility

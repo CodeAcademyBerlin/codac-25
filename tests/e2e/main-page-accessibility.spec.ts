@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Main Page Accessibility Tests', () => {
   test('should have proper heading hierarchy', async ({ page }) => {
@@ -9,7 +9,7 @@ test.describe('Main Page Accessibility Tests', () => {
     // Check if we're on dashboard or signin page
     const currentUrl = page.url();
 
-    if (currentUrl.includes('/auth/signin')) {
+    if (currentUrl.includes('/sign-in')) {
       // On signin page, check for signin-specific heading structure
       const welcomeText = await page.getByText('Welcome to codac').isVisible().catch(() => false);
       expect(welcomeText).toBe(true);
@@ -55,7 +55,7 @@ test.describe('Main Page Accessibility Tests', () => {
     // Check heading structure based on current page
     const currentUrl = page.url();
 
-    if (currentUrl.includes('/auth/signin')) {
+    if (currentUrl.includes('/sign-in')) {
       // On signin page, should have semantic structure even if not h1
       await expect(page.getByText('Welcome to codac')).toBeVisible();
     } else {

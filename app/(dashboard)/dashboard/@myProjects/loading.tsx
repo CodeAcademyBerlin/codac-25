@@ -12,7 +12,7 @@ export default function MyProjectsLoading() {
         <Skeleton className='h-10 w-24' />
       </div>
 
-      <Grid cols='3'>
+      <Grid cols={3}>
         {[1, 2, 3].map(i => (
           <div key={i} className='border rounded-lg overflow-hidden'>
             <Skeleton className='h-48 w-full' />

@@ -10,7 +10,7 @@ export async function requireServerAuth() {
   const result = await getSession();
 
   if (!result?.session?.user?.id) {
-    redirect("/auth/signin");
+    redirect("/sign-in");
   }
 
   // Fetch full user profile from database
@@ -44,7 +44,7 @@ export async function requireServerAuth() {
   });
 
   if (!user) {
-    redirect("/auth/signin");
+    redirect("/sign-in");
   }
 
   return user;

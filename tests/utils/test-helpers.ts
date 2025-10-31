@@ -15,7 +15,7 @@ export class AuthHelpers {
 
   // === SIGN IN METHODS ===
   async signIn(email: string, password: string) {
-    await this.page.goto('/auth/signin');
+    await this.page.goto('/sign-in');
     await this.page.waitForLoadState('networkidle');
 
     // Wait for form to be fully loaded
@@ -32,26 +32,26 @@ export class AuthHelpers {
 
     // Wait for either navigation or error state
     await Promise.race([
-      this.page.waitForURL(url => !url.toString().includes('/auth/signin'), { timeout: 10000 }),
+      this.page.waitForURL(url => !url.toString().includes('/sign-in'), { timeout: 10000 }),
       this.page.waitForSelector('[role="alert"]', { timeout: 5000 }).catch(() => null)
     ]);
   }
 
   async signInWithGoogle() {
-    await this.page.goto('/auth/signin');
+    await this.page.goto('/sign-in');
 
     await this.page.waitForLoadState('networkidle');
     await this.page.getByRole('button', { name: /Google/i }).click();
   }
 
   async signInWithGitHub() {
-    await this.page.goto('/auth/signin');
+    await this.page.goto('/sign-in');
     await this.page.waitForLoadState('networkidle');
     await this.page.getByRole('button', { name: /GitHub/i }).click();
   }
 
   async requestMagicLink(email: string) {
-    await this.page.goto('/auth/signin');
+    await this.page.goto('/sign-in');
     await this.page.waitForLoadState('networkidle');
     await this.page.waitForSelector('input[type="email"]', { timeout: 10000 });
 
@@ -102,7 +102,7 @@ export class AuthHelpers {
   // === NAVIGATION METHODS ===
   async goToSignUp() {
     // Try to find link to signup from signin page, or navigate directly
-    await this.page.goto('/auth/signin');
+    await this.page.goto('/sign-in');
     await this.page.waitForLoadState('networkidle');
 
     const signUpLink = this.page.getByRole('link', { name: /sign up/i });
@@ -137,13 +137,13 @@ export class AuthHelpers {
   // === SESSION STATE METHODS ===
   async isSignedIn(): Promise<boolean> {
     try {
-      await this.page.goto('/auth/signin');
+      await this.page.goto('/sign-in');
       await this.page.waitForLoadState('networkidle');
       await this.page.waitForTimeout(500);
 
       // If redirected away from signin page, user is likely already signed in
       const currentUrl = this.page.url();
-      return !currentUrl.includes('/auth/signin') || currentUrl.includes('callbackUrl');
+      return !currentUrl.includes('/sign-in') || currentUrl.includes('callbackUrl');
     } catch {
       return false;
     }
@@ -157,7 +157,7 @@ export class AuthHelpers {
       await this.page.waitForTimeout(500);
 
       // If redirected to signin, user is signed out
-      return this.page.url().includes('/auth/signin');
+      return this.page.url().includes('/sign-in');
     } catch {
       return true;
     }
@@ -167,7 +167,7 @@ export class AuthHelpers {
     // Wait for successful sign in by checking URL change
     try {
       await this.page.waitForFunction(() => {
-        return !window.location.pathname.startsWith('/auth/signin') &&
+        return !window.location.pathname.startsWith('/sign-in') &&
           !window.location.pathname.startsWith('/auth/error');
       }, { timeout: 15000 });
     } catch (error) {
@@ -186,7 +186,7 @@ export class AuthHelpers {
       // Look for success indicator or redirect
       await Promise.race([
         this.page.waitForSelector('text*=success', { timeout: 5000 }),
-        this.page.waitForURL('**/auth/signin**', { timeout: 5000 }),
+        this.page.waitForURL('**/sign-in**', { timeout: 5000 }),
         this.page.waitForSelector('[role="alert"]:has-text("Account created")', { timeout: 5000 })
       ]);
     } catch {
@@ -220,7 +220,7 @@ export class AuthHelpers {
 
   async expectRegistrationSuccess() {
     // Check for success state, message, or redirect to signin
-    const isOnSignin = await this.page.waitForURL('**/auth/signin**', { timeout: 3000 }).catch(() => false);
+    const isOnSignin = await this.page.waitForURL('**/sign-in**', { timeout: 3000 }).catch(() => false);
     const hasSuccessMessage = await this.page.locator('text*=success').isVisible().catch(() => false);
     const hasAlert = await this.page.locator('[role="alert"]').isVisible().catch(() => false);
 

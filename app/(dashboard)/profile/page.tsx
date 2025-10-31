@@ -18,7 +18,7 @@ export default async function ProfilePage() {
   const result = await getUser(authUser.id);
 
   if (!result.success || !result.data) {
-    redirect('/auth/signin');
+    redirect('/sign-in');
   }
 
   const user = result.data;

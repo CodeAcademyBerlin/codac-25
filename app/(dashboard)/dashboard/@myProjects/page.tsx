@@ -33,7 +33,7 @@ export default async function MyProjectsSlot() {
         </div>
 
         {userProjects.length > 0 ? (
-          <Grid cols='3'>
+          <Grid cols={3}>
             {userProjects.slice(0, 3).map(project => (
               <ProjectCard
                 key={project.id}

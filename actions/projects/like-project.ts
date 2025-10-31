@@ -18,7 +18,7 @@ export const likeProject = createServerAction(
   likeProjectSchema,
   async ({ projectId }: LikeProjectInput) => {
     const session = await getSession();
-    if (!session?.user?.id) {
+    if (!session?.session?.user?.id) {
       logger.warn('Unauthorized like attempt', {
         action: 'like_project',
         metadata: { projectId },
@@ -26,7 +26,7 @@ export const likeProject = createServerAction(
       throw new Error('Authentication required');
     }
 
-    const userId = session.user.id;
+    const userId = session.session.user.id;
 
     try {
       // Use transaction to ensure data consistency

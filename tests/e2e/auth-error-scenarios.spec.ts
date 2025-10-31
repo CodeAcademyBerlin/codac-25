@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { AuthHelpers, TestDataFactory } from '../utils/test-helpers';
 
 test.describe('Authentication Error Scenarios E2E Tests', () => {
@@ -101,7 +101,7 @@ test.describe('Authentication Error Scenarios E2E Tests', () => {
 
     test.describe('Login Error Edge Cases', () => {
         test('should handle login with SQL injection attempts', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Try SQL injection patterns
@@ -130,7 +130,7 @@ test.describe('Authentication Error Scenarios E2E Tests', () => {
         });
 
         test('should handle login with NoSQL injection attempts', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Try NoSQL injection patterns
@@ -147,8 +147,8 @@ test.describe('Authentication Error Scenarios E2E Tests', () => {
 
             // Attempt login from two different pages simultaneously
             await Promise.all([
-                page.goto('/auth/signin'),
-                page2.goto('/auth/signin')
+                page.goto('/sign-in'),
+                page2.goto('/sign-in')
             ]);
 
             await Promise.all([
@@ -184,7 +184,7 @@ test.describe('Authentication Error Scenarios E2E Tests', () => {
         });
 
         test('should handle browser back/forward during login', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             await page.locator('input[type="email"]').fill('test@example.com');
@@ -223,7 +223,7 @@ test.describe('Authentication Error Scenarios E2E Tests', () => {
                 }
             });
 
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Should handle corrupted session gracefully
@@ -244,7 +244,7 @@ test.describe('Authentication Error Scenarios E2E Tests', () => {
             await page.waitForTimeout(1000);
 
             // Should redirect to signin for expired session
-            expect(page.url()).toContain('/auth/signin');
+            expect(page.url()).toContain('/sign-in');
         });
 
         test('should handle localStorage unavailable', async ({ page }) => {
@@ -278,7 +278,7 @@ test.describe('Authentication Error Scenarios E2E Tests', () => {
                 }
             });
 
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Should still function without localStorage
@@ -310,7 +310,7 @@ test.describe('Authentication Error Scenarios E2E Tests', () => {
                 }
             });
 
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             await page.locator('input[type="email"]').fill('retry@example.com');
@@ -339,7 +339,7 @@ test.describe('Authentication Error Scenarios E2E Tests', () => {
                 });
             });
 
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             await page.locator('input[type="email"]').fill('slow@example.com');
@@ -381,7 +381,7 @@ test.describe('Authentication Error Scenarios E2E Tests', () => {
     test.describe('Browser Compatibility and Edge Cases', () => {
         test('should handle disabled JavaScript simulation', async ({ page }) => {
             // This test ensures the forms work with basic HTML when JS fails
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Check that forms have proper action and method attributes for graceful degradation
@@ -394,7 +394,7 @@ test.describe('Authentication Error Scenarios E2E Tests', () => {
         });
 
         test('should handle rapid form submission clicks', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             await page.locator('input[type="email"]').fill('rapid@example.com');
@@ -430,7 +430,7 @@ test.describe('Authentication Error Scenarios E2E Tests', () => {
                 });
             });
 
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             await page.locator('input[type="email"]').fill('refresh@example.com');
@@ -452,7 +452,7 @@ test.describe('Authentication Error Scenarios E2E Tests', () => {
 
     test.describe('Accessibility in Error States', () => {
         test('should maintain accessibility during error states', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Trigger an error

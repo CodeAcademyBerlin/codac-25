@@ -32,7 +32,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
       <PageHeader
         title="Job Board"
         description="Discover career opportunities from our community and partners"
-      >
+      />
         {canPostJob && (
           <Button asChild>
             <Link href="/career/jobs/post">

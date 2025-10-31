@@ -38,7 +38,7 @@ export async function createDiscussion(
     try {
         const session = await getSession();
 
-        if (!session?.user?.id) {
+        if (!session?.session?.user?.id) {
             return {
                 success: false,
                 error: 'Authentication required',
@@ -48,7 +48,7 @@ export async function createDiscussion(
         const discussion = await prisma.documentDiscussion.create({
             data: {
                 documentId: input.documentId,
-                userId: session.user.id,
+                userId: session.session.user.id,
                 documentContent: input.documentContent,
                 isResolved: false,
             },
@@ -59,7 +59,7 @@ export async function createDiscussion(
             metadata: {
                 discussionId: discussion.id,
                 documentId: input.documentId,
-                userId: session.user.id,
+                userId: session.session.user.id,
             },
         });
 
@@ -93,7 +93,7 @@ export async function createComment(
     try {
         const session = await getSession();
 
-        if (!session?.user?.id) {
+        if (!session?.session?.user?.id) {
             return {
                 success: false,
                 error: 'Authentication required',
@@ -116,7 +116,7 @@ export async function createComment(
         const comment = await prisma.documentComment.create({
             data: {
                 discussionId: input.discussionId,
-                userId: session.user.id,
+                userId: session.session.user.id,
                 contentRich: input.contentRich as any,
                 parentId: input.parentId,
                 isEdited: false,
@@ -128,7 +128,7 @@ export async function createComment(
             metadata: {
                 commentId: comment.id,
                 discussionId: input.discussionId,
-                userId: session.user.id,
+                userId: session.session.user.id,
             },
         });
 
@@ -162,7 +162,7 @@ export async function updateComment(
     try {
         const session = await getSession();
 
-        if (!session?.user?.id) {
+        if (!session?.session?.user?.id) {
             return {
                 success: false,
                 error: 'Authentication required',
@@ -187,7 +187,7 @@ export async function updateComment(
             };
         }
 
-        if (existingComment.userId !== session.user.id) {
+        if (existingComment.userId !== session.session.user.id) {
             return {
                 success: false,
                 error: 'Unauthorized to edit this comment',
@@ -206,7 +206,7 @@ export async function updateComment(
             action: 'update_comment',
             metadata: {
                 commentId: comment.id,
-                userId: session.user.id,
+                userId: session.session.user.id,
             },
         });
 
@@ -240,7 +240,7 @@ export async function resolveDiscussion(
     try {
         const session = await getSession();
 
-        if (!session?.user?.id) {
+        if (!session?.session?.user?.id) {
             return {
                 success: false,
                 error: 'Authentication required',
@@ -264,7 +264,7 @@ export async function resolveDiscussion(
         }
 
         // Only the discussion creator or admin can resolve it
-        if (existingDiscussion.userId !== session.user.id) {
+        if (existingDiscussion.userId !== session.session.user.id) {
             // TODO: Add admin role check here if needed
             return {
                 success: false,
@@ -284,7 +284,7 @@ export async function resolveDiscussion(
             metadata: {
                 discussionId: discussion.id,
                 isResolved: input.isResolved,
-                userId: session.user.id,
+                userId: session.session.user.id,
             },
         });
 

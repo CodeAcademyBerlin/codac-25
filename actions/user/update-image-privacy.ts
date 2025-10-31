@@ -22,7 +22,7 @@ export async function updateImagePrivacy(
     try {
         const session = await getSession();
 
-        if (!session?.user?.id) {
+        if (!session?.session?.user?.id) {
             return {
                 success: false,
                 error: 'Unauthorized',
@@ -32,7 +32,7 @@ export async function updateImagePrivacy(
         // TODO: Add imagePrivate and photoConsent fields to User model
         // For now, just return success to prevent build errors
         logger.warn('updateImagePrivacy called but fields not implemented in schema', {
-            userId: session.user.id,
+            userId: session.session.user.id,
             metadata: { requestedData: data },
         });
 
@@ -62,7 +62,7 @@ export async function removeUserImage(): Promise<ServerActionResult<void>> {
     try {
         const session = await getSession();
 
-        if (!session?.user?.id) {
+        if (!session?.session?.user?.id) {
             return {
                 success: false,
                 error: 'Unauthorized',
@@ -70,7 +70,7 @@ export async function removeUserImage(): Promise<ServerActionResult<void>> {
         }
 
         await prisma.user.update({
-            where: { id: session.user.id },
+            where: { id: session.session.user.id },
             data: { image: null },
         });
 
@@ -78,7 +78,7 @@ export async function removeUserImage(): Promise<ServerActionResult<void>> {
         revalidatePath('/profile');
 
         logger.info('User image removed', {
-            userId: session.user.id,
+            userId: session.session.user.id,
         });
 
         return {

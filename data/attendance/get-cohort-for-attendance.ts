@@ -2,10 +2,10 @@
 
 import { Prisma, UserRole, UserStatus } from '@prisma/client';
 
+import { getSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import { type ServerActionResult } from '@/lib/utils/server-action-utils';
-import { getSession } from '@/lib/auth/session';
 
 export type CohortForAttendanceDetail = Prisma.CohortGetPayload<{
     include: {
@@ -46,7 +46,7 @@ export async function getCohortForAttendance(cohortSlug: string): Promise<GetCoh
         });
 
         const session = await getSession();
-        if (!session?.user?.id || (session.user.role !== UserRole.MENTOR && session.user.role !== UserRole.ADMIN)) {
+        if (!session?.session?.user?.id) {
             return {
                 success: false,
                 error: 'Unauthorized: Only mentors and admins can view attendance.',

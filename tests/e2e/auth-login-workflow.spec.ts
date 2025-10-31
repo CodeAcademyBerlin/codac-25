@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { AuthHelpers } from '../utils/test-helpers';
 
 test.describe('User Login E2E Workflow Tests', () => {
@@ -38,7 +38,7 @@ test.describe('User Login E2E Workflow Tests', () => {
             });
 
             // Navigate to login page
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Verify page elements
@@ -56,12 +56,12 @@ test.describe('User Login E2E Workflow Tests', () => {
 
             // Should redirect away from signin page
             await Promise.race([
-                page.waitForURL(url => !url.toString().includes('/auth/signin'), { timeout: 10000 }),
+                page.waitForURL(url => !url.toString().includes('/sign-in'), { timeout: 10000 }),
                 page.waitForTimeout(5000)
             ]);
 
             // Verify we're not on signin or error page
-            expect(page.url()).not.toContain('/auth/signin');
+            expect(page.url()).not.toContain('/sign-in');
             expect(page.url()).not.toContain('/auth/error');
         });
 
@@ -88,7 +88,7 @@ test.describe('User Login E2E Workflow Tests', () => {
 
             // Check if we stay on the home page (not redirected to signin)
             const currentUrl = page.url();
-            const isNotOnSignin = !currentUrl.includes('/auth/signin');
+            const isNotOnSignin = !currentUrl.includes('/sign-in');
 
             // Reload the page to test session persistence
             if (isNotOnSignin) {
@@ -97,10 +97,10 @@ test.describe('User Login E2E Workflow Tests', () => {
                 await page.waitForTimeout(1000);
 
                 // Should still not be on signin page
-                expect(page.url()).not.toContain('/auth/signin');
+                expect(page.url()).not.toContain('/sign-in');
             } else {
                 // If we're redirected to signin, that's also a valid test result
-                expect(currentUrl).toContain('/auth/signin');
+                expect(currentUrl).toContain('/sign-in');
             }
         });
 
@@ -108,7 +108,7 @@ test.describe('User Login E2E Workflow Tests', () => {
             const callbackUrl = encodeURIComponent('/dashboard/profile');
 
             // Navigate to signin with callbackUrl parameter
-            await page.goto(`/auth/signin?callbackUrl=${callbackUrl}`);
+            await page.goto(`/sign-in?callbackUrl=${callbackUrl}`);
             await page.waitForLoadState('domcontentloaded');
 
             // Verify the callback URL is preserved in the form or URL
@@ -130,14 +130,14 @@ test.describe('User Login E2E Workflow Tests', () => {
 
             // Should still be on signin page or show an error (both are acceptable)
             const finalUrl = page.url();
-            const isOnSigninOrError = finalUrl.includes('/auth/signin') || finalUrl.includes('/auth/error');
+            const isOnSigninOrError = finalUrl.includes('/sign-in') || finalUrl.includes('/auth/error');
             expect(isOnSigninOrError).toBe(true);
         });
     });
 
     test.describe('Login Error Scenarios', () => {
         test('should show error for invalid credentials', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Fill with invalid credentials
@@ -160,7 +160,7 @@ test.describe('User Login E2E Workflow Tests', () => {
         });
 
         test('should show error for non-existent user', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             await page.locator('input[type="email"]').fill('nonexistent@example.com');
@@ -181,7 +181,7 @@ test.describe('User Login E2E Workflow Tests', () => {
                 });
             });
 
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             await page.locator('input[type="email"]').fill('user@example.com');
@@ -199,7 +199,7 @@ test.describe('User Login E2E Workflow Tests', () => {
                 await new Promise(() => { }); // Infinite promise
             });
 
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             await page.locator('input[type="email"]').fill('user@example.com');
@@ -213,7 +213,7 @@ test.describe('User Login E2E Workflow Tests', () => {
 
     test.describe('Login Form Validation', () => {
         test('should validate required fields', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Try to submit empty form
@@ -225,7 +225,7 @@ test.describe('User Login E2E Workflow Tests', () => {
         });
 
         test('should validate email format', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Fill with invalid email
@@ -246,7 +246,7 @@ test.describe('User Login E2E Workflow Tests', () => {
                 });
             });
 
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             await page.locator('input[type="email"]').fill('user@example.com');
@@ -261,7 +261,7 @@ test.describe('User Login E2E Workflow Tests', () => {
         });
 
         test('should clear errors on new input', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // First, cause an error
@@ -282,7 +282,7 @@ test.describe('User Login E2E Workflow Tests', () => {
 
     test.describe('OAuth Login Tests', () => {
         test('should show Google login option', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             const googleButton = page.getByRole('button', { name: /Google/i });
@@ -299,7 +299,7 @@ test.describe('User Login E2E Workflow Tests', () => {
                 });
             });
 
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Click Google button
@@ -322,7 +322,7 @@ test.describe('User Login E2E Workflow Tests', () => {
                 });
             });
 
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             const googleButton = page.getByRole('button', { name: /Google/i });
@@ -335,14 +335,14 @@ test.describe('User Login E2E Workflow Tests', () => {
 
     test.describe('Magic Link Tests', () => {
         test('should show magic link option', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             await expect(page.getByRole('button', { name: /Send Magic Link/i })).toBeVisible();
         });
 
         test('should handle magic link request', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Fill email field and try magic link
@@ -356,7 +356,7 @@ test.describe('User Login E2E Workflow Tests', () => {
             // Should either show success message, redirect to verify-request, or handle gracefully
             const hasSuccessMessage = await page.getByText(/check your email/i).isVisible().catch(() => false);
             const isOnVerifyPage = page.url().includes('/auth/verify-request');
-            const isStillOnSignin = page.url().includes('/auth/signin');
+            const isStillOnSignin = page.url().includes('/sign-in');
             const hasError = await page.locator('[role="alert"]:not([id="__next-route-announcer__"])').isVisible().catch(() => false);
 
             // At least one of these conditions should be true (success, redirect, or graceful handling)
@@ -364,7 +364,7 @@ test.describe('User Login E2E Workflow Tests', () => {
         });
 
         test('should handle email validation for magic link', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Try magic link with invalid email
@@ -388,7 +388,7 @@ test.describe('User Login E2E Workflow Tests', () => {
 
     test.describe('Navigation and UI Tests', () => {
         test('should have link to registration page', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Should have sign up link/button
@@ -403,7 +403,7 @@ test.describe('User Login E2E Workflow Tests', () => {
         test('should maintain callback URL when navigating to signup', async ({ page }) => {
             const callbackUrl = encodeURIComponent('/dashboard');
 
-            await page.goto(`/auth/signin?callbackUrl=${callbackUrl}`);
+            await page.goto(`/sign-in?callbackUrl=${callbackUrl}`);
             await page.waitForLoadState('domcontentloaded');
 
             const signupLink = page.getByRole('button', { name: /Sign up here/i });
@@ -430,17 +430,17 @@ test.describe('User Login E2E Workflow Tests', () => {
             });
 
             // Navigate to signin page while authenticated
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
 
             // Should redirect away from signin page
             await page.waitForTimeout(2000);
-            expect(page.url()).not.toContain('/auth/signin');
+            expect(page.url()).not.toContain('/sign-in');
         });
     });
 
     test.describe('Security Tests', () => {
         test('should prevent CSRF attacks', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Check for CSRF token or other security measures
@@ -455,7 +455,7 @@ test.describe('User Login E2E Workflow Tests', () => {
         });
 
         test('should sanitize inputs', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Try XSS-like input
@@ -474,7 +474,7 @@ test.describe('User Login E2E Workflow Tests', () => {
         });
 
         test('should handle multiple rapid login attempts', async ({ page }) => {
-            await page.goto('/auth/signin');
+            await page.goto('/sign-in');
             await page.waitForLoadState('domcontentloaded');
 
             // Fill credentials

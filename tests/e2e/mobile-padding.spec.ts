@@ -1,13 +1,13 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test('checks padding on desktop devices', async ({ page }) => {
   // Navigate to the signin page (more predictable than homepage)
-  await page.goto('/auth/signin');
-  
+  await page.goto('/sign-in');
+
   // Wait for page to fully load
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(1000);
-  
+
   // Get the computed padding values for the main container or card
   const pageContainer = page.locator('.flex.items-center.justify-center, [class*="card"], main').first();
   const padding = await pageContainer.evaluate((el) => {
@@ -19,15 +19,15 @@ test('checks padding on desktop devices', async ({ page }) => {
       paddingLeft: style.paddingLeft
     };
   });
-  
+
   console.log('Desktop padding:', padding);
-  
+
   // Check that padding values are reasonable (not too large)
   const paddingTopValue = parseInt(padding.paddingTop);
   const paddingRightValue = parseInt(padding.paddingRight);
   const paddingBottomValue = parseInt(padding.paddingBottom);
   const paddingLeftValue = parseInt(padding.paddingLeft);
-  
+
   // These should be reasonable values for desktop
   expect(paddingTopValue).toBeLessThan(50);
   expect(paddingRightValue).toBeLessThan(50);
@@ -38,14 +38,14 @@ test('checks padding on desktop devices', async ({ page }) => {
 test('checks padding on mobile viewport', async ({ page }) => {
   // Set viewport to mobile size
   await page.setViewportSize({ width: 375, height: 667 });
-  
+
   // Navigate to the signin page
-  await page.goto('/auth/signin');
-  
+  await page.goto('/sign-in');
+
   // Wait for page to fully load
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(1000);
-  
+
   // Get the computed padding values for the main container or card
   const pageContainer = page.locator('.flex.items-center.justify-center, [class*="card"], main').first();
   const padding = await pageContainer.evaluate((el) => {
@@ -57,15 +57,15 @@ test('checks padding on mobile viewport', async ({ page }) => {
       paddingLeft: style.paddingLeft
     };
   });
-  
+
   console.log('Mobile padding:', padding);
-  
+
   // Check that padding values are appropriate for mobile
   const paddingTopValue = parseInt(padding.paddingTop);
   const paddingRightValue = parseInt(padding.paddingRight);
   const paddingBottomValue = parseInt(padding.paddingBottom);
   const paddingLeftValue = parseInt(padding.paddingLeft);
-  
+
   // These should be smaller values for mobile
   expect(paddingTopValue).toBeLessThan(30);
   expect(paddingRightValue).toBeLessThan(30);
@@ -75,10 +75,10 @@ test('checks padding on mobile viewport', async ({ page }) => {
 
 test('compares desktop and mobile padding', async ({ page }) => {
   // Test desktop version first
-  await page.goto('/auth/signin');
+  await page.goto('/sign-in');
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(1000);
-  
+
   const desktopContainer = page.locator('.flex.items-center.justify-center, [class*="card"], main').first();
   const desktopPadding = await desktopContainer.evaluate((el) => {
     const style = window.getComputedStyle(el);
@@ -89,13 +89,13 @@ test('compares desktop and mobile padding', async ({ page }) => {
       paddingLeft: parseInt(style.paddingLeft)
     };
   });
-  
+
   // Switch to mobile viewport
   await page.setViewportSize({ width: 375, height: 667 });
-  await page.goto('/auth/signin');
+  await page.goto('/sign-in');
   await page.waitForLoadState('networkidle');
   await page.waitForTimeout(1000);
-  
+
   const mobileContainer = page.locator('.flex.items-center.justify-center, [class*="card"], main').first();
   const mobilePadding = await mobileContainer.evaluate((el) => {
     const style = window.getComputedStyle(el);
@@ -106,11 +106,11 @@ test('compares desktop and mobile padding', async ({ page }) => {
       paddingLeft: parseInt(style.paddingLeft)
     };
   });
-  
+
   console.log('Desktop vs Mobile padding comparison:');
   console.log('Desktop:', desktopPadding);
   console.log('Mobile:', mobilePadding);
-  
+
   // Mobile padding should be less than or equal to desktop padding
   expect(mobilePadding.paddingTop).toBeLessThanOrEqual(desktopPadding.paddingTop);
   expect(mobilePadding.paddingRight).toBeLessThanOrEqual(desktopPadding.paddingRight);

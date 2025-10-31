@@ -44,12 +44,12 @@ test.describe('User Registration E2E Tests', () => {
                 // Check for success message
                 page.waitForSelector('text=Account Created', { timeout: 10000 }),
                 // Or check for redirect to signin
-                page.waitForURL('**/auth/signin**', { timeout: 10000 })
+                page.waitForURL('**/sign-in**', { timeout: 10000 })
             ]);
 
             // Verify success - either success message is shown or redirected to signin
             const isOnSuccess = await page.getByText('Account Created').isVisible().catch(() => false);
-            const isOnSignin = page.url().includes('/auth/signin');
+            const isOnSignin = page.url().includes('/sign-in');
 
             expect(isOnSuccess || isOnSignin).toBe(true);
 
@@ -81,7 +81,7 @@ test.describe('User Registration E2E Tests', () => {
             await authHelpers.waitForSignInComplete();
 
             // Verify we're no longer on signin page
-            expect(page.url()).not.toContain('/auth/signin');
+            expect(page.url()).not.toContain('/sign-in');
             expect(page.url()).not.toContain('/auth/error');
         });
     });
@@ -155,7 +155,7 @@ test.describe('User Registration E2E Tests', () => {
             // The main thing is the form doesn't crash
             const hasError = await page.locator('[role="alert"]:not([id="__next-route-announcer__"])').isVisible();
             const isStillOnSignup = page.url().includes('/auth/signup');
-            const isRedirectedToSignin = page.url().includes('/auth/signin');
+            const isRedirectedToSignin = page.url().includes('/sign-in');
 
             // One of these conditions should be true (error shown, still on signup, or successful redirect)
             expect(hasError || isStillOnSignup || isRedirectedToSignin).toBe(true);

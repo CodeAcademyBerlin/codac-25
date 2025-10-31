@@ -1,10 +1,10 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 
 const BASE_URL = process.env.E2E_BASE_URL || 'http://localhost:3000'
 
 test.describe('Auth', () => {
   test('Sign-in page renders', async ({ page }) => {
-    await page.goto(`${BASE_URL}/auth/signin`)
+    await page.goto(`${BASE_URL}/sign-in`)
     await expect(page).toHaveTitle(/Authentication/i)
     await expect(page.getByRole('button', { name: /sign in/i })).toBeVisible()
   })

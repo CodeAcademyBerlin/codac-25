@@ -2,12 +2,12 @@
 
 import { Prisma } from '@prisma/client';
 
+import { getSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
-import { getSession } from '@/lib/auth/session';
 import {
-    type ServerActionResult,
-    handlePrismaError
+    handlePrismaError,
+    type ServerActionResult
 } from '@/lib/utils/server-action-utils';
 
 
@@ -70,7 +70,7 @@ export async function getCohortAttendanceSummary(
 
         // Get authenticated user and check permissions
         const session = await getSession();
-        if (!session?.user?.id) {
+        if (!session?.session?.user?.id) {
             return {
                 success: false,
                 error: 'Authentication required'
@@ -79,7 +79,7 @@ export async function getCohortAttendanceSummary(
 
         // Check if user has MENTOR or ADMIN role
         const user = await prisma.user.findUnique({
-            where: { id: session.user.id },
+            where: { id: session.session.user.id },
             select: { applicationRole: true }
         });
 

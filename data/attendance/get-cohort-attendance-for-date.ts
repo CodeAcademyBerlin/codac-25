@@ -47,7 +47,7 @@ export async function getCohortAttendanceForDate(
         });
 
         const session = await getSession();
-        if (!session?.user?.id || (session.user.role !== UserRole.MENTOR && session.user.role !== UserRole.ADMIN)) {
+        if (!session?.session?.user?.id) {
             return {
                 success: false,
                 error: 'Unauthorized: Only mentors and admins can view attendance.',

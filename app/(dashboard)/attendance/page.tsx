@@ -68,7 +68,7 @@ export default async function AttendancePage() {
         {/* Statistics Overview */}
         <Section>
           <SectionErrorBoundary sectionName='attendance statistics'>
-            <Grid cols='4' className='mb-8'>
+            <Grid cols={4} className='mb-8'>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
@@ -134,7 +134,7 @@ export default async function AttendancePage() {
                 </p>
               </div>
 
-              <Grid cols='3'>
+              <Grid cols={3}>
                 {activeCohorts.map(cohort => (
                   <AttendanceCohortCard key={cohort.id} cohort={cohort} />
                 ))}
@@ -156,7 +156,7 @@ export default async function AttendancePage() {
                 </p>
               </div>
 
-              <Grid cols='3'>
+              <Grid cols={3}>
                 {endedCohorts.map(cohort => (
                   <AttendanceCohortCard key={cohort.id} cohort={cohort} />
                 ))}

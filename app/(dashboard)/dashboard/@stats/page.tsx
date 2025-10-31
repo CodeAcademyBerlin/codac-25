@@ -30,7 +30,7 @@ export default async function StatsSlot() {
 
   return (
     <Section>
-      <Grid cols='4'>
+      <Grid cols={4}>
         <Card className='border-codac-pink/20'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-sm font-medium'>

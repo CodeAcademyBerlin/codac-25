@@ -50,7 +50,7 @@ export default async function MyProjectsPage() {
             </Link>
           </div>
         ) : (
-          <Grid cols='3'>
+          <Grid cols={3}>
             {projects.map(project => (
               <ProjectCard
                 key={project.id}

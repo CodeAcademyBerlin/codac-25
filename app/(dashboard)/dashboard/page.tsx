@@ -15,7 +15,7 @@ export default async function DashboardPage() {
 
   if (!result.success || !result.data) {
     // User has valid session but no database record - redirect to signout to clear session
-    redirect('/auth/signout?callbackUrl=/auth/signin');
+    redirect('/auth/signout?callbackUrl=/sign-in');
   }
 
   return (

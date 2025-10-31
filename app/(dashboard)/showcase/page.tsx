@@ -1,4 +1,4 @@
-import { Trophy, Star, TrendingUp, Users } from 'lucide-react';
+import { Star, TrendingUp, Trophy, Users } from 'lucide-react';
 
 import {
   Grid,
@@ -13,8 +13,8 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getProjectStats } from '@/data/projects/get-project-stats';
 import {
-  getFeaturedProjects,
   getAllProjects,
+  getFeaturedProjects,
 } from '@/data/projects/get-projects';
 
 export default async function ShowcasePage() {
@@ -119,7 +119,7 @@ export default async function ShowcasePage() {
             }
           />
 
-          <Grid cols='3'>
+          <Grid cols={3}>
             {featuredProjects.map(project => (
               <ProjectCard key={project.id} project={project} />
             ))}
@@ -141,7 +141,7 @@ export default async function ShowcasePage() {
             }
           />
 
-          <Grid cols='3'>
+          <Grid cols={3}>
             {topProjects.map(project => (
               <ProjectCard key={project.id} project={project} />
             ))}

@@ -27,7 +27,7 @@ export default async function ProfileSettingsPage() {
   const result = await getUser(user.id);
 
   if (!result.success || !result.data) {
-    redirect('/auth/signin');
+    redirect('/sign-in');
   }
 
   const fullUser = result.data;

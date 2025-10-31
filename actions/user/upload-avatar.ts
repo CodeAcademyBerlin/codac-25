@@ -1,7 +1,7 @@
 'use server';
 
-import { revalidatePath, updateTag } from 'next/cache';
 import { Prisma } from '@prisma/client';
+import { revalidatePath, updateTag } from 'next/cache';
 
 import { getSession } from '@/lib/auth/session';
 import { prisma } from '@/lib/db';
@@ -21,7 +21,7 @@ export async function uploadAvatar(
     try {
         // Get current session
         const session = await getSession();
-        if (!session?.user?.id) {
+        if (!session?.session?.user?.id) {
             return {
                 success: false,
                 error: 'Authentication required',
@@ -53,7 +53,7 @@ export async function uploadAvatar(
         }
 
         logger.logServerAction('upload', 'user-avatar', {
-            resourceId: session.user.id,
+            resourceId: session.session.user.id,
             metadata: { fileSize: file.size, fileType: file.type },
         });
 
@@ -65,7 +65,7 @@ export async function uploadAvatar(
 
         // Update user avatar
         const user = await prisma.user.update({
-            where: { id: session.user.id },
+            where: { id: session.session.user.id },
             data: { avatar: dataUrl },
             select: { id: true, avatar: true },
         });
@@ -75,12 +75,12 @@ export async function uploadAvatar(
         revalidatePath('/profile/settings');
         revalidatePath('/');
         updateTag('user');
-        updateTag(`user-${session.user.id}`);
+        updateTag(`user-${session.session.user.id}`);
 
         logger.info('Avatar uploaded successfully', {
             action: 'upload',
             resource: 'user-avatar',
-            resourceId: session.user.id,
+            resourceId: session.session.user.id,
             metadata: {
                 duration: Date.now() - startTime,
                 fileSize: file.size,
@@ -136,7 +136,7 @@ export async function resetAvatar(): Promise<UploadAvatarResult> {
     try {
         // Get current session
         const session = await getSession();
-        if (!session?.user?.id) {
+        if (!session?.session?.user?.id) {
             return {
                 success: false,
                 error: 'Authentication required',
@@ -144,12 +144,12 @@ export async function resetAvatar(): Promise<UploadAvatarResult> {
         }
 
         logger.logServerAction('reset', 'user-avatar', {
-            resourceId: session.user.id,
+            resourceId: session.session.user.id,
         });
 
         // Reset to default avatar
         const user = await prisma.user.update({
-            where: { id: session.user.id },
+            where: { id: session.session.user.id },
             data: { avatar: '/codac_logo.svg' },
             select: { id: true, avatar: true },
         });
@@ -159,12 +159,12 @@ export async function resetAvatar(): Promise<UploadAvatarResult> {
         revalidatePath('/profile/settings');
         revalidatePath('/');
         updateTag('user');
-        updateTag(`user-${session.user.id}`);
+        updateTag(`user-${session.session.user.id}`);
 
         logger.info('Avatar reset to default', {
             action: 'reset',
             resource: 'user-avatar',
-            resourceId: session.user.id,
+            resourceId: session.session.user.id,
             metadata: {
                 duration: Date.now() - startTime,
             },

@@ -1,15 +1,15 @@
 'use server'
 
-import { prisma } from '@/lib/db/prisma'
 import { getSession } from '@/lib/auth/session'
+import { prisma } from '@/lib/db/prisma'
 
 export async function findExistingDirectConversation(participantId: string) {
     const session = await getSession()
-    if (!session?.user?.id) {
+    if (!session?.session?.user?.id) {
         throw new Error('Authentication required')
     }
 
-    const currentUserId = session.user.id
+    const currentUserId = session.session.user.id
 
     try {
         // Find existing direct conversation between current user and the participant

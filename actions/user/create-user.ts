@@ -1,13 +1,14 @@
 'use server';
 
 import { Prisma } from '@prisma/client';
+import { nanoid } from 'nanoid';
 import { revalidatePath, updateTag } from 'next/cache';
 
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import {
-  type UserPrivate,
   commonSelects,
+  type UserPrivate,
 } from '@/lib/utils/server-action-utils';
 import {
   createUserSchema,
@@ -62,6 +63,7 @@ export async function createUser(
     // Create user with proper types
     const user = await prisma.user.create({
       data: {
+        id: nanoid(), // Generate unique ID
         email: validatedData.email,
         username: validatedData.username,
         name: validatedData.name || validatedData.email.split('@')[0],

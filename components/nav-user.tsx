@@ -79,7 +79,7 @@ function NavUser() {
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton asChild size='lg'>
-            <Link href='/auth/signin' className='w-full justify-start'>
+            <Link href='/sign-in' className='w-full justify-start'>
               Sign In
             </Link>
           </SidebarMenuButton>
@@ -180,7 +180,7 @@ function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className='cursor-pointer'
-              onSelect={async (event) => {
+              onSelect={async event => {
                 event.preventDefault();
                 await signOut();
                 window.location.href = '/';

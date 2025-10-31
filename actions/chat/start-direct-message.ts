@@ -1,9 +1,9 @@
 'use server'
 
 import { getSession } from '@/lib/auth/session'
-import { findExistingDirectConversation } from './find-existing-conversation'
-import { createConversation } from './create-conversation'
 import { logger } from '@/lib/logger'
+import { createConversation } from './create-conversation'
+import { findExistingDirectConversation } from './find-existing-conversation'
 
 /**
  * Start a direct message conversation with a user
@@ -14,7 +14,7 @@ export async function startDirectMessage(participantId: string) {
     try {
         // Check authentication
         const session = await getSession()
-        if (!session?.user?.id) {
+        if (!session?.session?.user?.id) {
             return {
                 success: false,
                 error: 'Authentication required'
@@ -22,7 +22,7 @@ export async function startDirectMessage(participantId: string) {
         }
 
         // Prevent self-messaging
-        if (session.user.id === participantId) {
+        if (session.session.user.id === participantId) {
             return {
                 success: false,
                 error: 'Cannot start a conversation with yourself'
@@ -30,7 +30,7 @@ export async function startDirectMessage(participantId: string) {
         }
 
         logger.info('Starting direct message', {
-            metadata: { participantId, currentUserId: session.user.id }
+            metadata: { participantId, currentUserId: session.session.user.id }
         })
 
         // First, check if a direct conversation already exists
