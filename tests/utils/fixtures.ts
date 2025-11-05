@@ -32,9 +32,14 @@ export const mockUser: User = {
   yearsExp: null,
   createdAt: new Date('2024-01-01T00:00:00.000Z'),
   updatedAt: new Date('2024-01-01T00:00:00.000Z'),
-  emailVerified: null,
+  emailVerified: false,
   image: null,
   password: null,
+  twoFactorEnabled: null,
+  banned: null,
+  banReason: null,
+  banExpires: null,
+  applicationRole: 'STUDENT' as UserRole,
 };
 
 export const mockUserPrivate = {

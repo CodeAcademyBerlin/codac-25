@@ -49,7 +49,7 @@ function getActivityColor(type: string): string {
 }
 
 export async function RecentActivity() {
-  const activityData = await getRecentActivity('user-id'); // TODO: Get actual user ID
+  const activityData = await getRecentActivity();
 
   return (
     <Card>

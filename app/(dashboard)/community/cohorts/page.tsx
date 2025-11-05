@@ -1,6 +1,6 @@
 import { Calendar, Filter, Search, Users } from 'lucide-react';
 
-import { CohortCard } from '@/components/community/cohort-card';
+import { CohortListCard } from '@/components/community/cohort-list-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -113,7 +113,7 @@ export default async function CohortsPage() {
 
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {activeCohorts.map(cohort => (
-              <CohortCard key={cohort.id} cohort={cohort} />
+              <CohortListCard key={cohort.id} cohort={cohort} />
             ))}
           </div>
         </section>
@@ -134,7 +134,7 @@ export default async function CohortsPage() {
 
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {upcomingCohorts.map(cohort => (
-              <CohortCard key={cohort.id} cohort={cohort} />
+              <CohortListCard key={cohort.id} cohort={cohort} />
             ))}
           </div>
         </section>

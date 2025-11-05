@@ -238,7 +238,7 @@ export default function UserCard(props: {
 													<p className="text-sm text-muted-foreground">
 														Copy URI to clipboard
 													</p>
-													<CopyButton textToCopy={twoFactorVerifyURI} />
+													<CopyButton text={twoFactorVerifyURI} />
 												</div>
 											</>
 										) : (

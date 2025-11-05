@@ -171,13 +171,13 @@ export default async function UserDetailsPage({
                   <div className='flex items-center gap-2 mb-4'>
                     <Badge
                       variant='outline'
-                      className={`${getRoleColor(user.role)} text-white border-none`}
+                      className={`${getRoleColor(user.role || 'STUDENT')} text-white border-none`}
                     >
                       {user.role}
                     </Badge>
                     <Badge
                       variant='outline'
-                      className={`${getStatusColor(user.status)} text-white border-none`}
+                      className={`${getStatusColor(user.status || 'ACTIVE')} text-white border-none`}
                     >
                       {user.status}
                     </Badge>

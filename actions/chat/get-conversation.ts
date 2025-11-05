@@ -15,7 +15,7 @@ export async function getConversationAction(input: unknown) {
             throw new Error('Authentication required')
         }
 
-        const conversation = await getConversation(parsed.conversationId, user.id)
+        const conversation = await getConversation(parsed.conversationId)
         return { ok: true, data: conversation }
     })
 }

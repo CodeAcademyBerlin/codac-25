@@ -11,7 +11,7 @@ import { Progress } from '@/components/ui/progress';
 import { getLearningProgress } from '@/data/dashboard';
 
 export async function LearningProgress() {
-  const progressData = await getLearningProgress('user-id'); // TODO: Get actual user ID
+  const progressData = await getLearningProgress();
 
   return (
     <Card className='col-span-4'>

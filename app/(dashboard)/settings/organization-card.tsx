@@ -277,7 +277,7 @@ export function OrganizationCard(props: {
 												</Button>
 												<div>
 													<CopyButton
-														textToCopy={`${window.location.origin}/accept-invitation/${invitation.id}`}
+														text={`${window.location.origin}/accept-invitation/${invitation.id}`}
 													/>
 												</div>
 											</div>

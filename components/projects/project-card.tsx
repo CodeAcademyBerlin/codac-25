@@ -45,7 +45,7 @@ export function ProjectCard({
       : null;
 
   const projectUrl = getProjectUrl(
-    project.projectProfile.user.username,
+    project.projectProfile.user.username || 'unknown',
     project.slug
   );
 

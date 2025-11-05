@@ -11,6 +11,10 @@ export async function getServerSession() {
   const result = await auth.api.getSession({
     headers: await headers(),
   });
-  // Better Auth returns { session: { user: {...} } }
-  return result as { session: { user: { id: string; email: string; name: string; image?: string | null } } } | null;
+  // Better Auth returns { session: { ... }, user: { ... } }
+  if (!result || !result.session || !result.user) {
+    return null;
+  }
+  // Return the complete result which includes both session and user
+  return result as { session: { id: string;[key: string]: any }; user: { id: string; email: string; name: string; image?: string | null } };
 }

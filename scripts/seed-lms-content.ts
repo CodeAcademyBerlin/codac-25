@@ -204,12 +204,13 @@ async function findOrCreateAdminUser() {
         // Create a system admin user for LMS content
         adminUser = await prisma.user.create({
             data: {
+                id: 'system-admin-user',
                 email: 'system@codac-berlin.com',
                 name: 'System Admin',
                 username: 'system-admin',
                 role: 'ADMIN',
                 status: 'ACTIVE',
-                emailVerified: new Date(),
+                emailVerified: true,
             }
         });
         console.log('👤 Created system admin user');

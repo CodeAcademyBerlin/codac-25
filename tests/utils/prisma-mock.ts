@@ -1,14 +1,12 @@
-import { PrismaClient } from '@prisma/client'
-
+import type { PrismaClient } from '@prisma/client'
 import { vi } from 'vitest'
 import { mockDeep, mockReset, DeepMockProxy } from 'vitest-mock-extended'
-import type { DatabaseConnection } from '@/lib/db'
 
 // Create a deep mock of PrismaClient
 export const prismaMock = mockDeep<PrismaClient>()
 
 // Type-safe mock that matches our database connection type
-export const mockPrisma = prismaMock as DeepMockProxy<DatabaseConnection>
+export const mockPrisma = prismaMock as DeepMockProxy<PrismaClient>
 
 // Reset function for use in beforeEach hooks
 export const resetPrismaMock = () => mockReset(prismaMock)

@@ -44,13 +44,8 @@ export default async function DocumentsPage({
   const previewDocId = params.preview ?? null;
 
   // Fetch folders and documents
-  const _treeDataPromise = getFolderTreeWithDocuments(user.id);
-  const _documentsPromise = getDocumentsInFolder(
-    selectedFolderId,
-    user.id,
-    50,
-    0
-  );
+  const _treeDataPromise = getFolderTreeWithDocuments();
+  const _documentsPromise = getDocumentsInFolder(selectedFolderId, 50, 0);
 
   // If preview mode, fetch the specific document
   const _previewDocumentPromise = previewDocId

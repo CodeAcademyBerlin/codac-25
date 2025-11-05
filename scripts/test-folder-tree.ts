@@ -6,7 +6,7 @@ async function testFolderTree() {
     try {
         console.log('Testing LMS folder tree...');
 
-        const result = await getFolderTreeWithDocuments('test-user-id');
+        const result = await getFolderTreeWithDocuments();
 
         console.log(`Root IDs: ${result.rootIds.length}`);
         console.log(`Total items: ${Object.keys(result.items).length}`);

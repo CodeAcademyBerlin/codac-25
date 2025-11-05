@@ -9,6 +9,10 @@ export async function getSession() {
   const result = await auth.api.getSession({
     headers: await headers(),
   });
-  return result as { session: { user: { id: string; email: string; name: string; image?: string | null } } } | null;
+  // Better Auth returns { session: { ... }, user: { ... } }
+  if (!result || !result.session || !result.user) {
+    return null;
+  }
+  return result as { session: { id: string; [key: string]: any }; user: { id: string; email: string; name: string; image?: string | null } };
 }
 

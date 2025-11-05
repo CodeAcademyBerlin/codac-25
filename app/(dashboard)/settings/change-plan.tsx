@@ -139,16 +139,18 @@ function Component(props: { currentPlan?: string; isTrial?: boolean }) {
 								if (selectedPlan === "enterprise") {
 									return;
 								}
-								await client.subscription.upgrade(
-									{
-										plan: selectedPlan,
-									},
-									{
-										onError: (ctx) => {
-											toast.error(ctx.error.message);
-										},
-									},
-								);
+								// TODO: Implement subscription upgrade
+								toast.info("Subscription management coming soon!");
+								// await client.subscription.upgrade(
+								// 	{
+								// 		plan: selectedPlan,
+								// 	},
+								// 	{
+								// 		onError: (ctx: any) => {
+								// 			toast.error(ctx.error.message);
+								// 		},
+								// 	},
+								// );
 							}}
 						>
 							{selectedPlan === props.currentPlan?.toLowerCase()
@@ -169,16 +171,18 @@ function Component(props: { currentPlan?: string; isTrial?: boolean }) {
 								variant="destructive"
 								className="w-full"
 								onClick={async () => {
-									await client.subscription.cancel(
-										{
-											returnUrl: "/dashboard",
-										},
-										{
-											onError: (ctx) => {
-												toast.error(ctx.error.message);
-											},
-										},
-									);
+									// TODO: Implement subscription cancellation
+									toast.info("Subscription management coming soon!");
+									// await client.subscription.cancel(
+									// 	{
+									// 		returnUrl: "/dashboard",
+									// 	},
+									// 	{
+									// 		onError: (ctx: any) => {
+									// 			toast.error(ctx.error.message);
+									// 		},
+									// 	},
+									// );
 								}}
 							>
 								Cancel Plan

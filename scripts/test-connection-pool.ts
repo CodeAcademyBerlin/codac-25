@@ -5,7 +5,7 @@
  * This script tests the connection pool settings and retry mechanism
  */
 
-import { checkDatabaseConnection, prisma } from '../lib/db/prisma';
+import { prisma } from '../lib/db/prisma';
 import { logger } from '../lib/logger';
 
 async function testConnectionPool() {
@@ -14,7 +14,7 @@ async function testConnectionPool() {
     try {
         // Test 1: Basic connection health check
         console.log('1. Testing basic connection...');
-        const isHealthy = await checkDatabaseConnection();
+        const isHealthy = await prisma.$queryRaw`SELECT 1` ? true : false;
         if (isHealthy) {
             console.log('✅ Database connection is healthy');
         } else {

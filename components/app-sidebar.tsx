@@ -158,7 +158,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   React.useEffect(() => {
     if (session?.user) {
       const userData = session.user;
-      setNavGroups(buildNavigationData(userData.role));
+      setNavGroups(buildNavigationData(userData.role ?? undefined));
     }
   }, [session, totalUnreadCount]);
 

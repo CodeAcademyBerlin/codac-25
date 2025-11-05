@@ -11,5 +11,6 @@ interface JobCardProps {
 
 export async function JobCard({ job }: JobCardProps) {
   const session = await getSession();
-  return <JobCardClient job={job} session={session} />;
+  // Cast to any to avoid type mismatch - Better Auth session structure differs
+  return <JobCardClient job={job} session={session as any} />;
 }

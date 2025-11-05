@@ -294,7 +294,7 @@ export function ProjectsList({
               Showing {filteredProjects.length} of {projects.length} projects
             </div>
             {viewMode === 'grid' ? (
-              <LayoutGrid cols='3'>
+              <LayoutGrid cols={3}>
                 {filteredProjects.map(project => (
                   <ProjectCard
                     key={project.id}

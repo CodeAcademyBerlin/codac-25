@@ -13,7 +13,7 @@ export async function getUserConversationsAction(input: unknown = {}) {
             throw new Error('Authentication required')
         }
 
-        const conversations = await getUserConversations(user.id)
+        const conversations = await getUserConversations()
         return { ok: true, data: conversations }
     })
 }

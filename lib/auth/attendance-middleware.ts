@@ -55,18 +55,19 @@ export function withAttendanceViewAuth<TInput, TOutput>(
                         };
                     }
 
-                    // Staff and admins have access to all cohorts
-                    const isStaffOrAdmin = 
-                        user.applicationRole === 'STAFF' || 
+                    // Mentors and admins have access to all cohorts
+                    const isMentorOrAdmin = 
+                        user.applicationRole === 'MENTOR' || 
                         user.applicationRole === 'ADMIN';
 
                     // Students can only access their own cohort
-                    if (!isStaffOrAdmin && user.cohortId !== cohortId) {
+                    if (!isMentorOrAdmin && user.cohortId !== cohortId) {
                         logger.warn('Attendance access denied: Cohort mismatch', {
-                            resource: config.logResource || 'attendance',
-                            userId: user.id,
-                            requestedCohortId: cohortId,
-                            userCohortId: user.cohortId,
+                            metadata: {
+                                userId: user.id,
+                                cohortId: cohortId,
+                                userCohortId: user.cohortId,
+                            }
                         });
                         return {
                             success: false,
@@ -87,10 +88,8 @@ export function withAttendanceViewAuth<TInput, TOutput>(
             // Execute the handler
             return await handler(data);
         } catch (error) {
-            logger.error('Attendance middleware error', {
-                resource: config.logResource || 'attendance',
-                error: error instanceof Error ? error.message : String(error),
-            });
+            logger.error('Attendance middleware error', 
+                error instanceof Error ? error : new Error(String(error)));
             return {
                 success: false,
                 error: 'An error occurred while processing your request',
