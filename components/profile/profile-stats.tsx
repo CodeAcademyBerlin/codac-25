@@ -79,7 +79,7 @@ export function ProfileStats({ user }: ProfileStatsProps) {
               <span className='text-sm'>Role</span>
             </div>
             <Badge variant='outline' className='capitalize'>
-              {user.role.toLowerCase()}
+              {user.role?.toLowerCase() || 'N/A'}
             </Badge>
           </div>
 

@@ -1,5 +1,7 @@
+import { siteConfig } from "@/config/site";
 import { prisma } from "@/lib/db";
 import { betterAuth } from "better-auth";
+import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import {
 	admin,
@@ -15,11 +17,9 @@ import {
 	twoFactor,
 } from "better-auth/plugins";
 import { passkey } from "better-auth/plugins/passkey";
-import { prismaAdapter } from "better-auth/adapters/prisma";
 import { reactInvitationEmail } from "./email/invitation";
 import { resend } from "./email/resend";
 import { reactResetPasswordEmail } from "./email/reset-password";
-import { siteConfig } from "@/config/site";
 
 const from = siteConfig.email.from;
 const to = siteConfig.email.testEmail;
@@ -134,7 +134,7 @@ export const auth = betterAuth({
 		multiSession(),
 		oAuthProxy(),
 		nextCookies(),
-		oneTap(),
+		...(process.env.NODE_ENV === "production" ? [oneTap()] : []),
 		customSession(async (session) => {
 			return session;
 		}),

@@ -17,17 +17,20 @@ export default function Page() {
 	const router = useRouter();
 	const params = useSearchParams();
 	useEffect(() => {
-		client.oneTap({
-			fetchOptions: {
-				onError: ({ error }) => {
-					toast.error(error.message || "An error occurred");
+		// Only enable Google One Tap in production
+		if (process.env.NODE_ENV === "production") {
+			client.oneTap({
+				fetchOptions: {
+					onError: ({ error }) => {
+						toast.error(error.message || "An error occurred");
+					},
+					onSuccess: () => {
+						toast.success("Successfully signed in");
+						router.push(getCallbackURL(params));
+					},
 				},
-				onSuccess: () => {
-					toast.success("Successfully signed in");
-					router.push(getCallbackURL(params));
-				},
-			},
-		});
+			});
+		}
 	}, []);
 
 	return (

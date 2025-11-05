@@ -8,7 +8,9 @@ import { auth } from "./index";
 export async function getServerSession() {
   // In Next.js App Router, we need to pass headers() directly
   // Better Auth's nextCookies plugin will handle this correctly
-  return auth.api.getSession({
+  const result = await auth.api.getSession({
     headers: await headers(),
   });
+  // Better Auth returns { session: { user: {...} } }
+  return result as { session: { user: { id: string; email: string; name: string; image?: string | null } } } | null;
 }

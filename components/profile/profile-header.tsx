@@ -25,7 +25,7 @@ function getInitials(name: string): string {
     .slice(0, 2);
 }
 
-function getRoleColor(role: string): string {
+function getRoleColor(role: string | null): string {
   switch (role) {
     case 'STUDENT':
       return 'bg-blue-500';
@@ -40,7 +40,7 @@ function getRoleColor(role: string): string {
   }
 }
 
-function getStatusColor(status: string): string {
+function getStatusColor(status: string | null): string {
   switch (status) {
     case 'ACTIVE':
       return 'bg-green-500';

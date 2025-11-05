@@ -8,7 +8,6 @@ import { getSession } from "./session";
  */
 export async function requireServerAuth() {
   const result = await getSession();
-
   if (!result?.session?.user?.id) {
     redirect("/sign-in");
   }
@@ -29,6 +28,10 @@ export async function requireServerAuth() {
       githubUrl: true,
       linkedinUrl: true,
       portfolioUrl: true,
+      currentJob: true,
+      currentCompany: true,
+      startDate: true,
+      endDate: true,
       createdAt: true,
       updatedAt: true,
       role: true, // Better Auth role field
@@ -38,6 +41,13 @@ export async function requireServerAuth() {
           name: true,
           slug: true,
           avatar: true,
+          startDate: true,
+          description: true,
+        },
+      },
+      _count: {
+        select: {
+          projectComments: true,
         },
       },
     },

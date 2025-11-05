@@ -68,7 +68,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
               </label>
               <p className='mt-1'>
                 <Badge variant='outline' className='capitalize'>
-                  {user.role.toLowerCase()}
+                  {user.role?.toLowerCase() || 'N/A'}
                 </Badge>
               </p>
             </div>
@@ -79,7 +79,7 @@ export function ProfileContent({ user }: ProfileContentProps) {
               </label>
               <p className='mt-1'>
                 <Badge variant='outline' className='capitalize'>
-                  {user.status.toLowerCase()}
+                  {user.status?.toLowerCase() || 'N/A'}
                 </Badge>
               </p>
             </div>

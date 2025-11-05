@@ -18,6 +18,7 @@ export type UserProfile = Prisma.UserGetPayload<{
     bio: true;
     applicationRole: true;
     status: true;
+    role: true;
     githubUrl: true;
     linkedinUrl: true;
     portfolioUrl: true;
@@ -61,6 +62,7 @@ const getCachedUser = unstable_cache(
         bio: true,
         applicationRole: true,
         status: true,
+        role: true,
         githubUrl: true,
         linkedinUrl: true,
         portfolioUrl: true,
@@ -181,6 +183,7 @@ export async function getUser(id: string): Promise<GetUserResult> {
           bio: true,
           applicationRole: true,
           status: true,
+          role: true,
           githubUrl: true,
           linkedinUrl: true,
           portfolioUrl: true,

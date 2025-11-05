@@ -2,7 +2,7 @@
 
 import { Prisma, UserRole, UserStatus } from '@prisma/client';
 
-import { getSession } from '@/lib/auth/session';
+import { getCurrentUser } from '@/lib/auth/auth-utils';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import { type ServerActionResult } from '@/lib/utils/server-action-utils';
@@ -45,8 +45,8 @@ export async function getCohortForAttendance(cohortSlug: string): Promise<GetCoh
             metadata: { cohortSlug },
         });
 
-        const session = await getSession();
-        if (!session?.session?.user?.id) {
+        const user = await getCurrentUser();
+        if (!user) {
             return {
                 success: false,
                 error: 'Unauthorized: Only mentors and admins can view attendance.',

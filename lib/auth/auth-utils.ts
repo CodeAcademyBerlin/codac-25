@@ -13,6 +13,7 @@ export type UserProfile = Prisma.UserGetPayload<{
     bio: true;
     applicationRole: true;
     status: true;
+    role: true;
     githubUrl: true;
     linkedinUrl: true;
     portfolioUrl: true;
@@ -62,6 +63,7 @@ export async function getCurrentUser(): Promise<UserProfile | null> {
       bio: true,
       applicationRole: true,
       status: true,
+      role: true,
       githubUrl: true,
       linkedinUrl: true,
       portfolioUrl: true,
@@ -98,7 +100,6 @@ export async function getCurrentUser(): Promise<UserProfile | null> {
  */
 export async function requireAuth(): Promise<UserProfile> {
   const user = await getCurrentUser();
-
   if (!user) {
     throw new Error("Unauthorized");
   }

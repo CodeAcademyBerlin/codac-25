@@ -1,5 +1,6 @@
 'use server';
 
+import { requireAuth } from '@/lib/auth/auth-utils';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 
@@ -68,12 +69,13 @@ export interface FolderTreeItem {
 
 
 
-export async function getFolderById(folderId: string, userId: string): Promise<DocumentFolderWithChildren | null> {
+export async function getFolderById(folderId: string): Promise<DocumentFolderWithChildren | null> {
     try {
+        const user = await requireAuth();
         const folder = await prisma.documentFolder.findFirst({
             where: {
                 id: folderId,
-                ownerId: userId,
+                ownerId: user.id,
             },
             include: {
                 _count: {
@@ -110,7 +112,6 @@ export async function getFolderById(folderId: string, userId: string): Promise<D
             action: 'get_folder_by_id',
             metadata: {
                 folderId,
-                userId,
                 error: error instanceof Error ? error.message : 'Unknown error',
             },
         });
@@ -120,16 +121,16 @@ export async function getFolderById(folderId: string, userId: string): Promise<D
 
 export async function getDocumentsInFolder(
     folderId: string | null,
-    userId: string,
     limit = 50,
     offset = 0
 ): Promise<DocumentWithAuthor[]> {
     try {
+        const user = await requireAuth();
         const documents = await prisma.document.findMany({
             where: {
                 // If folderId is null, show all documents; otherwise filter by folder
                 ...(folderId ? { folderId: folderId } : {}),
-                authorId: userId,
+                authorId: user.id,
                 isArchived: false,
             },
             include: {
@@ -167,7 +168,6 @@ export async function getDocumentsInFolder(
             action: 'get_documents_in_folder',
             metadata: {
                 folderId,
-                userId,
                 limit,
                 offset,
                 error: error instanceof Error ? error.message : 'Unknown error',
@@ -177,12 +177,13 @@ export async function getDocumentsInFolder(
     }
 }
 
-export async function getDocumentById(documentId: string, userId: string): Promise<DocumentWithAuthor | null> {
+export async function getDocumentById(documentId: string): Promise<DocumentWithAuthor | null> {
     try {
+        const user = await requireAuth();
         const document = await prisma.document.findFirst({
             where: {
                 id: documentId,
-                authorId: userId,
+                authorId: user.id,
                 isArchived: false,
             },
             include: {
@@ -215,7 +216,6 @@ export async function getDocumentById(documentId: string, userId: string): Promi
             action: 'get_document_by_id',
             metadata: {
                 documentId,
-                userId,
                 error: error instanceof Error ? error.message : 'Unknown error',
             },
         });
@@ -223,16 +223,17 @@ export async function getDocumentById(documentId: string, userId: string): Promi
     }
 }
 
-export async function getFolderTreeWithDocuments(userId: string): Promise<{
+export async function getFolderTreeWithDocuments(): Promise<{
     items: Record<string, FolderTreeItem>;
     rootIds: string[];
     totalDocuments: number;
 }> {
     try {
+        const user = await requireAuth();
         // Get all folders for the user with document counts using aggregation
         const foldersWithCounts = await prisma.documentFolder.findMany({
             where: {
-                ownerId: userId,
+                ownerId: user.id,
             },
             include: {
                 _count: {
@@ -254,7 +255,7 @@ export async function getFolderTreeWithDocuments(userId: string): Promise<{
         // Get all documents for the user
         const documents = await prisma.document.findMany({
             where: {
-                authorId: userId,
+                authorId: user.id,
                 isArchived: false,
             },
             include: {
@@ -361,7 +362,6 @@ export async function getFolderTreeWithDocuments(userId: string): Promise<{
         logger.error('Failed to fetch folder tree with documents', error instanceof Error ? error : new Error(String(error)), {
             action: 'get_folder_tree_with_documents',
             metadata: {
-                userId,
                 error: error instanceof Error ? error.message : 'Unknown error',
             },
         });

@@ -1,3 +1,4 @@
+import { requireAuth } from '@/lib/auth/auth-utils'
 import { prisma } from '@/lib/db'
 import { logger } from '@/lib/logger'
 
@@ -31,8 +32,11 @@ export interface ConversationWithParticipants {
 /**
  * Get all conversations for a user with participants and last message
  */
-export async function getUserConversations(userId: string): Promise<ConversationWithParticipants[]> {
+export async function getUserConversations(): Promise<ConversationWithParticipants[]> {
     try {
+        const user = await requireAuth();
+        const userId = user.id;
+        
         logger.info('Fetching user conversations', {
             metadata: {
                 userId,
@@ -128,8 +132,11 @@ export async function getUserConversations(userId: string): Promise<Conversation
 /**
  * Get a specific conversation with messages
  */
-export async function getConversation(conversationId: string, userId: string) {
+export async function getConversation(conversationId: string) {
     try {
+        const user = await requireAuth();
+        const userId = user.id;
+        
         logger.info('Fetching conversation', {
             metadata: {
                 conversationId,

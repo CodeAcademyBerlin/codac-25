@@ -1,6 +1,6 @@
 'use server';
 
-
+import { requireAuth } from '@/lib/auth/auth-utils';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import { JsonValue } from '@prisma/client/runtime/library';
@@ -177,14 +177,14 @@ export async function getDocumentsByType(
 }
 
 export async function getUserDocuments(
-    userId: string,
     documentType?: string,
     limit = 50,
     offset = 0
 ): Promise<DocumentWithAuthor[]> {
     try {
+        const user = await requireAuth();
         const whereClause: any = {
-            authorId: userId,
+            authorId: user.id,
             isArchived: false,
         };
 
@@ -227,7 +227,6 @@ export async function getUserDocuments(
     } catch (error) {
         logger.error('Failed to fetch user documents', error instanceof Error ? error : new Error(String(error)), {
             metadata: {
-                userId,
                 documentType,
                 limit,
                 offset,

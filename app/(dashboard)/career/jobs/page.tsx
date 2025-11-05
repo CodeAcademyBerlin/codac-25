@@ -29,10 +29,11 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
 
   return (
     <PageContainer size="xl">
-      <PageHeader
-        title="Job Board"
-        description="Discover career opportunities from our community and partners"
-      />
+      <div className="flex items-center justify-between mb-8">
+        <PageHeader
+          title="Job Board"
+          description="Discover career opportunities from our community and partners"
+        />
         {canPostJob && (
           <Button asChild>
             <Link href="/career/jobs/post">
@@ -41,7 +42,7 @@ export default async function JobsPage({ searchParams }: JobsPageProps) {
             </Link>
           </Button>
         )}
-      </PageHeader>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Filters Sidebar */}

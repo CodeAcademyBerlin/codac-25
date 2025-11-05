@@ -37,7 +37,7 @@ export function StudentCard({
       .slice(0, 2);
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string | null) => {
     switch (status) {
       case 'ACTIVE':
         return 'bg-green-500';
@@ -50,7 +50,7 @@ export function StudentCard({
     }
   };
 
-  const getRoleColor = (role: string) => {
+  const getRoleColor = (role: string | null) => {
     switch (role) {
       case 'STUDENT':
         return 'bg-blue-500';

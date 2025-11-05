@@ -1,3 +1,4 @@
+import { requireAuth } from '@/lib/auth/auth-utils';
 import { prisma } from '@/lib/db';
 
 export interface UserStats {
@@ -68,9 +69,10 @@ export async function getUserStats(): Promise<UserStats> {
   };
 }
 
-export async function getLearningProgress(
-  _userId: string
-): Promise<LearningProgressItem[]> {
+export async function getLearningProgress(): Promise<LearningProgressItem[]> {
+  // Verify auth (although this is a placeholder)
+  await requireAuth();
+  
   // This is a placeholder implementation
   // In a real app, you'd fetch actual learning progress data
   return [
@@ -104,9 +106,9 @@ export async function getLearningProgress(
   ];
 }
 
-export async function getRecentActivity(
-  userId: string
-): Promise<RecentActivityItem[]> {
+export async function getRecentActivity(): Promise<RecentActivityItem[]> {
+  const user = await requireAuth();
+  
   // This is a placeholder implementation
   // In a real app, you'd fetch actual recent activity data
   return [
@@ -116,7 +118,7 @@ export async function getRecentActivity(
       title: 'New Project Created',
       description: 'Created a new React project',
       timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-      userId,
+      userId: user.id,
     },
     {
       id: '2',
@@ -124,7 +126,7 @@ export async function getRecentActivity(
       title: 'Profile Updated',
       description: 'Updated profile information',
       timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000), // 5 hours ago
-      userId,
+      userId: user.id,
     },
   ];
 }

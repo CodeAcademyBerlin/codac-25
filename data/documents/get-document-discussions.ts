@@ -156,23 +156,8 @@ export async function getDiscussionUsers(documentId: string): Promise<Record<str
  */
 export async function getCurrentUserForDiscussion(): Promise<UserData | null> {
     try {
-        const { getServerSession } = await import('@/lib/auth/server');
-        const session = await getServerSession();
-
-        if (!session?.session?.user?.id) {
-            return null;
-        }
-
-        const user = await prisma.user.findUnique({
-            where: {
-                id: session.session.user.id,
-            },
-            select: {
-                id: true,
-                name: true,
-                avatar: true,
-            },
-        });
+        const { getCurrentUser } = await import('@/lib/auth/auth-utils');
+        const user = await getCurrentUser();
 
         if (!user) {
             return null;

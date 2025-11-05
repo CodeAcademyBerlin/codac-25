@@ -1,6 +1,6 @@
 'use server';
 
-import { getSession } from '@/lib/auth/session';
+import { getCurrentUser } from '@/lib/auth/auth-utils';
 import { prisma } from '@/lib/db/prisma';
 import { logger } from '@/lib/logger';
 
@@ -9,8 +9,8 @@ export async function getProjectLikeStatus(projectId: string): Promise<{
   likesCount: number;
 }> {
   try {
-    const session = await getSession();
-    const userId = session?.session?.user?.id;
+    const user = await getCurrentUser();
+    const userId = user?.id;
 
     // Get the project with like count and user's like status
     const [project, userLike] = await Promise.all([
@@ -39,9 +39,9 @@ export async function getProjectLikeStatus(projectId: string): Promise<{
       likesCount: project.likes,
     };
   } catch (error) {
-    const session = await getSession();
+    const user = await getCurrentUser();
     logger.error('Failed to get project like status', error as Error, {
-      metadata: { projectId, userId: session?.session?.user?.id },
+      metadata: { projectId, userId: user?.id },
     });
 
     // Return safe defaults

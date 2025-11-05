@@ -25,12 +25,16 @@ export const client = createAuthClient({
 		passkeyClient(),
 		adminClient(),
 		multiSessionClient(),
-		oneTapClient({
-			clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
-			promptOptions: {
-				maxAttempts: 1,
-			},
-		}),
+		...(process.env.NODE_ENV === "production"
+			? [
+					oneTapClient({
+						clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
+						promptOptions: {
+							maxAttempts: 1,
+						},
+					}),
+				]
+			: []),
 		oidcClient(),
 		genericOAuthClient(),
 

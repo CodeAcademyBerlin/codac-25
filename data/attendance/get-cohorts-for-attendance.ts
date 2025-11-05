@@ -2,7 +2,7 @@
 
 import { Prisma } from '@prisma/client';
 
-import { getSession } from '@/lib/auth/session';
+import { getCurrentUser } from '@/lib/auth/auth-utils';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import { type ServerActionResult } from '@/lib/utils/server-action-utils';
@@ -42,8 +42,8 @@ export async function getCohortsForAttendance(): Promise<GetCohortsForAttendance
         });
 
         // Get authenticated user and check permissions
-        const session = await getSession();
-        if (!session?.session?.user?.id) {
+        const user = await getCurrentUser();
+        if (!user) {
             return {
                 success: false,
                 error: 'Authentication required'
@@ -51,12 +51,7 @@ export async function getCohortsForAttendance(): Promise<GetCohortsForAttendance
         }
 
         // Check if user has MENTOR or ADMIN role
-        const user = await prisma.user.findUnique({
-            where: { id: session.session.user.id },
-            select: { applicationRole: true }
-        });
-
-        if (!user || (user.applicationRole !== 'MENTOR' && user.applicationRole !== 'ADMIN')) {
+        if (user.applicationRole !== 'MENTOR' && user.applicationRole !== 'ADMIN') {
             return {
                 success: false,
                 error: 'Insufficient permissions. Only mentors and admins can access attendance.'
