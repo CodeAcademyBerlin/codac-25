@@ -3,6 +3,7 @@
 import { Prisma } from '@prisma/client';
 import { nanoid } from 'nanoid';
 import { revalidatePath, updateTag } from 'next/cache';
+import { z } from 'zod';
 
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
@@ -114,11 +115,18 @@ export async function createUser(
     );
 
     // Handle Zod validation errors
-    if (error instanceof Error && error.name === 'ZodError') {
-      logger.logValidationError('user', (error as any).errors);
+    if (error instanceof z.ZodError) {
+      logger.logValidationError('user', error.issues);
       return {
         success: false,
-        error: (error as any).errors,
+        error: error.issues,
+      };
+    }
+    if (error instanceof Error && error.name === 'ZodError') {
+      logger.logValidationError('user', (error as z.ZodError).issues);
+      return {
+        success: false,
+        error: (error as z.ZodError).issues,
       };
     }
 

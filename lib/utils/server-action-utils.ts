@@ -51,6 +51,9 @@ export function handleConnectionError(error: unknown): string {
 export function handleValidationError(
   error: unknown
 ): string | z.ZodIssue[] {
+  if (error instanceof z.ZodError) {
+    return error.issues;
+  }
   if (error instanceof Error && error.name === 'ZodError') {
     return (error as z.ZodError).issues;
   }

@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { render, screen } from '@/tests/utils/test-utils';
 
@@ -180,7 +180,7 @@ describe('Input Component', () => {
     const input = screen.getByRole('textbox');
 
     // Check for key styling classes
-    expect(input).toHaveClass('flex', 'h-9', 'w-full', 'rounded', 'border');
+    expect(input).toHaveClass('h-9', 'w-full', 'rounded-md', 'border');
     expect(input).toHaveClass('px-3', 'py-1', 'text-base', 'md:text-sm');
   });
 

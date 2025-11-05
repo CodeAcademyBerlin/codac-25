@@ -1,12 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import {
-  userSchema,
-  createUserSchema,
-  updateUserSchema,
-  getUsersSchema,
-  changeUserRoleSchema,
   bulkDeleteUsersSchema,
+  changeUserRoleSchema,
+  createUserSchema,
+  getUsersSchema,
+  updateUserSchema,
+  userSchema,
 } from './user';
 
 describe('User Validation Schemas', () => {
@@ -14,6 +14,7 @@ describe('User Validation Schemas', () => {
     it('should validate a complete valid user object', () => {
       const validUser = {
         email: 'test@example.com',
+        username: 'johndoe',
         name: 'John Doe',
         avatar: 'https://example.com/avatar.jpg',
         bio: 'Software developer with 5 years experience',
@@ -35,6 +36,7 @@ describe('User Validation Schemas', () => {
     it('should validate with minimal required fields', () => {
       const minimalUser = {
         email: 'test@example.com',
+        username: 'testuser',
       };
 
       const result = userSchema.safeParse(minimalUser);
@@ -49,7 +51,7 @@ describe('User Validation Schemas', () => {
       const invalidEmails = ['invalid-email', '@example.com', 'test@', ''];
 
       invalidEmails.forEach(email => {
-        const result = userSchema.safeParse({ email });
+        const result = userSchema.safeParse({ email, username: 'testuser' });
         expect(result.success).toBe(false);
         if (!result.success) {
           expect(
@@ -69,6 +71,7 @@ describe('User Validation Schemas', () => {
       validAvatars.forEach(avatar => {
         const result = userSchema.safeParse({
           email: 'test@example.com',
+          username: 'testuser',
           avatar,
         });
         expect(result.success).toBe(true);
@@ -85,6 +88,7 @@ describe('User Validation Schemas', () => {
       invalidAvatars.forEach(avatar => {
         const result = userSchema.safeParse({
           email: 'test@example.com',
+          username: 'testuser',
           role: 'STUDENT',
           status: 'ACTIVE',
           avatar,
@@ -99,6 +103,7 @@ describe('User Validation Schemas', () => {
       validRoles.forEach(role => {
         const result = userSchema.safeParse({
           email: 'test@example.com',
+          username: 'testuser',
           role,
         });
         expect(result.success).toBe(true);
@@ -111,6 +116,7 @@ describe('User Validation Schemas', () => {
       validStatuses.forEach(status => {
         const result = userSchema.safeParse({
           email: 'test@example.com',
+          username: 'testuser',
           status,
         });
         expect(result.success).toBe(true);
@@ -124,6 +130,7 @@ describe('User Validation Schemas', () => {
         // Valid URLs should pass
         const validResult = userSchema.safeParse({
           email: 'test@example.com',
+          username: 'testuser',
           [field]: 'https://example.com',
         });
         expect(validResult.success).toBe(true);
@@ -131,6 +138,7 @@ describe('User Validation Schemas', () => {
         // Empty strings should pass
         const emptyResult = userSchema.safeParse({
           email: 'test@example.com',
+          username: 'testuser',
           [field]: '',
         });
         expect(emptyResult.success).toBe(true);
@@ -138,6 +146,7 @@ describe('User Validation Schemas', () => {
         // Invalid URLs should fail
         const invalidResult = userSchema.safeParse({
           email: 'test@example.com',
+          username: 'testuser',
           [field]: 'not-a-url',
         });
         expect(invalidResult.success).toBe(false);
@@ -162,6 +171,7 @@ describe('User Validation Schemas', () => {
             field === 'email'
               ? `${longString}@example.com`
               : 'test@example.com',
+          username: 'testuser',
           [field]: field === 'email' ? `${longString}@example.com` : longString,
         });
         expect(result.success).toBe(false);
@@ -181,6 +191,7 @@ describe('User Validation Schemas', () => {
     it('should require email, role, and status', () => {
       const validData = {
         email: 'test@example.com',
+        username: 'testuser',
         role: 'STUDENT' as const,
         status: 'ACTIVE' as const,
       };

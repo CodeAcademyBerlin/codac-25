@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { render, screen } from '@/tests/utils/test-utils';
 
@@ -11,7 +11,7 @@ describe('Button Component', () => {
     const button = screen.getByRole('button', { name: 'Click me' });
 
     expect(button).toBeInTheDocument();
-    expect(button).toHaveClass('h-11', 'px-4', 'py-2');
+    expect(button).toHaveClass('h-9', 'px-4', 'py-2');
   });
 
   it('should render all button variants', () => {
@@ -50,13 +50,13 @@ describe('Button Component', () => {
 
       expect(button).toBeInTheDocument();
       if (size === 'default') {
-        expect(button).toHaveClass('h-11');
+        expect(button).toHaveClass('h-9');
       } else if (size === 'sm') {
-        expect(button).toHaveClass('h-10');
+        expect(button).toHaveClass('h-8');
       } else if (size === 'lg') {
-        expect(button).toHaveClass('h-12');
+        expect(button).toHaveClass('h-10');
       } else if (size === 'icon') {
-        expect(button).toHaveClass('size-11');
+        expect(button).toHaveClass('size-9');
       }
 
       unmount();

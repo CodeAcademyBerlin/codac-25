@@ -397,6 +397,7 @@ describe('Server Action Utils', () => {
 
     it('should include resourceId in metadata when provided', async () => {
       const { logger } = await import('@/lib/logger');
+      await checkPermission('user-123', 'document', 'update', 'doc-789');
 
       expect(logger.debug).toHaveBeenCalledWith('Checking permission', {
         action: 'permission_check',

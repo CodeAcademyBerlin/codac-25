@@ -23,7 +23,11 @@ describe('createUser Server Action', () => {
 
   it('should create a user successfully', async () => {
     // Set up mocks using database helpers
-    const expectedUser = createMockUser(validUserData);
+    const expectedUser = createMockUser({
+      ...validUserData,
+      applicationRole: validUserData.role,
+      avatar: '/codac_logo.svg',
+    });
     const userHelpers = DatabaseHelpers.mockUserOperations();
 
     userHelpers.mockUserNotFound(); // No existing user with this email
@@ -43,22 +47,33 @@ describe('createUser Server Action', () => {
       );
     }
 
-    expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
-      where: { email: validUserData.email },
-      select: { id: true, email: true },
+    expect(mockPrisma.user.findFirst).toHaveBeenCalledWith({
+      where: {
+        OR: [
+          { email: validUserData.email },
+          { username: validUserData.username }
+        ]
+      },
+      select: { id: true, email: true, username: true },
     });
 
     expect(mockPrisma.user.create).toHaveBeenCalledWith({
-      data: validUserData,
+      data: expect.objectContaining({
+        email: validUserData.email,
+        username: validUserData.username,
+        applicationRole: validUserData.role,
+        status: validUserData.status,
+        id: expect.any(String),
+        avatar: '/codac_logo.svg',
+      }),
       select: expect.any(Object), // commonSelects.userPrivate
     });
   });
 
   it('should return error when user with email already exists', async () => {
     // Mock existing user
-    const existingUser = createMockUser({ email: validUserData.email });
-    const userHelpers = DatabaseHelpers.mockUserOperations();
-    userHelpers.mockFindUserByEmail(validUserData.email, existingUser);
+    const existingUser = createMockUser({ email: validUserData.email, username: validUserData.username });
+    mockPrisma.user.findFirst.mockResolvedValue(existingUser);
 
     const result = await createUser(validUserData);
 
@@ -97,6 +112,7 @@ describe('createUser Server Action', () => {
       {
         code: 'P2002',
         clientVersion: '5.0.0',
+        meta: { target: ['email'] }
       }
     );
     userHelpers.mockUserError('create', uniqueError);

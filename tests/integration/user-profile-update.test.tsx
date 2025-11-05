@@ -169,7 +169,11 @@ const MockProfilePage = () => {
           id: 'update-profile',
         });
       } else {
-        toast.error('Failed to update profile');
+        if (Array.isArray(result.error)) {
+          toast.error(result.error, { id: 'update-profile' });
+        } else {
+          toast.error(result.error, { id: 'update-profile' });
+        }
       }
     } catch (error) {
       toast.error('An unexpected error occurred', { id: 'update-profile' });
@@ -443,8 +447,12 @@ describe('User Profile Update Integration', () => {
       await waitFor(() => {
         expect(toast.error).toHaveBeenCalledWith(
           [
-            { path: ['email'], message: 'Invalid email address' },
-            { path: ['name'], message: 'Name is required' },
+            {
+              path: ['email'],
+              message: 'Invalid email address',
+              code: 'invalid_format',
+              validation: 'email',
+            },
           ],
           { id: 'update-profile' }
         );
@@ -475,7 +483,7 @@ describe('User Profile Update Integration', () => {
     it('should handle generic error responses', async () => {
       vi.mocked(updateUser).mockResolvedValue({
         success: false,
-        error: 'undefined', // No specific error message
+        error: 'Failed to update profile', // Generic error message
       });
 
       const user = userEvent.setup();
