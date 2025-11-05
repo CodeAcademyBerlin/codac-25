@@ -13,7 +13,7 @@ export function AnimatedLandingContent() {
       </motion.div>
 
       <motion.div
-        className='animate-diamond-pulse opacity-0'
+        className='animate-diamond-pulse'
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{
@@ -22,12 +22,19 @@ export function AnimatedLandingContent() {
           ease: [0, 0.71, 0.2, 1.01],
         }}
       >
-        <h1
-          className='text-[12rem] uppercase font-codac-brand bg-gradient-to-br from-[#E77096] to-[#52EACE] bg-clip-text text-transparent'
+        <motion.h1
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 3,
+            delay: 2,
+            ease: [0, 0.71, 0.2, 1.01],
+          }}
+          className='opacity-0 text-[12rem] uppercase font-codac-brand bg-gradient-to-br from-[#E77096] to-[#52EACE] bg-clip-text text-transparent'
           style={{ WebkitTextStroke: '4px white' }}
         >
           codac
-        </h1>
+        </motion.h1>
       </motion.div>
 
       <motion.div className='animate-diamond-pulse opacity-0'>

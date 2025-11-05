@@ -55,7 +55,7 @@ const calculateGridPosition = (index: number, total: number) => {
 
   return {
     x: col * horizontalSpacing - horizontalOffset,
-    y: -(row * verticalSpacing) + verticalOffset,
+    y: row * verticalSpacing - verticalOffset,
     z: 0,
     rotateX: 0,
     rotateY: 0,
@@ -135,6 +135,7 @@ const getCohortColor = (cohortName: string) => {
 
 interface CohortCardProps {
   cohort: Cohort;
+  cohortMembers: User[];
   index: number;
   position: ReturnType<typeof calculateGridPosition>;
   isSelected: boolean;
@@ -144,6 +145,7 @@ interface CohortCardProps {
 
 function CohortCard({
   cohort,
+  cohortMembers,
   index,
   position,
   isSelected,
@@ -164,13 +166,14 @@ function CohortCard({
         zIndex: isSelected ? 9999 : zIndex,
       }}
       initial={{
-        x: Math.random() * 2000 - 1000,
-        y: Math.random() * 2000 - 1000,
-        z: Math.random() * 2000 - 1000,
-        rotateX: Math.random() * 360,
-        rotateY: Math.random() * 360,
-        rotateZ: Math.random() * 360,
+        x: 0,
+        y: 0,
+        z: -2000,
+        rotateX: 180,
+        rotateY: 0,
+        rotateZ: 360,
         opacity: 0,
+        scale: 0.3,
       }}
       animate={{
         x: position.x,
@@ -184,9 +187,11 @@ function CohortCard({
       }}
       transition={{
         type: 'spring',
-        stiffness: 80,
-        damping: 20,
+        stiffness: 60,
+        damping: 15,
         mass: 1,
+        delay: index * 0.05,
+        opacity: { duration: 0.6, delay: index * 0.05 },
       }}
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
@@ -265,8 +270,8 @@ function CohortCard({
             color: 'white',
             fontSize: '14px',
             fontWeight: 'bold',
-            width: '32px',
-            height: '32px',
+            width: '40px',
+            height: '40px',
             borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',
@@ -275,7 +280,7 @@ function CohortCard({
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.5)',
           }}
         >
-          {index + 1}
+          {cohortMembers.length}
         </div>
 
         {/* Content */}
@@ -337,7 +342,8 @@ export default function CohortPeriodicTableFramer({
   const [currentLayout, setCurrentLayout] = useState<LayoutType>('grid');
   const containerRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(0.5);
+  const [hasAnimated, setHasAnimated] = useState(false);
   const isDragging = useRef(false);
   const lastMouse = useRef({ x: 0, y: 0 });
 
@@ -352,6 +358,23 @@ export default function CohortPeriodicTableFramer({
   const hasNext = currentIndex >= 0 && currentIndex < cohorts.length - 1;
   const hasPrevious = currentIndex > 0;
 
+  // Members for the selected cohort (used in the detail panel)
+  const selectedCohortMembers = useMemo(
+    () => users.filter(user => user.cohort === selectedCohortData?.slug),
+    [users, selectedCohort]
+  );
+
+  // Map of all cohort members (used for card badges)
+  const cohortMembersMap = useMemo(() => {
+    const map = new Map<string, User[]>();
+    cohorts.forEach(cohort => {
+      map.set(
+        cohort.slug,
+        users.filter(user => user.cohort === cohort.slug)
+      );
+    });
+    return map;
+  }, [users, cohorts]);
   const handleNext = () => {
     if (hasNext) {
       setSelectedCohort(cohorts[currentIndex + 1].slug);
@@ -367,8 +390,26 @@ export default function CohortPeriodicTableFramer({
   const handleResetView = () => {
     setSelectedCohort(null);
     setRotation({ x: 0, y: 0 });
-    setZoom(1);
+    setZoom(0.5);
   };
+
+  // Set up opening animation
+  useEffect(() => {
+    if (!hasAnimated) {
+      // Start with dramatic rotation
+      setRotation({ x: -15, y: 15 });
+      setZoom(0.4);
+
+      // Animate to final position
+      const timer = setTimeout(() => {
+        setRotation({ x: 0, y: 0 });
+        setZoom(0.5);
+        setHasAnimated(true);
+      }, 1500);
+
+      return () => clearTimeout(timer);
+    }
+  }, [hasAnimated]);
 
   // Calculate card positions with z-index based on depth
   const cardData = useMemo(() => {
@@ -391,16 +432,19 @@ export default function CohortPeriodicTableFramer({
     });
 
     // Calculate z-index based on depth (z position after rotation)
-    return data
-      .map(item => {
-        // Simple depth calculation based on z position
-        const depth = item.position.z;
-        return {
-          ...item,
-          zIndex: Math.floor(1000 + depth),
-        };
-      })
-      .sort((a, b) => a.zIndex - b.zIndex); // Render back to front
+    const dataWithZIndex = data.map(item => {
+      // Simple depth calculation based on z position
+      const depth = item.position.z;
+      return {
+        ...item,
+        zIndex: Math.floor(1000 + depth),
+      };
+    });
+
+    // Only sort by depth for 3D layouts (sphere, helix), keep original order for grid
+    return currentLayout === 'grid'
+      ? dataWithZIndex
+      : dataWithZIndex.sort((a, b) => a.zIndex - b.zIndex); // Render back to front
   }, [cohorts, currentLayout]);
 
   // Handle mouse interactions for rotation
@@ -433,7 +477,7 @@ export default function CohortPeriodicTableFramer({
 
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
-      setZoom(prev => Math.max(0.3, Math.min(3, prev - e.deltaY * 0.001)));
+      setZoom(prev => Math.max(0.2, Math.min(2, prev - e.deltaY * 0.001)));
     };
 
     container.addEventListener('mousedown', handleMouseDown);
@@ -453,7 +497,7 @@ export default function CohortPeriodicTableFramer({
     <div className='relative w-full h-screen bg-gradient-to-b from-slate-950 via-purple-950 to-slate-950 overflow-hidden'>
       <ResizablePanelGroup direction='horizontal' className='h-screen'>
         {/* 3D Visualization Panel */}
-        <ResizablePanel defaultSize={70} minSize={30}>
+        <ResizablePanel defaultSize={80} minSize={60}>
           <div
             ref={containerRef}
             className='relative w-full h-full overflow-hidden'
@@ -476,6 +520,11 @@ export default function CohortPeriodicTableFramer({
                   width: '100%',
                   height: '100%',
                 }}
+                initial={{
+                  rotateX: -45,
+                  rotateY: 45,
+                  scale: 0.3,
+                }}
                 animate={{
                   rotateX: rotation.x,
                   rotateY: rotation.y,
@@ -483,8 +532,9 @@ export default function CohortPeriodicTableFramer({
                 }}
                 transition={{
                   type: 'spring',
-                  stiffness: 100,
-                  damping: 30,
+                  stiffness: 50,
+                  damping: 25,
+                  mass: 1.5,
                 }}
               >
                 <div
@@ -499,6 +549,9 @@ export default function CohortPeriodicTableFramer({
                     <CohortCard
                       key={data.cohort.slug}
                       cohort={data.cohort}
+                      cohortMembers={
+                        cohortMembersMap.get(data.cohort.slug) || []
+                      }
                       index={data.index}
                       position={data.position}
                       isSelected={selectedCohort === data.cohort.slug}
@@ -516,7 +569,7 @@ export default function CohortPeriodicTableFramer({
         <ResizableHandle />
 
         {/* Detail Panel */}
-        <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
+        <ResizablePanel defaultSize={20} minSize={20} maxSize={50}>
           <div className='h-full bg-black/40 backdrop-blur-xl border-l border-white/10 flex flex-col overflow-hidden'>
             {/* Layout Picker - Always visible at top */}
             <div className='p-6 border-b border-white/10'>
@@ -633,7 +686,7 @@ export default function CohortPeriodicTableFramer({
                     <Image
                       width={100}
                       height={100}
-                      src={selectedCohortData.image}
+                      src={`/${selectedCohortData.image}`}
                       alt={selectedCohortData.name}
                       className='w-full h-full object-cover rounded-lg'
                     />
@@ -643,38 +696,31 @@ export default function CohortPeriodicTableFramer({
                 {/* Members List */}
                 <div className='flex-1 overflow-y-auto p-6'>
                   <h3 className='text-lg font-semibold text-white mb-4'>
-                    Members (
-                    {
-                      users.filter(u => u.cohort === selectedCohortData.slug)
-                        .length
-                    }
-                    )
+                    Members ({selectedCohortMembers.length})
                   </h3>
                   <div className='space-y-3'>
-                    {users
-                      .filter(u => u.cohort === selectedCohortData.slug)
-                      .map(user => (
-                        <div
-                          key={user.username}
-                          className='flex items-center gap-3 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors'
-                        >
-                          <Image
-                            width={100}
-                            height={100}
-                            src={`/${user.image || selectedCohortData.image}`}
-                            alt={user.name}
-                            className='w-10 h-10 rounded-full object-cover border-2 border-white/20'
-                          />
-                          <div className='flex-1 min-w-0'>
-                            <p className='text-white font-medium text-sm truncate'>
-                              {user.name}
-                            </p>
-                            <p className='text-slate-400 text-xs truncate'>
-                              @{user.username}
-                            </p>
-                          </div>
+                    {selectedCohortMembers.map(user => (
+                      <div
+                        key={user.username}
+                        className='flex items-center gap-3 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors'
+                      >
+                        <Image
+                          width={100}
+                          height={100}
+                          src={`/${user.image || selectedCohortData.image}`}
+                          alt={user.name}
+                          className='w-10 h-10 rounded-full object-cover border-2 border-white/20'
+                        />
+                        <div className='flex-1 min-w-0'>
+                          <p className='text-white font-medium text-sm truncate'>
+                            {user.name}
+                          </p>
+                          <p className='text-slate-400 text-xs truncate'>
+                            @{user.username}
+                          </p>
                         </div>
-                      ))}
+                      </div>
+                    ))}
                   </div>
                 </div>
 
