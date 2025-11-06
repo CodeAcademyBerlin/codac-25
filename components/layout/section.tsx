@@ -6,6 +6,6 @@ interface SectionProps {
 }
 
 export function Section({ children, className }: SectionProps) {
-  return <section className={cn('mb-6', className)}>{children}</section>;
+  return <section className={cn('mb-12', className)}>{children}</section>;
 }
 

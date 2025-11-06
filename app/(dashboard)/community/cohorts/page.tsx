@@ -1,10 +1,18 @@
-import { Calendar, Filter, Search, Users } from 'lucide-react';
+import { Calendar, Users } from 'lucide-react';
 
 import { CohortListCard } from '@/components/community/cohort-list-card';
+import {
+  EmptyState,
+  Grid,
+  PageContainer,
+  PageHeader,
+  SearchFilter,
+  Section,
+  SectionHeader,
+  StatsCard,
+  StatsGrid,
+} from '@/components/layout';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { getCohorts } from '@/data/cohort/get-cohorts';
 
 export default async function CohortsPage() {
@@ -12,144 +20,112 @@ export default async function CohortsPage() {
 
   if (!result.success || !result.data) {
     return (
-      <div className='container mx-auto px-4 py-8'>
-        <div className='text-center'>
-          <h1 className='text-3xl font-bold mb-4'>Cohorts</h1>
-          <p className='text-muted-foreground'>
-            {'error' in result
+      <PageContainer>
+        <PageHeader title='Cohorts' description='Explore our completed cohorts' size='lg' />
+        <EmptyState
+          icon={Users}
+          title='Failed to load cohorts'
+          description={
+            'error' in result
               ? typeof result.error === 'string'
                 ? result.error
                 : 'Invalid data format'
-              : 'Failed to load cohorts'}
-          </p>
-        </div>
-      </div>
+              : 'Failed to load cohorts'
+          }
+        />
+      </PageContainer>
     );
   }
 
   const { cohorts, totalStudents } = result.data;
 
-  const activeCohorts = cohorts.filter(
-    cohort => cohort.startDate <= new Date()
-  );
-  const upcomingCohorts = cohorts.filter(
-    cohort => cohort.startDate > new Date()
-  );
+  const activeCohorts = cohorts.filter(cohort => cohort.startDate <= new Date());
+  const upcomingCohorts = cohorts.filter(cohort => cohort.startDate > new Date());
 
   return (
-    <div className='container mx-auto px-4 py-8'>
-      {/* Header */}
-      <div className='mb-8'>
-        <h1 className='text-4xl font-bold mb-2'>Cohorts</h1>
-        <p className='text-xl text-muted-foreground'>
-          Explore our completed cohorts and celebrate their remarkable achievements
-        </p>
-      </div>
+    <PageContainer size='xl'>
+      <PageHeader
+        title='Cohorts'
+        description='Explore our completed cohorts and celebrate their remarkable achievements'
+        size='lg'
+      />
 
       {/* Stats Overview */}
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Total Cohorts</CardTitle>
-            <Users className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>{cohorts.length}</div>
-            <p className='text-xs text-muted-foreground'>Successfully completed</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>
-              Graduated Cohorts
-            </CardTitle>
-            <Calendar className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>{activeCohorts.length}</div>
-            <p className='text-xs text-muted-foreground'>Concluded their journey</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>
-              Total Alumni
-            </CardTitle>
-            <Users className='h-4 w-4 text-muted-foreground' />
-          </CardHeader>
-          <CardContent>
-            <div className='text-2xl font-bold'>{totalStudents}</div>
-            <p className='text-xs text-muted-foreground'>Across all cohorts</p>
-          </CardContent>
-        </Card>
-      </div>
+      <Section>
+        <StatsGrid cols={3}>
+          <StatsCard title='Total Cohorts' value={cohorts.length} description='Successfully completed' icon={Users} />
+          <StatsCard
+            title='Graduated Cohorts'
+            value={activeCohorts.length}
+            description='Concluded their journey'
+            icon={Calendar}
+          />
+          <StatsCard title='Total Alumni' value={totalStudents} description='Across all cohorts' icon={Users} />
+        </StatsGrid>
+      </Section>
 
       {/* Search and Filter */}
-      <div className='flex items-center gap-4 mb-6'>
-        <div className='relative flex-1 max-w-md'>
-          <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground' />
-          <Input placeholder='Search cohorts...' className='pl-10' />
-        </div>
-        <Button variant='outline' className='flex items-center gap-2'>
-          <Filter className='h-4 w-4' />
-          Filter
-        </Button>
-      </div>
+      <Section>
+        <SearchFilter
+          searchPlaceholder='Search cohorts...'
+          onSearchChange={() => {
+            // TODO: Implement search functionality
+          }}
+        />
+      </Section>
 
       {/* Completed Cohorts Section */}
       {activeCohorts.length > 0 && (
-        <section className='mb-12'>
-          <div className='flex items-center justify-between mb-6'>
-            <div>
-              <h2 className='text-2xl font-bold mb-2'>Completed Cohorts</h2>
-              <p className='text-muted-foreground'>Successfully concluded programs</p>
-            </div>
-            <Badge variant='secondary' className='text-sm'>
-              {activeCohorts.length} completed
-            </Badge>
-          </div>
+        <Section>
+          <SectionHeader
+            title='Completed Cohorts'
+            description='Successfully concluded programs'
+            badge={
+              <Badge variant='secondary' className='text-sm'>
+                {activeCohorts.length} completed
+              </Badge>
+            }
+          />
 
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          <Grid cols={3}>
             {activeCohorts.map(cohort => (
               <CohortListCard key={cohort.id} cohort={cohort} />
             ))}
-          </div>
-        </section>
+          </Grid>
+        </Section>
       )}
 
       {/* Legacy Cohorts Section */}
       {upcomingCohorts.length > 0 && (
-        <section className='mb-12'>
-          <div className='flex items-center justify-between mb-6'>
-            <div>
-              <h2 className='text-2xl font-bold mb-2'>Legacy Cohorts</h2>
-              <p className='text-muted-foreground'>Earlier cohorts from our academy</p>
-            </div>
-            <Badge variant='outline' className='text-sm'>
-              {upcomingCohorts.length} legacy
-            </Badge>
-          </div>
+        <Section>
+          <SectionHeader
+            title='Legacy Cohorts'
+            description='Earlier cohorts from our academy'
+            badge={
+              <Badge variant='outline' className='text-sm'>
+                {upcomingCohorts.length} legacy
+              </Badge>
+            }
+          />
 
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          <Grid cols={3}>
             {upcomingCohorts.map(cohort => (
               <CohortListCard key={cohort.id} cohort={cohort} />
             ))}
-          </div>
-        </section>
+          </Grid>
+        </Section>
       )}
 
       {/* Empty State */}
       {cohorts.length === 0 && (
-        <div className='text-center py-12'>
-          <Users className='h-16 w-16 text-muted-foreground mx-auto mb-4' />
-          <h3 className='text-lg font-semibold mb-2'>No cohorts found</h3>
-          <p className='text-muted-foreground'>
-            The academy has completed its mission. Thank you to all our graduates!
-          </p>
-        </div>
+        <Section>
+          <EmptyState
+            icon={Users}
+            title='No cohorts found'
+            description='The academy has completed its mission. Thank you to all our graduates!'
+          />
+        </Section>
       )}
-    </div>
+    </PageContainer>
   );
 }

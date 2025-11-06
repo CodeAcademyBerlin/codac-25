@@ -23,16 +23,24 @@ interface BreadcrumbConfig {
 const ROUTE_CONFIG: BreadcrumbConfig = {
   '/': { label: 'Home', href: '/' },
   '/dashboard': { label: 'Dashboard', href: '/dashboard' },
+  '/showcase': { label: 'Showcase', href: '/showcase' },
   '/lms': { label: 'Learning', href: '/lms' },
   '/lms/[id]': { label: 'Course', href: '/lms/[id]' },
   '/lms/[id]/edit': { label: 'Edit Course', href: '/lms/[id]/edit' },
   '/community': { label: 'Community', href: '/community' },
   '/community/cohorts': { label: 'Cohorts', href: '/community/cohorts' },
+  '/community/cohorts/[slug]': { label: 'Cohort', href: '/community/cohorts/[slug]' },
   '/community/students': { label: 'Students', href: '/community/students' },
   '/community/mentors': {
     label: 'Mentors',
     href: '/community/mentors',
   },
+  '/community/alumni': {
+    label: 'Alumni',
+    href: '/community/alumni',
+  },
+  '/community/[userRole]': { label: 'Community', href: '/community/[userRole]' },
+  '/community/[userRole]/[userId]': { label: 'Profile', href: '/community/[userRole]/[userId]' },
   '/projects': { label: 'Projects', href: '/projects' },
   '/projects/my': { label: 'My Projects', href: '/projects/my' },
   '/projects/create': { label: 'Create Project', href: '/projects/create' },
@@ -46,11 +54,17 @@ const ROUTE_CONFIG: BreadcrumbConfig = {
   },
   '/career': { label: 'Career Services', href: '/career' },
   '/career/jobs': { label: 'Jobs', href: '/career/jobs' },
+  '/career/jobs/[id]': { label: 'Job', href: '/career/jobs/[id]' },
+  '/career/jobs/post': { label: 'Post Job', href: '/career/jobs/post' },
+  '/attendance': { label: 'Attendance', href: '/attendance' },
+  '/attendance/[cohortSlug]': { label: 'Cohort Attendance', href: '/attendance/[cohortSlug]' },
   '/mentorship': { label: 'Mentorship', href: '/mentorship' },
   '/profile': { label: 'Profile', href: '/profile' },
+  '/settings': { label: 'Settings', href: '/settings' },
   '/profile/settings': { label: 'Settings', href: '/profile/settings' },
   '/documents': { label: 'Documents', href: '/documents' },
   '/documents/[docId]': { label: 'Document', href: '/documents/[docId]' },
+  '/chat': { label: 'Chat', href: '/chat' },
 };
 
 export function AppBreadcrumb() {

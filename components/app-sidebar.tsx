@@ -103,12 +103,24 @@ const buildNavigationData = (role?: string): NavigationGroup[] => {
       icon: Users,
       items: [
         {
-          title: 'Community',
+          title: 'Overview',
           url: '/community',
         },
         {
           title: 'Cohorts',
           url: '/community/cohorts',
+        },
+        {
+          title: 'Alumni',
+          url: '/community/alumni',
+        },
+        {
+          title: 'Students',
+          url: '/community/students',
+        },
+        {
+          title: 'Mentors',
+          url: '/community/mentors',
         },
       ],
     },

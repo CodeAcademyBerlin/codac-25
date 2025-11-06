@@ -20,7 +20,7 @@ export function PageHeader({
   };
 
   return (
-    <div className={cn('mb-8', className)}>
+    <header className={cn('mb-8', className)} role='banner'>
       <h1
         className={cn(
           'font-bold tracking-tight text-foreground',
@@ -30,9 +30,11 @@ export function PageHeader({
         {title}
       </h1>
       {description && (
-        <p className="mt-2 text-muted-foreground">{description}</p>
+        <p className='mt-2 text-muted-foreground' id='page-description'>
+          {description}
+        </p>
       )}
-    </div>
+    </header>
   );
 }
 
