@@ -3,7 +3,7 @@ import cohortsData from '@/data/cohorts.json';
 import users from '@/data/users.json';
 import type { Cohort } from '@/types/cohort';
 
-export default function PeriodicFramerPage() {
+export default function CommunityPage() {
   // Transform JSON data to match Cohort type
   const cohorts: Cohort[] = cohortsData.map(c => ({
     name: c.name,

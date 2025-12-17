@@ -66,12 +66,7 @@ export default async function CohortsPage() {
 
       {/* Search and Filter */}
       <Section>
-        <SearchFilter
-          searchPlaceholder='Search cohorts...'
-          onSearchChange={() => {
-            // TODO: Implement search functionality
-          }}
-        />
+        <SearchFilter searchPlaceholder='Search cohorts...' />
       </Section>
 
       {/* Completed Cohorts Section */}

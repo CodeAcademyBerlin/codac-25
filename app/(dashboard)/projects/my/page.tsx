@@ -5,9 +5,12 @@ import { PageContainer, PageHeader, Section } from '@/components/layout';
 import { ProjectsList } from '@/components/projects/projects-list';
 import { Button } from '@/components/ui/button';
 import { getUserProjects } from '@/data/projects/get-projects';
+import { requireServerAuth } from '@/lib/auth/auth-server';
 
 export default async function MyProjectsPage() {
-  const projects = getUserProjects();
+  const user = await requireServerAuth();
+  console.log('user', user);
+  const projects = getUserProjects(user.id);
 
   return (
     <PageContainer>

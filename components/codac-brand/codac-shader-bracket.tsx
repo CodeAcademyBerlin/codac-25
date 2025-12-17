@@ -5,16 +5,41 @@ import React from 'react';
 
 import { cn } from '@/lib/utils';
 
-import { BracketShader } from './shaders/bracket-shader';
-
 interface CodacShaderBracketProps {
-  className?: string;
+  /**
+   * Which side bracket to render
+   */
+  side: 'left' | 'right';
+
+  /**
+   * Size variant for the bracket
+   */
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '8xl';
+
+  /**
+   * Whether to animate the bracket on mount
+   */
   animated?: boolean;
-  side?: 'left' | 'right';
+
+  /**
+   * Whether to use the shader effect
+   */
   useShader?: boolean;
+
+  /**
+   * Shader intensity (default: 1.2)
+   */
   shaderIntensity?: number;
+
+  /**
+   * Shader animation speed (default: 0.5)
+   */
   shaderSpeed?: number;
+
+  /**
+   * Custom className for additional styling
+   */
+  className?: string;
 }
 
 const sizeConfig = {
@@ -28,80 +53,82 @@ const sizeConfig = {
 };
 
 export const CodacShaderBracket: React.FC<CodacShaderBracketProps> = ({
-  className,
+  side,
   size = 'sm',
   animated = false,
-  side = 'left',
-  useShader = false,
+  useShader = true,
   shaderIntensity = 1.2,
   shaderSpeed = 0.5,
+  className,
 }) => {
   const isLeft = side === 'left';
 
-  const leftPath = {
-    d: 'M334.461 0L167 334.461L334.461 668.923L0 334.461L334.461 0Z',
-    stroke:
-      'M334.461 0L167 334.461L334.461 668.923M334.461 0L0 334.461L334.461 668.923',
-  };
-
-  const rightPath = {
-    d: 'M0 668.923L167.462 334.461L0 0L334.462 334.461L0 668.923Z',
-    stroke: 'M0 0L167.462 334.461L0 668.923M0 0L334.462 334.461L0 668.923',
-  };
-
-  const path = isLeft ? leftPath : rightPath;
-  const gradientId = isLeft ? 'left-shader-gradient' : 'right-shader-gradient';
-
   const SvgComponent = (
-    <div className={cn('relative', sizeConfig[size], className)}>
-      {/* Shader Background Layer */}
-      {useShader && (
-        <div className='absolute inset-0 opacity-60 blur-sm'>
-          <BracketShader
-            speed={shaderSpeed}
-            intensity={shaderIntensity}
-            flowDirection={isLeft ? 1.0 : -1.0}
-            energyPulse={0.8}
-            colorIntensity={1.0}
-          />
-        </div>
+    <svg
+      viewBox={isLeft ? '0 0 335 670' : '0 0 335 670'}
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      className={cn(
+        sizeConfig[size],
+        useShader && 'animate-shader-pulse',
+        className
       )}
-
-      {/* SVG Bracket */}
-      <svg
-        viewBox='0 0 335 670'
-        fill='none'
-        xmlns='http://www.w3.org/2000/svg'
-        className={cn('relative z-10', sizeConfig[size])}
+      style={
+        useShader
+          ? ({
+              '--shader-speed': `${2 / shaderSpeed}s`,
+              filter: `drop-shadow(0 0 ${shaderIntensity * 8}px rgba(231, 112, 150, 0.6)) drop-shadow(0 0 ${shaderIntensity * 4}px rgba(82, 234, 206, 0.4))`,
+            } as React.CSSProperties)
+          : undefined
+      }
+    >
+      <g
+        id={isLeft ? 'left-angle-bracket' : 'right-angle-bracket'}
+        className={animated ? 'animate-diamond-pulse' : ''}
+        style={animated && !isLeft ? { animationDelay: '1s' } : undefined}
       >
-        <g
-          id={`${side}-shader-bracket`}
-          className={animated ? 'animate-diamond-pulse' : ''}
-          style={!isLeft ? { animationDelay: '1s' } : undefined}
+        {isLeft ? (
+          <>
+            <path
+              d='M334.461 0L167 334.461L334.461 668.923L0 334.461L334.461 0Z'
+              fill='url(#left-angle-gradient)'
+            />
+            <path
+              d='M334.461 0L167 334.461L334.461 668.923M334.461 0L0 334.461L334.461 668.923'
+              stroke='white'
+              strokeWidth='15'
+              strokeLinejoin='round'
+            />
+          </>
+        ) : (
+          <>
+            <path
+              d='M0 668.923L167.462 334.461L0 0L334.462 334.461L0 668.923Z'
+              fill='url(#right-angle-gradient)'
+            />
+            <path
+              d='M0 0L167.462 334.461L0 668.923M0 0L334.462 334.461L0 668.923'
+              stroke='white'
+              strokeWidth='15'
+              strokeLinejoin='round'
+            />
+          </>
+        )}
+      </g>
+      <defs>
+        <linearGradient
+          id={isLeft ? 'left-angle-gradient' : 'right-angle-gradient'}
+          x1={isLeft ? '167' : '167.231'}
+          y1='668.923'
+          x2={isLeft ? '167' : '167.231'}
+          y2='0'
+          gradientUnits='userSpaceOnUse'
         >
-          <path d={path.d} fill={`url(#${gradientId})`} />
-          <path
-            d={path.stroke}
-            stroke='currentColor'
-            strokeWidth='15'
-            strokeLinejoin='round'
-          />
-        </g>
-        <defs>
-          <linearGradient
-            id={gradientId}
-            x1='167'
-            y1='668.923'
-            x2='167'
-            y2='0'
-            gradientUnits='userSpaceOnUse'
-          >
-            <stop stopColor='#E77096' />
-            <stop offset='1' stopColor='#52EACE' />
-          </linearGradient>
-        </defs>
-      </svg>
-    </div>
+          <stop stopColor='#E77096' />
+          <stop offset='1' stopColor='#52EACE' />
+        </linearGradient>
+      </defs>
+    </svg>
   );
 
   if (animated) {

@@ -97,11 +97,12 @@ export async function getCurrentUser(): Promise<UserProfile | null> {
 /**
  * Require authentication and return user
  * Throws error if not authenticated
+ * Use this in server actions - for server components, use requireServerAuth() instead
  */
 export async function requireAuth(): Promise<UserProfile> {
   const user = await getCurrentUser();
   if (!user) {
-    throw new Error("Unauthorized");
+    throw new Error("Unauthorized: Please sign in to access this resource");
   }
 
   return user;

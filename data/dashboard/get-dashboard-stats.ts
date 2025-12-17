@@ -1,10 +1,10 @@
 'use server';
 
-import { ApplicationRole, UserStatus } from '@prisma/client';
+import { UserRole, UserStatus } from '@prisma/client';
 
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
-import type { ServerActionResult } from '@/lib/server-action-utils';
+import type { ServerActionResult } from '@/lib/utils/server-action-utils';
 
 export type DashboardStats = {
   totalStudents: number;
@@ -35,7 +35,7 @@ export async function getDashboardStats(): Promise<GetDashboardStatsResult> {
         prisma.user.count({
           where: {
             status: UserStatus.ACTIVE,
-            applicationRole: ApplicationRole.STUDENT,
+            applicationRole: UserRole.STUDENT,
           },
         }),
 
@@ -61,7 +61,7 @@ export async function getDashboardStats(): Promise<GetDashboardStatsResult> {
         prisma.user.count({
           where: {
             status: UserStatus.ACTIVE,
-            applicationRole: ApplicationRole.MENTOR,
+            applicationRole: UserRole.MENTOR,
           },
         }),
       ]);
@@ -115,4 +115,8 @@ export async function getDashboardStats(): Promise<GetDashboardStatsResult> {
     };
   }
 }
+
+
+
+
 

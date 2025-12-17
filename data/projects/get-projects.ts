@@ -2,7 +2,7 @@
 
 import { Project, ProjectLike, ProjectProfile, User } from '@prisma/client';
 
-import { requireAuth } from '@/lib/auth/auth-utils';
+import { requireServerAuth } from '@/lib/auth/auth-server';
 import { prisma } from '@/lib/db';
 import { logger } from '@/lib/logger';
 import type {
@@ -193,16 +193,24 @@ export async function getFeaturedProjects(
 }
 
 export async function getUserProjects(
+  userId?: string
 ): Promise<ProjectDTO[]> {
-  const user = await requireAuth();
-  const userId = user.id;
+  // If userId is provided, use it directly (called from authenticated server component)
+  // Otherwise, require authentication (called from server action)
+  let finalUserId: string;
+  if (userId) {
+    finalUserId = userId;
+  } else {
+    const user = await requireServerAuth();
+    finalUserId = user.id;
+  }
 
   try {
 
     const projects = await prisma.project.findMany({
       where: {
         projectProfile: {
-          userId: userId,
+          userId: finalUserId,
         },
       },
       include: {
@@ -244,7 +252,7 @@ export async function getUserProjects(
       error instanceof Error ? error : new Error(String(error)),
       {
         action: 'get_user_projects',
-        metadata: { userId },
+        metadata: { userId: finalUserId },
       }
     );
     return [];

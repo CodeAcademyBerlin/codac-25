@@ -47,14 +47,14 @@ export function CommunityStats({ stats }: CommunityStatsProps) {
       {statsData.map(stat => {
         const IconComponent = stat.icon;
         return (
-          <Card key={stat.title}>
-            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+          <Card key={stat.title} className='shiny-card'>
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2 relative z-10'>
               <CardTitle className='text-sm font-medium'>
                 {stat.title}
               </CardTitle>
               <IconComponent className='h-4 w-4 text-muted-foreground' />
             </CardHeader>
-            <CardContent>
+            <CardContent className='relative z-10'>
               <div className='text-2xl font-bold'>{stat.value}</div>
               <p className='text-xs text-muted-foreground'>
                 {stat.description}
@@ -66,4 +66,11 @@ export function CommunityStats({ stats }: CommunityStatsProps) {
     </div>
   );
 }
+
+
+
+
+
+
+
 

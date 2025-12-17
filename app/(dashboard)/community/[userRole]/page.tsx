@@ -298,12 +298,7 @@ export default async function CommunityRolePage({
 
       {/* Search and Filter */}
       <Section>
-        <SearchFilter
-          searchPlaceholder={`Search ${userRole}...`}
-          onSearchChange={() => {
-            // TODO: Implement search functionality
-          }}
-        />
+        <SearchFilter searchPlaceholder={`Search ${userRole}...`} />
       </Section>
 
       {/* Active/Recent Section */}
